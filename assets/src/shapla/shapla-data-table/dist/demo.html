@@ -1,0 +1,19 @@
+<meta charset="utf-8">
+<title>data-table demo</title>
+<script src="https://unpkg.com/vue"></script>
+<script src="./data-table.umd.js"></script>
+
+<link rel="stylesheet" href="./data-table.css">
+
+
+<div id="app">
+  <demo></demo>
+</div>
+
+<script>
+new Vue({
+  components: {
+    demo: data-table
+  }
+}).$mount('#app')
+</script>

@@ -27,9 +27,7 @@ if ( ! class_exists( 'Support_Candy' ) ) :
 			$this->includes();
 			add_action( 'init', array( $this, 'load_textdomain' ) );
 
-			/*
-	 * Cron setup
-	 */
+			// Cron setup
 			$cron_job_schedule = get_option( 'wpsc_cron_job_schedule_setup' );
 			if ( $cron_job_schedule ) {
 				add_filter( 'cron_schedules', array( $this, 'wpsc_cron_schedule' ) );
@@ -60,6 +58,8 @@ if ( ! class_exists( 'Support_Candy' ) ) :
 		}
 
 		public function includes() {
+			include_once 'stackonet-support-ticket.php';
+
 			include_once( WPSC_ABSPATH . 'includes/class-wpsc-install.php' );
 			include_once( WPSC_ABSPATH . 'includes/class-wpsc-ajax.php' );
 			include_once( WPSC_ABSPATH . 'includes/class-wpsc-functions.php' );
