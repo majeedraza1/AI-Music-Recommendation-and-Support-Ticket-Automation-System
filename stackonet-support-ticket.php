@@ -42,9 +42,10 @@ class StackonetSupportTicket {
 			self::$instance = new self();
 
 			self::$instance->define_constants();
+			self::$instance->include_classes();
 
 			// initialize the classes
-			add_action( 'plugins_loaded', array( self::$instance, 'init_plugin' ) );
+			add_action( 'plugins_loaded', array( self::$instance, 'init_classes' ) );
 		}
 
 		return self::$instance;
@@ -67,7 +68,6 @@ class StackonetSupportTicket {
 	 * Load the plugin after all plugins are loaded
 	 */
 	public function init_plugin() {
-		$this->include_classes();
 		$this->init_classes();
 	}
 
@@ -112,7 +112,8 @@ class StackonetSupportTicket {
 			$this->container['admin'] = StackonetSupportTicket\Admin\Admin::init();
 		}
 		if ( $this->is_request( 'frontend' ) ) {
-			$this->container['frontend'] = StackonetSupportTicket\Frontend::init();
+			$this->container['frontend']     = StackonetSupportTicket\Frontend::init();
+			$this->container['rest-support'] = StackonetSupportTicket\REST\SupportTicketController::init();
 		}
 		if ( $this->is_request( 'ajax' ) ) {
 			$this->container['ajax'] = StackonetSupportTicket\Ajax::init();

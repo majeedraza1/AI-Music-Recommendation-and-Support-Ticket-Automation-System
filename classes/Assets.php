@@ -158,7 +158,7 @@ class Assets {
 		$data = [
 			'homeUrl'        => home_url(),
 			'isUserLoggedIn' => $is_user_logged_in,
-			'restRoot'       => esc_url_raw( rest_url( 'stackonet-toolkit/v1' ) ),
+			'restRoot'       => esc_url_raw( rest_url( 'stackonet-support-ticker/v1' ) ),
 		];
 
 		if ( $is_user_logged_in ) {

@@ -17,7 +17,7 @@ class ApiController extends WP_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'stackonet-toolkit/v1';
+	protected $namespace = 'stackonet-support-ticket/v1';
 
 	/**
 	 * HTTP status code.

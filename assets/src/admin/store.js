@@ -7,7 +7,7 @@ export default new Vuex.Store({
 	// Same as Vue data
 	state: {
 		loading: true,
-		notification: {},
+		snackbar: {},
 	},
 
 	// Commit + track state changes
@@ -15,14 +15,30 @@ export default new Vuex.Store({
 		SET_LOADING_STATUS(state, loading) {
 			state.loading = loading;
 		},
-		SET_NOTIFICATION(state, notification) {
-			state.notification = notification;
-		},
 	},
 
 	// Same as Vue methods
 	actions: {},
 
 	// Save as Vue computed property
-	getters: {},
+	getters: {
+		categories() {
+			return SupportTickets.ticket_categories;
+		},
+		priorities() {
+			return SupportTickets.ticket_priorities;
+		},
+		statuses() {
+			return SupportTickets.ticket_statuses;
+		},
+		support_agents() {
+			return SupportTickets.support_agents;
+		},
+		display_name() {
+			return SupportTickets.user.display_name;
+		},
+		user_email() {
+			return SupportTickets.user.user_email;
+		},
+	},
 });

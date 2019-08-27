@@ -3,6 +3,9 @@
 namespace StackonetSupportTicket\REST;
 
 use Exception;
+use StackonetSupportTicket\Models\SupportTicket;
+use StackonetSupportTicket\Models\TicketThread;
+use WC_Order;
 use WP_Error;
 use WP_Post;
 use WP_REST_Request;
@@ -251,7 +254,7 @@ class SupportTicketController extends ApiController {
 		}
 		$counts = $supportTicket->count_records();
 
-		$pagination = $supportTicket->getPaginationMetadata( [
+		$pagination = $this->getPaginationMetadata( [
 			'totalCount'  => $counts[ $status ],
 			'limit'       => $per_page,
 			'currentPage' => $paged,
@@ -452,8 +455,7 @@ class SupportTicketController extends ApiController {
 				'post'   => $order->get_id(),
 				'action' => 'edit'
 			], admin_url( 'post.php' ) );
-			$payment_page_id = Settings::get_payment_page_id();
-			$page_url        = get_permalink( $payment_page_id );
+			$page_url        = home_url();
 			$payment_url     = add_query_arg( [
 				'order' => $order->get_id(),
 				'token' => $order->get_meta( '_reschedule_hash', true ),
@@ -494,23 +496,11 @@ class SupportTicketController extends ApiController {
 				'status'              => 'wc-' . $order->get_status(),
 				'order_edit_url'      => $order_url,
 				'address'             => $order->get_formatted_billing_address(),
-				'latitude_longitude'  => GoogleMap::get_customer_latitude_longitude_from_order( $order ),
+				'latitude_longitude'  => '',
 				'payment_status'      => $payment_status,
 				'payment_url'         => $payment_url,
 				'custom_amount_items' => $custom_amount,
 			];
-		}
-
-		// Map Data
-		if ( $supportTicket->created_via() == 'map' ) {
-			$response['map'] = ( new Map() )->find_by_id( $supportTicket->belongs_to_id() );
-		}
-
-		// Map Data
-		if ( $supportTicket->created_via() == 'checkout_analysis' ) {
-			$checkout_analysis = ( new CheckoutAnalysis() )->find_by_id( $supportTicket->belongs_to_id() );
-
-			$response['checkout_analysis'] = $checkout_analysis->get_rest_response_data();
 		}
 
 		return $this->respondOK( $response );
@@ -794,21 +784,6 @@ class SupportTicketController extends ApiController {
 
 		if ( $created_via !== 'appointment' ) {
 			return $this->respondUnprocessableEntity();
-		}
-
-		$appointment = ( new Appointment() )->find_by_id( $belongs_to_id );
-
-		if ( ! $appointment instanceof Appointment ) {
-			return $this->respondNotFound( null, 'No appointment found.' );
-		}
-
-		try {
-			$order_id = LeadSupportTicketToOrder::process( $appointment, $id );
-			if ( $order_id ) {
-				return $this->respondCreated( $appointment );
-			}
-		} catch ( Exception $e ) {
-			Logger::log( $e->getMessage() );
 		}
 
 		return $this->respondInternalServerError();

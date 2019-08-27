@@ -1,18 +1,13 @@
 import Vue from 'vue';
-import axios from 'axios';
-import App from './App.vue'
 import router from './routers.js';
 import store from './store.js';
-import wpMenuFix from "./utils/admin-menu-fix.js";
+import menuFix from "./utils/admin-menu-fix.js";
+import SupportTicket from './tickets/SupportTicket.vue'
 
-if (window.StackonetToolkit.restNonce) {
-	axios.defaults.headers.common['X-WP-Nonce'] = window.StackonetToolkit.restNonce;
-}
-
-let el = document.querySelector('#stackonet-toolkit-admin');
+let el = document.querySelector('#admin-stackonet-support-tickets');
 if (el) {
-	new Vue({el, store, router, render: h => h(App)});
+    new Vue({el: el, store: store, router: router, render: h => h(SupportTicket)});
 }
 
-// fix the admin menu for the slug "stackonet-toolkit"
-wpMenuFix('stackonet-toolkit');
+// fix the admin menu for the slug "wpsc-tickets"
+menuFix('wpsc-tickets');

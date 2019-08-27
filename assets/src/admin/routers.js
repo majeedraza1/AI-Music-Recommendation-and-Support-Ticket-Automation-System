@@ -1,15 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from './views/Home.vue';
-import Settings from './views/Settings.vue';
+import SupportTicketList from './tickets/SupportTicketList';
+import SingleSupportTicket from './tickets/SingleSupportTicket';
+import NewSupportTicket from './tickets/NewSupportTicket';
 
 Vue.use(VueRouter);
 
 const routes = [
-    {path: '/', name: 'Home', component: Home},
-    {path: '/settings', name: 'Settings', component: Settings}
+    {path: '/', name: 'SupportTicketList', component: SupportTicketList},
+    {path: '/ticket/:id/view', name: 'SingleSupportTicket', component: SingleSupportTicket},
+    {path: '/ticket/new', name: 'NewSupportTicket', component: NewSupportTicket},
 ];
 
 export default new VueRouter({
-    routes // short for `routes: routes`
+    routes: routes
 });

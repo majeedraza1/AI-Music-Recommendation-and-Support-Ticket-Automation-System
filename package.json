@@ -48,7 +48,13 @@
 		"webpack-cli": "^3.2.1"
 	},
 	"dependencies": {
+		"@tinymce/tinymce-vue": "^3.0.1",
 		"axios": "^0.18.0",
+		"shapla-columns": "^1.0.1",
+		"shapla-delete": "^1.0.1",
+		"shapla-modal": "^1.0.3",
+		"shapla-notifications": "^1.0.3",
+		"shapla-spinner": "^1.0.3",
 		"vue": "^2.5.22",
 		"vue-router": "^3.0.2",
 		"vuex": "^3.1.0"
