@@ -130,7 +130,7 @@
 			submitTicket() {
 				let self = this;
 				axios
-					.post(stackonetSettings.root + '/support-ticket', {
+					.post(SupportTickets.root + '/support-ticket', {
 						customer_name: self.customer_name,
 						customer_email: self.customer_email,
 						ticket_subject: self.ticket_subject,

@@ -16,7 +16,7 @@ ob_start();
     <form id="frm_ticket_change_status" method="post">
 
         <div class="form-group">
-            <label for="wpsc_default_ticket_status"><?php _e( 'Ticket Status', 'supportcandy' ); ?></label>
+            <label for="support_ticket_default_status"><?php _e( 'Ticket Status', 'supportcandy' ); ?></label>
             <select class="form-control" name="status">
                 <option></option>
 				<?php
@@ -27,7 +27,7 @@ ob_start();
 					'order'      => 'ASC',
 					'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_status_load_order' ) ),
 				] );
-				$wpsc_default_ticket_status = get_option( 'wpsc_default_ticket_status' );
+				$support_ticket_default_status = get_option( 'support_ticket_default_status' );
 				foreach ( $statuses as $status ) :
 					echo '<option  value="' . $status->term_id . '">' . $status->name . '</option>';
 				endforeach;
@@ -36,7 +36,7 @@ ob_start();
         </div>
 
         <div class="form-group">
-            <label for="wpsc_default_ticket_category"><?php _e( 'Ticket Category', 'supportcandy' ); ?></label>
+            <label for="support_ticket_default_category"><?php _e( 'Ticket Category', 'supportcandy' ); ?></label>
             <select class="form-control" name="category">
                 <option value=""></option>
 				<?php
@@ -47,7 +47,7 @@ ob_start();
 					'order'      => 'ASC',
 					'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_category_load_order' ) ),
 				] );
-				$wpsc_default_ticket_category = get_option( 'wpsc_default_ticket_category' );
+				$support_ticket_default_category = get_option( 'support_ticket_default_category' );
 				foreach ( $categories as $category ) :
 					echo '<option  value="' . $category->term_id . '">' . $category->name . '</option>';
 				endforeach;
@@ -56,7 +56,7 @@ ob_start();
         </div>
 
         <div class="form-group">
-            <label for="wpsc_default_ticket_priority"><?php _e( 'Ticket priority', 'supportcandy' ); ?></label>
+            <label for="support_ticket_default_priority"><?php _e( 'Ticket priority', 'supportcandy' ); ?></label>
             <select class="form-control" name="priority">
                 <option value=""></option>
 				<?php
@@ -67,7 +67,7 @@ ob_start();
 					'order'      => 'ASC',
 					'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_priority_load_order' ) ),
 				] );
-				$wpsc_default_ticket_priority = get_option( 'wpsc_default_ticket_priority' );
+				$support_ticket_default_priority = get_option( 'support_ticket_default_priority' );
 				foreach ( $priorities as $priority ) :
 					echo '<option  value="' . $priority->term_id . '">' . $priority->name . '</option>';
 				endforeach;

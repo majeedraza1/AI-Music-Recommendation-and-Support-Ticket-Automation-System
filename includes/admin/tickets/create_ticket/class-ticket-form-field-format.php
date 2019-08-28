@@ -435,12 +435,12 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
 						'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_category_load_order' ) ),
 					] );
 
-					$wpsc_default_ticket_category = '';
-					$wpsc_default_ticket_category = apply_filters( 'wpsc_default_ticket_category', $wpsc_default_ticket_category );
+					$support_ticket_default_category = '';
+					$support_ticket_default_category = apply_filters( 'support_ticket_default_category', $support_ticket_default_category );
 
 					foreach ( $categories as $category ) :
 						$category_id = $category->term_id;
-						$selected    = $wpsc_default_ticket_category == $category->term_id ? 'selected="selected"' : '';
+						$selected    = $support_ticket_default_category == $category->term_id ? 'selected="selected"' : '';
 						echo '<option ' . $selected . ' value="' . $category->term_id . '">' . $category->name . '</option>';
 					endforeach;
 					?>

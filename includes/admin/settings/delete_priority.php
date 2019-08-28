@@ -13,8 +13,8 @@ if ( ! $priority_id ) {
 	exit;
 }
 
-$wpsc_default_ticket_priority = get_option( 'wpsc_default_ticket_priority' );
-if ( $wpsc_default_ticket_priority == $priority_id ) {
+$support_ticket_default_priority = get_option( 'support_ticket_default_priority' );
+if ( $support_ticket_default_priority == $priority_id ) {
 	echo '{ "sucess_status":"0","messege":"' . __( 'Default ticket priority can not be deleted.', 'supportcandy' ) . '" }';
 	die();
 }

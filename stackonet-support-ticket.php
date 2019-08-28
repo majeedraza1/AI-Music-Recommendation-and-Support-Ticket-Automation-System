@@ -1,4 +1,15 @@
 <?php
+/**
+ * Plugin Name: Stackonet Support Ticket
+ * Description: Easy & Powerful support ticket system for WordPress
+ * Version: 2.0.2
+ * Author: Stackonet Services (Pvt.) Ltd.
+ * Author URI: https://stackonet.com/
+ * Requires at least: 4.9
+ * Tested up to: 5.2
+ * Text Domain: stackonet-support-ticket
+ * Domain Path: /lang
+ */
 
 defined( 'ABSPATH' ) || exit;
 
@@ -44,8 +55,15 @@ class StackonetSupportTicket {
 			self::$instance->define_constants();
 			self::$instance->include_classes();
 
+			include_once 'supportcandy.php';
+
 			// initialize the classes
-			add_action( 'plugins_loaded', array( self::$instance, 'init_classes' ) );
+			add_action( 'plugins_loaded', [ self::$instance, 'init_classes' ] );
+
+			add_filter( 'map_meta_cap',
+				[ new StackonetSupportTicket\Models\SupportTicket(), 'map_meta_cap' ], 10, 4 );
+
+			register_activation_hook( __FILE__, [ self::$instance, 'activation' ] );
 		}
 
 		return self::$instance;
@@ -62,13 +80,6 @@ class StackonetSupportTicket {
 		define( 'STACKONET_SUPPORT_TICKET_INCLUDES', STACKONET_SUPPORT_TICKET_PATH . '/classes' );
 		define( 'STACKONET_SUPPORT_TICKET_URL', plugins_url( '', STACKONET_SUPPORT_TICKET_FILE ) );
 		define( 'STACKONET_SUPPORT_TICKET_ASSETS', STACKONET_SUPPORT_TICKET_URL . '/assets' );
-	}
-
-	/**
-	 * Load the plugin after all plugins are loaded
-	 */
-	public function init_plugin() {
-		$this->init_classes();
 	}
 
 	/**
@@ -112,12 +123,21 @@ class StackonetSupportTicket {
 			$this->container['admin'] = StackonetSupportTicket\Admin\Admin::init();
 		}
 		if ( $this->is_request( 'frontend' ) ) {
-			$this->container['frontend']     = StackonetSupportTicket\Frontend::init();
-			$this->container['rest-support'] = StackonetSupportTicket\REST\SupportTicketController::init();
+			$this->container['frontend']         = StackonetSupportTicket\Frontend::init();
+			$this->container['rest-user-ticker'] = StackonetSupportTicket\REST\UserSupportTickerController::init();
+			$this->container['rest-support']     = StackonetSupportTicket\REST\SupportTicketController::init();
 		}
 		if ( $this->is_request( 'ajax' ) ) {
 			$this->container['ajax'] = StackonetSupportTicket\Ajax::init();
 		}
+	}
+
+	/**
+	 * Function to run on plugin activation
+	 */
+	public function activation() {
+		StackonetSupportTicket\RoleAndCapability::activation();
+		( new  StackonetSupportTicket\Models\SupportTicket )->create_table();
 	}
 
 	/**

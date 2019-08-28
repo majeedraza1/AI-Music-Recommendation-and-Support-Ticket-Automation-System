@@ -40,17 +40,7 @@ class Admin {
 	 * Admin scripts
 	 */
 	public function admin_localize_scripts() {
-		/** @var WP_Post[] $pages */
-		$pages  = get_pages();
-		$_pages = [];
-		foreach ( $pages as $page ) {
-			$_pages[] = [ 'id' => $page->ID, 'title' => $page->post_title ];
-		}
-		wp_localize_script( 'jquery', 'stackonetSettings', array(
-			'root'  => esc_url_raw( rest_url( 'stackonet-support-ticker/v1' ) ),
-			'nonce' => wp_create_nonce( 'wp_rest' ),
-			'pages' => $_pages,
-		) );
+
 	}
 
 	/**
@@ -88,8 +78,17 @@ class Admin {
 		wp_enqueue_style( 'stackonet-support-ticket-admin' );
 		wp_enqueue_script( 'stackonet-support-ticket-admin' );
 
-		$data          = [];
+		$data          = [
+			'root'  => esc_url_raw( rest_url( 'stackonet-support-ticket/v1' ) ),
+			'nonce' => wp_create_nonce( 'wp_rest' ),
+		];
 		$supportTicket = new SupportTicket();
+
+		/** @var WP_Post[] $pages */
+		$pages  = get_pages();
+		foreach ( $pages as $page ) {
+			$data['pages'][] = [ 'id' => $page->ID, 'title' => $page->post_title ];
+		}
 
 		$_statuses        = $supportTicket->get_ticket_statuses_terms();
 		$data['statuses'] = [ [ 'key' => 'all', 'label' => 'All Statuses', 'count' => 0, 'active' => true ] ];

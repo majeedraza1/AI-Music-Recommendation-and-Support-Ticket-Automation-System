@@ -20,7 +20,7 @@ ob_start();
     <form id="frm_get_ticket_change_status" method="post">
 
         <div class="form-group">
-            <label for="wpsc_default_ticket_status"><?php _e( 'Ticket Status', 'supportcandy' ); ?></label>
+            <label for="support_ticket_default_status"><?php _e( 'Ticket Status', 'supportcandy' ); ?></label>
             <select class="form-control" name="status">
 				<?php
 				$statuses = get_terms( [
@@ -39,7 +39,7 @@ ob_start();
         </div>
 
         <div class="form-group">
-            <label for="wpsc_default_ticket_category"><?php _e( 'Ticket Category', 'supportcandy' ); ?></label>
+            <label for="support_ticket_default_category"><?php _e( 'Ticket Category', 'supportcandy' ); ?></label>
             <select class="form-control" name="category">
 				<?php
 				$categories = get_terms( [
@@ -58,7 +58,7 @@ ob_start();
         </div>
 
         <div class="form-group">
-            <label for="wpsc_default_ticket_priority"><?php _e( 'Ticket priority', 'supportcandy' ); ?></label>
+            <label for="support_ticket_default_priority"><?php _e( 'Ticket priority', 'supportcandy' ); ?></label>
             <select class="form-control" name="priority">
 				<?php
 				$priorities = get_terms( [

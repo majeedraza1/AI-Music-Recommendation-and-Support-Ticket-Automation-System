@@ -8,7 +8,7 @@ global $current_user, $wpscfunction, $wpdb;
 $wpsc_ticket_id_type = get_option( 'wpsc_ticket_id_type' );
 
 // Ticket Status
-$default_status = get_option( 'wpsc_default_ticket_status' );
+$default_status = get_option( 'support_ticket_default_status' );
 
 // Customer name
 $customer_name = isset( $args['customer_name'] ) ? $args['customer_name'] : '';
@@ -20,12 +20,12 @@ $customer_email = isset( $args['customer_email'] ) ? sanitize_text_field( $args[
 $ticket_subject = isset( $args['ticket_subject'] ) ? sanitize_text_field( $args['ticket_subject'] ) : apply_filters( 'wpsc_default_subject_text', __( 'NA', 'supportcandy' ) );
 
 // Category
-$default_category = get_option( 'wpsc_default_ticket_category' );
+$default_category = get_option( 'support_ticket_default_category' );
 $ticket_category  = isset( $args['ticket_category'] ) ? intval( $args['ticket_category'] ) : $default_category;
 $ticket_category  = apply_filters( 'wpsc_create_ticket_category', $ticket_category, $args );
 
 // Priority
-$default_priority = get_option( 'wpsc_default_ticket_priority' );
+$default_priority = get_option( 'support_ticket_default_priority' );
 $ticket_priority  = isset( $args['ticket_priority'] ) ? intval( $args['ticket_priority'] ) : $default_priority;
 $ticket_priority  = apply_filters( 'wpsc_create_ticket_priority', $ticket_priority, $args );
 

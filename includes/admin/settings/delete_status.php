@@ -13,8 +13,8 @@ if ( ! $status_id ) {
 	exit;
 }
 
-$wpsc_default_ticket_status = get_option( 'wpsc_default_ticket_status' );
-if ( $wpsc_default_ticket_status == $status_id ) {
+$support_ticket_default_status = get_option( 'support_ticket_default_status' );
+if ( $support_ticket_default_status == $status_id ) {
 	echo '{ "sucess_status":"0","messege":"' . __( 'Default ticket status can not be deleted.', 'supportcandy' ) . '" }';
 	die();
 }

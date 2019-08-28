@@ -158,7 +158,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				$term = wp_insert_term( __( 'General', 'supportcandy' ), 'wpsc_categories' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_category_load_order', '1' );
-					update_option( 'wpsc_default_ticket_category', $term['term_id'] );
+					update_option( 'support_ticket_default_category', $term['term_id'] );
 				}
 
 				// Status Items
@@ -167,7 +167,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_status_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_status_background_color', '#d9534f' );
 					add_term_meta( $term['term_id'], 'wpsc_status_load_order', '1' );
-					update_option( 'wpsc_default_ticket_status', $term['term_id'] );
+					update_option( 'support_ticket_default_status', $term['term_id'] );
 				}
 				$term = wp_insert_term( __( 'Awaiting customer reply', 'supportcandy' ), 'wpsc_statuses' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
@@ -197,7 +197,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_priority_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_priority_background_color', '#5bc0de' );
 					add_term_meta( $term['term_id'], 'wpsc_priority_load_order', '1' );
-					update_option( 'wpsc_default_ticket_priority', $term['term_id'] );
+					update_option( 'support_ticket_default_priority', $term['term_id'] );
 				}
 				$term = wp_insert_term( __( 'Medium', 'supportcandy' ), 'wpsc_priorities' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {

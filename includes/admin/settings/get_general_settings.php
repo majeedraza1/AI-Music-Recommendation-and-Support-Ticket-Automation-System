@@ -41,9 +41,9 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
     </div>
 
     <div class="form-group">
-        <label for="wpsc_default_ticket_status"><?php _e( 'Default ticket status', 'supportcandy' ); ?></label>
+        <label for="support_ticket_default_status"><?php _e( 'Default ticket status', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( 'This status will get applied for newly created ticket.', 'supportcandy' ); ?></p>
-        <select class="form-control" name="wpsc_default_ticket_status" id="wpsc_default_ticket_status">
+        <select class="form-control" name="support_ticket_default_status" id="support_ticket_default_status">
 			<?php
 			$statuses                   = get_terms( [
 				'taxonomy'   => 'wpsc_statuses',
@@ -52,9 +52,9 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 				'order'      => 'ASC',
 				'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_status_load_order' ) ),
 			] );
-			$wpsc_default_ticket_status = get_option( 'wpsc_default_ticket_status' );
+			$support_ticket_default_status = get_option( 'support_ticket_default_status' );
 			foreach ( $statuses as $status ) :
-				$selected = $wpsc_default_ticket_status == $status->term_id ? 'selected="selected"' : '';
+				$selected = $support_ticket_default_status == $status->term_id ? 'selected="selected"' : '';
 				echo '<option ' . $selected . ' value="' . $status->term_id . '">' . $status->name . '</option>';
 			endforeach;
 			?>
@@ -62,9 +62,9 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
     </div>
 
     <div class="form-group">
-        <label for="wpsc_default_ticket_category"><?php _e( 'Default ticket category', 'supportcandy' ); ?></label>
+        <label for="support_ticket_default_category"><?php _e( 'Default ticket category', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( 'This category will get applied for newly created ticket.', 'supportcandy' ); ?></p>
-        <select class="form-control" name="wpsc_default_ticket_category" id="wpsc_default_ticket_category">
+        <select class="form-control" name="support_ticket_default_category" id="support_ticket_default_category">
 			<?php
 			$categories                   = get_terms( [
 				'taxonomy'   => 'wpsc_categories',
@@ -73,9 +73,9 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 				'order'      => 'ASC',
 				'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_category_load_order' ) ),
 			] );
-			$wpsc_default_ticket_category = get_option( 'wpsc_default_ticket_category' );
+			$support_ticket_default_category = get_option( 'support_ticket_default_category' );
 			foreach ( $categories as $category ) :
-				$selected = $wpsc_default_ticket_category == $category->term_id ? 'selected="selected"' : '';
+				$selected = $support_ticket_default_category == $category->term_id ? 'selected="selected"' : '';
 				echo '<option ' . $selected . ' value="' . $category->term_id . '">' . $category->name . '</option>';
 			endforeach;
 			?>
@@ -83,9 +83,9 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
     </div>
 
     <div class="form-group">
-        <label for="wpsc_default_ticket_priority"><?php _e( 'Default ticket priority', 'supportcandy' ); ?></label>
+        <label for="support_ticket_default_priority"><?php _e( 'Default ticket priority', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( 'This priority will get applied for newly created ticket.', 'supportcandy' ); ?></p>
-        <select class="form-control" name="wpsc_default_ticket_priority" id="wpsc_default_ticket_priority">
+        <select class="form-control" name="support_ticket_default_priority" id="support_ticket_default_priority">
 			<?php
 			$priorities                   = get_terms( [
 				'taxonomy'   => 'wpsc_priorities',
@@ -94,9 +94,9 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 				'order'      => 'ASC',
 				'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_priority_load_order' ) ),
 			] );
-			$wpsc_default_ticket_priority = get_option( 'wpsc_default_ticket_priority' );
+			$support_ticket_default_priority = get_option( 'support_ticket_default_priority' );
 			foreach ( $priorities as $priority ) :
-				$selected = $wpsc_default_ticket_priority == $priority->term_id ? 'selected="selected"' : '';
+				$selected = $support_ticket_default_priority == $priority->term_id ? 'selected="selected"' : '';
 				echo '<option ' . $selected . ' value="' . $priority->term_id . '">' . $priority->name . '</option>';
 			endforeach;
 			?>

@@ -1,15 +1,5 @@
 <?php
-/**
- * Plugin Name: Stackonet Support Ticket
- * Description: Easy & Powerful support ticket system for WordPress
- * Version: 2.0.2
- * Author: Stackonet Services (Pvt.) Ltd.
- * Author URI: https://stackonet.com/
- * Requires at least: 4.9
- * Tested up to: 5.2
- * Text Domain: stackonet-support-ticket
- * Domain Path: /lang
- */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -58,7 +48,6 @@ if ( ! class_exists( 'Support_Candy' ) ) :
 		}
 
 		public function includes() {
-			include_once 'stackonet-support-ticket.php';
 
 			include_once( WPSC_ABSPATH . 'includes/class-wpsc-install.php' );
 			include_once( WPSC_ABSPATH . 'includes/class-wpsc-ajax.php' );

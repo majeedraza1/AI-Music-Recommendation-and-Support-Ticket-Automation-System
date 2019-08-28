@@ -192,7 +192,7 @@
 				self.$store.commit('SET_LOADING_STATUS', true);
 				let parms = `ticket_status=${self.status}&ticket_category=${data.cat}&ticket_priority=${self.priority}&paged=${self.currentPage}&city=${self.city}&search=${data.query}`;
 				axios
-					.get(stackonetSettings.root + `/support-ticket?${parms}`)
+					.get(SupportTickets.root + `/support-ticket?${parms}`)
 					.then((response) => {
 						self.$store.commit('SET_LOADING_STATUS', false);
 						let data = response.data.data;
@@ -218,7 +218,7 @@
 				self.$store.commit('SET_LOADING_STATUS', true);
 				let parms = `ticket_status=${self.status}&ticket_category=${self.category}&ticket_priority=${self.priority}&paged=${self.currentPage}&city=${self.city}&search=${self.query}`;
 				axios
-					.get(stackonetSettings.root + `/support-ticket?${parms}`)
+					.get(SupportTickets.root + `/support-ticket?${parms}`)
 					.then((response) => {
 						self.$store.commit('SET_LOADING_STATUS', false);
 						let data = response.data.data;
@@ -249,7 +249,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.post(stackonetSettings.root + '/support-ticket/delete', {
+					.post(SupportTickets.root + '/support-ticket/delete', {
 						id: item.id,
 						action: action
 					})
@@ -280,7 +280,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.post(stackonetSettings.root + '/support-ticket/batch_delete', {
+					.post(SupportTickets.root + '/support-ticket/batch_delete', {
 						ids: ids,
 						action: action
 					})

@@ -354,7 +354,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.post(stackonetSettings.root + '/support-ticket/' + self.id + '/sms', {
+					.post(SupportTickets.root + '/support-ticket/' + self.id + '/sms', {
 						content: self.ticket_twilio_sms_content,
 						send_to_customer: self.ticket_twilio_sms_customer_phone,
 						send_to_custom_number: self.ticket_twilio_sms_enable_custom_phone,
@@ -432,7 +432,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.post(stackonetSettings.root + '/support-ticket/' + self.id + '/agent', {
+					.post(SupportTickets.root + '/support-ticket/' + self.id + '/agent', {
 						agents_ids: self.support_agents_ids,
 					})
 					.then((response) => {
@@ -459,7 +459,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.put(stackonetSettings.root + '/support-ticket/' + self.id, {
+					.put(SupportTickets.root + '/support-ticket/' + self.id, {
 						ticket_category: self.ticket_category,
 						ticket_priority: self.ticket_priority,
 						ticket_status: self.ticket_status,
@@ -480,7 +480,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.put(stackonetSettings.root + '/support-ticket/' + self.id, {
+					.put(SupportTickets.root + '/support-ticket/' + self.id, {
 						ticket_subject: self.ticket_subject,
 					})
 					.then((response) => {
@@ -497,7 +497,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.post(stackonetSettings.root + '/support-ticket/' + self.id + '/thread/', {
+					.post(SupportTickets.root + '/support-ticket/' + self.id + '/thread/', {
 						thread_type: thread_type,
 						thread_content: thread_content,
 					})
@@ -514,7 +514,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.put(stackonetSettings.root + '/support-ticket/' + self.id + '/thread/' + self.activeThread.thread_id, {
+					.put(SupportTickets.root + '/support-ticket/' + self.id + '/thread/' + self.activeThread.thread_id, {
 						post_content: self.activeThreadContent,
 					})
 					.then((response) => {
@@ -533,7 +533,7 @@
 				if (confirm('Are you sure to delete this thread?')) {
 					self.$store.commit('SET_LOADING_STATUS', true);
 					axios
-						.delete(stackonetSettings.root + '/support-ticket/' + self.id + '/thread/' + thread.thread_id)
+						.delete(SupportTickets.root + '/support-ticket/' + self.id + '/thread/' + thread.thread_id)
 						.then((response) => {
 							self.$store.commit('SET_LOADING_STATUS', false);
 							self.getItem();
@@ -556,7 +556,7 @@
 				let self = this;
 				self.$store.commit('SET_LOADING_STATUS', true);
 				axios
-					.get(stackonetSettings.root + '/support-ticket/' + self.id)
+					.get(SupportTickets.root + '/support-ticket/' + self.id)
 					.then((response) => {
 						self.$store.commit('SET_LOADING_STATUS', false);
 						self.item = response.data.data.ticket;

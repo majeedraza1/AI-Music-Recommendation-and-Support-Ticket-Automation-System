@@ -13,16 +13,16 @@ $wpsc_support_page_id = isset( $_POST ) && isset( $_POST['wpsc_support_page_id']
 update_option( 'wpsc_support_page_id', $wpsc_support_page_id );
 
 // Default Status
-$wpsc_default_ticket_status = isset( $_POST ) && isset( $_POST['wpsc_default_ticket_status'] ) ? sanitize_text_field( $_POST['wpsc_default_ticket_status'] ) : '';
-update_option( 'wpsc_default_ticket_status', $wpsc_default_ticket_status );
+$support_ticket_default_status = isset( $_POST ) && isset( $_POST['support_ticket_default_status'] ) ? sanitize_text_field( $_POST['support_ticket_default_status'] ) : '';
+update_option( 'support_ticket_default_status', $support_ticket_default_status );
 
 // Default Categories
-$wpsc_default_ticket_category = isset( $_POST ) && isset( $_POST['wpsc_default_ticket_category'] ) ? sanitize_text_field( $_POST['wpsc_default_ticket_category'] ) : '';
-update_option( 'wpsc_default_ticket_category', $wpsc_default_ticket_category );
+$support_ticket_default_category = isset( $_POST ) && isset( $_POST['support_ticket_default_category'] ) ? sanitize_text_field( $_POST['support_ticket_default_category'] ) : '';
+update_option( 'support_ticket_default_category', $support_ticket_default_category );
 
 // Default Priorities
-$wpsc_default_ticket_priority = isset( $_POST ) && isset( $_POST['wpsc_default_ticket_priority'] ) ? sanitize_text_field( $_POST['wpsc_default_ticket_priority'] ) : '';
-update_option( 'wpsc_default_ticket_priority', $wpsc_default_ticket_priority );
+$support_ticket_default_priority = isset( $_POST ) && isset( $_POST['support_ticket_default_priority'] ) ? sanitize_text_field( $_POST['support_ticket_default_priority'] ) : '';
+update_option( 'support_ticket_default_priority', $support_ticket_default_priority );
 
 // Ticket status after customer reply
 $wpsc_ticket_status_after_customer_reply = isset( $_POST ) && isset( $_POST['wpsc_ticket_status_after_customer_reply'] ) ? sanitize_text_field( $_POST['wpsc_ticket_status_after_customer_reply'] ) : '';
