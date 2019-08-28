@@ -11,7 +11,7 @@ use WP_REST_Server;
 
 defined( 'ABSPATH' ) or exit;
 
-class UserSupportTickerController extends ApiController {
+class TicketController extends ApiController {
 
 	/**
 	 * The instance of the class

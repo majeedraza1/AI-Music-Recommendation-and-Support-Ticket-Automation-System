@@ -7,7 +7,6 @@ use WP_Term;
 
 class TicketStatus extends AbstractModel {
 
-
 	/**
 	 * Taxonomy name
 	 *
@@ -39,6 +38,11 @@ class TicketStatus extends AbstractModel {
 		}
 	}
 
+	/**
+	 * Array representation of the class
+	 *
+	 * @return array
+	 */
 	public function to_array() {
 		return [
 			'term_id' => $this->get( 'term_id' ),
@@ -61,7 +65,7 @@ class TicketStatus extends AbstractModel {
 			'order'      => 'ASC',
 			'meta_query' => array(
 				'order_clause' => array(
-					'key' => 'wpsc_status_load_order'
+					'key' => 'support_ticket_status_menu_order'
 				)
 			),
 		);
@@ -76,5 +80,54 @@ class TicketStatus extends AbstractModel {
 		}
 
 		return $terms;
+	}
+
+	/**
+	 * Crate a new term
+	 *
+	 * @param string $term term to add
+	 * @param array $args
+	 *
+	 * @return int
+	 */
+	public static function create( $term, $args = [] ) {
+		$data = wp_insert_term( $term, self::$taxonomy, [
+				'description' => isset( $args['description'] ) ? $args['description'] : '',
+				'slug'        => isset( $args['slug'] ) ? $args['slug'] : '',
+				'parent'      => isset( $args['parent'] ) ? intval( $args['parent'] ) : 0
+			]
+		);
+
+		$term_id = 0;
+		if ( ! is_wp_error( $data ) ) {
+			$term_id    = isset( $data['term_id'] ) ? $data['term_id'] : 0;
+			$categories = self::get_all();
+			update_term_meta( $term_id, 'support_ticket_status_menu_order', count( $categories ) + 1 );
+		}
+
+		return $term_id;
+	}
+
+	/**
+	 * Update support ticket menu order
+	 *
+	 * @param array $terms_ids
+	 */
+	public static function update_menu_orders( array $terms_ids ) {
+		$terms_ids = array_map( 'intval', $terms_ids );
+		foreach ( $terms_ids as $order => $term_id ) {
+			update_term_meta( $term_id, 'support_ticket_status_menu_order', $order + 1 );
+		}
+	}
+
+	/**
+	 * Delete category by term id
+	 *
+	 * @param int $term_id
+	 *
+	 * @return bool
+	 */
+	public static function delete( $term_id ) {
+		return ( wp_delete_term( $term_id, self::$taxonomy ) === true );
 	}
 }

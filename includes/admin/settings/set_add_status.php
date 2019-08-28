@@ -30,8 +30,8 @@ if ( $status_color == $status_bg_color ) {
 
 $term = wp_insert_term( $status_name, 'wpsc_statuses' );
 if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
-	$load_order = $wpdb->get_var( "select max(meta_value) as load_order from {$wpdb->prefix}termmeta WHERE meta_key='wpsc_status_load_order'" );
-	add_term_meta( $term['term_id'], 'wpsc_status_load_order', ++ $load_order );
+	$load_order = $wpdb->get_var( "select max(meta_value) as load_order from {$wpdb->prefix}termmeta WHERE meta_key='support_ticket_status_menu_order'" );
+	add_term_meta( $term['term_id'], 'support_ticket_status_menu_order', ++ $load_order );
 	add_term_meta( $term['term_id'], 'wpsc_status_color', $status_color );
 	add_term_meta( $term['term_id'], 'wpsc_status_background_color', $status_bg_color );
 	do_action( 'wpsc_set_add_status', $term['term_id'] );

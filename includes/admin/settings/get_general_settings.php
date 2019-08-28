@@ -50,7 +50,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
-				'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_status_load_order' ) ),
+				'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_status_menu_order' ) ),
 			] );
 			$support_ticket_default_status = get_option( 'support_ticket_default_status' );
 			foreach ( $statuses as $status ) :
@@ -92,7 +92,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
-				'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_priority_load_order' ) ),
+				'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_priority_menu_order' ) ),
 			] );
 			$support_ticket_default_priority = get_option( 'support_ticket_default_priority' );
 			foreach ( $priorities as $priority ) :

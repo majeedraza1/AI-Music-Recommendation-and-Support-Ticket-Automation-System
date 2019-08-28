@@ -11,7 +11,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 $priority_ids = isset( $_POST ) && isset( $_POST['priority_ids'] ) ? $_POST['priority_ids'] : array();
 
 foreach ( $priority_ids as $key => $priority_id ) {
-	update_term_meta( intval( $priority_id ), 'wpsc_priority_load_order', intval( $key ) );
+	update_term_meta( intval( $priority_id ), 'support_ticket_priority_menu_order', intval( $key ) );
 }
 
 echo '{ "sucess_status":"1","messege":"' . __( 'Priority order saved.', 'supportcandy' ) . '" }';

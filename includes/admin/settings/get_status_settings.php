@@ -13,7 +13,7 @@ $statuses = get_terms( [
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'order'      => 'ASC',
-	'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_status_load_order' ) ),
+	'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_status_menu_order' ) ),
 ] );
 
 ?>
