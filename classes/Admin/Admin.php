@@ -50,8 +50,14 @@ class Admin {
 		$capability = 'manage_options';
 		$slug       = 'wpsc-tickets';
 
-		$hook = add_menu_page( __( 'Support', 'stackonet-support-ticket' ), __( 'Support', 'stackonet-support-ticket' ),
-			$capability, $slug, [ self::$instance, 'support_tickets_callback' ], 'dashicons-admin-post', 8 );
+		$hook = add_menu_page(
+			__( 'Support', 'stackonet-support-ticket' ),
+			__( 'Support', 'stackonet-support-ticket' ),
+			$capability,
+			$slug,
+			[ self::$instance, 'support_tickets_callback' ],
+			'dashicons-format-chat',
+			8 );
 
 		add_action( 'load-' . $hook, [ self::$instance, 'init_support_tickets_hooks' ] );
 	}
@@ -85,7 +91,7 @@ class Admin {
 		$supportTicket = new SupportTicket();
 
 		/** @var WP_Post[] $pages */
-		$pages  = get_pages();
+		$pages = get_pages();
 		foreach ( $pages as $page ) {
 			$data['pages'][] = [ 'id' => $page->ID, 'title' => $page->post_title ];
 		}

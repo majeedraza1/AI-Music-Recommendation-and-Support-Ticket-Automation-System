@@ -1159,7 +1159,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
-				'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_category_load_order' ) ),
+				'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_category_menu_order' ) ),
 			] );
 			foreach ( $categories as $category ) {
 				$category_ids[] = $category->term_id;

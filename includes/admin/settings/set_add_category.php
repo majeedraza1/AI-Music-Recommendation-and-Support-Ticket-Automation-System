@@ -17,8 +17,8 @@ $flag = 0;
 
 $term = wp_insert_term( $cat_name, 'wpsc_categories' );
 if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
-	$load_order = $wpdb->get_var( "select max(meta_value) as load_order from {$wpdb->prefix}termmeta WHERE meta_key='wpsc_category_load_order'" );
-	add_term_meta( $term['term_id'], 'wpsc_category_load_order', ++ $load_order );
+	$load_order = $wpdb->get_var( "select max(meta_value) as load_order from {$wpdb->prefix}termmeta WHERE meta_key='support_ticket_category_menu_order'" );
+	add_term_meta( $term['term_id'], 'support_ticket_category_menu_order', ++ $load_order );
 	do_action( 'wpsc_set_add_category', $term['term_id'] );
 	echo '{ "sucess_status":"1","messege":"' . __( 'Category added successfully.', 'supportcandy' ) . '" }';
 } else {

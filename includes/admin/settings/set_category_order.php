@@ -11,7 +11,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 $cat_ids = isset( $_POST ) && isset( $_POST['cat_ids'] ) ? $_POST['cat_ids'] : array();
 
 foreach ( $cat_ids as $key => $cat_id ) {
-	update_term_meta( intval( $cat_id ), 'wpsc_category_load_order', intval( $key ) );
+	update_term_meta( intval( $cat_id ), 'support_ticket_category_menu_order', intval( $key ) );
 }
 
 echo '{ "sucess_status":"1","messege":"' . __( 'Category order saved.', 'supportcandy' ) . '" }';

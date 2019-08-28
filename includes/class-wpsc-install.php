@@ -157,7 +157,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				// Category Items
 				$term = wp_insert_term( __( 'General', 'supportcandy' ), 'wpsc_categories' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
-					add_term_meta( $term['term_id'], 'wpsc_category_load_order', '1' );
+					add_term_meta( $term['term_id'], 'support_ticket_category_menu_order', '1' );
 					update_option( 'support_ticket_default_category', $term['term_id'] );
 				}
 

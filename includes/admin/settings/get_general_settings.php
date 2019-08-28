@@ -71,7 +71,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
-				'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_category_load_order' ) ),
+				'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_category_menu_order' ) ),
 			] );
 			$support_ticket_default_category = get_option( 'support_ticket_default_category' );
 			foreach ( $categories as $category ) :

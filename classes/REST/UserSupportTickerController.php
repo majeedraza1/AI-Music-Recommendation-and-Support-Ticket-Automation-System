@@ -67,6 +67,11 @@ class UserSupportTickerController extends ApiController {
 		$ticket_status   = $request->get_param( 'status' );
 		$ticket_priority = $request->get_param( 'priority' );
 
+		$attachments = $request->get_param( 'attachments' );
+		if ( ! empty( $attachments ) ) {
+			$attachments = is_array( $attachments ) ? array_map( 'intval', $attachments ) : [];
+		}
+
 		$default_category = (int) get_option( 'support_ticket_default_category' );
 		$default_status   = (int) get_option( 'support_ticket_default_status' );
 		$default_priority = (int) get_option( 'support_ticket_default_priority' );
@@ -80,7 +85,7 @@ class UserSupportTickerController extends ApiController {
 			'ticket_status'    => ! empty( $ticket_status ) ? $ticket_status : $default_status,
 			'ticket_priority'  => ! empty( $ticket_priority ) ? $ticket_priority : $default_priority,
 			'ip_address'       => self::get_remote_ip(),
-			'agent_created'    => 0,
+			'agent_created'    => get_current_user_id(),
 			'ticket_auth_code' => bin2hex( random_bytes( 5 ) ),
 			'active'           => 1
 		];
@@ -96,6 +101,7 @@ class UserSupportTickerController extends ApiController {
 				'customer_name'  => $name,
 				'customer_email' => $email,
 				'thread_type'    => 'report',
+				'attachments'    => $attachments,
 			];
 
 			$thread_id = ( new TicketThread )->create( $thread_data );
@@ -166,6 +172,12 @@ class UserSupportTickerController extends ApiController {
 				'type'              => 'integer',
 				'required'          => false,
 				'sanitize_callback' => 'intval',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'attachments'  => array(
+				'description'       => __( 'Array of WordPress media ID.', 'stackonet-support-ticker' ),
+				'type'              => 'array',
+				'required'          => false,
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 		);

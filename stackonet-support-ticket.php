@@ -125,6 +125,7 @@ class StackonetSupportTicket {
 		if ( $this->is_request( 'frontend' ) ) {
 			$this->container['frontend']         = StackonetSupportTicket\Frontend::init();
 			$this->container['rest-user-ticker'] = StackonetSupportTicket\REST\UserSupportTickerController::init();
+			$this->container['rest-category']    = StackonetSupportTicket\REST\CategoryController::init();
 			$this->container['rest-support']     = StackonetSupportTicket\REST\SupportTicketController::init();
 		}
 		if ( $this->is_request( 'ajax' ) ) {
