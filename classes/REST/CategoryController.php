@@ -3,6 +3,7 @@
 namespace StackonetSupportTicket\REST;
 
 use StackonetSupportTicket\Models\TicketCategory;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -81,7 +82,7 @@ class CategoryController extends ApiController {
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
-	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
 		$name        = $request->get_param( 'name' );
@@ -101,11 +102,11 @@ class CategoryController extends ApiController {
 		}
 
 		$category_id = TicketCategory::create( $name, $args );
-		if ( $category_id ) {
-			return $this->respondCreated( [ 'category_id' => $category_id ] );
+		if ( is_wp_error( $category_id ) ) {
+			return $category_id;
 		}
 
-		return $this->respondInternalServerError();
+		return $this->respondCreated( [ 'category_id' => $category_id ] );
 	}
 
 	/**

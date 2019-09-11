@@ -3,8 +3,11 @@
 namespace StackonetSupportTicket\Models;
 
 use StackonetSupportTicket\Abstracts\AbstractModel;
+use WP_Error;
 use WP_Term;
 use WP_User;
+
+defined( 'ABSPATH' ) or exit;
 
 class SupportAgent extends AbstractModel {
 
@@ -160,5 +163,37 @@ class SupportAgent extends AbstractModel {
 		}
 
 		return $terms;
+	}
+
+	/**
+	 * Crate a new term
+	 *
+	 * @param int $user_id
+	 * @param int $role_id
+	 *
+	 * @return int|WP_Error
+	 */
+	public static function create( $user_id, $role_id ) {
+		$term = wp_insert_term( 'agent_' . $user_id, self::$taxonomy );
+		if ( is_wp_error( $term ) ) {
+			return $term;
+		}
+
+		$user = get_user_by( 'id', $user_id );
+
+		add_term_meta( $term['term_id'], 'role', $role_id );
+		add_term_meta( $term['term_id'], 'agentgroup', '0' );
+
+		add_term_meta( $term['term_id'], 'user_id', $user->ID );
+		add_term_meta( $term['term_id'], 'label', $user->display_name );
+		add_term_meta( $term['term_id'], 'first_name', $user->first_name );
+		add_term_meta( $term['term_id'], 'last_name', $user->last_name );
+		add_term_meta( $term['term_id'], 'nicename', $user->user_nicename );
+		add_term_meta( $term['term_id'], 'email', $user->user_email );
+
+		$user->add_cap( 'wpsc_agent' );
+		update_user_option( $user->ID, 'wpsc_agent_role', $role_id );
+
+		return $term['term_id'];
 	}
 }

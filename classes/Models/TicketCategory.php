@@ -3,6 +3,7 @@
 namespace StackonetSupportTicket\Models;
 
 use StackonetSupportTicket\Abstracts\AbstractModel;
+use WP_Error;
 use WP_Term;
 
 defined( 'ABSPATH' ) or exit;
@@ -90,7 +91,7 @@ class TicketCategory extends AbstractModel {
 	 * @param string $term term to add
 	 * @param array $args
 	 *
-	 * @return int
+	 * @return int|WP_Error
 	 */
 	public static function create( $term, $args = [] ) {
 		$data = wp_insert_term( $term, self::$taxonomy, [
@@ -100,14 +101,15 @@ class TicketCategory extends AbstractModel {
 			]
 		);
 
-		$term_id = 0;
 		if ( ! is_wp_error( $data ) ) {
 			$term_id    = isset( $data['term_id'] ) ? $data['term_id'] : 0;
 			$categories = self::get_all();
 			update_term_meta( $term_id, 'support_ticket_category_menu_order', count( $categories ) + 1 );
+
+			return $term_id;
 		}
 
-		return $term_id;
+		return $data;
 	}
 
 	/**

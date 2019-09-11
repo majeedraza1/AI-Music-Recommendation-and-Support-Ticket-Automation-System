@@ -3,6 +3,7 @@
 namespace StackonetSupportTicket\REST;
 
 use StackonetSupportTicket\Models\TicketStatus;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -80,7 +81,7 @@ class StatusController extends ApiController {
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
-	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
 		$name        = $request->get_param( 'name' );
@@ -100,11 +101,11 @@ class StatusController extends ApiController {
 		}
 
 		$status_id = TicketStatus::create( $name, $args );
-		if ( $status_id ) {
-			return $this->respondCreated( [ 'status_id' => $status_id ] );
+		if ( is_wp_error( $status_id ) ) {
+			return $status_id;
 		}
 
-		return $this->respondInternalServerError();
+		return $this->respondCreated( [ 'status_id' => $status_id ] );
 	}
 
 	/**

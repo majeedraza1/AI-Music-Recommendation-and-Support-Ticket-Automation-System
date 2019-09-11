@@ -128,6 +128,8 @@ class StackonetSupportTicket {
 			$this->container['rest-category']    = StackonetSupportTicket\REST\CategoryController::init();
 			$this->container['rest-status']      = StackonetSupportTicket\REST\StatusController::init();
 			$this->container['rest-priority']    = StackonetSupportTicket\REST\PriorityController::init();
+			$this->container['rest-agent']       = StackonetSupportTicket\REST\AgentController::init();
+			$this->container['rest-role']        = StackonetSupportTicket\REST\AgentRoleController::init();
 			$this->container['rest-support']     = StackonetSupportTicket\REST\SupportTicketController::init();
 		}
 		if ( $this->is_request( 'ajax' ) ) {
