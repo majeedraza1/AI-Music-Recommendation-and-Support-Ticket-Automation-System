@@ -73,7 +73,7 @@ class SupportAgent extends AbstractModel {
 			$this->data        = $term->to_array();
 			$this->user_id     = (int) get_term_meta( $term->term_id, 'user_id', true );
 			$this->role_id     = (int) get_term_meta( $term->term_id, 'role', true );
-			$this->agent_roles = get_option( 'wpsc_agent_role' );
+			$this->agent_roles = get_option( 'support_ticket_agent_roles' );
 			if ( ! empty( $this->agent_roles[ $this->role_id ]['label'] ) ) {
 				$this->role_label = $this->agent_roles[ $this->role_id ]['label'];
 			}
@@ -192,7 +192,7 @@ class SupportAgent extends AbstractModel {
 		add_term_meta( $term['term_id'], 'email', $user->user_email );
 
 		$user->add_cap( 'wpsc_agent' );
-		update_user_option( $user->ID, 'wpsc_agent_role', $role_id );
+		update_user_option( $user->ID, 'support_ticket_agent_roles', $role_id );
 
 		return $term['term_id'];
 	}

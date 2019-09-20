@@ -155,8 +155,8 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		// Get current agent permissions.
 		function get_current_agent_permissions() {
 			global $current_user;
-			$role_id    = get_user_option( 'wpsc_agent_role' );
-			$agent_role = get_option( 'wpsc_agent_role' );
+			$role_id    = get_user_option( 'support_ticket_agent_roles' );
+			$agent_role = get_option( 'support_ticket_agent_roles' );
 
 			return $agent_role[ $role_id ];
 		}
@@ -807,8 +807,8 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			if ( ! $current_user->has_cap( 'wpsc_agent' ) ) {
 				return false;
 			}
-			$role_id     = get_user_option( 'wpsc_agent_role', $current_user->ID );
-			$agent_roles = get_option( 'wpsc_agent_role' );
+			$role_id     = get_user_option( 'support_ticket_agent_roles', $current_user->ID );
+			$agent_roles = get_option( 'support_ticket_agent_roles' );
 			$permissions = $agent_roles[ $role_id ];
 			if ( $ticket_id ) {
 				$assigned_agents = $wpscfunction->get_ticket_meta( $ticket_id, 'assigned_agent' );
@@ -816,10 +816,10 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 					case 'view_unassigned':
 					case 'assign_unassigned':
 					case 'reply_unassigned':
-					case 'cng_tkt_sts_unassigned':
-					case 'cng_tkt_field_unassigned':
-					case 'cng_tkt_ao_unassigned':
-					case 'cng_tkt_rb_unassigned':
+					case 'change_ticket_status_unassigned':
+					case 'change_ticket_field_unassigned':
+					case 'change_ticket_agent_only_unassigned':
+					case 'change_ticket_raised_by_unassigned':
 					case 'delete_unassigned':
 						$response = ( $permissions[ $permission ] && in_array( 0, $assigned_agents ) ) ? true : false;
 						break;
@@ -827,10 +827,10 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 					case 'view_assigned_me':
 					case 'assign_assigned_me':
 					case 'reply_assigned_me':
-					case 'cng_tkt_sts_assigned_me':
-					case 'cng_tkt_field_assigned_me':
-					case 'cng_tkt_ao_assigned_me':
-					case 'cng_tkt_rb_assigned_me':
+					case 'change_ticket_status_assigned_me':
+					case 'change_ticket_field_assigned_me':
+					case 'change_ticket_agent_only_assigned_me':
+					case 'change_ticket_raised_by_assigned_me':
 					case 'delete_assigned_me':
 						$response = ( $permissions[ $permission ] && in_array( $current_agent_id, $assigned_agents ) ) ? true : false;
 						break;
@@ -838,10 +838,10 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 					case 'view_assigned_others':
 					case 'assign_assigned_others':
 					case 'reply_assigned_others':
-					case 'cng_tkt_sts_assigned_others':
-					case 'cng_tkt_field_assigned_others':
-					case 'cng_tkt_ao_assigned_others':
-					case 'cng_tkt_rb_assigned_others':
+					case 'change_ticket_status_assigned_others':
+					case 'change_ticket_field_assigned_others':
+					case 'change_ticket_agent_only_assigned_others':
+					case 'change_ticket_raised_by_assigned_others':
 					case 'delete_assigned_others':
 						$response = ( $permissions[ $permission ] && ! in_array( $current_agent_id, $assigned_agents ) && ! in_array( 0, $assigned_agents ) ) ? true : false;
 						break;
@@ -886,19 +886,19 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 					break;
 
 				case 'change_status':
-					$response = $this->agent_has_permission( 'cng_tkt_sts_unassigned', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_sts_assigned_me', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_sts_assigned_others', $ticket_id ) ? true : false;
+					$response = $this->agent_has_permission( 'change_ticket_status_unassigned', $ticket_id ) || $this->agent_has_permission( 'change_ticket_status_assigned_me', $ticket_id ) || $this->agent_has_permission( 'change_ticket_status_assigned_others', $ticket_id ) ? true : false;
 					break;
 
 				case 'change_ticket_fields':
-					$response = $this->agent_has_permission( 'cng_tkt_field_unassigned', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_field_assigned_me', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_field_assigned_others', $ticket_id ) ? true : false;
+					$response = $this->agent_has_permission( 'change_ticket_field_unassigned', $ticket_id ) || $this->agent_has_permission( 'change_ticket_field_assigned_me', $ticket_id ) || $this->agent_has_permission( 'change_ticket_field_assigned_others', $ticket_id ) ? true : false;
 					break;
 
 				case 'change_agentonly_fields':
-					$response = $this->agent_has_permission( 'cng_tkt_ao_unassigned', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_ao_assigned_me', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_ao_assigned_others', $ticket_id ) ? true : false;
+					$response = $this->agent_has_permission( 'change_ticket_agent_only_unassigned', $ticket_id ) || $this->agent_has_permission( 'change_ticket_agent_only_assigned_me', $ticket_id ) || $this->agent_has_permission( 'change_ticket_agent_only_assigned_others', $ticket_id ) ? true : false;
 					break;
 
 				case 'change_raised_by':
-					$response = $this->agent_has_permission( 'cng_tkt_rb_unassigned', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_rb_assigned_me', $ticket_id ) || $this->agent_has_permission( 'cng_tkt_rb_assigned_others', $ticket_id ) ? true : false;
+					$response = $this->agent_has_permission( 'change_ticket_raised_by_unassigned', $ticket_id ) || $this->agent_has_permission( 'change_ticket_raised_by_assigned_me', $ticket_id ) || $this->agent_has_permission( 'change_ticket_raised_by_assigned_others', $ticket_id ) ? true : false;
 					break;
 
 				case 'delete_ticket':

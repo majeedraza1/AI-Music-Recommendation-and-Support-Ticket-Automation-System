@@ -25,7 +25,7 @@ $ticket_widgets                = get_terms( [
 	'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_ticket_widget_load_order' ) ),
 ] );
 
-$role_id = get_user_option( 'wpsc_agent_role' );
+$role_id = get_user_option( 'support_ticket_agent_roles' );
 
 include_once WPSC_ABSPATH . 'includes/admin/tickets/create_ticket/class-fields-formatting.php';
 $fields_format = new WPSC_Ticket_Field_Formatting();

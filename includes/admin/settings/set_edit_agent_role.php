@@ -13,7 +13,7 @@ if ( ! $role_id ) {
 	exit;
 }
 
-$agent_role = get_option( 'wpsc_agent_role' );
+$agent_role = get_option( 'support_ticket_agent_roles' );
 
 $agent_role_item = isset( $_POST ) && isset( $_POST['agentrole'] ) && is_array( $_POST['agentrole'] ) ? $_POST['agentrole'] : array();
 foreach ( $agent_role as $key => $val ) {
@@ -22,7 +22,7 @@ foreach ( $agent_role as $key => $val ) {
 
 $agent_role[ $role_id ] = $agent_role_item;
 
-update_option( 'wpsc_agent_role', $agent_role );
+update_option( 'support_ticket_agent_roles', $agent_role );
 
 do_action( 'wpsc_set_edit_agent_role' );
 

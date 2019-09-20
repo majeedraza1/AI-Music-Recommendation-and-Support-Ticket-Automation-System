@@ -8,7 +8,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 	exit;
 }
 
-$agent_role = get_option( 'wpsc_agent_role' );
+$agent_role = get_option( 'support_ticket_agent_roles' );
 
 ?>
 <h4>

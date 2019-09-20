@@ -13,11 +13,11 @@ if ( ! $role_id ) {
 	exit;
 }
 
-$agent_role = get_option( 'wpsc_agent_role' );
+$agent_role = get_option( 'support_ticket_agent_roles' );
 
 if ( $role_id > 2 ) {
 	unset( $agent_role[ $role_id ] );
-	update_option( 'wpsc_agent_role', $agent_role );
+	update_option( 'support_ticket_agent_roles', $agent_role );
 	do_action( 'wpsc_delete_agent_role' );
 	echo '{ "sucess_status":"1","messege":"' . __( 'Deleted successfully.', 'supportcandy' ) . '" }';
 } else {

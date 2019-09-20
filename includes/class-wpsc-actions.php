@@ -201,7 +201,7 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 			global $wpscfunction;
 			$unresolved_statuses = get_option( 'wpsc_tl_agent_unresolve_statuses' );
 			$ticket_status       = $wpscfunction->get_ticket_fields( $ticket_id, 'ticket_status' );
-			$agent_role          = get_option( 'wpsc_agent_role' );
+			$agent_role          = get_option( 'support_ticket_agent_roles' );
 
 			$agents = get_terms( [
 				'taxonomy'   => 'wpsc_agents',

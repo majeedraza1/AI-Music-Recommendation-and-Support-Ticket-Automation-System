@@ -40,7 +40,7 @@ if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 	$user = get_user_by( 'id', $agent_id );
 	$user->add_cap( 'wpsc_agent' );
 
-	update_user_option( $agent_id, 'wpsc_agent_role', $agent_role );
+	update_user_option( $agent_id, 'support_ticket_agent_roles', $agent_role );
 
 	do_action( 'wpsc_set_add_agent', $term['term_id'] );
 	echo '{ "sucess_status":"1","messege":"' . __( 'Agent added successfully.', 'supportcandy' ) . '" }';

@@ -15,7 +15,7 @@ if ( ! $term_id ) {
 
 $term = get_term_by( 'id', $term_id, 'wpsc_en' );
 
-$agent_role         = get_option( 'wpsc_agent_role' );
+$agent_role         = get_option( 'support_ticket_agent_roles' );
 $notification_types = $wpscfunction->get_email_notification_types();
 ?>
 <h4 style="margin-bottom:20px;"><?php _e( 'Edit email notification', 'supportcandy' ); ?></h4>

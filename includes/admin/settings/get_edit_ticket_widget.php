@@ -15,7 +15,7 @@ if ( ! $ticket_widget_id ) {
 }
 $ticket_widget      = get_term_by( 'id', $ticket_widget_id, 'wpsc_ticket_widget' );
 $ticket_widget_name = get_term_meta( $ticket_widget_id, 'wpsc_label', true );
-$agent_role         = get_option( 'wpsc_agent_role' );
+$agent_role         = get_option( 'support_ticket_agent_roles' );
 ob_start();
 ?>
 <form id="wpsc_frm_general_settings" method="post">

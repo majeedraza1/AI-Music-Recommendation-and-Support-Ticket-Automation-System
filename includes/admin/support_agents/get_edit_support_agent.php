@@ -15,14 +15,14 @@ if ( ! $agent_id ) {
 
 $agent_role_id = get_term_meta( $agent_id, 'role', true );
 
-$agent_role = get_option( 'wpsc_agent_role' );
+$agent_role = get_option( 'support_ticket_agent_roles' );
 
 ob_start();
 ?>
     <div class="form-group">
         <label for="wpsc_priority_color"><?php _e( 'Select Role', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( 'Select agent role. You can create new role in Agent Roles section if needed.', 'supportcandy' ); ?></p>
-        <select class="form-control" id="wpsc_agent_role" name="wpsc_agent_role">
+        <select class="form-control" id="support_ticket_agent_roles" name="support_ticket_agent_roles">
 			<?php foreach ( $agent_role as $key => $value ): ?>
                 <option <?php echo $agent_role_id == $key ? 'selected="selected"' : '' ?>
                         value="<?php echo $key ?>"><?php echo $value['label'] ?></option>

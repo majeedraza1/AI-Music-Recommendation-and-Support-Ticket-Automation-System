@@ -512,7 +512,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 						add_term_meta( $term['term_id'], 'role', '1' );
 						add_term_meta( $term['term_id'], 'agentgroup', '0' );
 						$admin->add_cap( 'wpsc_agent' );
-						update_user_option( $admin->ID, 'wpsc_agent_role', 1 );
+						update_user_option( $admin->ID, 'support_ticket_agent_roles', 1 );
 					}
 				}
 
@@ -586,62 +586,61 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				// Agent Roles
 				$agent_role = array(
 					1 => array(
-						'label'                         => __( 'Administrator', 'supportcandy' ),
-						'view_unassigned'               => 1,
-						'view_assigned_me'              => 1,
-						'view_assigned_others'          => 1,
-						'assign_unassigned'             => 1,
-						'assign_assigned_me'            => 1,
-						'assign_assigned_others'        => 1,
-						'cng_tkt_sts_unassigned'        => 1,
-						'cng_tkt_sts_assigned_me'       => 1,
-						'cng_tkt_sts_assigned_others'   => 1,
-						'cng_tkt_field_unassigned'      => 1,
-						'cng_tkt_field_assigned_me'     => 1,
-						'cng_tkt_field_assigned_others' => 1,
-						'cng_tkt_ao_unassigned'         => 1,
-						'cng_tkt_ao_assigned_me'        => 1,
-						'cng_tkt_ao_assigned_others'    => 1,
-						'cng_tkt_rb_unassigned'         => 1,
-						'cng_tkt_rb_assigned_me'        => 1,
-						'cng_tkt_rb_assigned_others'    => 1,
-						'reply_unassigned'              => 1,
-						'reply_assigned_me'             => 1,
-						'reply_assigned_others'         => 1,
-						'delete_unassigned'             => 1,
-						'delete_assigned_me'            => 1,
-						'delete_assigned_others'        => 1
+						'label'                                    => __( 'Administrator', 'supportcandy' ),
+						'view_unassigned'                          => 1,
+						'view_assigned_me'                         => 1,
+						'view_assigned_others'                     => 1,
+						'assign_unassigned'                        => 1,
+						'assign_assigned_me'                       => 1,
+						'assign_assigned_others'                   => 1,
+						'change_ticket_status_unassigned'          => 1,
+						'change_ticket_status_assigned_me'         => 1,
+						'change_ticket_status_assigned_others'     => 1,
+						'change_ticket_field_unassigned'           => 1,
+						'change_ticket_field_assigned_me'          => 1,
+						'change_ticket_field_assigned_others'      => 1,
+						'change_ticket_agent_only_unassigned'      => 1,
+						'change_ticket_agent_only_assigned_me'     => 1,
+						'change_ticket_agent_only_assigned_others' => 1,
+						'change_ticket_raised_by_unassigned'       => 1,
+						'change_ticket_raised_by_assigned_me'      => 1,
+						'change_ticket_raised_by_assigned_others'  => 1,
+						'reply_unassigned'                         => 1,
+						'reply_assigned_me'                        => 1,
+						'reply_assigned_others'                    => 1,
+						'delete_unassigned'                        => 1,
+						'delete_assigned_me'                       => 1,
+						'delete_assigned_others'                   => 1
 					),
 					2 => array(
-						'label'                         => __( 'Agent', 'supportcandy' ),
-						'view_unassigned'               => 1,
-						'view_assigned_me'              => 1,
-						'view_assigned_others'          => 0,
-						'assign_unassigned'             => 1,
-						'assign_assigned_me'            => 1,
-						'assign_assigned_others'        => 0,
-						'cng_tkt_sts_unassigned'        => 0,
-						'cng_tkt_sts_assigned_me'       => 1,
-						'cng_tkt_sts_assigned_others'   => 0,
-						'cng_tkt_field_unassigned'      => 0,
-						'cng_tkt_field_assigned_me'     => 1,
-						'cng_tkt_field_assigned_others' => 0,
-						'cng_tkt_ao_unassigned'         => 0,
-						'cng_tkt_ao_assigned_me'        => 1,
-						'cng_tkt_ao_assigned_others'    => 0,
-						'cng_tkt_rb_unassigned'         => 0,
-						'cng_tkt_rb_assigned_me'        => 0,
-						'cng_tkt_rb_assigned_others'    => 0,
-						'reply_unassigned'              => 0,
-						'reply_assigned_me'             => 1,
-						'reply_assigned_others'         => 0,
-						'delete_unassigned'             => 0,
-						'delete_assigned_me'            => 0,
-						'delete_assigned_others'        => 0
+						'label'                                    => __( 'Agent', 'supportcandy' ),
+						'view_unassigned'                          => 1,
+						'view_assigned_me'                         => 1,
+						'view_assigned_others'                     => 0,
+						'assign_unassigned'                        => 1,
+						'assign_assigned_me'                       => 1,
+						'assign_assigned_others'                   => 0,
+						'change_ticket_status_unassigned'          => 0,
+						'change_ticket_status_assigned_me'         => 1,
+						'change_ticket_status_assigned_others'     => 0,
+						'change_ticket_field_unassigned'           => 0,
+						'change_ticket_field_assigned_me'          => 1,
+						'change_ticket_field_assigned_others'      => 0,
+						'change_ticket_agent_only_unassigned'      => 0,
+						'change_ticket_agent_only_assigned_me'     => 1,
+						'change_ticket_agent_only_assigned_others' => 0,
+						'change_ticket_raised_by_unassigned'       => 0,
+						'change_ticket_raised_by_assigned_me'      => 0,
+						'change_ticket_raised_by_assigned_others'  => 0,
+						'reply_unassigned'                         => 0,
+						'reply_assigned_me'                        => 1,
+						'reply_assigned_others'                    => 0,
+						'delete_unassigned'                        => 0,
+						'delete_assigned_me'                       => 0,
+						'delete_assigned_others'                   => 0
 					)
 				);
-				update_option( 'wpsc_agent_role', $agent_role );
-
+				update_option( 'support_ticket_agent_roles', $agent_role );
 			}
 
 			if ( $installed_version < '1.0.1' ) {
@@ -868,7 +867,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				}
 
 				$agent_role_ids = array();
-				$agent_role     = get_option( 'wpsc_agent_role' );
+				$agent_role     = get_option( 'support_ticket_agent_roles' );
 				foreach ( $agent_role as $key => $agent ) {
 					$agent_role_ids[] = $key;
 				}

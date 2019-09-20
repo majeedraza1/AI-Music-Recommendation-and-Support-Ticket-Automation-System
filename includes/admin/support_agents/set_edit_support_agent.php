@@ -21,7 +21,7 @@ if ( ! $agent_role ) {
 update_term_meta( $agent_id, 'role', $agent_role );
 
 $user_id = get_term_meta( $agent_id, 'user_id', true );
-update_user_option( $user_id, 'wpsc_agent_role', $agent_role );
+update_user_option( $user_id, 'support_ticket_agent_roles', $agent_role );
 
 do_action( 'wpsc_set_edit_agent', $agent_id );
 

@@ -8,7 +8,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 	exit;
 }
 
-$agent_role = get_option( 'wpsc_agent_role' );
+$agent_role = get_option( 'support_ticket_agent_roles' );
 $role_id    = isset( $_POST ) && isset( $_POST['role_id'] ) ? intval( $_POST['role_id'] ) : 0;
 if ( ! $role_id ) {
 	exit;
@@ -130,30 +130,30 @@ ob_start();
             <div class="col-sm-4">
                 <label><?php _e( 'Change status unassigned', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Unassigned ticket status change capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_sts_unassigned]">
-                    <option <?php echo $agent_role_item['cng_tkt_sts_unassigned'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_status_unassigned]">
+                    <option <?php echo $agent_role_item['change_ticket_status_unassigned'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_sts_unassigned'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_status_unassigned'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change status assigned me', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to user himself change ticket status capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_sts_assigned_me]">
-                    <option <?php echo $agent_role_item['cng_tkt_sts_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_status_assigned_me]">
+                    <option <?php echo $agent_role_item['change_ticket_status_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_sts_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_status_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change status assigned others', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to all other agents change ticket status capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_sts_assigned_others]">
-                    <option <?php echo $agent_role_item['cng_tkt_sts_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_status_assigned_others]">
+                    <option <?php echo $agent_role_item['change_ticket_status_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_sts_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_status_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
@@ -163,30 +163,30 @@ ob_start();
             <div class="col-sm-4">
                 <label><?php _e( 'Change ticket fields unassigned', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Unassigned change ticket fields capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_field_unassigned]">
-                    <option <?php echo $agent_role_item['cng_tkt_field_unassigned'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_field_unassigned]">
+                    <option <?php echo $agent_role_item['change_ticket_field_unassigned'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_field_unassigned'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_field_unassigned'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change ticket fields assigned me', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to user himself change ticket fields capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_field_assigned_me]">
-                    <option <?php echo $agent_role_item['cng_tkt_field_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_field_assigned_me]">
+                    <option <?php echo $agent_role_item['change_ticket_field_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_field_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_field_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change ticket fields assigned others', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to all other agents change ticket fields capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_field_assigned_others]">
-                    <option <?php echo $agent_role_item['cng_tkt_field_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_field_assigned_others]">
+                    <option <?php echo $agent_role_item['change_ticket_field_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_field_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_field_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
@@ -196,30 +196,30 @@ ob_start();
             <div class="col-sm-4">
                 <label><?php _e( 'Change agentonly fields unassigned', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Unassigned change agentonly fields capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_ao_unassigned]">
-                    <option <?php echo $agent_role_item['cng_tkt_ao_unassigned'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_agent_only_unassigned]">
+                    <option <?php echo $agent_role_item['change_ticket_agent_only_unassigned'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_ao_unassigned'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_agent_only_unassigned'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change agentonly fields assigned me', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to user himself change agentonly fields capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_ao_assigned_me]">
-                    <option <?php echo $agent_role_item['cng_tkt_ao_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_agent_only_assigned_me]">
+                    <option <?php echo $agent_role_item['change_ticket_agent_only_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_ao_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_agent_only_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change agentonly fields assigned others', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to all other agents change agentonly fields capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_ao_assigned_others]">
-                    <option <?php echo $agent_role_item['cng_tkt_ao_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_agent_only_assigned_others]">
+                    <option <?php echo $agent_role_item['change_ticket_agent_only_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_ao_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_agent_only_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
@@ -229,30 +229,30 @@ ob_start();
             <div class="col-sm-4">
                 <label><?php _e( 'Change Raised By unassigned', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Unassigned ticket change raised by capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_rb_unassigned]">
-                    <option <?php echo $agent_role_item['cng_tkt_rb_unassigned'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_raised_by_unassigned]">
+                    <option <?php echo $agent_role_item['change_ticket_raised_by_unassigned'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_rb_unassigned'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_raised_by_unassigned'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change Raised By assigned me', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to user himself change Raised By capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_rb_assigned_me]">
-                    <option <?php echo $agent_role_item['cng_tkt_rb_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_raised_by_assigned_me]">
+                    <option <?php echo $agent_role_item['change_ticket_raised_by_assigned_me'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_rb_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_raised_by_assigned_me'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label><?php _e( 'Change Raised By assigned others', 'supportcandy' ); ?></label>
                 <p class="help-block"><?php _e( 'Ticket assigned to all other agents change Raised By capability.', 'supportcandy' ); ?></p>
-                <select class="form-control" name="agentrole[cng_tkt_rb_assigned_others]">
-                    <option <?php echo $agent_role_item['cng_tkt_rb_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
+                <select class="form-control" name="agentrole[change_ticket_raised_by_assigned_others]">
+                    <option <?php echo $agent_role_item['change_ticket_raised_by_assigned_others'] == '0' ? 'selected="selected"' : '' ?>
                             value="0"><?php _e( 'Disable', 'supportcandy' ); ?></option>
-                    <option <?php echo $agent_role_item['cng_tkt_rb_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
+                    <option <?php echo $agent_role_item['change_ticket_raised_by_assigned_others'] == '1' ? 'selected="selected"' : '' ?>
                             value="1"><?php _e( 'Enable', 'supportcandy' ); ?></option>
                 </select>
             </div>

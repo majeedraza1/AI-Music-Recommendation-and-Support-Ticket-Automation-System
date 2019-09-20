@@ -20,7 +20,7 @@ $agents = get_terms( [
 	)
 ] );
 
-$agent_role = get_option( 'wpsc_agent_role' );
+$agent_role = get_option( 'support_ticket_agent_roles' );
 
 ?>
 <h4>
@@ -83,7 +83,7 @@ $agent_role = get_option( 'wpsc_agent_role' );
             jQuery('#wpsc_agent_name').focus();
             return;
         }
-        var agent_role = jQuery('#wpsc_agent_role').val();
+        var agent_role = jQuery('#support_ticket_agent_roles').val();
 
         jQuery('.wpsc_popup_action').text('<?php _e( 'Please wait ...', 'supportcandy' )?>');
         jQuery('.wpsc_popup_action, #wpsc_popup_body input').attr("disabled", "disabled");
@@ -134,7 +134,7 @@ $agent_role = get_option( 'wpsc_agent_role' );
     }
 
     function wpsc_set_edit_support_agent(agent_id) {
-        var agent_role = jQuery('#wpsc_agent_role').val();
+        var agent_role = jQuery('#support_ticket_agent_roles').val();
         jQuery('.wpsc_popup_action').text('<?php _e( 'Please wait ...', 'supportcandy' )?>');
         jQuery('.wpsc_popup_action, #wpsc_popup_body input').attr("disabled", "disabled");
         var data = {
