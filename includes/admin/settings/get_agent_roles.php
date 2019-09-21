@@ -24,9 +24,9 @@ $agent_role = get_option( 'support_ticket_agent_roles' );
         <li class="ui-state-default">
             <div class="wpsc-flex-container" style="background-color:#1E90FF;color:#fff;">
                 <div class="wpsc-sortable-label"><?php echo $val['label'] ?></div>
-                <div class="wpsc-sortable-edit" onclick="wpsc_get_edit_agent_role(<?php echo $key ?>);"
+                <div class="wpsc-sortable-edit" onclick="wpsc_get_edit_agent_role('<?php echo $key ?>');"
                      style="margin-left:40px;"><i class="fa fa-edit"></i></div>
-                <div class="wpsc-sortable-delete" onclick="wpsc_delete_agent_role(<?php echo $key ?>);"><i
+                <div class="wpsc-sortable-delete" onclick="wpsc_delete_agent_role('<?php echo $key ?>');"><i
                             class="fa fa-trash"></i></div>
             </div>
         </li>

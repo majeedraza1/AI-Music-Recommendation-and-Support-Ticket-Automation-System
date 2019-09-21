@@ -31,9 +31,33 @@ class Admin {
 
 			add_action( 'admin_enqueue_scripts', [ self::$instance, 'admin_localize_scripts' ] );
 			add_action( 'admin_menu', [ self::$instance, 'add_menu' ], 9 );
+			add_action( 'admin_menu', [ self::$instance, 'support_ticket_menu' ] );
 		}
 
 		return self::$instance;
+	}
+
+	public function support_ticket_menu() {
+		global $submenu;
+		$capability = 'manage_options';
+		$slug       = 'stackonet-support-ticket';
+		$hook       = add_menu_page( __( 'Support - beta', 'stackonet-toolkit' ), __( 'Support - beta', 'stackonet-toolkit' ),
+			$capability, $slug, [ self::$instance, 'menu_page_callback' ], 'dashicons-format-chat', 6 );
+		$menus      = [
+			[ 'title' => __( 'Tickets', 'stackonet-toolkit' ), 'slug' => '#/' ],
+			[ 'title' => __( 'Agents', 'stackonet-toolkit' ), 'slug' => '#/agents' ],
+		];
+		if ( current_user_can( $capability ) ) {
+			foreach ( $menus as $menu ) {
+				$submenu[ $slug ][] = [ $menu['title'], $capability, 'admin.php?page=' . $slug . $menu['slug'] ];
+			}
+		}
+		add_action( 'load-' . $hook, [ self::$instance, 'init_support_tickets_hooks' ] );
+	}
+
+	public function menu_page_callback() {
+		echo '<div class="wrap"><div id="stackonet-support-tickets-admin"></div></div>';
+		add_action( 'admin_footer', [ $this, 'tinymce_script' ], 9 );
 	}
 
 	/**

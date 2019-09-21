@@ -95,7 +95,7 @@ class AgentController extends ApiController {
 			return $this->respondUnprocessableEntity( 'invalid_user_id', __( 'User ID is not valid.' ) );
 		}
 
-		$roles     = AgentRole::get_all();
+		$roles     = AgentRole::get_roles();
 		$roles_ids = array_keys( $roles );
 
 		if ( ! in_array( $role_id, $roles_ids, true ) ) {

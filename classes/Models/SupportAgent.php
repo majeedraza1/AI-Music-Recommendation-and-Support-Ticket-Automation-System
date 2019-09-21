@@ -63,19 +63,26 @@ class SupportAgent extends AbstractModel {
 	private $phone_number = '';
 
 	/**
+	 * @var array
+	 */
+	protected $capabilities = [];
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param null|WP_Term $term
 	 */
 	public function __construct( $term = null ) {
 		if ( $term instanceof WP_Term ) {
-			$this->term        = $term;
-			$this->data        = $term->to_array();
-			$this->user_id     = (int) get_term_meta( $term->term_id, 'user_id', true );
-			$this->role_id     = (int) get_term_meta( $term->term_id, 'role', true );
-			$this->agent_roles = get_option( 'support_ticket_agent_roles' );
-			if ( ! empty( $this->agent_roles[ $this->role_id ]['label'] ) ) {
-				$this->role_label = $this->agent_roles[ $this->role_id ]['label'];
+			$this->term    = $term;
+			$this->data    = $term->to_array();
+			$this->user_id = (int) get_term_meta( $term->term_id, 'user_id', true );
+			$this->role_id = get_term_meta( $term->term_id, 'role', true );
+
+			$agent_role = AgentRole::get_role( $this->role_id );
+			if ( $agent_role instanceof AgentRole ) {
+				$this->role_label   = $agent_role->get_role_name();
+				$this->capabilities = $agent_role->get_capabilities();
 			}
 		}
 	}
@@ -90,6 +97,7 @@ class SupportAgent extends AbstractModel {
 			'term_id'      => $this->get( 'term_id' ),
 			'slug'         => $this->get( 'slug' ),
 			'name'         => $this->get( 'name' ),
+			'role_id'      => $this->role_id,
 			'role_label'   => $this->role_label,
 			'id'           => $this->get_user()->ID,
 			'display_name' => $this->get_user()->display_name,

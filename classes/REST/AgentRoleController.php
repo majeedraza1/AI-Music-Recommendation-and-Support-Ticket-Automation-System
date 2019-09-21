@@ -70,8 +70,21 @@ class AgentRoleController extends ApiController {
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
-		$items = AgentRole::get_all();
+		$roles = AgentRole::get_roles();
 
-		return $this->respondOK( [ 'items' => $items ] );
+		return $this->respondOK( [
+			'roles' => $this->prepare_items_for_response( $roles )
+		] );
+	}
+
+	/**
+	 * Prepares the item for the REST response.
+	 *
+	 * @param AgentRole[] $items WordPress representation of the item.
+	 *
+	 * @return array Response object on success, or WP_Error object on failure.
+	 */
+	public function prepare_items_for_response( $items ) {
+		return array_values( $items );
 	}
 }

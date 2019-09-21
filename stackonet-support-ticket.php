@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Stackonet Support Ticket
  * Description: Easy & Powerful support ticket system for WordPress
- * Version: 2.0.2
+ * Version: 1.0.0-alpha
  * Author: Stackonet Services (Pvt.) Ltd.
  * Author URI: https://stackonet.com/
  * Requires at least: 4.9
@@ -34,7 +34,7 @@ class StackonetSupportTicket {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0';
+	public $version = '1.0.0-alpha';
 
 	/**
 	 * Holds various class instances
@@ -143,6 +143,7 @@ class StackonetSupportTicket {
 	public function activation() {
 		StackonetSupportTicket\RoleAndCapability::activation();
 		( new  StackonetSupportTicket\Models\SupportTicket )->create_table();
+		StackonetSupportTicket\Install::init();
 	}
 
 	/**

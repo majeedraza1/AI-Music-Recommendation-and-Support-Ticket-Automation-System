@@ -509,7 +509,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 						add_term_meta( $term['term_id'], 'user_id', $admin->ID );
 						add_term_meta( $term['term_id'], 'label', $admin->display_name );
-						add_term_meta( $term['term_id'], 'role', '1' );
+						add_term_meta( $term['term_id'], 'role', 'administrator' );
 						add_term_meta( $term['term_id'], 'agentgroup', '0' );
 						$admin->add_cap( 'wpsc_agent' );
 						update_user_option( $admin->ID, 'support_ticket_agent_roles', 1 );
@@ -582,65 +582,6 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 
 				update_option( 'wpsc_tl_agent_unresolve_statuses', array( 3, 4, 5 ) );
 				update_option( 'wpsc_tl_customer_unresolve_statuses', array( 3, 4, 5 ) );
-
-				// Agent Roles
-				$agent_role = array(
-					1 => array(
-						'label'                                    => __( 'Administrator', 'supportcandy' ),
-						'view_unassigned'                          => 1,
-						'view_assigned_me'                         => 1,
-						'view_assigned_others'                     => 1,
-						'assign_unassigned'                        => 1,
-						'assign_assigned_me'                       => 1,
-						'assign_assigned_others'                   => 1,
-						'change_ticket_status_unassigned'          => 1,
-						'change_ticket_status_assigned_me'         => 1,
-						'change_ticket_status_assigned_others'     => 1,
-						'change_ticket_field_unassigned'           => 1,
-						'change_ticket_field_assigned_me'          => 1,
-						'change_ticket_field_assigned_others'      => 1,
-						'change_ticket_agent_only_unassigned'      => 1,
-						'change_ticket_agent_only_assigned_me'     => 1,
-						'change_ticket_agent_only_assigned_others' => 1,
-						'change_ticket_raised_by_unassigned'       => 1,
-						'change_ticket_raised_by_assigned_me'      => 1,
-						'change_ticket_raised_by_assigned_others'  => 1,
-						'reply_unassigned'                         => 1,
-						'reply_assigned_me'                        => 1,
-						'reply_assigned_others'                    => 1,
-						'delete_unassigned'                        => 1,
-						'delete_assigned_me'                       => 1,
-						'delete_assigned_others'                   => 1
-					),
-					2 => array(
-						'label'                                    => __( 'Agent', 'supportcandy' ),
-						'view_unassigned'                          => 1,
-						'view_assigned_me'                         => 1,
-						'view_assigned_others'                     => 0,
-						'assign_unassigned'                        => 1,
-						'assign_assigned_me'                       => 1,
-						'assign_assigned_others'                   => 0,
-						'change_ticket_status_unassigned'          => 0,
-						'change_ticket_status_assigned_me'         => 1,
-						'change_ticket_status_assigned_others'     => 0,
-						'change_ticket_field_unassigned'           => 0,
-						'change_ticket_field_assigned_me'          => 1,
-						'change_ticket_field_assigned_others'      => 0,
-						'change_ticket_agent_only_unassigned'      => 0,
-						'change_ticket_agent_only_assigned_me'     => 1,
-						'change_ticket_agent_only_assigned_others' => 0,
-						'change_ticket_raised_by_unassigned'       => 0,
-						'change_ticket_raised_by_assigned_me'      => 0,
-						'change_ticket_raised_by_assigned_others'  => 0,
-						'reply_unassigned'                         => 0,
-						'reply_assigned_me'                        => 1,
-						'reply_assigned_others'                    => 0,
-						'delete_unassigned'                        => 0,
-						'delete_assigned_me'                       => 0,
-						'delete_assigned_others'                   => 0
-					)
-				);
-				update_option( 'support_ticket_agent_roles', $agent_role );
 			}
 
 			if ( $installed_version < '1.0.1' ) {

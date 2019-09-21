@@ -9,7 +9,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $agent_role = get_option( 'support_ticket_agent_roles' );
-$role_id    = isset( $_POST ) && isset( $_POST['role_id'] ) ? intval( $_POST['role_id'] ) : 0;
+$role_id    = isset( $_POST ) && isset( $_POST['role_id'] ) ? sanitize_text_field( $_POST['role_id'] ) : 0;
 if ( ! $role_id ) {
 	exit;
 }
@@ -303,7 +303,7 @@ ob_start();
     <button type="button" class="btn wpsc_popup_close"
             onclick="wpsc_modal_close();"><?php _e( 'Close', 'supportcandy' ); ?></button>
     <button type="button" class="btn wpsc_popup_action"
-            onclick="wpsc_set_edit_agent_role(<?php echo htmlentities( $role_id ) ?>);"><?php _e( 'Submit', 'supportcandy' ); ?></button>
+            onclick="wpsc_set_edit_agent_role('<?php echo htmlentities( $role_id ) ?>');"><?php _e( 'Submit', 'supportcandy' ); ?></button>
 <?php
 $footer = ob_get_clean();
 

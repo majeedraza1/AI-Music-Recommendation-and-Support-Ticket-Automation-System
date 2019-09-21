@@ -8,7 +8,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 	exit;
 }
 
-$role_id = isset( $_POST ) && isset( $_POST['role_id'] ) ? intval( $_POST['role_id'] ) : 0;
+$role_id = isset( $_POST ) && isset( $_POST['role_id'] ) ? sanitize_text_field( $_POST['role_id'] ) : 0;
 if ( ! $role_id ) {
 	exit;
 }

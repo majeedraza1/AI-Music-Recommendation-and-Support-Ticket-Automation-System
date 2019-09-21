@@ -74,9 +74,6 @@ class RoleAndCapability {
 	 * @param array $capabilities
 	 */
 	public static function add_capabilities_to_roles( array $roles, array $capabilities ) {
-
-
-		Logger::log( 'working' );
 		foreach ( $roles as $roleName ) {
 			$role = get_role( $roleName );
 			if ( ! $role instanceof WP_Role ) {
