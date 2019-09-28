@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\Admin;
 
+use StackonetSupportTicket\Models\AgentRole;
 use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketCategory;
@@ -147,12 +148,13 @@ class Admin {
 		$data['ticket_priorities'] = TicketPriority::get_all();
 		$data['support_agents']    = SupportAgent::get_all();
 
-		$user           = wp_get_current_user();
-		$data['user']   = [
+		$user                  = wp_get_current_user();
+		$data['user']          = [
 			'display_name' => $user->display_name,
 			'user_email'   => $user->user_email,
 		];
-		$data['cities'] = ( new SupportTicket() )->find_all_cities();
+		$data['cities']        = ( new SupportTicket() )->find_all_cities();
+		$data['caps_settings'] = AgentRole::form_settings();
 
 		$data['search_categories'] = (array) get_option( 'stackonet_ticket_search_categories' );
 

@@ -46,18 +46,18 @@ class AgentRoleController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => [ $this, 'create_item' ],
+				'args'     => $this->get_create_item_params(),
 			],
 		] );
-		register_rest_route( $this->namespace, '/roles/(?P<id>\d+)', [
+		register_rest_route( $this->namespace, '/role', [
+			[
+				'methods'  => WP_REST_Server::EDITABLE,
+				'callback' => [ $this, 'update_item' ],
+				'args'     => $this->get_update_item_params(),
+			],
 			[
 				'methods'  => WP_REST_Server::DELETABLE,
 				'callback' => [ $this, 'delete_item' ],
-			],
-		] );
-		register_rest_route( $this->namespace, '/roles/batch', [
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'update_batch_items' ],
 			],
 		] );
 	}
@@ -86,5 +86,159 @@ class AgentRoleController extends ApiController {
 	 */
 	public function prepare_items_for_response( $items ) {
 		return array_values( $items );
+	}
+
+	/**
+	 * Creates one item from the collection.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function create_item( $request ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return $this->respondUnauthorized();
+		}
+
+		$role         = $request->get_param( 'role' );
+		$name         = $request->get_param( 'name' );
+		$capabilities = $request->get_param( 'capabilities' );
+
+		if ( empty( $role ) ) {
+			return $this->respondUnprocessableEntity( null, 'Role is required.' );
+		}
+
+		$role = AgentRole::add_role( $role, $name, $capabilities );
+
+		if ( is_wp_error( $role ) ) {
+			return $this->respondUnprocessableEntity( $role->get_error_code(), $role->get_error_message() );
+		}
+
+		return $this->respondCreated( $role );
+	}
+
+	/**
+	 * Updates one item from the collection.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function update_item( $request ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return $this->respondUnauthorized();
+		}
+
+		$role         = $request->get_param( 'role' );
+		$name         = $request->get_param( 'name' );
+		$capabilities = $request->get_param( 'capabilities' );
+
+		if ( empty( $role ) ) {
+			return $this->respondUnprocessableEntity( null, 'Role is required.' );
+		}
+
+		$agent_role = AgentRole::get_role( $role );
+		if ( ! $agent_role instanceof AgentRole ) {
+			return $this->respondNotFound( null, 'No role found' );
+		}
+
+		$_name = $agent_role->get_role_name();
+		if ( $name != $_name ) {
+			$_name = $name;
+		}
+
+		$agent_role = AgentRole::update_role( $role, $capabilities, $_name );
+
+		return $this->respondOK( $agent_role );
+	}
+
+	/**
+	 * Deletes one item from the collection.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function delete_item( $request ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return $this->respondUnauthorized();
+		}
+
+		$role = $request->get_param( 'role' );
+
+		$agent_role = AgentRole::get_role( $role );
+		if ( ! $agent_role instanceof AgentRole ) {
+			return $this->respondNotFound( null, 'No role found' );
+		}
+
+		if ( AgentRole::remove_role( $role ) ) {
+			return $this->respondOK();
+		}
+
+		return $this->respondInternalServerError();
+	}
+
+	/**
+	 * Retrieves the query params for create new item.
+	 *
+	 * @return array
+	 */
+	public function get_create_item_params() {
+		$capabilities = AgentRole::valid_capabilities();
+
+		return [
+			'role'         => array(
+				'description'       => 'Role slug.',
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'name'         => array(
+				'description'       => 'Role display name.',
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'capabilities' => array(
+				'description'       => 'Role capabilities. Valid capabilities are ' . implode( ', ', array_keys( $capabilities ) ),
+				'type'              => 'object',
+				'required'          => true,
+				'validate_callback' => 'rest_validate_request_arg',
+			)
+		];
+	}
+
+	/**
+	 * Retrieves the query params for create new item.
+	 *
+	 * @return array
+	 */
+	public function get_update_item_params() {
+		$capabilities = AgentRole::valid_capabilities();
+
+		return [
+			'role'         => array(
+				'description'       => 'Role slug.',
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'name'         => array(
+				'description'       => 'Role display name.',
+				'type'              => 'string',
+				'required'          => false,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'capabilities' => array(
+				'description'       => 'Role capabilities. Valid capabilities are ' . implode( ', ', array_keys( $capabilities ) ),
+				'type'              => 'object',
+				'required'          => false,
+				'validate_callback' => 'rest_validate_request_arg',
+			)
+		];
 	}
 }

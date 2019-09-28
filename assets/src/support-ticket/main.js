@@ -3,7 +3,12 @@ import router from './routers.js';
 import store from './store.js';
 import menuFix from "./utils/admin-menu-fix.js";
 import SupportTicket from './tickets/SupportTicket.vue'
+import {modal} from 'shapla-confirm-modal'
 import axios from "axios";
+
+Vue.config.productionTip = false;
+
+Vue.use(modal);
 
 if (window.SupportTickets.nonce) {
     axios.defaults.headers.common['X-WP-Nonce'] = window.SupportTickets.nonce;

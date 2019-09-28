@@ -3,6 +3,7 @@
 namespace StackonetSupportTicket\Models;
 
 use JsonSerializable;
+use WP_Error;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -142,12 +143,12 @@ class AgentRole implements JsonSerializable {
 	 * @param string $display_name Display name for role.
 	 * @param array $capabilities List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
 	 *
-	 * @return self|null
+	 * @return self|WP_Error
 	 */
 	public static function add_role( $role, $display_name, $capabilities = [] ) {
 		$agent_roles = get_option( self::$option_name );
 		if ( isset( $agent_roles[ $role ] ) ) {
-			return null;
+			return new WP_Error( 'role_exists', __( 'A role with the name provided already exists.' ) );
 		}
 
 		$valid_caps    = static::valid_capabilities();
@@ -183,7 +184,7 @@ class AgentRole implements JsonSerializable {
 		}
 
 		/** @var self $current_role */
-		$current_role = $agent_roles[ $role ];
+		$current_role = static::get_role( $role );
 
 		$_capabilities = [];
 		foreach ( $current_role->get_capabilities() as $cap_name => $active ) {
@@ -222,47 +223,6 @@ class AgentRole implements JsonSerializable {
 	}
 
 	/**
-	 * Support ticket valid capabilities
-	 *
-	 * @return array
-	 */
-	public static function valid_capabilities() {
-		return [
-			"view_unassigned"      => 0,
-			"view_assigned_me"     => 0,
-			"view_assigned_others" => 0,
-
-			"assign_unassigned"      => 0,
-			"assign_assigned_me"     => 0,
-			"assign_assigned_others" => 0,
-
-			"reply_unassigned"      => 0,
-			"reply_assigned_me"     => 0,
-			"reply_assigned_others" => 0,
-
-			"delete_unassigned"      => 0,
-			"delete_assigned_me"     => 0,
-			"delete_assigned_others" => 0,
-
-			"change_ticket_status_unassigned"      => 0,
-			"change_ticket_status_assigned_me"     => 0,
-			"change_ticket_status_assigned_others" => 0,
-
-			"change_ticket_field_unassigned"      => 0,
-			"change_ticket_field_assigned_me"     => 0,
-			"change_ticket_field_assigned_others" => 0,
-
-			"change_ticket_agent_only_unassigned"      => 0,
-			"change_ticket_agent_only_assigned_me"     => 0,
-			"change_ticket_agent_only_assigned_others" => 0,
-
-			"change_ticket_raised_by_unassigned"      => 0,
-			"change_ticket_raised_by_assigned_me"     => 0,
-			"change_ticket_raised_by_assigned_others" => 0,
-		];
-	}
-
-	/**
 	 * Format capabilities
 	 *
 	 * @param $capabilities
@@ -298,5 +258,156 @@ class AgentRole implements JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return $this->to_array();
+	}
+
+	/**
+	 * Support ticket valid capabilities
+	 *
+	 * @return array
+	 */
+	public static function valid_capabilities() {
+		$settings = static::form_settings();
+		$ids      = wp_list_pluck( $settings, 'id' );
+
+		return array_fill_keys( $ids, 0 );
+	}
+
+	/**
+	 * Agent capabilities settings
+	 *
+	 * @return array
+	 */
+	public static function form_settings() {
+		$capabilities = [
+			[
+				'id'          => 'view_unassigned',
+				'label'       => __( 'View unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Unassigned ticket list visibility.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'view_assigned_me',
+				'label'       => __( 'View assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself. This will also enable private notes.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'view_assigned_others',
+				'label'       => __( 'View assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents. This will also enable private notes.', 'stackonet-support-ticket' ),
+			],
+
+			[
+				'id'          => 'assign_unassigned',
+				'label'       => __( 'Assign unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Unassigned ticket assign agent capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'assign_assigned_me',
+				'label'       => __( 'Assign assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself further assign capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'assign_assigned_others',
+				'label'       => __( 'Assign assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents further assign capability.', 'stackonet-support-ticket' ),
+			],
+
+			[
+				'id'          => 'reply_unassigned',
+				'label'       => __( 'Reply unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Unassigned ticket reply capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'reply_assigned_me',
+				'label'       => __( 'Reply assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself reply capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'reply_assigned_others',
+				'label'       => __( 'Reply assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents reply capability.', 'stackonet-support-ticket' ),
+			],
+
+			[
+				'id'          => 'delete_unassigned',
+				'label'       => __( 'Delete unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Delete unassigned ticket capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'delete_assigned_me',
+				'label'       => __( 'Delete assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself delete capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'delete_assigned_others',
+				'label'       => __( 'Delete assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents delete capability.', 'stackonet-support-ticket' ),
+			],
+
+			[
+				'id'          => 'change_ticket_status_unassigned',
+				'label'       => __( 'Change status unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Unassigned ticket status change capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_status_assigned_me',
+				'label'       => __( 'Change status assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change ticket status capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_status_assigned_others',
+				'label'       => __( 'Change status assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change ticket status capability.', 'stackonet-support-ticket' ),
+			],
+
+			[
+				'id'          => 'change_ticket_field_unassigned',
+				'label'       => __( 'Change ticket fields unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Unassigned change ticket fields capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_field_assigned_me',
+				'label'       => __( 'Change ticket fields assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change ticket fields capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_field_assigned_others',
+				'label'       => __( 'Change ticket fields assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change ticket fields capability.', 'stackonet-support-ticket' ),
+			],
+
+			[
+				'id'          => 'change_ticket_agent_only_unassigned',
+				'label'       => __( 'Change agent only fields unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Unassigned change agent only fields capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_agent_only_assigned_me',
+				'label'       => __( 'Change agent only fields assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change agent only fields capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_agent_only_assigned_others',
+				'label'       => __( 'Change agent only fields assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change agent only fields capability.', 'stackonet-support-ticket' ),
+			],
+
+			[
+				'id'          => 'change_ticket_raised_by_unassigned',
+				'label'       => __( 'Change Raised By unassigned', 'stackonet-support-ticket' ),
+				'description' => __( 'Unassigned ticket change raised by capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_raised_by_assigned_me',
+				'label'       => __( 'Change Raised By assigned me', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change Raised By capability.', 'stackonet-support-ticket' ),
+			],
+			[
+				'id'          => 'change_ticket_raised_by_assigned_others',
+				'label'       => __( 'Change Raised By assigned others', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change Raised By capability..', 'stackonet-support-ticket' ),
+			],
+		];
+
+		return $capabilities;
 	}
 }
