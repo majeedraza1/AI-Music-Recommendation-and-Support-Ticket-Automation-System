@@ -53,6 +53,10 @@ class AgentController extends ApiController {
 		] );
 		register_rest_route( $this->namespace, '/agents/(?P<id>\d+)', [
 			[
+				'methods'  => WP_REST_Server::EDITABLE,
+				'callback' => [ $this, 'update_item' ],
+			],
+			[
 				'methods'  => WP_REST_Server::DELETABLE,
 				'callback' => [ $this, 'delete_item' ],
 			],
@@ -116,6 +120,34 @@ class AgentController extends ApiController {
 		}
 
 		return $this->respondCreated();
+	}
+
+	/**
+	 * Updates one item from the collection.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function update_item( $request ) {
+		$id      = (int) $request->get_param( 'id' );
+		$role_id = $request->get_param( 'role_id' );
+
+		$agent = SupportAgent::find_by_id( $id );
+
+		if ( ! $agent instanceof SupportAgent ) {
+			return $this->respondNotFound( null, 'Support agent not found.' );
+		}
+
+		$role = AgentRole::get_role( $role_id );
+
+		if ( ! $role instanceof AgentRole ) {
+			return $this->respondNotFound( null, 'Support agent role not found.' );
+		}
+
+		SupportAgent::update_role( $id, $role_id );
+
+		return $this->respondOK();
 	}
 
 	/**

@@ -22,11 +22,13 @@
                     <div class="modal--add-agent-inner" style="min-height: 200px">
                         <columns :multiline="true">
                             <column :tablet="12">
+                                <label>Agent</label>
                                 <v-select @search="fetchUsers" :filterable="false" :options="users"
                                           label="name" v-model="addAgentActiveAgent"></v-select>
                                 <span class="help has-error" v-if="agentError.length">{{agentError}}</span>
                             </column>
                             <column :tablet="12">
+                                <label>Role</label>
                                 <v-select :filterable="false" :options="roles" label="name"
                                           v-model="addAgentActiveRole"></v-select>
                             </column>
@@ -34,6 +36,19 @@
                     </div>
                     <template slot="foot">
                         <mdl-button type="raised" color="primary" :disabled="!canCreateAgent" @click="createNewAgent">
+                            Create
+                        </mdl-button>
+                    </template>
+                </modal>
+                <modal :active="showEditAgentModal" @close="showEditAgentModal = false" title="Edit Agent Role">
+                    <div style="min-height: 200px">
+                        <label>Role</label>
+                        <select v-model="editAgentActiveAgent.role_id" style="width: 100%">
+                            <option v-for="_role in roles" :value="_role.role" v-html="_role.name"></option>
+                        </select>
+                    </div>
+                    <template slot="foot">
+                        <mdl-button type="raised" color="primary" @click="updateAgentRole">
                             Create
                         </mdl-button>
                     </template>
@@ -100,6 +115,7 @@
                 showAddAgentModal: false,
                 showAddRoleModal: false,
                 showEditRoleModal: false,
+                showEditAgentModal: false,
                 users: [],
                 agents: [],
                 roles: [],
@@ -139,6 +155,7 @@
         methods: {
             onActionClick(action, item) {
                 if ('edit' === action) {
+                    this.showEditAgentModal = true;
                     this.editAgentActiveAgent = item;
                 }
                 if ('delete' === action) {
@@ -272,7 +289,17 @@
                     this.getAgents();
                 }).catch(error => {
                     this.agentError = error.response.data.message;
-                })
+                });
+            },
+            updateAgentRole() {
+                this.update_item('agents/' + this.editAgentActiveAgent.term_id, {
+                    role_id: this.editAgentActiveAgent.role_id,
+                }).then(() => {
+                    this.showEditAgentModal = false;
+                    this.getAgents();
+                }).catch(error => {
+                    this.agentError = error.response.data.message;
+                });
             }
         }
     }

@@ -221,6 +221,13 @@ class SupportAgent extends AbstractModel {
 		return false;
 	}
 
+	public static function update_role( $id, $role_id ) {
+		$user_id = get_term_meta( $id, 'user_id', true );
+
+		update_term_meta( $id, 'role', $role_id );
+		update_user_option( $user_id, 'support_ticket_agent_roles', $role_id );
+	}
+
 	/**
 	 * Delete a agent
 	 *
