@@ -104,7 +104,15 @@ class AgentController extends ApiController {
 
 		$agent = SupportAgent::create( $user_id, $role_id );
 		if ( is_wp_error( $agent ) ) {
-			return $agent;
+			$code    = $agent->get_error_code();
+			$message = $agent->get_error_message();
+
+			if ( 'term_exists' == $agent->get_error_code() ) {
+				$code    = 'agent_exists';
+				$message = __( 'Agent already exists.' );
+			}
+
+			return $this->respondUnprocessableEntity( $code, $message );
 		}
 
 		return $this->respondCreated( [ $roles_ids, $user_id, $role_id ] );
@@ -131,11 +139,10 @@ class AgentController extends ApiController {
 			),
 			'role_id' => array(
 				'description'       => 'Agent role ID.',
-				'type'              => 'integer',
+				'type'              => 'string',
 				'required'          => true,
-				'sanitize_callback' => 'absint',
+				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
-				'minimum'           => 1,
 			)
 		];
 	}

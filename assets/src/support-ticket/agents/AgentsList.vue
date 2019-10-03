@@ -1,9 +1,8 @@
 <template>
     <div>
-        <h1 class="wp-heading-inline">Support Agents</h1>
         <div class="clear"></div>
         <tabs>
-            <tab name="Agents" :selected="true">
+            <tab name="Support Agents" :selected="true">
                 <data-table
                         :columns="columns"
                         :rows="agents"
@@ -15,8 +14,28 @@
                     </template>
                 </data-table>
                 <div class="button-add-agent-container" title="Add Agent">
-                    <mdl-fab>+</mdl-fab>
+                    <mdl-fab @click="showAddAgentModal = true">+</mdl-fab>
                 </div>
+                <modal :active="showAddAgentModal" @close="showAddAgentModal = false" title="Add Agent">
+                    <div class="modal--add-agent-inner" style="min-height: 200px">
+                        <columns :multiline="true">
+                            <column :tablet="12">
+                                <v-select @search="fetchUsers" :filterable="false" :options="users"
+                                          label="name" v-model="addAgentActiveAgent"></v-select>
+                                <span class="help has-error" v-if="agentError.length">{{agentError}}</span>
+                            </column>
+                            <column :tablet="12">
+                                <v-select :filterable="false" :options="roles" label="name"
+                                          v-model="addAgentActiveRole"></v-select>
+                            </column>
+                        </columns>
+                    </div>
+                    <template slot="foot">
+                        <mdl-button type="raised" color="primary" :disabled="!canCreateAgent" @click="createNewAgent">
+                            Create
+                        </mdl-button>
+                    </template>
+                </modal>
             </tab>
             <tab name="Roles & Capabilities">
                 <div v-for="role in roles" :key="role.role">
@@ -54,24 +73,32 @@
 
 <script>
     import {mapGetters} from 'vuex';
+    import axios from 'axios';
+    import vSelect from 'vue-select'
+    import modal from 'shapla-modal'
+    import {columns, column} from 'shapla-columns'
     import {tabs, tab} from "../../shapla/shapla-tabs";
     import dataTable from "../../shapla/shapla-data-table/src/dataTable";
     import {CrudMixin} from "../../components/CrudMixin";
     import MdlFab from "../../material-design-lite/button/mdlFab";
-    import modal from 'shapla-modal'
-    import {columns, column} from 'shapla-columns'
     import AnimatedInput from "../../components/AnimatedInput";
     import MdlSwitch from "../../material-design-lite/switch/mdlSwitch";
     import RoleEditor from "./RoleEditor";
+    import MdlButton from "../../material-design-lite/button/mdlButton";
 
     export default {
         name: "AgentsList",
         mixins: [CrudMixin],
-        components: {RoleEditor, MdlSwitch, AnimatedInput, MdlFab, dataTable, tabs, tab, modal, columns, column},
+        components: {
+            MdlButton,
+            RoleEditor, MdlSwitch, AnimatedInput, vSelect, MdlFab, dataTable, tabs, tab, modal, columns, column
+        },
         data() {
             return {
+                showAddAgentModal: false,
                 showAddRoleModal: false,
                 showEditRoleModal: false,
+                users: [],
                 agents: [],
                 roles: [],
                 columns: [
@@ -81,7 +108,10 @@
                     {key: 'avatar_url', label: 'Avatar'},
                 ],
                 activeRole: {},
-                role: {}
+                role: {},
+                addAgentActiveAgent: {},
+                addAgentActiveRole: {},
+                agentError: '',
             }
         },
         mounted() {
@@ -91,6 +121,11 @@
         },
         computed: {
             ...mapGetters(['caps_settings']),
+            canCreateAgent() {
+                if (!this.addAgentActiveAgent || !this.addAgentActiveRole) return false;
+
+                return !!(Object.keys(this.addAgentActiveAgent).length && Object.keys(this.addAgentActiveRole).length);
+            }
         },
         methods: {
             getAgents() {
@@ -174,11 +209,36 @@
                     }
                 })
             },
+            fetchUsers(search, loading) {
+                axios.get(StackonetToolkit.wpRestRoot + '/users', {
+                    params: {search: search}
+                }).then(response => {
+                    let _data = response.data;
+                    if (_data.length) {
+                        this.users = _data;
+                    } else {
+                        this.users = [];
+                    }
+                }).catch(error => {
+                    console.log(error);
+                })
+            },
+            createNewAgent() {
+                this.agentError = '';
+                this.create_item('agents', {
+                    user_id: this.addAgentActiveAgent.id,
+                    role_id: this.addAgentActiveRole.role,
+                }).then(data => {
+
+                }).catch(error => {
+                    this.agentError = error.response.data.message;
+                })
+            }
         }
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .shapla-box--role {
         margin-bottom: 1rem;
         justify-content: space-between;
@@ -211,5 +271,20 @@
             font-style: italic;
             color: rgba(#000, .35);
         }
+    }
+
+    .modal--add-agent-inner {
+    }
+
+    .vs__search,
+    .vs__search:focus {
+        border: 1px solid transparent !important;
+        border-left: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .help.has-error {
+        color: darkred;
     }
 </style>

@@ -171,6 +171,10 @@ class AgentRoleController extends ApiController {
 			return $this->respondNotFound( null, 'No role found' );
 		}
 
+		if ( in_array( $role, AgentRole::get_reserve_roles() ) ) {
+			return $this->respondUnprocessableEntity( null, 'You cannot remove reserved roles.' );
+		}
+
 		if ( AgentRole::remove_role( $role ) ) {
 			return $this->respondOK();
 		}

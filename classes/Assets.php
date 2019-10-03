@@ -158,6 +158,7 @@ class Assets {
 		$data = [
 			'homeUrl'        => home_url(),
 			'isUserLoggedIn' => $is_user_logged_in,
+			'wpRestRoot'     => esc_url_raw( rest_url( 'wp/v2' ) ),
 			'restRoot'       => esc_url_raw( rest_url( 'stackonet-support-ticker/v1' ) ),
 		];
 

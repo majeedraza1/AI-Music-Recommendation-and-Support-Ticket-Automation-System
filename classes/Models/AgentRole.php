@@ -40,7 +40,7 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * @var array
 	 */
-	public static $reserve_roles = [ 'administrator', 'agent' ];
+	protected static $reserve_roles = [ 'administrator', 'agent' ];
 
 	/**
 	 * AgentRole constructor.
@@ -58,6 +58,15 @@ class AgentRole implements JsonSerializable {
 			$this->name         = $_role->get_role_name();
 			$this->capabilities = $_role->get_capabilities();
 		}
+	}
+
+	/**
+	 * Get reserve roles
+	 *
+	 * @return array
+	 */
+	public static function get_reserve_roles() {
+		return self::$reserve_roles;
 	}
 
 	/**
