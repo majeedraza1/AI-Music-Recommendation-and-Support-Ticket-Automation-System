@@ -30,6 +30,11 @@ class TicketCategory extends AbstractModel {
 	protected $term;
 
 	/**
+	 * @var array
+	 */
+	protected static $reserve_categories = [ 'general' ];
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param null|WP_Term $term
@@ -39,6 +44,15 @@ class TicketCategory extends AbstractModel {
 			$this->term = $term;
 			$this->data = $term->to_array();
 		}
+	}
+
+	/**
+	 * Get reserve categories
+	 *
+	 * @return array
+	 */
+	public static function get_reserve_categories() {
+		return self::$reserve_categories;
 	}
 
 	/**
@@ -110,6 +124,40 @@ class TicketCategory extends AbstractModel {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Update category
+	 *
+	 * @param int $term_id
+	 * @param string $name
+	 * @param string $slug
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function update( $term_id, $name, $slug ) {
+		$args = [
+			'name' => $name,
+			'slug' => $slug,
+		];
+
+		return wp_update_term( $term_id, self::$taxonomy, $args );
+	}
+
+	/**
+	 * Get category by id
+	 *
+	 * @param int $id
+	 *
+	 * @return bool|TicketCategory
+	 */
+	public static function find_by_id( $id ) {
+		$term = get_term_by( 'term_id', $id, self::$taxonomy, OBJECT );
+		if ( $term instanceof WP_Term ) {
+			return new self( $term );
+		}
+
+		return false;
 	}
 
 	/**

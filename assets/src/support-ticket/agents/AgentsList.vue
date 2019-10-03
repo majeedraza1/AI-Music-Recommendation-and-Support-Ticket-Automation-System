@@ -107,8 +107,8 @@
         name: "AgentsList",
         mixins: [CrudMixin],
         components: {
-            MdlButton,
-            RoleEditor, MdlSwitch, AnimatedInput, vSelect, MdlFab, dataTable, tabs, tab, modal, columns, column
+            MdlButton, RoleEditor, MdlSwitch, AnimatedInput, vSelect, MdlFab, dataTable,
+            tabs, tab, modal, columns, column
         },
         data() {
             return {
