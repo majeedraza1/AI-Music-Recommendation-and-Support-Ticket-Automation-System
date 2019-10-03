@@ -111,6 +111,40 @@ class TicketPriority extends AbstractModel {
 	}
 
 	/**
+	 * Update category
+	 *
+	 * @param int $term_id
+	 * @param string $name
+	 * @param string $slug
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function update( $term_id, $name, $slug ) {
+		$args = [
+			'name' => $name,
+			'slug' => $slug,
+		];
+
+		return wp_update_term( $term_id, self::$taxonomy, $args );
+	}
+
+	/**
+	 * Get category by id
+	 *
+	 * @param int $id
+	 *
+	 * @return bool|TicketPriority
+	 */
+	public static function find_by_id( $id ) {
+		$term = get_term_by( 'term_id', $id, self::$taxonomy, OBJECT );
+		if ( $term instanceof WP_Term ) {
+			return new self( $term );
+		}
+
+		return false;
+	}
+
+	/**
 	 * Update support ticket menu order
 	 *
 	 * @param array $terms_ids
