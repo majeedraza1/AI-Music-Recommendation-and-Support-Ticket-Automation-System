@@ -6,6 +6,8 @@
                 <data-table
                         :columns="columns"
                         :rows="agents"
+                        :actions="actions"
+                        @action:click="onActionClick"
                         action-column="display_name"
                         index="term_id"
                 >
@@ -111,6 +113,7 @@
                 role: {},
                 addAgentActiveAgent: {},
                 addAgentActiveRole: {},
+                editAgentActiveAgent: {},
                 agentError: '',
             }
         },
@@ -121,6 +124,12 @@
         },
         computed: {
             ...mapGetters(['caps_settings']),
+            actions() {
+                return [
+                    {key: 'edit', label: 'Edit'},
+                    {key: 'delete', label: 'Delete'}
+                ];
+            },
             canCreateAgent() {
                 if (!this.addAgentActiveAgent || !this.addAgentActiveRole) return false;
 
@@ -128,6 +137,36 @@
             }
         },
         methods: {
+            onActionClick(action, item) {
+                if ('edit' === action) {
+                    this.editAgentActiveAgent = item;
+                }
+                if ('delete' === action) {
+                    this.$modal.confirm('Are you sure to delete this agent?').then(confirm => {
+                        if (confirm) {
+                            this.trashAction(item.term_id);
+                        }
+                    });
+                }
+            },
+            trashAction(item) {
+                this.delete_item('agents/' + item).then(() => {
+                    this.$store.commit('SET_SNACKBAR', {
+                        title: 'Success!',
+                        message: 'Support agent has been deleted.',
+                        type: 'success',
+                    });
+                    this.getAgents();
+                }).catch(error => {
+                    if (error.response.data.message) {
+                        this.$store.commit('SET_SNACKBAR', {
+                            title: 'Error!',
+                            message: error.response.data.message,
+                            type: 'error',
+                        });
+                    }
+                });
+            },
             getAgents() {
                 this.get_item('agents').then(data => {
                     this.agents = data.items;
@@ -228,8 +267,9 @@
                 this.create_item('agents', {
                     user_id: this.addAgentActiveAgent.id,
                     role_id: this.addAgentActiveRole.role,
-                }).then(data => {
-
+                }).then(() => {
+                    this.showAddAgentModal = false;
+                    this.getAgents();
                 }).catch(error => {
                     this.agentError = error.response.data.message;
                 })

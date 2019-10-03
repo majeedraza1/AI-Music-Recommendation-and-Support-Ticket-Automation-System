@@ -115,7 +115,30 @@ class AgentController extends ApiController {
 			return $this->respondUnprocessableEntity( $code, $message );
 		}
 
-		return $this->respondCreated( [ $roles_ids, $user_id, $role_id ] );
+		return $this->respondCreated();
+	}
+
+	/**
+	 * Deletes one item from the collection.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function delete_item( $request ) {
+		$id = (int) $request->get_param( 'id' );
+
+		$agent = SupportAgent::find_by_id( $id );
+
+		if ( ! $agent instanceof SupportAgent ) {
+			return $this->respondNotFound( null, 'Support agent not found.' );
+		}
+
+		if ( SupportAgent::delete( $id ) ) {
+			return $this->respondOK();
+		}
+
+		return $this->respondInternalServerError();
 	}
 
 	public function update_batch_items() {

@@ -204,4 +204,31 @@ class SupportAgent extends AbstractModel {
 
 		return $term['term_id'];
 	}
+
+	/**
+	 * Find agent by id
+	 *
+	 * @param int $id
+	 *
+	 * @return bool|SupportAgent
+	 */
+	public static function find_by_id( $id ) {
+		$term = get_term_by( 'id', $id, self::$taxonomy, OBJECT );
+		if ( $term instanceof WP_Term ) {
+			return new self( $term );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete a agent
+	 *
+	 * @param int $id
+	 *
+	 * @return bool|int|WP_Error
+	 */
+	public static function delete( $id ) {
+		return wp_delete_term( $id, self::$taxonomy );
+	}
 }
