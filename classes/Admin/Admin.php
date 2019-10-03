@@ -48,6 +48,7 @@ class Admin {
 			[ 'title' => __( 'Tickets', 'stackonet-toolkit' ), 'slug' => '#/' ],
 			[ 'title' => __( 'Agents', 'stackonet-toolkit' ), 'slug' => '#/agents' ],
 			[ 'title' => __( 'Categories', 'stackonet-toolkit' ), 'slug' => '#/categories' ],
+			[ 'title' => __( 'Statuses', 'stackonet-toolkit' ), 'slug' => '#/statuses' ],
 		];
 		if ( current_user_can( $capability ) ) {
 			foreach ( $menus as $menu ) {

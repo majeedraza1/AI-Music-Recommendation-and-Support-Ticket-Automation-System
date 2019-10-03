@@ -5,6 +5,7 @@ import SingleSupportTicket from './tickets/SingleSupportTicket';
 import NewSupportTicket from './tickets/NewSupportTicket';
 import AgentsList from "./agents/AgentsList";
 import TicketCategories from "./categories/TicketCategories";
+import TicketStatuses from "./statuses/TicketStatuses";
 
 Vue.use(VueRouter);
 
@@ -14,6 +15,7 @@ const routes = [
     {path: '/ticket/new', name: 'NewSupportTicket', component: NewSupportTicket},
     {path: '/agents', name: 'AgentsList', component: AgentsList},
     {path: '/categories', name: 'TicketCategories', component: TicketCategories},
+    {path: '/statuses', name: 'TicketStatuses', component: TicketStatuses},
 ];
 
 export default new VueRouter({

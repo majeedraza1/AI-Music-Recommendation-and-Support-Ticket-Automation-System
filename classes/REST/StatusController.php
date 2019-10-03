@@ -50,6 +50,10 @@ class StatusController extends ApiController {
 		] );
 		register_rest_route( $this->namespace, '/statuses/(?P<id>\d+)', [
 			[
+				'methods'  => WP_REST_Server::EDITABLE,
+				'callback' => [ $this, 'update_item' ],
+			],
+			[
 				'methods'  => WP_REST_Server::DELETABLE,
 				'callback' => [ $this, 'delete_item' ],
 			],
@@ -102,10 +106,40 @@ class StatusController extends ApiController {
 
 		$status_id = TicketStatus::create( $name, $args );
 		if ( is_wp_error( $status_id ) ) {
+			if ( 'term_exists' == $status_id->get_error_code() ) {
+				return $this->respondUnprocessableEntity( 'status_exists', 'Status already exists.' );
+			}
+
 			return $status_id;
 		}
 
 		return $this->respondCreated( [ 'status_id' => $status_id ] );
+	}
+
+
+	/**
+	 * Updates one item from the collection.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function update_item( $request ) {
+		$id   = (int) $request->get_param( 'id' );
+		$name = $request->get_param( 'name' );
+		$slug = $request->get_param( 'slug' );
+
+		$category = TicketStatus::find_by_id( $id );
+		if ( ! $category instanceof TicketStatus ) {
+			return $this->respondNotFound( null, 'No ticket status found with this id.' );
+		}
+
+		$response = TicketStatus::update( $id, $name, $slug );
+		if ( is_wp_error( $response ) ) {
+			return $this->respondUnprocessableEntity( $response->get_error_code(), $response->get_error_message() );
+		}
+
+		return $this->respondOK( $response );
 	}
 
 	/**
