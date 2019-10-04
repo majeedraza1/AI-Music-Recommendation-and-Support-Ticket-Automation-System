@@ -124,6 +124,7 @@ class StackonetSupportTicket {
 		}
 		if ( $this->is_request( 'frontend' ) ) {
 			$this->container['frontend']         = StackonetSupportTicket\Frontend::init();
+			$this->container['rest-login']       = StackonetSupportTicket\REST\LoginController::init();
 			$this->container['rest-user-ticker'] = StackonetSupportTicket\REST\TicketController::init();
 			$this->container['rest-category']    = StackonetSupportTicket\REST\CategoryController::init();
 			$this->container['rest-status']      = StackonetSupportTicket\REST\StatusController::init();

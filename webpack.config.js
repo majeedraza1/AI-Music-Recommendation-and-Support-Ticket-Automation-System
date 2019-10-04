@@ -12,7 +12,7 @@ let plugins = [];
 let entryPoints = {
     frontend: [
         "./assets/src/scss/frontend.scss",
-        "./assets/src/frontend/main.js",
+        "./assets/src/frontend/login/main.js",
     ],
     admin: [
         "./assets/src/scss/admin.scss",
