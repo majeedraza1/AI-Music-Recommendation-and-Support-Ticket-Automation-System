@@ -5,6 +5,7 @@ namespace StackonetSupportTicket\REST;
 use Exception;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -41,11 +42,37 @@ class TicketController extends ApiController {
 	public function register_routes() {
 		register_rest_route( $this->namespace, '/tickets', [
 			[
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => [ $this, 'get_items' ],
+			],
+			[
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => [ $this, 'create_item' ],
 				'args'     => $this->get_create_item_params(),
 			],
 		] );
+	}
+
+	/**
+	 * Retrieves a collection of items.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function get_items( $request ) {
+		$status          = $request->get_param( 'ticket_status' );
+		$ticket_category = $request->get_param( 'ticket_category' );
+		$ticket_priority = $request->get_param( 'ticket_priority' );
+		$per_page        = $request->get_param( 'per_page' );
+		$paged           = $request->get_param( 'paged' );
+		$city            = $request->get_param( 'city' );
+		$search          = $request->get_param( 'search' );
+		$agent           = $request->get_param( 'agent' );
+
+		$response = [];
+
+		return $this->respondOK( $response );
 	}
 
 	/**

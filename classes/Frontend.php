@@ -48,7 +48,7 @@ class Frontend {
 			return $this->support_ticket_login();
 		}
 
-		return 'Welcome to support';
+		return '<div id="stackonet_support_ticket_list"></div>';
 	}
 
 	/**

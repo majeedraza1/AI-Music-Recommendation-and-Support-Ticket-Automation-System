@@ -252,7 +252,7 @@
                     }
                 });
 
-                tr.classList.toggle('is-expanded');
+                // tr.classList.toggle('is-expanded');
             },
 
             hideActionSeparator(action) {
