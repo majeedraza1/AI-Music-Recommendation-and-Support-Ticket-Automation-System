@@ -8,6 +8,7 @@
                 <div class="shapla-box shapla-box--role flex w-full content-center mdl-shadow--2dp">
                     <div>
                         <strong>{{_category.name}}</strong>
+                        <span class="extra_info">ID: {{_category.term_id}}</span>
                     </div>
                     <div class="flex">
                         <div class="handle">
@@ -159,5 +160,11 @@
         bottom: 1rem;
         right: 1rem;
         z-index: 10;
+    }
+
+    .extra_info {
+        font-size: .875em;
+        font-style: italic;
+        margin-left: 1em;
     }
 </style>

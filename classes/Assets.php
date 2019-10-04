@@ -116,9 +116,14 @@ class Assets {
 	 */
 	public function get_scripts() {
 		$scripts = [
+			'tinymce-editor'                 => [
+				'src'       => includes_url( 'js/tinymce/tinymce.min.js' ),
+				'deps'      => [],
+				'in_footer' => true
+			],
 			$this->plugin_name . '-frontend' => [
 				'src'       => $this->assets_url . '/js/frontend.js',
-				'deps'      => [],
+				'deps'      => [ 'tinymce-editor' ],
 				'in_footer' => true
 			],
 			$this->plugin_name . '-admin'    => [
