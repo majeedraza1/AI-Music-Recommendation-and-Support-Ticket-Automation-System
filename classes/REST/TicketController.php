@@ -70,7 +70,63 @@ class TicketController extends ApiController {
 		$search          = $request->get_param( 'search' );
 		$agent           = $request->get_param( 'agent' );
 
-		$response = [];
+		$status          = ! empty( $status ) ? $status : 'all';
+		$ticket_category = ! empty( $ticket_category ) ? $ticket_category : 'all';
+		$ticket_priority = ! empty( $ticket_priority ) ? $ticket_priority : 'all';
+		$city            = ! empty( $city ) ? $city : 'all';
+		$per_page        = ! empty( $per_page ) ? absint( $per_page ) : 20;
+		$paged           = ! empty( $paged ) ? absint( $paged ) : 1;
+
+		$supportTicket = new SupportTicket();
+
+		if ( ! empty( $search ) ) {
+			$items = $supportTicket->search( [
+				'search'          => $search,
+				'ticket_category' => $ticket_category
+			] );
+		} else {
+			$items = $supportTicket->find( [
+				'paged'           => $paged,
+				'per_page'        => $per_page,
+				'ticket_status'   => $status,
+				'ticket_category' => $ticket_category,
+				'ticket_priority' => $ticket_priority,
+				'city'            => $city,
+				'agent'           => $agent,
+			] );
+		}
+
+		$counts = $supportTicket->count_records();
+
+		$pagination = $this->getPaginationMetadata( [
+			'totalCount'  => $counts[ $status ],
+			'limit'       => $per_page,
+			'currentPage' => $paged,
+		] );
+
+		$response = [ 'items' => $items, 'pagination' => $pagination, 'filters' => [] ];
+
+		if ( current_user_can( 'manage_options' ) ) {
+			$response['filters'] = $this->get_filter_data();
+		}
+
+		if ( 'trash' == $status ) {
+			$actions     = [
+				[ 'key' => 'restore', 'label' => 'Restore' ],
+				[ 'key' => 'delete', 'label' => 'Delete Permanently' ],
+			];
+			$bulkActions = $actions;
+		} else {
+			$actions     = [
+				[ 'key' => 'view', 'label' => 'View' ],
+				[ 'key' => 'trash', 'label' => 'Trash' ],
+			];
+			$bulkActions = [
+				[ 'key' => 'trash', 'label' => 'Move to Trash' ],
+			];
+		}
+
+		$response['meta_data'] = [ 'actions' => $actions, 'bulkActions' => $bulkActions ];
 
 		return $this->respondOK( $response );
 	}
@@ -263,5 +319,55 @@ class TicketController extends ApiController {
 		$html = ob_get_clean();
 
 		return $html;
+	}
+
+	/**
+	 *
+	 * Get filter data
+	 *
+	 * @return array
+	 */
+	public function get_filter_data() {
+		$_categories = ( new SupportTicket() )->get_categories_terms();
+		$categories  = [];
+		foreach ( $_categories as $status ) {
+			$categories[] = [ 'value' => $status->term_id, 'label' => $status->name ];
+		}
+
+		$_priorities = ( new SupportTicket() )->get_priorities_terms();
+		$priorities  = [];
+		foreach ( $_priorities as $status ) {
+			$priorities[] = [ 'value' => $status->term_id, 'label' => $status->name ];
+		}
+
+		$statuses = SupportTicket::get_statuses_with_counts();
+		$cities   = ( new SupportTicket() )->find_all_cities();
+
+		return [
+			[
+				'id'            => 'status',
+				'name'          => __( 'Statuses', 'stackonet-support-ticket' ),
+				'singular_name' => __( 'Status', 'stackonet-support-ticket' ),
+				'options'       => $statuses,
+			],
+			[
+				'id'            => 'category',
+				'name'          => __( 'Categories', 'stackonet-support-ticket' ),
+				'singular_name' => __( 'Category', 'stackonet-support-ticket' ),
+				'options'       => $categories
+			],
+			[
+				'id'            => 'priority',
+				'name'          => __( 'Priorities', 'stackonet-support-ticket' ),
+				'singular_name' => __( 'Priority', 'stackonet-support-ticket' ),
+				'options'       => $priorities
+			],
+			[
+				'id'            => 'city',
+				'name'          => __( 'Cities', 'stackonet-support-ticket' ),
+				'singular_name' => __( 'City', 'stackonet-support-ticket' ),
+				'options'       => $cities
+			],
+		];
 	}
 }

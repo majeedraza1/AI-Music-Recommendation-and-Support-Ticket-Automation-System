@@ -939,48 +939,9 @@ class SupportTicket extends DatabaseModel {
 	 * @return array
 	 */
 	public function count_records() {
-		global $wpdb;
-		$table      = $wpdb->prefix . $this->table;
-		$meta_table = $wpdb->prefix . $this->meta_table;
-		$statuses   = $this->get_ticket_statuses_terms();
-		$counts     = wp_cache_get( 'support_tickets_count', $this->cache_group );
-		if ( false === $counts ) {
-			$query = "SELECT ticket_status, COUNT( * ) AS num_entries FROM {$table}";
+		$statuses = $this->get_ticket_statuses_terms();
 
-			if ( ! current_user_can( 'read_others_tickets' ) ) {
-				$query .= " LEFT JOIN {$meta_table} as mt ON {$table}.id = mt.ticket_id";
-			}
-
-			$query .= " WHERE active = 1";
-
-			if ( ! current_user_can( 'read_others_tickets' ) ) {
-				$user_id  = get_current_user_id();
-				$agent_id = self::get_current_user_agent_id( $user_id );
-				$query    .= " AND(";
-				if ( ! empty( $agent_id ) ) {
-					$query .= $wpdb->prepare( " (mt.meta_key = %s AND mt.meta_value = %d) OR", 'assigned_agent', $agent_id );
-				}
-				$query .= $wpdb->prepare( " agent_created = %d", $user_id );
-				$query .= " )";
-			}
-
-			$query   .= " GROUP BY ticket_status";
-			$results = $wpdb->get_results( $query, ARRAY_A );
-
-			foreach ( $statuses as $status ) {
-				$counts[ $status->term_id ] = 0;
-			}
-
-			foreach ( $results as $row ) {
-				$counts[ $row['ticket_status'] ] = intval( $row['num_entries'] );
-			}
-			$counts['all']   = array_sum( $counts );
-			$counts['trash'] = $this->count_trash_records();
-
-			wp_cache_set( 'support_tickets_count', $counts, $this->cache_group );
-		}
-
-		return $counts;
+		return static::tickets_count_by_status( $statuses );
 	}
 
 	/**
@@ -1037,6 +998,90 @@ class SupportTicket extends DatabaseModel {
 		) );
 
 		return $terms;
+	}
+
+	/**
+	 * Count number of tickets by status
+	 *
+	 * @param array $statuses
+	 *
+	 * @return array
+	 */
+	public static function tickets_count_by_status( $statuses ) {
+		global $wpdb;
+		$self = ( new static );
+
+		$table      = $wpdb->prefix . $self->table;
+		$meta_table = $wpdb->prefix . $self->meta_table;
+		$counts     = wp_cache_get( 'tickets_count_by_status', $self->cache_group );
+		if ( false === $counts ) {
+			$query = "SELECT ticket_status, COUNT( * ) AS num_entries FROM {$table}";
+
+			if ( ! current_user_can( 'read_others_tickets' ) ) {
+				$query .= " LEFT JOIN {$meta_table} as mt ON {$table}.id = mt.ticket_id";
+			}
+
+			$query .= " WHERE active = 1";
+
+			if ( ! current_user_can( 'read_others_tickets' ) ) {
+				$user_id  = get_current_user_id();
+				$agent_id = self::get_current_user_agent_id( $user_id );
+				$query    .= " AND(";
+				if ( ! empty( $agent_id ) ) {
+					$query .= $wpdb->prepare( " (mt.meta_key = %s AND mt.meta_value = %d) OR", 'assigned_agent', $agent_id );
+				}
+				$query .= $wpdb->prepare( " agent_created = %d", $user_id );
+				$query .= " )";
+			}
+
+			$query   .= " GROUP BY ticket_status";
+			$results = $wpdb->get_results( $query, ARRAY_A );
+
+			foreach ( $statuses as $status ) {
+				$counts[ $status->term_id ] = 0;
+			}
+
+			foreach ( $results as $row ) {
+				$counts[ $row['ticket_status'] ] = intval( $row['num_entries'] );
+			}
+			$counts['all']   = array_sum( $counts );
+			$counts['trash'] = $self->count_trash_records();
+
+			wp_cache_set( 'tickets_count_by_status', $counts, $self->cache_group );
+		}
+
+		return $counts;
+	}
+
+	/**
+	 * Get status with count
+	 *
+	 * @param string $current_status
+	 *
+	 * @return array
+	 */
+	public static function get_statuses_with_counts( $current_status = 'all' ) {
+		$all_statuses = ( new static )->get_ticket_statuses_terms();
+		$counts       = ( new static )->tickets_count_by_status( $all_statuses );
+		$statuses     = [];
+
+		foreach ( $all_statuses as $status ) {
+			$statuses[] = [
+				'value'  => $status->term_id,
+				'label'  => $status->name,
+				'count'  => isset( $counts[ $status->term_id ] ) ? $counts[ $status->term_id ] : 0,
+				'active' => $current_status == $status->term_id
+			];
+		}
+
+		$statuses[] = [
+			'value'  => 'trash',
+			'label'  => 'Trash',
+			'count'  => $counts['trash'],
+			'active' => $current_status == 'trash'
+		];
+
+		return $statuses;
 	}
 
 	/**

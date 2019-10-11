@@ -53,6 +53,10 @@ class AgentController extends ApiController {
 		] );
 		register_rest_route( $this->namespace, '/agents/(?P<id>\d+)', [
 			[
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => [ $this, 'get_item' ],
+			],
+			[
 				'methods'  => WP_REST_Server::EDITABLE,
 				'callback' => [ $this, 'update_item' ],
 			],
@@ -81,6 +85,25 @@ class AgentController extends ApiController {
 		$items = SupportAgent::get_all();
 
 		return $this->respondOK( [ 'items' => $items ] );
+	}
+
+	/**
+	 * Retrieves one item from the collection.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function get_item( $request ) {
+		$id    = (int) $request->get_param( 'id' );
+
+		$agent = SupportAgent::find_by_id( $id );
+
+		if ( ! $agent instanceof SupportAgent ) {
+			return $this->respondNotFound();
+		}
+
+		return $this->respondOK( $agent );
 	}
 
 	/**

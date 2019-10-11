@@ -158,18 +158,20 @@ class Assets {
 	 * Global localize data both for admin and frontend
 	 */
 	public static function localize_data() {
-		$is_user_logged_in = is_user_logged_in();
+		$current_user = wp_get_current_user();
 
 		$data = [
 			'homeUrl'         => home_url(),
 			'lostPasswordUrl' => wp_lostpassword_url(),
-			'isUserLoggedIn'  => $is_user_logged_in,
+			'isUserLoggedIn'  => $current_user->exists(),
 			'wpRestRoot'      => esc_url_raw( rest_url( 'wp/v2' ) ),
 			'restRoot'        => esc_url_raw( rest_url( 'stackonet-support-ticket/v1' ) ),
 		];
 
-		if ( $is_user_logged_in ) {
-			$data['restNonce'] = wp_create_nonce( 'wp_rest' );
+		if ( $current_user->exists() ) {
+			$data['restNonce']    = wp_create_nonce( 'wp_rest' );
+			$data['display_name'] = $current_user->display_name;
+			$data['user_email']   = $current_user->user_email;
 		}
 
 		echo '<script>window.StackonetToolkit = ' . wp_json_encode( $data ) . '</script>';

@@ -221,6 +221,12 @@ class SupportAgent extends AbstractModel {
 		return false;
 	}
 
+	/**
+	 * Update support agent role
+	 *
+	 * @param int $id
+	 * @param string $role_id
+	 */
 	public static function update_role( $id, $role_id ) {
 		$user_id = get_term_meta( $id, 'user_id', true );
 
