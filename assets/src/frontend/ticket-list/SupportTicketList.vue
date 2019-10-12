@@ -1,7 +1,7 @@
 <template>
     <div class="stackont-support-ticket-container">
-        <a href="#" class="page-title-action" @click.prevent="openNewTicket">New Ticket</a>
-        <button class="button button-primary" style="float: right;" @click="exportExcel">Export Excel</button>
+        <a href="#" class="button stackonet-primary" @click.prevent="openNewTicket">New Ticket</a>
+        <button class="button stackonet-primary" style="float: right;" @click="exportExcel">Export Excel</button>
         <div class="clear"></div>
 
         <data-table

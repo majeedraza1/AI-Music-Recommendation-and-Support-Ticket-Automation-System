@@ -1,0 +1,16 @@
+$color--primary: #f58730;
+
+$primary: var(--stackonet-primary, $color--primary); // buttons (alt), price filter, store-notice, default message, star ratings, breadcrumb
+$on-primary: var(--stackonet-on-primary, #fff); // Text on primary color bg
+
+$secondary: var(--stackonet-secondary, #9c27b0); // Secondary buttons, On sale, Prices, In stock labels, sales flash
+$on-secondary: var(--stackonet-on-secondary, #fff); // Text on secondary color bg
+
+$surface: var(--stackonet-surface, #fff); // Content BG - Tabs (active state)
+$on-surface: var(--stackonet-on-surface, #000); // Product Title, Price
+
+$error: var(--stackonet-error, #f44336); // Content BG - Tabs (active state)
+$on-error: var(--stackonet-on-error, #fff); // Product Title, Price
+
+$text-primary: var(--stackonet-text-primary, rgba(#000, .87));
+$text-secondary: var(--stackonet-text-secondary, rgba(#000, .54));

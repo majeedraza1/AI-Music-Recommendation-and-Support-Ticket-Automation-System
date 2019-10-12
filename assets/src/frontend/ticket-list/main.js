@@ -17,5 +17,6 @@ axios.defaults.baseURL = window.StackonetToolkit.restRoot;
 
 let el = document.querySelector('#stackonet_support_ticket_list');
 if (el) {
+    document.querySelector('body').classList.add('has-support-ticket');
     new Vue({el, store, router, render: h => h(SupportTicket)});
 }
