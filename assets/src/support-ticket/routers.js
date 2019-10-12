@@ -7,6 +7,7 @@ import AgentsList from "./agents/AgentsList";
 import TicketCategories from "./categories/TicketCategories";
 import TicketStatuses from "./statuses/TicketStatuses";
 import TicketPriorities from "./priorities/TicketPriorities";
+import Settings from "./settings/Settings";
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,7 @@ const routes = [
     {path: '/categories', name: 'TicketCategories', component: TicketCategories},
     {path: '/statuses', name: 'TicketStatuses', component: TicketStatuses},
     {path: '/priorities', name: 'TicketPriorities', component: TicketPriorities},
+    {path: '/settings', name: 'Settings', component: Settings},
 ];
 
 export default new VueRouter({

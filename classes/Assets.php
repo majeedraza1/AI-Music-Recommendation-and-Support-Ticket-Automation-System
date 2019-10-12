@@ -128,7 +128,7 @@ class Assets {
 			],
 			$this->plugin_name . '-admin'    => [
 				'src'       => $this->assets_url . '/js/admin.js',
-				'deps'      => [],
+				'deps'      => [ 'wp-color-picker' ],
 				'in_footer' => true
 			]
 		];
@@ -147,7 +147,8 @@ class Assets {
 				'src' => $this->assets_url . '/css/frontend.css'
 			],
 			$this->plugin_name . '-admin'    => [
-				'src' => $this->assets_url . '/css/admin.css'
+				'src'  => $this->assets_url . '/css/admin.css',
+				'deps' => [ 'wp-color-picker' ],
 			],
 		];
 

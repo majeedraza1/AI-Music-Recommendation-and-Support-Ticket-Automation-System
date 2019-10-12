@@ -117,11 +117,13 @@ class StackonetSupportTicket {
 	 * Instantiate the required classes
 	 */
 	public function init_classes() {
-		$this->container['assets'] = StackonetSupportTicket\Assets::init();
+		$this->container['assets']   = StackonetSupportTicket\Assets::init();
+		$this->container['settings'] = StackonetSupportTicket\Admin\Settings::init();
 
 		if ( $this->is_request( 'admin' ) ) {
 			$this->container['admin'] = StackonetSupportTicket\Admin\Admin::init();
 		}
+
 		if ( $this->is_request( 'frontend' ) ) {
 			$this->container['frontend']         = StackonetSupportTicket\Frontend::init();
 			$this->container['rest-login']       = StackonetSupportTicket\REST\LoginController::init();
@@ -132,7 +134,9 @@ class StackonetSupportTicket {
 			$this->container['rest-agent']       = StackonetSupportTicket\REST\AgentController::init();
 			$this->container['rest-role']        = StackonetSupportTicket\REST\AgentRoleController::init();
 			$this->container['rest-support']     = StackonetSupportTicket\REST\SupportTicketController::init();
+			$this->container['rest-settings']    = StackonetSupportTicket\REST\SettingController::init();
 		}
+
 		if ( $this->is_request( 'ajax' ) ) {
 			$this->container['ajax'] = StackonetSupportTicket\Ajax::init();
 		}

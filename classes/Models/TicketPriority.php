@@ -57,7 +57,7 @@ class TicketPriority extends AbstractModel {
 	 *
 	 * @param array $args
 	 *
-	 * @return WP_Term[]
+	 * @return self[]
 	 */
 	public static function get_all( $args = [] ) {
 		$default          = array(
