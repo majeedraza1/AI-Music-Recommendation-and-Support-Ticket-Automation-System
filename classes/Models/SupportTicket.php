@@ -934,31 +934,6 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
-	 * Count total records from the database
-	 *
-	 * @return array
-	 */
-	public function count_records() {
-		$statuses = $this->get_ticket_statuses_terms();
-
-		return static::tickets_count_by_status( $statuses );
-	}
-
-	/**
-	 * Cont trash records
-	 *
-	 * @return int
-	 */
-	public function count_trash_records() {
-		global $wpdb;
-		$table   = $wpdb->prefix . $this->table;
-		$query   = "SELECT COUNT( * ) AS num_entries FROM {$table} WHERE active = 0";
-		$results = $wpdb->get_row( $query, ARRAY_A );
-
-		return intval( $results['num_entries'] );
-	}
-
-	/**
 	 * Get ticket statuses term
 	 *
 	 * @return WP_Term[]
@@ -1015,21 +990,53 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Cont trash records
+	 *
+	 * @return int
+	 */
+	public function count_inactive_records() {
+		global $wpdb;
+		$table   = $wpdb->prefix . $this->table;
+		$query   = "SELECT COUNT( * ) AS num_entries FROM {$table} WHERE active = 0";
+		$results = $wpdb->get_row( $query, ARRAY_A );
+
+		return intval( $results['num_entries'] );
+	}
+
+	/**
 	 * Count number of tickets by status
 	 *
-	 * @param array $statuses
+	 * @param WP_Term[] $terms
+	 * @param string $column_name
 	 *
 	 * @return array
 	 */
-	public static function tickets_count_by_status( $statuses ) {
+	public static function tickets_count_by_terms( $terms, $column_name ) {
+		$counts  = array_fill_keys( wp_list_pluck( $terms, 'term_id' ), 0 );
+		$results = static::count_column_unique_values( $column_name );
+		foreach ( $results as $row ) {
+			$counts[ $row['_key'] ] = intval( $row['_value'] );
+		}
+		$counts['all'] = array_sum( $counts );
+
+
+		return $counts;
+	}
+
+	/**
+	 * @param string $column_name table column name
+	 *
+	 * @return array
+	 */
+	public static function count_column_unique_values( $column_name ) {
 		global $wpdb;
 		$self = ( new static );
 
 		$table      = $wpdb->prefix . $self->table;
 		$meta_table = $wpdb->prefix . $self->meta_table;
-		$counts     = wp_cache_get( 'tickets_count_by_status', $self->cache_group );
+		$counts     = wp_cache_get( $column_name . '_counts', $self->cache_group );
 		if ( false === $counts ) {
-			$query = "SELECT ticket_status, COUNT( * ) AS num_entries FROM {$table}";
+			$query = "SELECT {$column_name} as _key, COUNT( * ) AS _value FROM {$table}";
 
 			if ( ! current_user_can( 'read_others_tickets' ) ) {
 				$query .= " LEFT JOIN {$meta_table} as mt ON {$table}.id = mt.ticket_id";
@@ -1048,54 +1055,37 @@ class SupportTicket extends DatabaseModel {
 				$query .= " )";
 			}
 
-			$query   .= " GROUP BY ticket_status";
-			$results = $wpdb->get_results( $query, ARRAY_A );
+			$query  .= " GROUP BY {$column_name}";
+			$counts = $wpdb->get_results( $query, ARRAY_A );
 
-			foreach ( $statuses as $status ) {
-				$counts[ $status->term_id ] = 0;
-			}
-
-			foreach ( $results as $row ) {
-				$counts[ $row['ticket_status'] ] = intval( $row['num_entries'] );
-			}
-			$counts['all']   = array_sum( $counts );
-			$counts['trash'] = $self->count_trash_records();
-
-			wp_cache_set( 'tickets_count_by_status', $counts, $self->cache_group );
+			wp_cache_set( $column_name . '_counts', $counts, $self->cache_group );
 		}
 
 		return $counts;
 	}
 
 	/**
-	 * Get status with count
-	 *
-	 * @param string|int $current_status
+	 * Get tickets count by agents
 	 *
 	 * @return array
 	 */
-	public static function get_statuses_with_counts( $current_status = 'all' ) {
-		$all_statuses = ( new static )->get_ticket_statuses_terms();
-		$counts       = ( new static )->tickets_count_by_status( $all_statuses );
-		$statuses     = [];
+	public static function count_tickets_by_agents() {
+		global $wpdb;
+		$self = ( new static );
 
-		foreach ( $all_statuses as $status ) {
-			$statuses[] = [
-				'value'  => $status->term_id,
-				'label'  => $status->name,
-				'count'  => isset( $counts[ $status->term_id ] ) ? $counts[ $status->term_id ] : 0,
-				'active' => $current_status == $status->term_id
-			];
+		$meta_table = $wpdb->prefix . $self->meta_table;
+
+		$query   = "SELECT meta_value as _key, COUNT( * ) AS _value FROM {$meta_table}";
+		$query   .= $wpdb->prepare( " WHERE meta_key = %s", 'assigned_agent' );
+		$query   .= " GROUP BY meta_value";
+		$results = $wpdb->get_results( $query, ARRAY_A );
+
+		$counts = [];
+		foreach ( $results as $row ) {
+			$counts[ $row['_key'] ] = intval( $row['_value'] );
 		}
 
-		$statuses[] = [
-			'value'  => 'trash',
-			'label'  => 'Trash',
-			'count'  => $counts['trash'],
-			'active' => $current_status == 'trash'
-		];
-
-		return $statuses;
+		return $counts;
 	}
 
 	/**
@@ -1195,5 +1185,14 @@ class SupportTicket extends DatabaseModel {
 		}
 
 		return $caps;
+	}
+
+	/**
+	 * Count total records from the database
+	 *
+	 * @return array
+	 */
+	public function count_records() {
+		return [];
 	}
 }

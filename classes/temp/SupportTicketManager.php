@@ -2,9 +2,6 @@
 
 namespace Stackonet\Modules\SupportTicket;
 
-use Stackonet\Models\Map;
-use Stackonet\Supports\Utils;
-
 defined( 'ABSPATH' ) or exit;
 
 class SupportTicketManager {
@@ -24,8 +21,10 @@ class SupportTicketManager {
 			add_action( 'wpsc_get_gerneral_settings', [ self::$instance, 'settings' ] );
 			add_action( 'wpsc_set_gerneral_settings', [ self::$instance, 'save_settings' ] );
 			add_shortcode( 'stackonet_support_ticket_form', [ self::$instance, 'support_ticket_form' ] );
-			add_action( 'wp_ajax_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
 			add_filter( 'map_meta_cap', [ new SupportTicket(), 'map_meta_cap' ], 10, 4 );
+
+			add_action( 'wp_ajax_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
+			add_action( 'wp_ajax_nopriv_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
 
 			add_action( 'save_support_ticket_agent', [ new Map(), 'update_map_agents' ], 10, 2 );
 			add_action( 'save_stackonet_map_agent', [ new Map(), 'update_support_ticket_agents' ], 10, 2 );
@@ -215,12 +214,12 @@ class SupportTicketManager {
 			'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_category_menu_order' ) ),
 		] );
 		?>
-		<div class="form-group">
-			<label
-				for="wpsc_default_order_ticket_category"><?php _e( 'Default ticket category for order', 'supportcandy' ); ?></label>
-			<p class="help-block"><?php _e( 'This category will get applied for newly created ticket.', 'supportcandy' ); ?></p>
-			<select class="form-control" name="wpsc_default_order_ticket_category"
-			        id="wpsc_default_order_ticket_category">
+        <div class="form-group">
+            <label
+                    for="wpsc_default_order_ticket_category"><?php _e( 'Default ticket category for order', 'supportcandy' ); ?></label>
+            <p class="help-block"><?php _e( 'This category will get applied for newly created ticket.', 'supportcandy' ); ?></p>
+            <select class="form-control" name="wpsc_default_order_ticket_category"
+                    id="wpsc_default_order_ticket_category">
 				<?php
 				$support_ticket_default_category = get_option( 'wpsc_default_order_ticket_category' );
 				foreach ( $categories as $category ) :
@@ -228,13 +227,13 @@ class SupportTicketManager {
 					echo '<option ' . $selected . ' value="' . $category->term_id . '">' . $category->name . '</option>';
 				endforeach;
 				?>
-			</select>
-		</div>
-		<div class="form-group">
-			<label
-				for="carrier_store_default_category"><?php _e( 'Default ticket category for carrier store', 'supportcandy' ); ?></label>
-			<p class="help-block"><?php _e( 'This category will get applied for newly created ticket.', 'supportcandy' ); ?></p>
-			<select class="form-control" name="carrier_store_default_category" id="carrier_store_default_category">
+            </select>
+        </div>
+        <div class="form-group">
+            <label
+                    for="carrier_store_default_category"><?php _e( 'Default ticket category for carrier store', 'supportcandy' ); ?></label>
+            <p class="help-block"><?php _e( 'This category will get applied for newly created ticket.', 'supportcandy' ); ?></p>
+            <select class="form-control" name="carrier_store_default_category" id="carrier_store_default_category">
 				<?php
 				$support_ticket_default_category = get_option( 'carrier_store_default_category' );
 				foreach ( $categories as $category ) :
@@ -242,14 +241,14 @@ class SupportTicketManager {
 					echo '<option ' . $selected . ' value="' . $category->term_id . '">' . $category->name . '</option>';
 				endforeach;
 				?>
-			</select>
-		</div>
-		<div class="form-group">
-			<label
-				for="wpsc_default_order_ticket_category"><?php _e( 'Default ticket category for Spot Appointment', 'supportcandy' ); ?></label>
-			<p class="help-block"><?php _e( 'This category will get applied for newly created Spot Appointment.', 'supportcandy' ); ?></p>
-			<select class="form-control" name="wpsc_default_spot_appointment_category"
-			        id="wpsc_default_spot_appointment_category">
+            </select>
+        </div>
+        <div class="form-group">
+            <label
+                    for="wpsc_default_order_ticket_category"><?php _e( 'Default ticket category for Spot Appointment', 'supportcandy' ); ?></label>
+            <p class="help-block"><?php _e( 'This category will get applied for newly created Spot Appointment.', 'supportcandy' ); ?></p>
+            <select class="form-control" name="wpsc_default_spot_appointment_category"
+                    id="wpsc_default_spot_appointment_category">
 				<?php
 				$support_ticket_default_category = get_option( 'wpsc_default_spot_appointment_category' );
 				foreach ( $categories as $category ) :
@@ -257,14 +256,14 @@ class SupportTicketManager {
 					echo '<option ' . $selected . ' value="' . $category->term_id . '">' . $category->name . '</option>';
 				endforeach;
 				?>
-			</select>
-		</div>
-		<div class="form-group">
-			<label
-				for="support_ticket_default_checkout_analysis_category"><?php _e( 'Default ticket category for Checkout Analysis', 'supportcandy' ); ?></label>
-			<p class="help-block"><?php _e( 'This category will get applied for newly created ticket from checkout analysis.', 'supportcandy' ); ?></p>
-			<select class="form-control" name="support_ticket_default_checkout_analysis_category"
-			        id="support_ticket_default_checkout_analysis_category">
+            </select>
+        </div>
+        <div class="form-group">
+            <label
+                    for="support_ticket_default_checkout_analysis_category"><?php _e( 'Default ticket category for Checkout Analysis', 'supportcandy' ); ?></label>
+            <p class="help-block"><?php _e( 'This category will get applied for newly created ticket from checkout analysis.', 'supportcandy' ); ?></p>
+            <select class="form-control" name="support_ticket_default_checkout_analysis_category"
+                    id="support_ticket_default_checkout_analysis_category">
 				<?php
 				$support_ticket_default_category = get_option( 'support_ticket_default_checkout_analysis_category' );
 				foreach ( $categories as $category ) :
@@ -272,14 +271,14 @@ class SupportTicketManager {
 					echo '<option ' . $selected . ' value="' . $category->term_id . '">' . $category->name . '</option>';
 				endforeach;
 				?>
-			</select>
-		</div>
-		<div class="form-group">
-			<label
-				for="support_ticket_default_map_category"><?php _e( 'Default ticket category for Map', 'supportcandy' ); ?></label>
-			<p class="help-block"><?php _e( 'This category will get applied for newly created ticket from map.', 'supportcandy' ); ?></p>
-			<select class="form-control" name="support_ticket_default_map_category"
-			        id="support_ticket_default_map_category">
+            </select>
+        </div>
+        <div class="form-group">
+            <label
+                    for="support_ticket_default_map_category"><?php _e( 'Default ticket category for Map', 'supportcandy' ); ?></label>
+            <p class="help-block"><?php _e( 'This category will get applied for newly created ticket from map.', 'supportcandy' ); ?></p>
+            <select class="form-control" name="support_ticket_default_map_category"
+                    id="support_ticket_default_map_category">
 				<?php
 				$support_ticket_default_category = get_option( 'support_ticket_default_map_category' );
 				foreach ( $categories as $category ) :
@@ -287,36 +286,36 @@ class SupportTicketManager {
 					echo '<option ' . $selected . ' value="' . $category->term_id . '">' . $category->name . '</option>';
 				endforeach;
 				?>
-			</select>
-		</div>
-		<div class="form-group">
-			<label
-				for="wpsc_default_order_ticket_category"><?php _e( 'Category for customer support form', 'supportcandy' ); ?></label>
-			<p class="help-block"><?php _e( 'This category will get applied for customer support form.', 'supportcandy' ); ?></p>
+            </select>
+        </div>
+        <div class="form-group">
+            <label
+                    for="wpsc_default_order_ticket_category"><?php _e( 'Category for customer support form', 'supportcandy' ); ?></label>
+            <p class="help-block"><?php _e( 'This category will get applied for customer support form.', 'supportcandy' ); ?></p>
 			<?php
 			$support_ticket_default_category = (array) get_option( 'wpsc_default_contact_form_ticket_category' );
 			foreach ( $categories as $category ) {
 				$selected = in_array( $category->term_id, $support_ticket_default_category ) ? 'checked' : '';
 				?>
-				<input type="checkbox" name="wpsc_default_contact_form_ticket_category[]"
-				       value="<?php echo $category->term_id; ?>" <?php echo $selected; ?>> <?php echo $category->name; ?>
-				<br>
+                <input type="checkbox" name="wpsc_default_contact_form_ticket_category[]"
+                       value="<?php echo $category->term_id; ?>" <?php echo $selected; ?>> <?php echo $category->name; ?>
+                <br>
 			<?php } ?>
-		</div>
-		<div class="form-group">
-			<label
-				for="stackonet_ticket_search_categories"><?php _e( 'Categories for ticket search', 'supportcandy' ); ?></label>
-			<br>
+        </div>
+        <div class="form-group">
+            <label
+                    for="stackonet_ticket_search_categories"><?php _e( 'Categories for ticket search', 'supportcandy' ); ?></label>
+            <br>
 			<?php
 			$support_ticket_default_category = (array) get_option( 'stackonet_ticket_search_categories' );
 			foreach ( $categories as $category ) {
 				$selected = in_array( $category->term_id, $support_ticket_default_category ) ? 'checked' : '';
 				?>
-				<input type="checkbox" name="stackonet_ticket_search_categories[]"
-				       value="<?php echo $category->term_id; ?>" <?php echo $selected; ?>> <?php echo $category->name; ?>
-				<br>
+                <input type="checkbox" name="stackonet_ticket_search_categories[]"
+                       value="<?php echo $category->term_id; ?>" <?php echo $selected; ?>> <?php echo $category->name; ?>
+                <br>
 			<?php } ?>
-		</div>
+        </div>
 		<?php
 	}
 }

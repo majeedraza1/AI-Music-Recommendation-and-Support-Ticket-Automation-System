@@ -34,7 +34,11 @@
         },
         methods: {
             input(value) {
-                this.$emit('input', value);
+                if (value.length) {
+                    this.$emit('input', value);
+                } else {
+                    this.$emit('clear', '');
+                }
                 this.searchValue = value;
             },
             submit() {

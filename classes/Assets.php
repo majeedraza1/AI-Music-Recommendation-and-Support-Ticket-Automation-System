@@ -163,6 +163,7 @@ class Assets {
 
 		$data = [
 			'homeUrl'         => home_url(),
+			'ajaxurl'         => admin_url( 'admin-ajax.php' ),
 			'lostPasswordUrl' => wp_lostpassword_url(),
 			'isUserLoggedIn'  => $current_user->exists(),
 			'wpRestRoot'      => esc_url_raw( rest_url( 'wp/v2' ) ),

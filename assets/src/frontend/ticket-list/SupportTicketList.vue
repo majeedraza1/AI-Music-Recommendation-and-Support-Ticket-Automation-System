@@ -7,36 +7,24 @@
         <div class="stackonet-support-ticket-icon-search">
             <columns>
                 <column>
-                    <h2>Unassigned</h2>
+                    <h2 v-if="status === 'trash'">Trash</h2>
+                    <h2 v-else>Tickets</h2>
                 </column>
                 <column>
                     <div class="flex justify-center">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg">
-                                <title>Archive</title>
-                                <use xlink:href="#icon-work_outline"></use>
-                            </svg>
-                        </div>
-
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg">
-                                <title>Agents</title>
-                                <use xlink:href="#icon-person_outline"></use>
-                            </svg>
-                        </div>
-
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg">
-                                <use xlink:href="#icon-fa_tag"></use>
-                            </svg>
-                        </div>
                         <div @click="exportExcel">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Import Export</title>
                                 <use xlink:href="#icon-import_export"></use>
                             </svg>
                         </div>
-                        <div>
+                        <div v-if="status==='trash'" @click="restoreItems">
+                            <svg xmlns="http://www.w3.org/2000/svg">
+                                <title>Restore</title>
+                                <use xlink:href="#icon-settings_restore"></use>
+                            </svg>
+                        </div>
+                        <div @click="trashItems">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Trash</title>
                                 <use xlink:href="#icon-delete_outline"></use>
@@ -46,7 +34,7 @@
                 </column>
                 <column>
                     <div class="search-box">
-                        <search-form></search-form>
+                        <search-form @search="searchTicket" @clear="searchTicket"></search-form>
                     </div>
                 </column>
             </columns>
@@ -64,7 +52,7 @@
                 @bulk:apply="onBulkAction"
                 @pagination="paginate"
                 :show-search="false"
-                @search="search"
+                @checkedItems="updateSelectedItems"
         >
             <template slot="created_by" slot-scope="data" class="button--status">
                 <span v-html="getAssignedAgents(data.row.assigned_agents)"></span>
@@ -102,6 +90,7 @@
             return {
                 loading: false,
                 search_categories: [],
+                selectedItems: [],
                 columns: [
                     {key: 'ticket_subject', label: 'Subject', numeric: false},
                     {key: 'id', label: 'Ticket ID', numeric: true},
@@ -114,13 +103,6 @@
                     {key: 'ticket_priority', label: 'Priority', numeric: false},
                     {key: 'updated_human_time', label: 'Updated', numeric: false},
                 ],
-                currentPage: 1,
-                count_trash: 0,
-                status: 'all',
-                category: 'all',
-                priority: 'all',
-                city: 'all',
-                query: '',
             }
         },
         mounted() {
@@ -130,7 +112,8 @@
             }
         },
         computed: {
-            ...mapState(['pagination', 'tickets', 'filters', 'meta_data']),
+            ...mapState(['pagination', 'tickets', 'filters', 'meta_data',
+                'status', 'category', 'priority', 'currentPage', 'city', 'search']),
             actions() {
                 return this.meta_data.actions;
             },
@@ -146,12 +129,12 @@
                     ticket_priority: this.priority,
                     paged: this.currentPage,
                     city: this.city,
-                    search: this.query
+                    search: this.search
                 });
             },
             categorySearch(data) {
-                this.category = data.cat;
-                this.query = data.query;
+                this.$store.commit('SET_CATEGORY', data.cat);
+                this.$store.commit('SET_SEARCH', data.query);
                 this.getItems();
             },
             openNewTicket() {
@@ -168,25 +151,30 @@
                 return html;
             },
             clearFilter() {
-                this.status = 'all';
-                this.category = 'all';
-                this.priority = 'all';
-                this.city = 'all';
+                this.$store.commit('SET_STATUS', 'all');
+                this.$store.commit('SET_CATEGORY', 'all');
+                this.$store.commit('SET_PRIORITY', 'all');
+                this.$store.commit('SET_CITY', 'all');
+
                 this.getItems();
             },
             changeStatus() {
-                this.currentPage = 1;
+                this.$store.commit('SET_CURRENT_PAGE', 1);
                 this.getItems();
             },
             paginate(page) {
-                this.currentPage = page;
+                this.$store.commit('SET_CURRENT_PAGE', page);
                 this.getItems();
             },
-            search(query) {
-                this.query = query;
+            searchTicket(query) {
+                this.$store.commit('SET_SEARCH', query);
                 this.getItems();
+            },
+            updateSelectedItems(ids) {
+                this.selectedItems = ids;
             },
             exportExcel() {
+                let ajaxurl = window.StackonetToolkit.ajaxurl;
                 window.location.href = `${ajaxurl}?action=download_support_ticket&ticket_status=${this.status}&ticket_category=${this.category}&ticket_priority=${this.priority}`;
             },
             onActionClick(action, item) {
@@ -201,6 +189,18 @@
                 }
                 if ('delete' === action && window.confirm('Are you sure to delete permanently?')) {
                     this.trashAction(item, 'delete');
+                }
+            },
+            restoreItems() {
+                this.onBulkAction('restore', this.selectedItems);
+            },
+            trashItems() {
+                if (this.selectedItems.length) {
+                    if ('trash' === this.status) {
+                        this.onBulkAction('delete', this.selectedItems);
+                    } else {
+                        this.onBulkAction('trash', this.selectedItems);
+                    }
                 }
             },
             onBulkAction(action, items) {

@@ -252,7 +252,9 @@ class SupportTicketController extends ApiController {
 				'agent'           => $agent,
 			] );
 		}
-		$counts = $supportTicket->count_records();
+
+		$statuses = $supportTicket->get_ticket_statuses_terms();
+		$counts   = SupportTicket::tickets_count_by_terms( $statuses, 'ticket_status' );
 
 		$pagination = $this->getPaginationMetadata( [
 			'totalCount'  => $counts[ $status ],

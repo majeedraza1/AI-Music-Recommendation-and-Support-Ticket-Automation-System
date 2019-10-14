@@ -145,7 +145,7 @@ class Admin {
 			$data['priorities'][] = [ 'key' => $status->term_id, 'label' => $status->name, 'count' => 0, ];
 		}
 
-		$data['count_trash'] = $supportTicket->count_trash_records();
+		$data['count_trash'] = $supportTicket->count_inactive_records();
 
 		$data['ticket_categories'] = TicketCategory::get_all();
 		$data['ticket_statuses']   = TicketStatus::get_all();

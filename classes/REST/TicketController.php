@@ -97,7 +97,8 @@ class TicketController extends ApiController {
 			] );
 		}
 
-		$counts = $supportTicket->count_records();
+		$statuses = $supportTicket->get_ticket_statuses_terms();
+		$counts   = SupportTicket::tickets_count_by_terms( $statuses, 'ticket_status' );
 
 		$pagination = $this->getPaginationMetadata( [
 			'totalCount'  => $counts[ $status ],
@@ -107,8 +108,18 @@ class TicketController extends ApiController {
 
 		$response = [ 'items' => $items, 'pagination' => $pagination, 'filters' => [] ];
 
+		$response['trash'] = [
+			'key'           => 'trash',
+			'name'          => __( 'Trash', 'stackonet-support-ticket' ),
+			'singular_name' => __( 'Trash', 'stackonet-support-ticket' ),
+			'count'         => $supportTicket->count_inactive_records(),
+			'active'        => $status == 'trash'
+		];
+
 		if ( current_user_can( 'manage_options' ) ) {
-			$response['filters'] = $this->get_filter_data( $status );
+			$response['filters'] = $this->get_filter_data(
+				$status, $ticket_category, $ticket_priority
+			);
 		}
 
 		if ( 'trash' == $status ) {
@@ -326,31 +337,62 @@ class TicketController extends ApiController {
 	 *
 	 * Get filter data
 	 *
-	 * @param string $status
+	 * @param int $status
+	 * @param int $category
+	 * @param int $priority
 	 *
 	 * @return array
 	 */
-	public function get_filter_data( $status ) {
+	public function get_filter_data( $status, $category = null, $priority = null ) {
 		$_categories = ( new SupportTicket() )->get_categories_terms();
+		$counts      = SupportTicket::tickets_count_by_terms( $_categories, 'ticket_category' );
 		$categories  = [];
 		foreach ( $_categories as $_category ) {
-			$categories[] = [ 'value' => $_category->term_id, 'label' => $_category->name ];
+			$categories[] = [
+				'value'  => $_category->term_id,
+				'label'  => $_category->name,
+				'count'  => isset( $counts[ $_category->term_id ] ) ? $counts[ $_category->term_id ] : 0,
+				'active' => $category == $_category->term_id
+			];
 		}
 
 		$_priorities = ( new SupportTicket() )->get_priorities_terms();
+		$counts      = SupportTicket::tickets_count_by_terms( $_priorities, 'ticket_priority' );
 		$priorities  = [];
 		foreach ( $_priorities as $_priority ) {
-			$priorities[] = [ 'value' => $_priority->term_id, 'label' => $_priority->name ];
+			$priorities[] = [
+				'value'  => $_priority->term_id,
+				'label'  => $_priority->name,
+				'count'  => isset( $counts[ $_priority->term_id ] ) ? $counts[ $_priority->term_id ] : 0,
+				'active' => $priority == $_priority->term_id
+			];
 		}
 
-		$statuses = SupportTicket::get_statuses_with_counts( $status );
-		$cities   = ( new SupportTicket() )->find_all_cities();
+		$_statuses = ( new SupportTicket )->get_ticket_statuses_terms();
+		$counts    = SupportTicket::tickets_count_by_terms( $_statuses, 'ticket_status' );
+		$statuses  = [];
+		foreach ( $_statuses as $_status ) {
+			$statuses[] = [
+				'value'  => $_status->term_id,
+				'label'  => $_status->name,
+				'count'  => isset( $counts[ $_status->term_id ] ) ? $counts[ $_status->term_id ] : 0,
+				'active' => $status == $_status->term_id
+			];
+		}
 
 		$_agents = SupportAgent::get_all();
+		$counts  = SupportTicket::count_tickets_by_agents();
 		$agents  = [];
 		foreach ( $_agents as $_agent ) {
-			$agents[] = [ 'value' => $_agent->get( 'term_id' ), 'label' => $_agent->get_user()->display_name ];
+			$agents[] = [
+				'value' => $_agent->get( 'term_id' ),
+				'label' => $_agent->get_user()->display_name,
+				'count' => isset( $counts[ $_agent->get( 'term_id' ) ] ) ? $counts[ $_agent->get( 'term_id' ) ] : 0,
+				// 'active' => $status == $_agent->get( 'term_id' )
+			];
 		}
+
+		$cities = ( new SupportTicket() )->find_all_cities();
 
 		return [
 			[

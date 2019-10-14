@@ -10,6 +10,7 @@ export default new Vuex.Store({
         loading: true,
         snackbar: {},
         pagination: {},
+        trashedTickets: {},
         tickets: [],
         filters: [],
         meta_data: [],
@@ -23,6 +24,7 @@ export default new Vuex.Store({
         city: '',
         agent: '',
         search: '',
+        currentPage: 1,
     },
 
     // Commit + track state changes
@@ -75,6 +77,12 @@ export default new Vuex.Store({
         SET_SEARCH(state, search) {
             state.search = search;
         },
+        SET_TRASHED_TICKETS(state, trashedTickets) {
+            state.trashedTickets = trashedTickets;
+        },
+        SET_CURRENT_PAGE(state, currentPage) {
+            state.currentPage = currentPage;
+        },
     },
 
     // Same as Vue methods
@@ -87,6 +95,7 @@ export default new Vuex.Store({
                 commit('SET_TICKETS', data.items);
                 commit('SET_PAGINATION', data.pagination);
                 commit('SET_META_DATA', data.meta_data);
+                commit('SET_TRASHED_TICKETS', data.trash);
                 commit('SET_FILTERS', filters);
             }).catch(error => {
                 console.log(error);

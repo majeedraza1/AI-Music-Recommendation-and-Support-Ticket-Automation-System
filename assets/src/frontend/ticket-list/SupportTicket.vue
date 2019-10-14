@@ -1,32 +1,53 @@
 <template>
     <div class="Support-ticket-wrapper">
-        <div class="support-tickets-left-content">
-            <div class="support-ticket-toggle" v-for="(filter, index) in filters" v-if="filter.options.length">
+
+        <div class="support-tickets-side-nav">
+            <div class="support-tickets-side-nav__item" v-for="(filter, index) in filters" v-if="filter.options.length">
                 <toggle :name="filter.name" :selected="index === 0">
                     <template slot="icon">
                         <svg xmlns="http://www.w3.org/2000/svg">
                             <use xlink:href="#icon-format_list_bulleted"></use>
                         </svg>
                     </template>
-                    <ul class="dropdown-content">
-                        <li v-for="_option in filter.options" :class="{'is-active':_option.active}"
-                            @click="changeFilter(_option,filter)">
-                            <span>{{_option.label}}</span>
-                            <span v-if="_option.count !== 'undefine'">({{_option.count}})</span>
-                        </li>
-                    </ul>
+                    <span class="support-tickets-side-nav__text" v-for="_option in filter.options"
+                          :class="{'is-active':_option.active}" @click="changeFilter(_option.value,filter.id)">
+                        <span class="support-tickets-side-nav__label">{{_option.label}}</span>
+                        <span class="support-tickets-side-nav__count">{{_option.count}}</span>
+                    </span>
+
                 </toggle>
             </div>
-            <div class="support-ticket-toggle">
-                <toggle name="Setting" :selected="isSelected">
-                    <template slot="icon">
+
+            <div class="support-tickets-side-nav__item">
+                <div class="support-tickets-side-nav__title">
+                    <span class="support-tickets-side-nav__icon">
                         <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-fa_cog"></use>
+                            <use xlink:href="#icon-delete_outline"></use>
                         </svg>
-                    </template>
-                </toggle>
+                    </span>
+                    <span class="support-tickets-side-nav__text" :class="{'is-active':trashedTickets.active}"
+                          @click="changeFilter('trash', 'status')">
+                        <span class="support-tickets-side-nav__label">{{trashedTickets.name}}</span>
+                        <span class="support-tickets-side-nav__count">{{trashedTickets.count}}</span>
+                    </span>
+                </div>
             </div>
+
+            <div class="support-tickets-side-nav__item">
+                <div class="support-tickets-side-nav__title">
+                    <span class="support-tickets-side-nav__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg">
+                            <use xlink:href="#icon-settings"></use>
+                        </svg>
+                    </span>
+                    <span class="support-tickets-side-nav__text">
+                        <span class="support-tickets-side-nav__label">Setting</span>
+                    </span>
+                </div>
+            </div>
+
         </div>
+
         <div class="admin-support-tickets-container">
             <router-view></router-view>
             <spinner :active="loading"></spinner>
@@ -54,13 +75,19 @@
             }
         },
         computed: {
-            ...mapState(['snackbar', 'loading', 'filters',
+            ...mapState(['snackbar', 'loading', 'filters', 'trashedTickets',
                 'status', 'category', 'priority', 'currentPage', 'city', 'search']),
         },
         methods: {
             changeFilter(option, filter) {
-                if (filter.id === 'status') {
-                    this.$store.commit('SET_STATUS', option.value);
+                if (filter === 'status') {
+                    this.$store.commit('SET_STATUS', option);
+                }
+                if (filter === 'category') {
+                    this.$store.commit('SET_CATEGORY', option);
+                }
+                if (filter === 'priority') {
+                    this.$store.commit('SET_PRIORITY', option);
                 }
 
                 this.$store.dispatch('getTickets', {
@@ -82,14 +109,14 @@
     .Support-ticket-wrapper {
         display: flex;
         justify-content: space-between;
-
+        min-height: 80vh;
     }
 
     .admin-support-tickets-container {
-        position: relative;
         box-sizing: border-box;
-        width: calc(100% - 350px);
-        padding: 0 4rem;
+        flex-grow: 1;
+        padding: 0 2rem;
+        position: relative;
 
 
         * {
@@ -98,33 +125,81 @@
 
     }
 
-    .support-tickets-left-content {
+    .support-tickets-side-nav {
         background-color: #fff;
         padding: 2rem;
         max-width: 350px;
 
-    }
+        .shapla-toggle-panel--boxed-mode {
+            margin-bottom: 0;
+        }
 
-    .support-ticket-toggle {
-        display: flex;
+        .shapla-toggle-panel__content {
+            padding-left: 20px;
 
-        .dropdown-content {
-            min-width: 160px;
-            list-style: none;
-            margin: 0 !important;
-
-            li {
-                line-height: 1.8em;
-                color: #000;
-                font-size: 16px;
-                font-weight: 300;
-
-                &.is-active {
-                    color: var(--stackonet-ticket-primary);
-                }
+            .support-tickets-side-nav__text {
+                margin-bottom: 10px;
+                margin-top: 10px;
             }
         }
 
+        &__item {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        &__title {
+            cursor: pointer;
+            display: flex;
+            width: 100%;
+        }
+
+        &__icon {
+            height: 24px;
+            width: 24px;
+        }
+
+        &__text {
+            align-items: center;
+            color: var(--stackonet-ticket-text-primary, rgba(#000, .85));
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        &__label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: calc(100% - 1.5em);
+            margin-right: 10px;
+        }
+
+        &__count {
+            font-size: 12px;
+            min-width: 1.5em;
+            height: 1.5em;
+            background: rgba(#000, .1);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+        }
+
+        svg {
+            height: 24px;
+            width: 24px;
+            fill: var(--stackonet-ticket-text-icon, rgba(#000, .38));
+        }
+
+        &__text.is-active {
+            color: var(--stackonet-ticket-primary);
+
+            .support-tickets-side-nav__count {
+                background-color: var(--stackonet-ticket-primary);
+                color: var(--stackonet-ticket-on-primary);
+            }
+        }
     }
 
     .shapla-search-form__input {

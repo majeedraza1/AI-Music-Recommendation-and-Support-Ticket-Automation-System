@@ -89,6 +89,7 @@
         border: 1px none #eeeeee;
         box-shadow: none;
         font-size: 1rem;
+        width: 100%;
 
         &--boxed-mode {
             margin-bottom: 1em;
@@ -111,7 +112,7 @@
                 box-shadow: none;
                 display: inline-flex;
                 font-size: 1em;
-                padding: 0em 1.25em;
+                padding: 0 1.25em;
                 text-decoration: none;
             }
 
@@ -147,7 +148,6 @@
 
         &__content {
             border: none;
-            padding: 10px 25px 15px;
             position: relative;
 
             &:before,
