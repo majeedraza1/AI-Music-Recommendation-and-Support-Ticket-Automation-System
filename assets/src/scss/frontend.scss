@@ -1,3 +1,6 @@
 @import "utilities/all";
 @import "utilities-classes/all";
 @import "shapla-box";
+body.has-support-ticket .site-content {
+	background: #f5f7fb;
+}

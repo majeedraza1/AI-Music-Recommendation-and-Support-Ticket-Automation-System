@@ -1,18 +1,13 @@
 <template>
     <div class="stackont-single-support-ticket-container">
-
         <div class="stackont-single-support-ticket-actions">
-            <mdl-button type="raised" color="primary" @click="openNewTicket">
-                New Ticket
-            </mdl-button>
-            <mdl-button type="raised" color="default" @click="ticketList">
-                Ticket List
+
+            <mdl-button type="raised" color="primary" @click="ticketList">
+                Back
             </mdl-button>
         </div>
-
         <columns>
             <column :desktop="8">
-
                 <div class="stackont-single-ticket-content">
 
                     <div class="stackont-single-ticket__heading">
@@ -24,7 +19,7 @@
 
                     <div>
                         <editor :init="mce" v-model="content"></editor>
-                        <div style="text-align: right;margin-top:10px;" v-show="content.length">
+                        <div style="text-align: right;margin-top:20px;" v-show="content.length">
                             <mdl-button type="raised" color="default" @click="addNote">Add Note</mdl-button>
                             <mdl-button type="raised" color="primary" @click="submitReply">Submit Reply</mdl-button>
                         </div>
@@ -105,28 +100,28 @@
 
             <column :desktop="4">
 
-                <div class="shapla-box shapla-widget-box">
-                    <div class="shapla-widget-box__heading">
+                <div class="shapla-box shapla-widget-box no-padding">
+                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
                         <h5 class="shapla-widget-box__title">Status</h5>
                         <icon>
                             <span @click="openStatusModal" class="dashicons dashicons-edit"></span>
                         </icon>
                     </div>
-                    <div class="shapla-widget-box__content" v-if="Object.keys(item).length">
+                    <div class="shapla-widget-box__content padding-15" v-if="Object.keys(item).length">
                         <list-item label="Status">{{item.status.name}}</list-item>
                         <list-item label="Category">{{item.category.name}}</list-item>
                         <list-item label="Priority">{{item.priority.name}}</list-item>
                     </div>
                 </div>
 
-                <div class="shapla-box shapla-widget-box">
-                    <div class="shapla-widget-box__heading">
+                <div class="shapla-box shapla-widget-box no-padding">
+                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
                         <h5 class="shapla-widget-box__title">Assign Agent(s)</h5>
                         <icon>
                             <span @click="openAssignAgentModal" class="dashicons dashicons-edit"></span>
                         </icon>
                     </div>
-                    <div class="shapla-widget-box__content">
+                    <div class="shapla-widget-box__content padding-15">
 						<span class="shapla-chip shapla-chip--contact" v-for="_agent in item.assigned_agents">
 							<span class="shapla-chip__contact">
 								<image-container>
@@ -138,11 +133,11 @@
                     </div>
                 </div>
 
-                <div class="shapla-box shapla-widget-box">
-                    <div class="shapla-widget-box__heading">
+                <div class="shapla-box shapla-widget-box no-padding">
+                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
                         <h5 class="shapla-widget-box__title">Raised By</h5>
                     </div>
-                    <div class="shapla-widget-box__content">
+                    <div class="shapla-widget-box__content padding-15">
 						<span class="shapla-chip shapla-chip--contact">
 							<span class="shapla-chip__contact">
 								<image-container>
@@ -154,28 +149,26 @@
                     </div>
                 </div>
 
-                <div class="shapla-box shapla-widget-box">
-                    <div class="shapla-widget-box__heading">
+                <div class="shapla-box shapla-widget-box no-padding">
+                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
                         <h5 class="shapla-widget-box__title">SMS Messages</h5>
                     </div>
-                    <div class="shapla-widget-box__content">
-                        <fieldset>
-                            <legend class="screen-reader-text"><span>Phone</span></legend>
-                            <label for="ticket_twilio_sms_customer_phone">
-                                <input type="checkbox" id="ticket_twilio_sms_customer_phone"
-                                       v-model="ticket_twilio_sms_customer_phone">
-                                <strong>Customer Phone: </strong> {{item.customer_phone}}
-                            </label>
-                        </fieldset>
-                        <fieldset>
-                            <legend class="screen-reader-text"><span>Phone</span></legend>
-                            <label for="users_can_register">
-                                <input type="checkbox" id="users_can_register"
-                                       v-model="ticket_twilio_sms_enable_custom_phone">
-                                <strong>Custom Phone: </strong>
-                                <input type="text" v-model="ticket_twilio_sms_custom_phone"/>
-                            </label>
-                        </fieldset>
+                    <div class="shapla-widget-box__content padding-15">
+                        <div class="shapla-widget-box__customer-phone">
+
+                            <mdl-checkbox id="ticket_twilio_sms_customer_phone"
+                                          v-model="ticket_twilio_sms_customer_phone"><strong>Customer Phone: </strong>
+                                {{item.customer_phone}}
+                            </mdl-checkbox>
+                        </div>
+                        <div class="shapla-widget-box__customer-phone">
+
+                            <mdl-checkbox id="users_can_register"
+                                          v-model="ticket_twilio_sms_enable_custom_phone"><strong>Custom
+                                Phone: </strong></mdl-checkbox>
+                            <input type="text" v-model="ticket_twilio_sms_custom_phone"/>
+
+                        </div>
                         <p>
                             <icon>
                                 <span @click="openTwilioAssignAgentModal" class="dashicons dashicons-edit"></span>
@@ -197,16 +190,21 @@
                         <p><textarea type="text" name="ticket_twilio_sms" id="ticket_twilio_sms"
                                      v-model="ticket_twilio_sms_content"
                                      class="input-text" style="width: 100%;" rows="4" value=""></textarea></p>
-                        <p><a class="button tips" id="wc_twilio_sms_order_send_message" @click="sendSms">Send SMS</a>
+                        <p style="margin-bottom:0">
+                            <mdl-button type="raised" color="primary" id="wc_twilio_sms_order_send_message"
+                                        @click="sendSms">Send SMS
+                            </mdl-button>
+
                             <span id="wc_twilio_sms_order_message_char_count"
                                   style="color: green; float: right; font-size: 16px;">{{ticket_twilio_sms_content.length}}</span>
                         </p>
                     </div>
                 </div>
 
-            </column>
-        </columns>
 
+            </column>
+
+        </columns>
         <modal :active="activeThreadModal" title="Edit this Thread" @close="closeThreadEditor">
             <editor :init="mce" v-model="activeThreadContent"></editor>
             <template slot="foot">
@@ -292,10 +290,11 @@
     import ListItem from '../../components/ListItem'
     import ImageContainer from "../../shapla/image/image";
     import Icon from "../../shapla/icon/icon";
+    import MdlCheckbox from "../../material-design-lite/checkbox/mdlCheckbox";
 
     export default {
         name: "SingleSupportTicket",
-        components: {Icon, ImageContainer, mdlButton, columns, column, ListItem, Editor, modal},
+        components: {MdlCheckbox, Icon, ImageContainer, mdlButton, columns, column, ListItem, Editor, modal},
         data() {
             return {
                 loading: false,
@@ -569,6 +568,7 @@
 
         .stackont-single-support-ticket-actions {
             display: flex;
+            margin-bottom: 20px;
 
             .left {
                 > *:not(:last-child) {
@@ -631,6 +631,7 @@
 
     .shapla-widget-box {
         margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
 
         &__heading {
             align-items: center;
@@ -642,9 +643,15 @@
         }
 
         &__title {
+            color: currentColor;
             margin: 0;
             padding: 0;
         }
+
+        &__customer-phone {
+            padding-bottom: 10px;
+        }
+
     }
 
     .shapla-chip {
@@ -710,7 +717,8 @@
         &--report,
         &--note,
         &--reply {
-            border: 1px solid rgba(#000, 0.2);
+            box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+            //border: 1px solid rgba(#000, 0.2);
             border-radius: 6px;
             display: flex;
             margin: 1.5rem 0;
@@ -761,6 +769,7 @@
         &__time {
             display: block;
         }
+
     }
 
     .table--support-order {
@@ -772,5 +781,13 @@
             max-width: 200px;
             height: auto;
         }
+    }
+
+    .mce-panel {
+        border: none !important;
+    }
+
+    .mce-tinymce {
+        box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08) !important;
     }
 </style>
