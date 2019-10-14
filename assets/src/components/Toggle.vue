@@ -1,26 +1,24 @@
 <template>
     <div class="shapla-toggle-panel" :class="panelClass">
         <div class="shapla-toggle-panel__heading">
-            <h4 class="shapla-toggle-panel__title toggle">
-                <a href="#" @click.prevent="toggleActive">
+            <h4 class="shapla-toggle-panel__title toggle" @click.prevent="toggleActive">
+                <span class="shapla-toggle-panel__icon-wrapper">
                     <slot name="icon">
-                        <div class="shapla-toggle-panel__icon-wrapper">
-                            <template v-if="isSelected">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M19 13H5v-2h14v2z"/>
-                                    <path d="M0 0h24v24H0z" fill="none"/>
-                                </svg>
-                            </template>
-                            <template v-if="!isSelected">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                                    <path d="M0 0h24v24H0z" fill="none"/>
-                                </svg>
-                            </template>
-                        </div>
+                        <template v-if="isSelected">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 13H5v-2h14v2z"/>
+                                <path d="M0 0h24v24H0z" fill="none"/>
+                            </svg>
+                        </template>
+                        <template v-if="!isSelected">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                <path d="M0 0h24v24H0z" fill="none"/>
+                            </svg>
+                        </template>
                     </slot>
-                    <div class="shapla-toggle-panel__title-text">{{name}}</div>
-                </a>
+                </span>
+                <span class="shapla-toggle-panel__title-text">{{name}}</span>
             </h4>
         </div>
         <div class="shapla-toggle-panel__body" :class="panelBodyClass">
@@ -98,11 +96,12 @@
         }
 
         &__title {
+            display: flex;
             position: relative;
             line-height: 1.5;
             font-size: 1.25em;
             font-weight: 400;
-            color: inherit;
+            color: var(--stackonet-ticket-text-secondary);
             margin: 0;
             padding: 0;
 
@@ -116,22 +115,21 @@
                 text-decoration: none;
             }
 
-            .shapla-toggle-panel__icon-wrapper,
+            .shapla-toggle-panel__icon-wrapper {
+            }
+
             svg {
-                order: 2;
-                float: right;
-                fill: white;
+                float: left;
+                fill: currentColor;
+                overflow: hidden;
+                margin-right: 10px;
                 width: 1em;
                 height: 1em;
-                overflow: hidden;
-                margin-left: 10px;
-                display: none;
             }
         }
 
         &__title-text {
-            color: #000;
-            opacity: 0.6;
+            color: var(--stackonet-ticket-text-secondary);
             font-size: 16px;
             font-weight: 500;
             line-height: 1.2em;

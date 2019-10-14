@@ -1001,6 +1001,20 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Get ticket statuses term
+	 *
+	 * @return WP_Term[]
+	 */
+	public function get_agents_terms() {
+		$terms = get_terms( array(
+			'taxonomy'   => 'wpsc_agents',
+			'hide_empty' => false,
+		) );
+
+		return $terms;
+	}
+
+	/**
 	 * Count number of tickets by status
 	 *
 	 * @param array $statuses
@@ -1056,7 +1070,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Get status with count
 	 *
-	 * @param string $current_status
+	 * @param string|int $current_status
 	 *
 	 * @return array
 	 */

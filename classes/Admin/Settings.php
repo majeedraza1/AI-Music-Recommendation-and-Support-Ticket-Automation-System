@@ -2,7 +2,6 @@
 
 namespace StackonetSupportTicket\Admin;
 
-use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketCategory;
 use StackonetSupportTicket\Models\TicketPriority;
 use StackonetSupportTicket\Models\TicketStatus;
@@ -26,9 +25,29 @@ class Settings {
 			self::$instance = new self();
 
 			add_action( 'wp_loaded', [ self::$instance, 'settings' ] );
+			add_action( 'wp_head', [ self::$instance, 'support_ticket_colors' ], 1 );
 		}
 
 		return self::$instance;
+	}
+
+	public function support_ticket_colors() {
+		$options         = get_option( 'stackonet_support_ticket' );
+		$primary_color   = isset( $options['primary_color'] ) ? esc_attr( $options['primary_color'] ) : '#f58730';
+		$secondary_color = isset( $options['secondary_color'] ) ? esc_attr( $options['secondary_color'] ) : '#9c27b0';
+		?>
+        <style type="text/css">
+            :root {
+                --stackonet-ticket-primary: <?php echo $primary_color; ?>;
+                --stackonet-ticket-on-primary: #ffffff;
+                --stackonet-ticket-secondary: <?php echo $secondary_color; ?>;
+                --stackonet-ticket-on-secondary: #ffffff;
+                --stackonet-ticket-text-primary: rgba(0, 0, 0, 0.87);
+                --stackonet-ticket-text-secondary: rgba(0, 0, 0, 0.54);
+                --stackonet-ticket-text-icon: rgba(0, 0, 0, 0.38);
+            }
+        </style>
+		<?php
 	}
 
 	/**

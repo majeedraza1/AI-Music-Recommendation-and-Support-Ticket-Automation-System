@@ -17,6 +17,12 @@ export default new Vuex.Store({
         priorities: [],
         statuses: [],
         agents: [],
+        status: '',
+        category: '',
+        priority: '',
+        city: '',
+        agent: '',
+        search: '',
     },
 
     // Commit + track state changes
@@ -50,6 +56,24 @@ export default new Vuex.Store({
         },
         SET_AGENTS(state, agents) {
             state.agents = agents;
+        },
+        SET_STATUS(state, status) {
+            state.status = status;
+        },
+        SET_CATEGORY(state, category) {
+            state.category = category;
+        },
+        SET_PRIORITY(state, priority) {
+            state.priority = priority;
+        },
+        SET_CITY(state, city) {
+            state.city = city;
+        },
+        SET_AGENT(state, agent) {
+            state.agent = agent;
+        },
+        SET_SEARCH(state, search) {
+            state.search = search;
         },
     },
 

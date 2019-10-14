@@ -3,6 +3,7 @@
 namespace StackonetSupportTicket\REST;
 
 use Exception;
+use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
 use WP_Error;
@@ -107,7 +108,7 @@ class TicketController extends ApiController {
 		$response = [ 'items' => $items, 'pagination' => $pagination, 'filters' => [] ];
 
 		if ( current_user_can( 'manage_options' ) ) {
-			$response['filters'] = $this->get_filter_data();
+			$response['filters'] = $this->get_filter_data( $status );
 		}
 
 		if ( 'trash' == $status ) {
@@ -325,23 +326,31 @@ class TicketController extends ApiController {
 	 *
 	 * Get filter data
 	 *
+	 * @param string $status
+	 *
 	 * @return array
 	 */
-	public function get_filter_data() {
+	public function get_filter_data( $status ) {
 		$_categories = ( new SupportTicket() )->get_categories_terms();
 		$categories  = [];
-		foreach ( $_categories as $status ) {
-			$categories[] = [ 'value' => $status->term_id, 'label' => $status->name ];
+		foreach ( $_categories as $_category ) {
+			$categories[] = [ 'value' => $_category->term_id, 'label' => $_category->name ];
 		}
 
 		$_priorities = ( new SupportTicket() )->get_priorities_terms();
 		$priorities  = [];
-		foreach ( $_priorities as $status ) {
-			$priorities[] = [ 'value' => $status->term_id, 'label' => $status->name ];
+		foreach ( $_priorities as $_priority ) {
+			$priorities[] = [ 'value' => $_priority->term_id, 'label' => $_priority->name ];
 		}
 
-		$statuses = SupportTicket::get_statuses_with_counts();
+		$statuses = SupportTicket::get_statuses_with_counts( $status );
 		$cities   = ( new SupportTicket() )->find_all_cities();
+
+		$_agents = SupportAgent::get_all();
+		$agents  = [];
+		foreach ( $_agents as $_agent ) {
+			$agents[] = [ 'value' => $_agent->get( 'term_id' ), 'label' => $_agent->get_user()->display_name ];
+		}
 
 		return [
 			[
@@ -351,16 +360,22 @@ class TicketController extends ApiController {
 				'options'       => $statuses,
 			],
 			[
-				'id'            => 'category',
-				'name'          => __( 'Categories', 'stackonet-support-ticket' ),
-				'singular_name' => __( 'Category', 'stackonet-support-ticket' ),
-				'options'       => $categories
-			],
-			[
 				'id'            => 'priority',
 				'name'          => __( 'Priorities', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'Priority', 'stackonet-support-ticket' ),
 				'options'       => $priorities
+			],
+			[
+				'id'            => 'agent',
+				'name'          => __( 'Agents', 'stackonet-support-ticket' ),
+				'singular_name' => __( 'Agent', 'stackonet-support-ticket' ),
+				'options'       => $agents
+			],
+			[
+				'id'            => 'category',
+				'name'          => __( 'Categories', 'stackonet-support-ticket' ),
+				'singular_name' => __( 'Category', 'stackonet-support-ticket' ),
+				'options'       => $categories
 			],
 			[
 				'id'            => 'city',

@@ -47,6 +47,7 @@ class Frontend {
 		if ( ! is_user_logged_in() ) {
 			return $this->support_ticket_login();
 		}
+		include STACKONET_SUPPORT_TICKET_PATH . '/assets/icon/icons.svg';
 
 		return '<div id="stackonet_support_ticket_list"></div>';
 	}
