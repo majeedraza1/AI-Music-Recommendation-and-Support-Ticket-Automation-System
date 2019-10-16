@@ -76,7 +76,7 @@
         },
         computed: {
             ...mapState(['snackbar', 'loading', 'filters', 'trashedTickets',
-                'status', 'category', 'priority', 'currentPage', 'city', 'search']),
+                'status', 'category', 'priority', 'agent', 'currentPage', 'city', 'search']),
         },
         methods: {
             changeFilter(option, filter) {
@@ -89,11 +89,15 @@
                 if (filter === 'priority') {
                     this.$store.commit('SET_PRIORITY', option);
                 }
+                if (filter === 'agent') {
+                    this.$store.commit('SET_AGENT', option);
+                }
 
                 this.$store.dispatch('getTickets', {
                     ticket_status: this.status,
                     ticket_category: this.category,
                     ticket_priority: this.priority,
+                    agent: this.agent,
                     paged: this.currentPage,
                     city: this.city,
                     search: this.search

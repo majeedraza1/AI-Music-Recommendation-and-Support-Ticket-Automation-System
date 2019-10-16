@@ -646,6 +646,7 @@ class SupportTicket extends DatabaseModel {
 			$query .= " AND active = 1";
 		}
 
+		$query   .= " GROUP BY {$table}.{$this->primaryKey}";
 		$query   .= " ORDER BY {$table}.{$orderby} {$order}";
 		$query   .= $wpdb->prepare( " LIMIT %d OFFSET %d", $per_page, $offset );
 		$results = $wpdb->get_results( $query, ARRAY_A );
@@ -1071,12 +1072,13 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public static function count_tickets_by_agents() {
 		global $wpdb;
-		$self = ( new static );
-
+		$self       = ( new static );
+		$table      = $wpdb->prefix . $self->table;
 		$meta_table = $wpdb->prefix . $self->meta_table;
 
-		$query   = "SELECT meta_value as _key, COUNT( * ) AS _value FROM {$meta_table}";
-		$query   .= $wpdb->prepare( " WHERE meta_key = %s", 'assigned_agent' );
+		$query   = "SELECT mt.meta_value as _key, COUNT(mt.ticket_id ) AS _value FROM {$table}";
+		$query   .= " RIGHT JOIN {$meta_table} as mt ON {$table}.id = mt.ticket_id";
+		$query   .= " WHERE {$table}.active = 1 AND mt.meta_key = 'assigned_agent'";
 		$query   .= " GROUP BY meta_value";
 		$results = $wpdb->get_results( $query, ARRAY_A );
 

@@ -118,7 +118,7 @@ class TicketController extends ApiController {
 
 		if ( current_user_can( 'manage_options' ) ) {
 			$response['filters'] = $this->get_filter_data(
-				$status, $ticket_category, $ticket_priority
+				$status, $ticket_category, $ticket_priority, $agent
 			);
 		}
 
@@ -340,10 +340,11 @@ class TicketController extends ApiController {
 	 * @param int $status
 	 * @param int $category
 	 * @param int $priority
+	 * @param int $agent
 	 *
 	 * @return array
 	 */
-	public function get_filter_data( $status, $category = null, $priority = null ) {
+	public function get_filter_data( $status, $category = null, $priority = null, $agent = null ) {
 		$_categories = ( new SupportTicket() )->get_categories_terms();
 		$counts      = SupportTicket::tickets_count_by_terms( $_categories, 'ticket_category' );
 		$categories  = [];
@@ -385,10 +386,10 @@ class TicketController extends ApiController {
 		$agents  = [];
 		foreach ( $_agents as $_agent ) {
 			$agents[] = [
-				'value' => $_agent->get( 'term_id' ),
-				'label' => $_agent->get_user()->display_name,
-				'count' => isset( $counts[ $_agent->get( 'term_id' ) ] ) ? $counts[ $_agent->get( 'term_id' ) ] : 0,
-				// 'active' => $status == $_agent->get( 'term_id' )
+				'value'  => $_agent->get_user_id(),
+				'label'  => $_agent->get_user()->display_name,
+				'count'  => isset( $counts[ $_agent->get( 'term_id' ) ] ) ? $counts[ $_agent->get( 'term_id' ) ] : 0,
+				'active' => $agent == $_agent->get_user_id()
 			];
 		}
 
