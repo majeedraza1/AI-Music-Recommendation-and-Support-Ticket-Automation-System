@@ -112,7 +112,7 @@
             }
         },
         computed: {
-            ...mapState(['pagination', 'tickets', 'filters', 'meta_data',
+            ...mapState(['pagination', 'tickets', 'filters', 'meta_data', 'label',
                 'status', 'category', 'priority', 'currentPage', 'city', 'search']),
             actions() {
                 return this.meta_data.actions;
@@ -123,14 +123,7 @@
         },
         methods: {
             getItems() {
-                this.$store.dispatch('getTickets', {
-                    ticket_status: this.status,
-                    ticket_category: this.category,
-                    ticket_priority: this.priority,
-                    paged: this.currentPage,
-                    city: this.city,
-                    search: this.search
-                });
+                this.$store.dispatch('getTickets');
             },
             categorySearch(data) {
                 this.$store.commit('SET_CATEGORY', data.cat);

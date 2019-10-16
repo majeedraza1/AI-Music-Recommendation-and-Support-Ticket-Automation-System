@@ -45,6 +45,7 @@ class TicketController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::READABLE,
 				'callback' => [ $this, 'get_items' ],
+				'args'     => $this->get_collection_params(),
 			],
 			[
 				'methods'  => WP_REST_Server::CREATABLE,
@@ -62,16 +63,19 @@ class TicketController extends ApiController {
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
-		$status          = $request->get_param( 'ticket_status' );
+		$paged    = $request->get_param( 'page' );
+		$per_page = $request->get_param( 'per_page' );
+		$search   = $request->get_param( 'search' );
+
+		$ticket_status   = $request->get_param( 'ticket_status' );
 		$ticket_category = $request->get_param( 'ticket_category' );
 		$ticket_priority = $request->get_param( 'ticket_priority' );
-		$per_page        = $request->get_param( 'per_page' );
-		$paged           = $request->get_param( 'paged' );
 		$city            = $request->get_param( 'city' );
-		$search          = $request->get_param( 'search' );
 		$agent           = $request->get_param( 'agent' );
+		$label           = $request->get_param( 'label' );
+		$active          = 'trash' != $label;
 
-		$status          = ! empty( $status ) ? $status : 'all';
+		$ticket_status   = ! empty( $ticket_status ) ? $ticket_status : 'all';
 		$ticket_category = ! empty( $ticket_category ) ? $ticket_category : 'all';
 		$ticket_priority = ! empty( $ticket_priority ) ? $ticket_priority : 'all';
 		$city            = ! empty( $city ) ? $city : 'all';
@@ -89,10 +93,11 @@ class TicketController extends ApiController {
 			$items = $supportTicket->find( [
 				'paged'           => $paged,
 				'per_page'        => $per_page,
-				'ticket_status'   => $status,
+				'ticket_status'   => $ticket_status,
 				'ticket_category' => $ticket_category,
 				'ticket_priority' => $ticket_priority,
 				'city'            => $city,
+				'active'          => $active,
 				'agent'           => $agent,
 			] );
 		}
@@ -101,7 +106,7 @@ class TicketController extends ApiController {
 		$counts   = SupportTicket::tickets_count_by_terms( $statuses, 'ticket_status' );
 
 		$pagination = $this->getPaginationMetadata( [
-			'totalCount'  => $counts[ $status ],
+			'totalCount'  => $counts[ $ticket_status ],
 			'limit'       => $per_page,
 			'currentPage' => $paged,
 		] );
@@ -113,16 +118,16 @@ class TicketController extends ApiController {
 			'name'          => __( 'Trash', 'stackonet-support-ticket' ),
 			'singular_name' => __( 'Trash', 'stackonet-support-ticket' ),
 			'count'         => $supportTicket->count_inactive_records(),
-			'active'        => $status == 'trash'
+			'active'        => $label == 'trash'
 		];
 
 		if ( current_user_can( 'manage_options' ) ) {
 			$response['filters'] = $this->get_filter_data(
-				$status, $ticket_category, $ticket_priority, $agent
+				$ticket_status, $ticket_category, $ticket_priority, $agent
 			);
 		}
 
-		if ( 'trash' == $status ) {
+		if ( 'trash' == $label ) {
 			$actions     = [
 				[ 'key' => 'restore', 'label' => 'Restore' ],
 				[ 'key' => 'delete', 'label' => 'Delete Permanently' ],
@@ -205,6 +210,81 @@ class TicketController extends ApiController {
 		}
 
 		return $this->respondInternalServerError();
+	}
+
+	/**
+	 * Retrieves the query params for the collections.
+	 *
+	 * @return array Query parameters for the collection.
+	 */
+	public function get_collection_params() {
+		$params = [
+			'page'            => [
+				'description'       => __( 'Current page of the collection.' ),
+				'type'              => 'integer',
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+				'minimum'           => 1,
+			],
+			'per_page'        => [
+				'description'       => __( 'Maximum number of items to be returned in result set.' ),
+				'type'              => 'integer',
+				'default'           => 10,
+				'minimum'           => 1,
+				'maximum'           => 100,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'search'          => [
+				'description'       => __( 'Limit results to those matching a string.' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'city'            => [
+				'description'       => __( 'Limit results to those matching a city.' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'ticket_status'   => [
+				'description'       => __( 'Limit results to those matching ticket status.' ),
+				'type'              => 'integer',
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+				'default'           => 0,
+			],
+			'ticket_category' => [
+				'description'       => __( 'Limit results to those matching ticket category.' ),
+				'type'              => 'integer',
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+				'default'           => 0,
+			],
+			'ticket_priority' => [
+				'description'       => __( 'Limit results to those matching ticket priority.' ),
+				'type'              => 'integer',
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+				'default'           => 0,
+			],
+			'agent'           => [
+				'description'       => __( 'Agent user id. Limit results to those matching support ticket agents.' ),
+				'type'              => 'integer',
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+				'default'           => 0,
+			],
+			'label'           => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+				'default'           => 'all',
+			],
+		];
+
+		return $params;
 	}
 
 	/**

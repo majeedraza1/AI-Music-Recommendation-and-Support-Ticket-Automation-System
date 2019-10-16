@@ -18,11 +18,12 @@ export default new Vuex.Store({
         priorities: [],
         statuses: [],
         agents: [],
-        status: '',
-        category: '',
-        priority: '',
+        status: 0,
+        category: 0,
+        priority: 0,
+        agent: 0,
+        label: 'all',
         city: '',
-        agent: '',
         search: '',
         currentPage: 1,
     },
@@ -68,6 +69,9 @@ export default new Vuex.Store({
         SET_PRIORITY(state, priority) {
             state.priority = priority;
         },
+        SET_LABEL(state, label) {
+            state.label = label;
+        },
         SET_CITY(state, city) {
             state.city = city;
         },
@@ -87,10 +91,23 @@ export default new Vuex.Store({
 
     // Same as Vue methods
     actions: {
-        getTickets({commit}, params) {
+        getTickets({commit, state}) {
             commit('SET_LOADING_STATUS', true);
-            axios.get('tickets', {params: params}).then(response => {
-                let data = response.data.data, filters = data.filters;
+            axios.get('tickets',
+                {
+                    params: {
+                        ticket_status: state.status,
+                        ticket_category: state.category,
+                        ticket_priority: state.priority,
+                        agent: state.agent,
+                        page: state.currentPage,
+                        label: state.label,
+                        city: state.city,
+                        search: state.search
+                    }
+                }).then(response => {
+                let data = response.data.data,
+                    filters = data.filters;
                 commit('SET_LOADING_STATUS', false);
                 commit('SET_TICKETS', data.items);
                 commit('SET_PAGINATION', data.pagination);

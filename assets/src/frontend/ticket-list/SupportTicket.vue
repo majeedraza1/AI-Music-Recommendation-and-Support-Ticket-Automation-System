@@ -26,7 +26,7 @@
                         </svg>
                     </span>
                     <span class="support-tickets-side-nav__text" :class="{'is-active':trashedTickets.active}"
-                          @click="changeFilter('trash', 'status')">
+                          @click="getTrashedItems">
                         <span class="support-tickets-side-nav__label">{{trashedTickets.name}}</span>
                         <span class="support-tickets-side-nav__count">{{trashedTickets.count}}</span>
                     </span>
@@ -75,11 +75,21 @@
             }
         },
         computed: {
-            ...mapState(['snackbar', 'loading', 'filters', 'trashedTickets',
+            ...mapState(['snackbar', 'loading', 'filters', 'trashedTickets', 'label',
                 'status', 'category', 'priority', 'agent', 'currentPage', 'city', 'search']),
         },
         methods: {
+            getTrashedItems() {
+                this.$store.commit('SET_STATUS', 0);
+                this.$store.commit('SET_CATEGORY', 0);
+                this.$store.commit('SET_PRIORITY', 0);
+                this.$store.commit('SET_AGENT', 0);
+                this.$store.commit('SET_LABEL', 'trash');
+
+                this.$store.dispatch('getTickets');
+            },
             changeFilter(option, filter) {
+                this.$store.commit('SET_LABEL', 'all');
                 if (filter === 'status') {
                     this.$store.commit('SET_STATUS', option);
                 }
@@ -93,15 +103,7 @@
                     this.$store.commit('SET_AGENT', option);
                 }
 
-                this.$store.dispatch('getTickets', {
-                    ticket_status: this.status,
-                    ticket_category: this.category,
-                    ticket_priority: this.priority,
-                    agent: this.agent,
-                    paged: this.currentPage,
-                    city: this.city,
-                    search: this.search
-                });
+                this.$store.dispatch('getTickets');
             }
         }
     }

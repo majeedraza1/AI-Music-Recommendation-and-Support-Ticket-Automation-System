@@ -592,6 +592,7 @@ class SupportTicket extends DatabaseModel {
 		$order         = isset( $args['order'] ) && 'ASC' == $args['order'] ? 'ASC' : 'DESC';
 		$ticket_status = isset( $args['ticket_status'] ) ? $args['ticket_status'] : 'all';
 		$agent         = isset( $args['agent'] ) && is_numeric( $args['agent'] ) ? intval( $args['agent'] ) : 0;
+		$active        = isset( $args['active'] ) && is_bool( $args['active'] ) ? $args['active'] : false;
 
 		global $wpdb;
 		$table      = $wpdb->prefix . $this->table;
@@ -640,7 +641,7 @@ class SupportTicket extends DatabaseModel {
 			$query .= $wpdb->prepare( " AND city = %s", $args['city'] );
 		}
 
-		if ( 'trash' == $ticket_status ) {
+		if ( ! $active ) {
 			$query .= " AND active = 0";
 		} else {
 			$query .= " AND active = 1";
