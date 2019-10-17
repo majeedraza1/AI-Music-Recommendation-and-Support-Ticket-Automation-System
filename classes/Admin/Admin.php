@@ -30,8 +30,6 @@ class Admin {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
-			add_action( 'admin_enqueue_scripts', [ self::$instance, 'admin_localize_scripts' ] );
-			add_action( 'admin_menu', [ self::$instance, 'add_menu' ], 9 );
 			add_action( 'admin_menu', [ self::$instance, 'support_ticket_menu' ] );
 		}
 
@@ -63,32 +61,6 @@ class Admin {
 	public function menu_page_callback() {
 		echo '<div class="wrap"><div id="stackonet-support-tickets-admin"></div></div>';
 		add_action( 'admin_footer', [ $this, 'tinymce_script' ], 9 );
-	}
-
-	/**
-	 * Admin scripts
-	 */
-	public function admin_localize_scripts() {
-
-	}
-
-	/**
-	 * Add top level menu
-	 */
-	public function add_menu() {
-		$capability = 'manage_options';
-		$slug       = 'wpsc-tickets';
-
-		$hook = add_menu_page(
-			__( 'Support', 'stackonet-support-ticket' ),
-			__( 'Support', 'stackonet-support-ticket' ),
-			$capability,
-			$slug,
-			[ self::$instance, 'support_tickets_callback' ],
-			'dashicons-format-chat',
-			8 );
-
-		add_action( 'load-' . $hook, [ self::$instance, 'init_support_tickets_hooks' ] );
 	}
 
 	/**

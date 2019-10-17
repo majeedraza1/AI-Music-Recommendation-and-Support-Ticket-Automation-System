@@ -1123,8 +1123,6 @@ class SupportTicket extends DatabaseModel {
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $tables );
-
-		$this->add_table_columns();
 	}
 
 	/**
@@ -1138,14 +1136,6 @@ class SupportTicket extends DatabaseModel {
 
 		if ( version_compare( $version, '1.0.1', '<' ) ) {
 			$row = $wpdb->get_row( "SELECT * FROM {$table_name}", ARRAY_A );
-
-			if ( ! isset( $row['customer_phone'] ) ) {
-				$wpdb->query( "ALTER TABLE {$table_name} ADD `customer_phone` VARCHAR(20) NULL DEFAULT NULL AFTER `customer_email`" );
-			}
-
-			if ( ! isset( $row['city'] ) ) {
-				$wpdb->query( "ALTER TABLE {$table_name} ADD `city` VARCHAR(100) NULL DEFAULT NULL AFTER `ticket_subject`" );
-			}
 
 			update_option( 'stackonet_support_ticket_table_version', '1.0.1' );
 		}

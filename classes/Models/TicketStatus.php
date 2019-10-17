@@ -104,6 +104,10 @@ class TicketStatus extends AbstractModel {
 			$categories = self::get_all();
 			update_term_meta( $term_id, 'support_ticket_status_menu_order', count( $categories ) + 1 );
 
+			if ( ! empty( $args['color'] ) ) {
+				add_term_meta( $term_id, 'ticket_status_color', $args['color'] );
+			}
+
 			return $term_id;
 		}
 

@@ -55,8 +55,6 @@ class StackonetSupportTicket {
 			self::$instance->define_constants();
 			self::$instance->include_classes();
 
-			include_once 'supportcandy.php';
-
 			// initialize the classes
 			add_action( 'plugins_loaded', [ self::$instance, 'init_classes' ] );
 
