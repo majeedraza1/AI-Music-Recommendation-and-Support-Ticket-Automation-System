@@ -18,13 +18,14 @@
                                 <use xlink:href="#icon-import_export"></use>
                             </svg>
                         </div>
-                        <div v-if="status==='trash'" @click="restoreItems">
+                        <div v-if="label==='trash'" @click="restoreItems" class="button-restore"
+                             :class="{'is-active':selectedItems.length}">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Restore</title>
                                 <use xlink:href="#icon-settings_restore"></use>
                             </svg>
                         </div>
-                        <div @click="trashItems">
+                        <div @click="trashItems" class="button-trash" :class="{'is-active':selectedItems.length}">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Trash</title>
                                 <use xlink:href="#icon-delete_outline"></use>
@@ -107,6 +108,7 @@
         },
         mounted() {
             this.$store.commit('SET_LOADING_STATUS', false);
+            this.$store.commit('SET_SHOW_SIDE_NAVE', true);
             if (!this.tickets.length) {
                 this.getItems();
             }
@@ -240,6 +242,14 @@
             right: auto;
             left: 3px;
             top: 5px;
+        }
+    }
+
+    .button-restore,
+    .button-trash {
+        &:not(.is-active) {
+            cursor: not-allowed;
+            opacity: .5;
         }
     }
 

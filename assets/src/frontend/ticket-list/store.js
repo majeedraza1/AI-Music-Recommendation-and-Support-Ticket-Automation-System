@@ -8,6 +8,7 @@ export default new Vuex.Store({
     // Same as Vue data
     state: {
         loading: true,
+        showSideNav: false,
         snackbar: {},
         pagination: {},
         trashedTickets: {},
@@ -86,6 +87,9 @@ export default new Vuex.Store({
         },
         SET_CURRENT_PAGE(state, currentPage) {
             state.currentPage = currentPage;
+        },
+        SET_SHOW_SIDE_NAVE(state, showSideNav) {
+            state.showSideNav = showSideNav;
         },
     },
 

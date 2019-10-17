@@ -2,49 +2,59 @@
     <div class="Support-ticket-wrapper">
 
         <div class="support-tickets-side-nav">
-            <div class="support-tickets-side-nav__item" v-for="(filter, index) in filters" v-if="filter.options.length">
-                <toggle :name="filter.name" :selected="index === 0">
-                    <template slot="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-format_list_bulleted"></use>
-                        </svg>
-                    </template>
-                    <span class="support-tickets-side-nav__text" v-for="_option in filter.options"
-                          :class="{'is-active':_option.active}" @click="changeFilter(_option.value,filter.id)">
+
+            <div v-if="!showSideNav" class="support-tickets-side-nav__back-button">
+                <mdl-button type="raised" color="primary" @click="backToTicketList">
+                    Back
+                </mdl-button>
+            </div>
+
+            <template v-if="showSideNav">
+                <div class="support-tickets-side-nav__item" v-for="(filter, index) in filters"
+                     v-if="filter.options.length">
+                    <toggle :name="filter.name" :selected="index === 0">
+                        <template slot="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg">
+                                <use xlink:href="#icon-format_list_bulleted"></use>
+                            </svg>
+                        </template>
+                        <span class="support-tickets-side-nav__text" v-for="_option in filter.options"
+                              :class="{'is-active':_option.active}" @click="changeFilter(_option.value,filter.id)">
                         <span class="support-tickets-side-nav__label">{{_option.label}}</span>
                         <span class="support-tickets-side-nav__count">{{_option.count}}</span>
                     </span>
 
-                </toggle>
-            </div>
+                    </toggle>
+                </div>
 
-            <div class="support-tickets-side-nav__item">
-                <div class="support-tickets-side-nav__title">
+                <div class="support-tickets-side-nav__item">
+                    <div class="support-tickets-side-nav__title">
                     <span class="support-tickets-side-nav__icon">
                         <svg xmlns="http://www.w3.org/2000/svg">
                             <use xlink:href="#icon-delete_outline"></use>
                         </svg>
                     </span>
-                    <span class="support-tickets-side-nav__text" :class="{'is-active':trashedTickets.active}"
-                          @click="getTrashedItems">
+                        <span class="support-tickets-side-nav__text" :class="{'is-active':trashedTickets.active}"
+                              @click="getTrashedItems">
                         <span class="support-tickets-side-nav__label">{{trashedTickets.name}}</span>
                         <span class="support-tickets-side-nav__count">{{trashedTickets.count}}</span>
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="support-tickets-side-nav__item">
-                <div class="support-tickets-side-nav__title">
+                <div class="support-tickets-side-nav__item">
+                    <div class="support-tickets-side-nav__title">
                     <span class="support-tickets-side-nav__icon">
                         <svg xmlns="http://www.w3.org/2000/svg">
                             <use xlink:href="#icon-settings"></use>
                         </svg>
                     </span>
-                    <span class="support-tickets-side-nav__text">
+                        <span class="support-tickets-side-nav__text" @click="gotToSettings">
                         <span class="support-tickets-side-nav__label">Setting</span>
                     </span>
+                    </div>
                 </div>
-            </div>
+            </template>
 
         </div>
 
@@ -65,17 +75,18 @@
     import spinner from "shapla-spinner";
     import {ConfirmDialog} from 'shapla-confirm-modal/src';
     import Toggle from "../../components/Toggle";
+    import MdlButton from "../../material-design-lite/button/mdlButton";
 
     export default {
         name: "SupportTicket",
-        components: {Toggle, notification, spinner, ConfirmDialog, columns, column},
+        components: {MdlButton, Toggle, notification, spinner, ConfirmDialog, columns, column},
         data() {
             return {
                 isSelected: false,
             }
         },
         computed: {
-            ...mapState(['snackbar', 'loading', 'filters', 'trashedTickets', 'label',
+            ...mapState(['snackbar', 'loading', 'filters', 'trashedTickets', 'label', 'showSideNav',
                 'status', 'category', 'priority', 'agent', 'currentPage', 'city', 'search']),
         },
         methods: {
@@ -104,7 +115,13 @@
                 }
 
                 this.$store.dispatch('getTickets');
-            }
+            },
+            gotToSettings() {
+                this.$router.push({name: 'Settings'});
+            },
+            backToTicketList() {
+                this.$router.push({name: 'SupportTicketList'})
+            },
         }
     }
 </script>
@@ -135,6 +152,15 @@
         background-color: #fff;
         padding: 2rem;
         max-width: 350px;
+        min-width: 280px;
+
+        &__back-button {
+            margin-bottom: 10px;
+
+            button {
+                width: 100%;
+            }
+        }
 
         .shapla-toggle-panel--boxed-mode {
             margin-bottom: 0;

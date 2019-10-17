@@ -1,15 +1,6 @@
 <template>
     <div class="stackont-support-ticket-container stackont-support-ticket-container--new">
 
-        <div class="display-flex justify-space-between">
-            <div class="flex-item">
-                <mdl-button type="raised" color="default" @click="ticketList">
-                    <icon><i class="fa fa-list" aria-hidden="true"></i></icon>
-                    Ticket List
-                </mdl-button>
-            </div>
-        </div>
-
         <columns multiline>
 
             <column :desktop="6">
@@ -117,6 +108,7 @@
         },
         mounted() {
             this.$store.commit('SET_LOADING_STATUS', false);
+            this.$store.commit('SET_SHOW_SIDE_NAVE', false);
             this.customer_name = this.display_name;
             this.customer_email = this.user_email;
             if (!this.categories.length) {

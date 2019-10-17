@@ -1,11 +1,6 @@
 <template>
     <div class="stackont-single-support-ticket-container">
-        <div class="stackont-single-support-ticket-actions">
 
-            <mdl-button type="raised" color="primary" @click="ticketList">
-                Back
-            </mdl-button>
-        </div>
         <columns>
             <column :desktop="8">
                 <div class="stackont-single-ticket-content">
@@ -339,6 +334,7 @@
         mounted() {
             let id = this.$route.params.id;
             this.$store.commit('SET_LOADING_STATUS', false);
+            this.$store.commit('SET_SHOW_SIDE_NAVE', false);
             if (id) {
                 this.id = parseInt(id);
                 this.getItem();
