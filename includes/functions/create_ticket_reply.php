@@ -36,8 +36,8 @@ foreach ( $reply_attachment as $key => $value ) {
 
 $thread_id = $wpscfunction->submit_ticket_thread( $reply_args );
 
-$ticket_status_after_customer_reply = get_option( 'wpsc_ticket_status_after_customer_reply' );
-$ticket_status_after_agent_reply    = get_option( 'wpsc_ticket_status_after_agent_reply' );
+$ticket_status_after_customer_reply = get_option( 'support_ticket_status_after_customer_reply' );
+$ticket_status_after_agent_reply    = get_option( 'support_ticket_status_after_agent_reply' );
 
 if ( $user && $user->has_cap( 'wpsc_agent' ) && $ticket_status_after_agent_reply != $old_status_id ) {
 

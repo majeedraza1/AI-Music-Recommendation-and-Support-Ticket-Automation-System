@@ -1,8 +1,8 @@
 function wpsc_init(wpsc_setting_action, attrs) {
 
-    jQuery('#wpsc_tickets_container').html(wpsc_admin.loading_html);
+    jQuery('#support_tickets_container').html(wpsc_admin.loading_html);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: wpsc_setting_action
     };
 
@@ -10,7 +10,7 @@ function wpsc_init(wpsc_setting_action, attrs) {
         data[key] = value;
     });
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('#wpsc_tickets_container').html(response);
+        jQuery('#support_tickets_container').html(response);
     });
 
 }
@@ -48,30 +48,30 @@ function wpsc_sign_in() {
 
 function wpsc_signup_user() {
 
-    jQuery('#wpsc_tickets_container').html(wpsc_admin.loading_html);
-    //wpsc_doScrolling('#wpsc_tickets_container',1000);
+    jQuery('#support_tickets_container').html(wpsc_admin.loading_html);
+    //wpsc_doScrolling('#support_tickets_container',1000);
 
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'sign_up_user'
     };
 
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('#wpsc_tickets_container').html(response);
+        jQuery('#support_tickets_container').html(response);
     });
 }
 
 function wpsc_get_ticket_list() {
 
-    jQuery('#wpsc_tickets_container').html(wpsc_admin.loading_html);
+    jQuery('#support_tickets_container').html(wpsc_admin.loading_html);
 
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'ticket_list'
     };
 
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('#wpsc_tickets_container').html(response);
+        jQuery('#support_tickets_container').html(response);
     });
 }
 
@@ -83,37 +83,37 @@ function wpsc_get_individual_ticket(e) {
 }
 
 function wpsc_open_ticket(ticket_id) {
-    jQuery('#wpsc_tickets_container').html(wpsc_admin.loading_html);
-    //wpsc_doScrolling('#wpsc_tickets_container',1000);
+    jQuery('#support_tickets_container').html(wpsc_admin.loading_html);
+    //wpsc_doScrolling('#support_tickets_container',1000);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'individual_ticket',
         ticket_id: ticket_id
     };
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('#wpsc_tickets_container').html(response);
+        jQuery('#support_tickets_container').html(response);
     });
 }
 
 function wpsc_get_create_ticket() {
-    jQuery('#wpsc_tickets_container').html(wpsc_admin.loading_html);
-    //wpsc_doScrolling('#wpsc_tickets_container',1000);
+    jQuery('#support_tickets_container').html(wpsc_admin.loading_html);
+    //wpsc_doScrolling('#support_tickets_container',1000);
 
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'create_ticket'
     };
 
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('#wpsc_tickets_container').html(response);
+        jQuery('#support_tickets_container').html(response);
     });
 }
 
 function wpsc_create_ticket_init(wpsc_setting_action, attrs) {
 
-    jQuery('#wpsc_tickets_container').html(wpsc_admin.loading_html);
+    jQuery('#support_tickets_container').html(wpsc_admin.loading_html);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: wpsc_setting_action,
     };
 
@@ -122,7 +122,7 @@ function wpsc_create_ticket_init(wpsc_setting_action, attrs) {
     });
 
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('#wpsc_tickets_container').html(response);
+        jQuery('#support_tickets_container').html(response);
         jQuery('.wpsc_tl_action_bar').hide();
         jQuery('#wpsc_insert_macros').hide();
     });
@@ -179,7 +179,7 @@ function wpsc_close_custom_filter() {
 function wpsc_get_save_ticket_filter() {
     wpsc_modal_open();
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_save_ticket_filter'
     };
     jQuery.post(wpsc_admin.ajax_url, data, function (response_str) {
@@ -191,7 +191,7 @@ function wpsc_get_save_ticket_filter() {
 
 function wpsc_set_saved_filter(key) {
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'set_saved_filter',
         key: key
     };
@@ -202,7 +202,7 @@ function wpsc_set_saved_filter(key) {
 
 function wpsc_delete_saved_filter(key) {
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'delete_saved_filter',
         key: key
     };
@@ -216,9 +216,9 @@ function wpsc_set_default_filter(label) {
 
     jQuery('.wpsp_sidebar_labels').removeClass('active');
     jQuery('.wpsp_sidebar_labels.' + label).addClass('active');
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'set_default_filter',
         label: label
     };
@@ -229,17 +229,17 @@ function wpsc_set_default_filter(label) {
 
 function wpsc_get_tickets() {
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_ticket_list'
     };
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('.wpsc_ticket_list_container').html(response);
+        jQuery('.support_ticket_list_container').html(response);
     });
 }
 
 function wpsc_set_custom_filter() {
     var dataform = new FormData(jQuery('#frm_additional_filters')[0]);
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     jQuery.ajax({
         url: wpsc_admin.ajax_url,
         type: 'POST',
@@ -249,7 +249,7 @@ function wpsc_set_custom_filter() {
     })
         .done(function (response_str) {
             wpsc_get_tickets();
-            //wpsc_doScrolling('#wpsc_tickets_container',1000);
+            //wpsc_doScrolling('#support_tickets_container',1000);
         });
 }
 
@@ -279,7 +279,7 @@ function toggle_list_checkboxes(obj) {
     toggle_ticket_list_actions();
 }
 
-function wpsc_ticket_next_page() {
+function support_ticket_next_page() {
     var page_no = parseInt(jQuery('#wpsc_pg_no').val().trim());
     if (page_no) {
         page_no++;
@@ -288,7 +288,7 @@ function wpsc_ticket_next_page() {
     }
 }
 
-function wpsc_ticket_prev_page() {
+function support_ticket_prev_page() {
     var page_no = parseInt(jQuery('#wpsc_pg_no').val().trim());
     if (page_no > 1) {
         page_no--;
@@ -299,7 +299,7 @@ function wpsc_ticket_prev_page() {
 
 function toggle_ticket_list_actions() {
 
-    var checked = jQuery('#tbl_wpsc_ticket_list').find('.chk_ticket_list_item:checked');
+    var checked = jQuery('#tbl_support_ticket_list').find('.chk_ticket_list_item:checked');
     if (checked.length == 0) {
         jQuery('.checkbox_depend').addClass('hidden');
     } else {
@@ -345,7 +345,7 @@ function wpsc_set_agent_setting() {
     dataform.append('action', 'wpsc_support_agents');
     dataform.append('setting_action', 'set_agent_setting');
     wpsc_modal_close();
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     jQuery.ajax({
         url: wpsc_admin.ajax_url,
         type: 'POST',
@@ -360,14 +360,14 @@ function wpsc_set_agent_setting() {
 
 function wpsc_get_bulk_change_status() {
     wpsc_modal_open(wpsc_admin.change_ticket_status);
-    var checked = jQuery('#tbl_wpsc_ticket_list').find('.chk_ticket_list_item:checked');
+    var checked = jQuery('#tbl_support_ticket_list').find('.chk_ticket_list_item:checked');
     if (checked.length != 0) {
         var values = jQuery('.chk_ticket_list_item:checked').map(function () {
             return this.value;
         }).get();
         var ticket_id = String(values);
         var data = {
-            action: 'wpsc_tickets',
+            action: 'support_tickets',
             setting_action: 'get_bulk_change_status',
             ticket_id: ticket_id
         }
@@ -382,7 +382,7 @@ function wpsc_get_bulk_change_status() {
 function wpsc_set_bulk_change_status() {
     var dataform = new FormData(jQuery('#frm_ticket_change_status')[0]);
     wpsc_modal_close();
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     jQuery.ajax({
         url: wpsc_admin.ajax_url,
         type: 'POST',
@@ -398,7 +398,7 @@ function wpsc_set_bulk_change_status() {
 
 function wpsc_get_delete_bulk_ticket() {
     wpsc_modal_open(wpsc_admin.delete_tickets);
-    var checked = jQuery('#tbl_wpsc_ticket_list').find('.chk_ticket_list_item:checked');
+    var checked = jQuery('#tbl_support_ticket_list').find('.chk_ticket_list_item:checked');
     if (checked.length != 0) {
         var values = jQuery('.chk_ticket_list_item:checked').map(function () {
             return this.value;
@@ -407,7 +407,7 @@ function wpsc_get_delete_bulk_ticket() {
         var ticket_id = String(values);
 
         var data = {
-            action: 'wpsc_tickets',
+            action: 'support_tickets',
             setting_action: 'get_delete_bulk_ticket',
             ticket_id: ticket_id
         }
@@ -422,7 +422,7 @@ function wpsc_get_delete_bulk_ticket() {
 
 function wpsc_get_bulk_assign_agent() {
     wpsc_modal_open(wpsc_admin.assign_agent);
-    var checked = jQuery('#tbl_wpsc_ticket_list').find('.chk_ticket_list_item:checked');
+    var checked = jQuery('#tbl_support_ticket_list').find('.chk_ticket_list_item:checked');
 
     if (checked.length != 0) {
         var values = jQuery('.chk_ticket_list_item:checked').map(function () {
@@ -432,7 +432,7 @@ function wpsc_get_bulk_assign_agent() {
         var ticket_id = String(values);
 
         var data = {
-            action: 'wpsc_tickets',
+            action: 'support_tickets',
             setting_action: 'get_bulk_assign_agent',
             ticket_id: ticket_id
         }
@@ -448,7 +448,7 @@ function wpsc_get_bulk_assign_agent() {
 function wpsc_set_delete_bulk_ticket() {
     var dataform = new FormData(jQuery('#frm_delete_bulk_ticket')[0]);
     wpsc_modal_close();
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     jQuery.ajax({
         url: wpsc_admin.ajax_url,
         type: 'POST',
@@ -465,7 +465,7 @@ function wpsc_set_delete_bulk_ticket() {
 function wpsc_set_bulk_assign_agent() {
     var dataform = new FormData(jQuery('#frm_bulk_assigned_agents')[0]);
     wpsc_modal_close();
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     jQuery.ajax({
         url: wpsc_admin.ajax_url,
         type: 'POST',
@@ -480,7 +480,7 @@ function wpsc_set_bulk_assign_agent() {
 
 }
 
-function wpsc_ticket_thread_expander_toggle(obj) {
+function ticket_thread_expander_toggle(obj) {
     var height = parseInt(jQuery(obj).parent().find('.thread_messege').height());
     if (height === 100) {
         jQuery(obj).parent().find('.thread_messege').height('auto');
@@ -494,7 +494,7 @@ function wpsc_ticket_thread_expander_toggle(obj) {
 function wpsc_get_change_ticket_status(ticket_id) {
     wpsc_modal_open(wpsc_admin.change_ticket_status);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_change_ticket_status',
         ticket_id: ticket_id
     }
@@ -508,7 +508,7 @@ function wpsc_get_change_ticket_status(ticket_id) {
 function wpsc_get_change_ticket_fields(ticket_id) {
     wpsc_modal_open('Change Ticket Fields');
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_change_ticket_fields',
         ticket_id: ticket_id
     }
@@ -538,7 +538,7 @@ function wpsc_set_change_ticket_status(ticket_id) {
 function wpsc_get_change_assign_agent(ticket_id) {
     wpsc_modal_open('Assign Agent');
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_change_assign_agent',
         ticket_id: ticket_id
     }
@@ -552,7 +552,7 @@ function wpsc_get_change_assign_agent(ticket_id) {
 function wpsc_get_delete_ticket(ticket_id) {
     wpsc_modal_open('Delete Ticket');
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_delete_ticket',
         ticket_id: ticket_id
     }
@@ -583,7 +583,7 @@ function wpsc_get_edit_thread(ticket_id, thread_id) {
 
     wpsc_modal_open(wpsc_admin.edit_this_thread);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_edit_thread',
         ticket_id: ticket_id,
         thread_id: thread_id
@@ -598,7 +598,7 @@ function wpsc_get_edit_thread(ticket_id, thread_id) {
 function wpsc_get_close_ticket(ticket_id) {
     wpsc_modal_open(wpsc_admin.close_ticket);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_close_ticket',
         ticket_id: ticket_id
     }
@@ -612,7 +612,7 @@ function wpsc_get_close_ticket(ticket_id) {
 function wpsc_get_clone_ticket(ticket_id) {
     wpsc_modal_open(wpsc_admin.clone_ticket);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_clone_ticket',
         ticket_id: ticket_id
     }
@@ -628,7 +628,7 @@ function wpsc_set_edit_thread(ticket_id) {
     var description = tinyMCE.get('wpsc_therad_edit').getContent().trim();
     var dataform = new FormData(jQuery('#frm_edit_thread')[0]);
     dataform.append('body', description);
-    dataform.append('action', 'wpsc_tickets');
+    dataform.append('action', 'support_tickets');
     dataform.append('setting_action', 'set_edit_thread');
     wpsc_modal_close();
     jQuery('.wpsc_reply_widget').html(wpsc_admin.loading_html);
@@ -647,7 +647,7 @@ function wpsc_set_edit_thread(ticket_id) {
 function wpsc_get_delete_thread(ticket_id, thread_id) {
     wpsc_modal_open(wpsc_admin.delete_this_thread);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_delete_thread',
         ticket_id: ticket_id,
         thread_id: thread_id
@@ -662,7 +662,7 @@ function wpsc_get_delete_thread(ticket_id, thread_id) {
 function wpsc_edit_ticket_subject(ticket_id) {
     wpsc_modal_open(wpsc_admin.edit_subject);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_edit_ticket_subject',
         ticket_id: ticket_id
     }
@@ -759,7 +759,7 @@ function wpsc_set_delete_ticket() {
 function wpsc_get_change_raised_by(ticket_id) {
     wpsc_modal_open(wpsc_admin.change_raised_by);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_change_raised_by',
         ticket_id: ticket_id
     }
@@ -788,7 +788,7 @@ function wpsc_set_change_raised_by(ticket_id) {
 
 function wpsc_get_restore_bulk_ticket() {
     wpsc_modal_open(wpsc_admin.restore_deleted_tickets);
-    var checked = jQuery('#tbl_wpsc_ticket_list').find('.chk_ticket_list_item:checked');
+    var checked = jQuery('#tbl_support_ticket_list').find('.chk_ticket_list_item:checked');
     if (checked.length != 0) {
         var values = jQuery('.chk_ticket_list_item:checked').map(function () {
             return this.value;
@@ -797,7 +797,7 @@ function wpsc_get_restore_bulk_ticket() {
         var ticket_id = String(values);
 
         var data = {
-            action: 'wpsc_tickets',
+            action: 'support_tickets',
             setting_action: 'get_bulk_restore_ticket',
             ticket_id: ticket_id
         }
@@ -813,7 +813,7 @@ function wpsc_get_restore_bulk_ticket() {
 function wpsc_set_bulk_restore_ticket() {
     var dataform = new FormData(jQuery('#frm_bulk_restore_ticket')[0]);
     wpsc_modal_close();
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     jQuery.ajax({
         url: wpsc_admin.ajax_url,
         type: 'POST',
@@ -831,7 +831,7 @@ function wpsc_set_bulk_restore_ticket() {
 function get_restore_ticket(ticket_id) {
     wpsc_modal_open(wpsc_admin.restore_ticket);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_restore_ticket',
         ticket_id: ticket_id
     }
@@ -878,7 +878,7 @@ function wpsc_delete_attached_files(attachment_id, ticket_id, attachment_slug) {
     var flag = confirm(wpsc_admin.are_you_sure);
     if (flag) {
         var data = {
-            action: 'wpsc_tickets',
+            action: 'support_tickets',
             setting_action: 'set_delete_attached_files',
             attachment_id: attachment_id,
             ticket_id: ticket_id,
@@ -893,7 +893,7 @@ function wpsc_delete_attached_files(attachment_id, ticket_id, attachment_slug) {
 function wpsc_get_change_agent_fields(ticket_id) {
     wpsc_modal_open(wpsc_admin.change_agent_fields);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_change_agent_fields',
         ticket_id: ticket_id
     }
@@ -921,14 +921,14 @@ function wpsc_set_change_agent_fields(ticket_id) {
 }
 
 function wpsc_signup_user() {
-    jQuery('#wpsc_tickets_container').html(wpsc_admin.loading_html);
+    jQuery('#support_tickets_container').html(wpsc_admin.loading_html);
 
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'sign_up_user'
     };
     jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-        jQuery('#wpsc_tickets_container').html(response);
+        jQuery('#support_tickets_container').html(response);
     });
 }
 
@@ -962,7 +962,7 @@ function wpsc_set_cron_setup_settings() {
 function wpsc_delete_ticket_permanently(ticket_id) {
     wpsc_modal_open(wpsc_admin.delete_ticket_permanently);
     var data = {
-        action: 'wpsc_tickets',
+        action: 'support_tickets',
         setting_action: 'get_delete_ticket_permanently',
         ticket_id: ticket_id
     }
@@ -991,7 +991,7 @@ function wpsc_set_delete_ticket_permanently() {
 
 function wpsc_get_delete_permanently_bulk_ticket() {
     wpsc_modal_open(wpsc_admin.delete_tickets_permanently);
-    var checked = jQuery('#tbl_wpsc_ticket_list').find('.chk_ticket_list_item:checked');
+    var checked = jQuery('#tbl_support_ticket_list').find('.chk_ticket_list_item:checked');
     if (checked.length != 0) {
         var values = jQuery('.chk_ticket_list_item:checked').map(function () {
             return this.value;
@@ -1000,7 +1000,7 @@ function wpsc_get_delete_permanently_bulk_ticket() {
         var ticket_id = String(values);
 
         var data = {
-            action: 'wpsc_tickets',
+            action: 'support_tickets',
             setting_action: 'get_delete_permanently_bulk_ticket',
             ticket_id: ticket_id
         }
@@ -1016,7 +1016,7 @@ function wpsc_get_delete_permanently_bulk_ticket() {
 function wpsc_set_delete_permanently_bulk_ticket() {
     var dataform = new FormData(jQuery('#frm_bulk_delete_ticket')[0]);
     wpsc_modal_close();
-    jQuery('.wpsc_ticket_list_container').html(wpsc_admin.loading_html);
+    jQuery('.support_ticket_list_container').html(wpsc_admin.loading_html);
     jQuery.ajax({
         url: wpsc_admin.ajax_url,
         type: 'POST',

@@ -13,7 +13,7 @@ class TicketStatus extends AbstractModel {
 	 *
 	 * @var string
 	 */
-	protected static $taxonomy = 'wpsc_statuses';
+	protected static $taxonomy = 'ticket_status';
 
 	/**
 	 * The primary key for the model.

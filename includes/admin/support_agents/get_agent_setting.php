@@ -53,7 +53,7 @@ ob_start();
                     var form_data = new FormData();
                     form_data.append('file', file);
                     form_data.append('file_name', file.name);
-                    form_data.append('action', 'wpsc_tickets');
+                    form_data.append('action', 'support_tickets');
                     form_data.append('setting_action', 'rb_upload_file');
                     jQuery.ajax({
                         type: 'post',

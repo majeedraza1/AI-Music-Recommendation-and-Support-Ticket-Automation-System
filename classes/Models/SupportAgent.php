@@ -16,7 +16,7 @@ class SupportAgent extends AbstractModel {
 	 *
 	 * @var string
 	 */
-	protected static $taxonomy = 'wpsc_agents';
+	protected static $taxonomy = 'support_agent';
 
 	/**
 	 * The primary key for the model.

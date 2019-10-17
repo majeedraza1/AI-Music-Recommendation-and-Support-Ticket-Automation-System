@@ -16,7 +16,7 @@ if ( ! $field_id ) {
 $wpsc_tf_type = get_term_meta( $field_id, 'wpsc_tf_type', true );
 
 if ( $wpsc_tf_type != '0' ) {
-	wp_delete_term( $field_id, 'wpsc_ticket_custom_fields' );
+	wp_delete_term( $field_id, 'support_ticket_custom_fields' );
 	do_action( 'wpsc_delete_custom_field', $field_id );
 	echo '{ "sucess_status":"1","messege":"' . __( 'Field deleted successfully.', 'supportcandy' ) . '" }';
 } else {

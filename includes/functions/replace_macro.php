@@ -5,28 +5,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $current_user, $wpscfunction, $wpdb;
 
-$wpsc_ticket_data = $wpscfunction->get_ticket( $ticket_id );
+$support_ticket_data = $wpscfunction->get_ticket( $ticket_id );
 
 // Ticket ID
 $str = preg_replace( '/{ticket_id}/', $ticket_id, $str );
 
 // Ticket Status
-$str = preg_replace( '/{ticket_status}/', $this->get_status_name( $wpsc_ticket_data['ticket_status'] ), $str );
+$str = preg_replace( '/{ticket_status}/', $this->get_status_name( $support_ticket_data['ticket_status'] ), $str );
 
 // Ticket Category
-$str = preg_replace( '/{ticket_category}/', $this->get_category_name( $wpsc_ticket_data['ticket_category'] ), $str );
+$str = preg_replace( '/{ticket_category}/', $this->get_category_name( $support_ticket_data['ticket_category'] ), $str );
 
 // Ticket Priority
-$str = preg_replace( '/{ticket_priority}/', $this->get_priority_name( $wpsc_ticket_data['ticket_priority'] ), $str );
+$str = preg_replace( '/{ticket_priority}/', $this->get_priority_name( $support_ticket_data['ticket_priority'] ), $str );
 
 // Customer Name
-$str = preg_replace( '/{customer_name}/', stripslashes( $wpsc_ticket_data['customer_name'] ), $str );
+$str = preg_replace( '/{customer_name}/', stripslashes( $support_ticket_data['customer_name'] ), $str );
 
 // Customer Email
-$str = preg_replace( '/{customer_email}/', $wpsc_ticket_data['customer_email'], $str );
+$str = preg_replace( '/{customer_email}/', $support_ticket_data['customer_email'], $str );
 
 // Subject
-$ticket_subject = str_replace( '$', '\$', $wpsc_ticket_data['ticket_subject'] );
+$ticket_subject = str_replace( '$', '\$', $support_ticket_data['ticket_subject'] );
 $str            = preg_replace( '/{ticket_subject}/', stripslashes( $ticket_subject ), $str );
 
 // Ticket Description
@@ -85,23 +85,23 @@ $assigned_agents = $this->get_assigned_agent_names( $ticket_id );
 $str             = preg_replace( '/{assigned_agent}/', $assigned_agents, $str );
 
 // Date created
-$str = preg_replace( '/{date_created}/', get_date_from_gmt( $wpsc_ticket_data['date_created'] ), $str );
+$str = preg_replace( '/{date_created}/', get_date_from_gmt( $support_ticket_data['date_created'] ), $str );
 
 // Date updated
-$str = preg_replace( '/{date_updated}/', get_date_from_gmt( $wpsc_ticket_data['date_updated'] ), $str );
+$str = preg_replace( '/{date_updated}/', get_date_from_gmt( $support_ticket_data['date_updated'] ), $str );
 
 // Agent created
-$str = preg_replace( '/{agent_created}/', $this->get_agent_name( $wpsc_ticket_data['agent_created'] ), $str );
+$str = preg_replace( '/{agent_created}/', $this->get_agent_name( $support_ticket_data['agent_created'] ), $str );
 
 // Ticket URL
-$ticket_auth_code = $wpsc_ticket_data['ticket_auth_code'];
+$ticket_auth_code = $support_ticket_data['ticket_auth_code'];
 $ticket_url       = get_permalink( get_option( 'wpsc_support_page_id' ) ) . '?support_page=open_ticket&ticket_id=' . $ticket_id . '&auth_code=' . $ticket_auth_code;
 $ticket_url       = '<a href="' . $ticket_url . '" target="_blank">' . $ticket_url . '</a>';
 $str              = preg_replace( '/{ticket_url}/', $ticket_url, $str );
 
 // Custom Fields
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -180,7 +180,7 @@ foreach ( $fields as $field ) {
 					}
 					$upload_dir   = wp_upload_dir();
 					$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-					$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+					$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 					$attach_url[] = '<a href="' . $download_url . '" target="_blank">' . $attach['filename'] . '</a>';
 				endforeach;
 				$str = preg_replace( '/{' . $field->slug . '}/', implode( '<br />', $attach_url ), $str );
@@ -199,7 +199,7 @@ if ( $tdec_flag ) {
 	if ( isset( $ticket_description['thread_id'] ) ) {
 		$report_thread_id   = $ticket_description['thread_id'];
 		$report_attachments = get_post_meta( $report_thread_id, 'attachments', true );
-		$auth_id            = $wpsc_ticket_data['ticket_auth_code'];
+		$auth_id            = $support_ticket_data['ticket_auth_code'];
 		$ticket_id          = get_post_meta( $report_thread_id, 'ticket_id', true );
 		$attach_url         = array();
 		if ( $report_attachments ) {
@@ -212,7 +212,7 @@ if ( $tdec_flag ) {
 				}
 				$upload_dir   = wp_upload_dir();
 				$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-				$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+				$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 				$attach_url[] = '<a href="' . $download_url . '" target="_blank">' . $attach['filename'] . '</a>';
 			endforeach;
 		}
@@ -222,7 +222,7 @@ if ( $tdec_flag ) {
 if ( $lr_flag ) {
 	$last_reply_thread_id   = $last_reply['thread_id'];
 	$last_reply_attachments = get_post_meta( $last_reply_thread_id, 'attachments', true );
-	$auth_id                = $wpsc_ticket_data['ticket_auth_code'];
+	$auth_id                = $support_ticket_data['ticket_auth_code'];
 	$ticket_id              = get_post_meta( $last_reply_thread_id, 'ticket_id', true );
 	$attach_url             = array();
 	if ( $last_reply_attachments ) {
@@ -235,7 +235,7 @@ if ( $lr_flag ) {
 			}
 			$upload_dir   = wp_upload_dir();
 			$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-			$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+			$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 			$attach_url[] = '<a href="' . $download_url . '" target="_blank">' . $attach['filename'] . '</a>';
 		endforeach;
 	}
@@ -245,7 +245,7 @@ if ( $lr_flag ) {
 if ( $ln_flag ) {
 	$last_note_thread_id   = $last_note['thread_id'];
 	$last_note_attachments = get_post_meta( $last_note_thread_id, 'attachments', true );
-	$auth_id               = $wpsc_ticket_data['ticket_auth_code'];
+	$auth_id               = $support_ticket_data['ticket_auth_code'];
 	$ticket_id             = get_post_meta( $last_note_thread_id, 'ticket_id', true );
 	$attach_url            = array();
 	if ( $last_note_attachments ) {
@@ -258,7 +258,7 @@ if ( $ln_flag ) {
 			}
 			$upload_dir   = wp_upload_dir();
 			$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-			$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+			$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 			$attach_url[] = '<a href="' . $download_url . '" target="_blank">' . $attach['filename'] . '</a>';
 		endforeach;
 	}

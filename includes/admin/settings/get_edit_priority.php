@@ -13,7 +13,7 @@ if ( ! $priority_id ) {
 	exit;
 }
 
-$priority        = get_term_by( 'id', $priority_id, 'wpsc_priorities' );
+$priority        = get_term_by( 'id', $priority_id, 'ticket_priority' );
 $color           = get_term_meta( $priority->term_id, 'wpsc_priority_color', true );
 $backgound_color = get_term_meta( $priority->term_id, 'wpsc_priority_background_color', true );
 

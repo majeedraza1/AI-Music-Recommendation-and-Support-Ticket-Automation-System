@@ -15,7 +15,7 @@ ob_start();
             <p><?php _e( 'Are you sure to delete these tickets permanently?', 'supportcandy' ); ?></p>
         </div>
 
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_delete_permanently_bulk_ticket"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
     </form>

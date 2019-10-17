@@ -13,7 +13,7 @@ class TicketPriority extends AbstractModel {
 	 *
 	 * @var string
 	 */
-	protected static $taxonomy = 'wpsc_priorities';
+	protected static $taxonomy = 'ticket_priority';
 
 	/**
 	 * The primary key for the model.

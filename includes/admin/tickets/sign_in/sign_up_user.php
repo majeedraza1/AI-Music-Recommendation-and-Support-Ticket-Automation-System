@@ -95,7 +95,7 @@ $general_appearance     = get_option( 'wpsc_appearance_general_settings' );
 
         if (check_flag) {
             var data = {
-                action: 'wpsc_tickets',
+                action: 'support_tickets',
                 setting_action: 'submit_user',
                 username: username,
                 email: email,

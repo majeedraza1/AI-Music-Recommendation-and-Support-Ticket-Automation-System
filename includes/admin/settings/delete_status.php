@@ -18,13 +18,13 @@ if ( $support_ticket_default_status == $status_id ) {
 	echo '{ "sucess_status":"0","messege":"' . __( 'Default ticket status can not be deleted.', 'supportcandy' ) . '" }';
 	die();
 }
-$wpsc_ticket_status_after_customer_reply = get_option( 'wpsc_ticket_status_after_customer_reply' );
-if ( $wpsc_ticket_status_after_customer_reply == $status_id ) {
+$support_ticket_status_after_customer_reply = get_option( 'support_ticket_status_after_customer_reply' );
+if ( $support_ticket_status_after_customer_reply == $status_id ) {
 	echo '{ "sucess_status":"0","messege":"' . __( 'Ticket status after customer reply can not be deleted.', 'supportcandy' ) . '" }';
 	die();
 }
-$wpsc_ticket_status_after_agent_reply = get_option( 'wpsc_ticket_status_after_agent_reply' );
-if ( $wpsc_ticket_status_after_agent_reply == $status_id ) {
+$support_ticket_status_after_agent_reply = get_option( 'support_ticket_status_after_agent_reply' );
+if ( $support_ticket_status_after_agent_reply == $status_id ) {
 	echo '{ "sucess_status":"0","messege":"' . __( 'Ticket status after agent reply can not be deleted.', 'supportcandy' ) . '" }';
 	die();
 }
@@ -34,7 +34,7 @@ if ( $wpsc_close_ticket_status == $status_id ) {
 	die();
 }
 
-wp_delete_term( $status_id, 'wpsc_statuses' );
+wp_delete_term( $status_id, 'ticket_status' );
 
 do_action( 'wpsc_delete_status', $cat_id );
 

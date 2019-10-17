@@ -15,7 +15,7 @@ ob_start();
             <p><?php _e( 'Are you sure to restore these tickets?', 'supportcandy' ); ?></p>
         </div>
 
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_bulk_restore_ticket"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
     </form>

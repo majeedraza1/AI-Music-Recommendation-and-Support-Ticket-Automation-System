@@ -39,7 +39,7 @@ $signin_button_css = 'background-color:' . $wpsc_appearance_login_form['wpsc_sig
                 </div>
             </div>
 
-            <input type="hidden" name="action" value="wpsc_tickets"/>
+            <input type="hidden" name="action" value="support_tickets"/>
             <input type="hidden" name="setting_action" value="set_user_login"/>
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce() ?>"/>
             <button id="wpsc_sign_in_btn" class="btn btn-lg btn-block" type="submit"

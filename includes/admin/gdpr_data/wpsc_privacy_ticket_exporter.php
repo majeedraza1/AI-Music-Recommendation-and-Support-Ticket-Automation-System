@@ -7,12 +7,12 @@ global $wpdb, $wpscfunction;
 
 $user = get_user_by( 'email', $email_address );
 
-$sql         = "SELECT t.* from {$wpdb->prefix}wpsc_ticket  t WHERE t.customer_email = '$email_address'";
+$sql         = "SELECT t.* from {$wpdb->prefix}support_ticket  t WHERE t.customer_email = '$email_address'";
 $tickets     = $wpdb->get_results( $sql );
 $ticket_list = json_decode( json_encode( $tickets ), true );
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -85,9 +85,9 @@ foreach ( $ticket_list as $export_post ) {
 	$data_points = apply_filters( 'wpsc_privacy_tickets_information', $data_points, $export_post['id'] );
 
 	$export_ticket[] = array(
-		'group_id'    => 'wpsc_tickets',
+		'group_id'    => 'support_tickets',
 		'group_label' => __( 'User Tickets', 'supportcandy' ),
-		'item_id'     => "wpsc_ticket_id-{$export_post['id']}",
+		'item_id'     => "support_ticket_id-{$export_post['id']}",
 		'data'        => $data_points,
 	);
 }

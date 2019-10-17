@@ -44,15 +44,15 @@ if ( ! $isError && $_FILES['file']['tmp_name'] == '' ) {
 
 if ( ! $isError ) {
 
-	$attachment_count = get_option( 'wpsc_attachment_count' );
+	$attachment_count = get_option( 'support_ticket_attachment_count' );
 	if ( ! $attachment_count ) {
 		$attachment_count = 1;
 	}
-	$term = wp_insert_term( 'attachment_' . $attachment_count, 'wpsc_attachment' );
+	$term = wp_insert_term( 'attachment_' . $attachment_count, 'support_ticket_attachment' );
 	if ( ! $term ) {
 		die();
 	}
-	update_option( 'wpsc_attachment_count', ++ $attachment_count );
+	update_option( 'support_ticket_attachment_count', ++ $attachment_count );
 
 	$upload_dir = wp_upload_dir();
 	if ( ! file_exists( $upload_dir['basedir'] . '/wpsc/' ) ) {

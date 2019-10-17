@@ -15,7 +15,7 @@ foreach ( $field_types as $key => $field ) {
 }
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'meta_query' => array(
 		'relation' => 'OR',

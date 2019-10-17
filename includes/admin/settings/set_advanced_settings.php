@@ -8,8 +8,8 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 	exit;
 }
 // Allow ticket url Permissions
-$wpsc_ticket_url_permission = isset( $_POST ) && isset( $_POST['wpsc_ticket_url_permission'] ) ? sanitize_text_field( $_POST['wpsc_ticket_url_permission'] ) : '0';
-update_option( 'wpsc_ticket_url_permission', $wpsc_ticket_url_permission );
+$support_ticket_url_permission = isset( $_POST ) && isset( $_POST['support_ticket_url_permission'] ) ? sanitize_text_field( $_POST['support_ticket_url_permission'] ) : '0';
+update_option( 'support_ticket_url_permission', $support_ticket_url_permission );
 
 $wpsc_allow_sign_out = isset( $_POST ) && isset( $_POST['wpsc_sign_out'] ) ? sanitize_text_field( $_POST['wpsc_sign_out'] ) : '';
 update_option( 'wpsc_sign_out', $wpsc_allow_sign_out );
@@ -18,8 +18,8 @@ $wpsc_guest_can_upload_files = isset( $_POST ) && isset( $_POST['wpsc_guest_can_
 update_option( 'wpsc_guest_can_upload_files', $wpsc_guest_can_upload_files );
 
 // Public MOde
-$wpsc_ticket_public_mode = isset( $_POST ) && isset( $_POST['wpsc_ticket_public_mode'] ) ? sanitize_text_field( $_POST['wpsc_ticket_public_mode'] ) : '0';
-update_option( 'wpsc_ticket_public_mode', $wpsc_ticket_public_mode );
+$support_ticket_public_mode = isset( $_POST ) && isset( $_POST['support_ticket_public_mode'] ) ? sanitize_text_field( $_POST['support_ticket_public_mode'] ) : '0';
+update_option( 'support_ticket_public_mode', $support_ticket_public_mode );
 
 $wpsc_show_and_hide_filters = isset( $_POST ) && isset( $_POST['wpsc_show_and_hide_filters'] ) ? sanitize_text_field( $_POST['wpsc_show_and_hide_filters'] ) : '';
 update_option( 'wpsc_show_and_hide_filters', $wpsc_show_and_hide_filters );
@@ -48,8 +48,8 @@ update_option( 'wpsc_allow_attachment', $wpsc_allow_attach_active );
 $wpsc_hide_show_priority = isset( $_POST ) && isset( $_POST['wpsc_hide_show_priority'] ) ? sanitize_text_field( $_POST['wpsc_hide_show_priority'] ) : '';
 update_option( 'wpsc_hide_show_priority', $wpsc_hide_show_priority );
 
-$wpsc_ticket_id_type = isset( $_POST ) && isset( $_POST['wpsc_ticket_id_type'] ) ? sanitize_text_field( $_POST['wpsc_ticket_id_type'] ) : '0';
-update_option( 'wpsc_ticket_id_type', $wpsc_ticket_id_type );
+$support_ticket_id_type = isset( $_POST ) && isset( $_POST['support_ticket_id_type'] ) ? sanitize_text_field( $_POST['support_ticket_id_type'] ) : '0';
+update_option( 'support_ticket_id_type', $support_ticket_id_type );
 
 $wpsc_view_more = isset( $_POST ) && isset( $_POST['wpsc_view_more'] ) ? sanitize_text_field( $_POST['wpsc_view_more'] ) : '';
 update_option( 'wpsc_view_more', $wpsc_view_more );

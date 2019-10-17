@@ -18,7 +18,7 @@ if ( ! $check_flag ) {
 }
 
 $attachments = get_terms( [
-	'taxonomy'   => 'wpsc_attachment',
+	'taxonomy'   => 'support_ticket_attachment',
 	'hide_empty' => false,
 	'meta_query' => array(
 		'relation' => 'AND',
@@ -40,7 +40,7 @@ if ( $attachments ) {
 		$now                     = time();
 		$diff                    = $now - $attachment_updated_time;
 		if ( $diff > 86400 ) {
-			wp_delete_term( $attachment->term_id, 'wpsc_attachment' );
+			wp_delete_term( $attachment->term_id, 'support_ticket_attachment' );
 			if ( file_exists( $file_path ) ) {
 				unlink( $file_path );
 			}

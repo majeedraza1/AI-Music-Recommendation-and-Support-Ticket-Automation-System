@@ -13,7 +13,7 @@ if ( ! $status_id ) {
 	exit;
 }
 
-$status          = get_term_by( 'id', $status_id, 'wpsc_statuses' );
+$status          = get_term_by( 'id', $status_id, 'ticket_status' );
 $color           = get_term_meta( $status->term_id, 'wpsc_status_color', true );
 $backgound_color = get_term_meta( $status->term_id, 'wpsc_status_background_color', true );
 

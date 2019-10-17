@@ -21,13 +21,13 @@ if ( ! $check_flag || $wpsc_personal_data_retention_type == 'never' || ! $wpsc_p
 	return;
 }
 
-$sql         = "SELECT t.* from {$wpdb->prefix}wpsc_ticket  t  WHERE t.id NOT IN (SELECT DISTINCT tm.ticket_id  FROM {$wpdb->prefix}wpsc_ticketmeta tm 
+$sql         = "SELECT t.* from {$wpdb->prefix}support_ticket  t  WHERE t.id NOT IN (SELECT DISTINCT tm.ticket_id  FROM {$wpdb->prefix}support_ticketmeta tm 
 				WHERE tm.meta_key='wpsc_privacy_data_erase' AND t.id = tm.ticket_id ) ";
 $tickets     = $wpdb->get_results( $sql );
 $ticket_list = json_decode( json_encode( $tickets ), true );
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -47,7 +47,7 @@ if ( $wpsc_personal_data_retention_period_unit == 'days' ) {
 	foreach ( $ticket_list as $post ) {
 		$ticket_id      = $post['id'];
 		$args           = array(
-			'post_type'      => 'wpsc_ticket_thread',
+			'post_type'      => 'ticket_thread',
 			'post_status'    => 'publish',
 			'posts_per_page' => - 1,
 			'order'          => 'ASC',
@@ -70,7 +70,7 @@ if ( $wpsc_personal_data_retention_period_unit == 'days' ) {
 
 			if ( $diff_days > $wpsc_personal_data_retention_period_time ) {
 
-				$wpdb->update( $wpdb->prefix . 'wpsc_ticket', array(
+				$wpdb->update( $wpdb->prefix . 'support_ticket', array(
 					'customer_name'  => 'Anonymized User',
 					'customer_email' => 'anonymous@anonymous.anonymous '
 				), array( 'id' => $post['id'] ) );
@@ -93,7 +93,7 @@ if ( $wpsc_personal_data_retention_period_unit == 'days' ) {
 		$ticket_id = $post['id'];
 
 		$args           = array(
-			'post_type'      => 'wpsc_ticket_thread',
+			'post_type'      => 'ticket_thread',
 			'post_status'    => 'publish',
 			'posts_per_page' => - 1,
 			'order'          => 'ASC',
@@ -116,7 +116,7 @@ if ( $wpsc_personal_data_retention_period_unit == 'days' ) {
 			$months = ( $diff->y * 12 ) + $diff->m;
 
 			if ( $months >= $wpsc_personal_data_retention_period_time ) {
-				$wpdb->update( $wpdb->prefix . 'wpsc_ticket', array(
+				$wpdb->update( $wpdb->prefix . 'support_ticket', array(
 					'customer_name'  => 'Anonymized User',
 					'customer_email' => 'anonymous@anonymous.anonymous '
 				), array( 'id' => $post['id'] ) );
@@ -140,7 +140,7 @@ if ( $wpsc_personal_data_retention_period_unit == 'days' ) {
 		$ticket_id = $post['id'];
 
 		$args           = array(
-			'post_type'      => 'wpsc_ticket_thread',
+			'post_type'      => 'ticket_thread',
 			'post_status'    => 'publish',
 			'posts_per_page' => - 1,
 			'order'          => 'ASC',
@@ -164,7 +164,7 @@ if ( $wpsc_personal_data_retention_period_unit == 'days' ) {
 
 			if ( $years >= $wpsc_personal_data_retention_period_time ) {
 
-				$wpdb->update( $wpdb->prefix . 'wpsc_ticket', array(
+				$wpdb->update( $wpdb->prefix . 'support_ticket', array(
 					'customer_name'  => 'Anonymized User',
 					'customer_email' => 'anonymous@anonymous.anonymous '
 				), array( 'id' => $post['id'] ) );

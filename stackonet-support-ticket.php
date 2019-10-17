@@ -117,8 +117,9 @@ class StackonetSupportTicket {
 	 * Instantiate the required classes
 	 */
 	public function init_classes() {
-		$this->container['assets']   = StackonetSupportTicket\Assets::init();
-		$this->container['settings'] = StackonetSupportTicket\Admin\Settings::init();
+		$this->container['assets']    = StackonetSupportTicket\Assets::init();
+		$this->container['settings']  = StackonetSupportTicket\Admin\Settings::init();
+		$this->container['post_type'] = StackonetSupportTicket\Admin\PostType::init();
 
 		if ( $this->is_request( 'admin' ) ) {
 			$this->container['admin'] = StackonetSupportTicket\Admin\Admin::init();

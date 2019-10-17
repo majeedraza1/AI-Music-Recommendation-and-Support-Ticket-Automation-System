@@ -85,7 +85,7 @@ if ( $ticket_priority ) {
 
 // Custom fields
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',

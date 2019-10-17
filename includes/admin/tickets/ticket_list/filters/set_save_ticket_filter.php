@@ -29,7 +29,7 @@ if ( $order ) {
 	$filter['order'] = $order;
 }
 
-setcookie( 'wpsc_ticket_filter', json_encode( $filter ) );
+setcookie( 'support_ticket_filter', json_encode( $filter ) );
 
 $filter['save_label'] = $filter_lable;
 

@@ -41,17 +41,17 @@ $wpsc_appearance_ticket_list = get_option( 'wpsc_appearance_ticket_list' );
         <div class="form-group">
             <label for="wpsc_default_buttons_action_bar_color"><?php _e( 'Ticket List Header ', 'supportcandy' ); ?></label></br>
             <div class="row">
-                <div class="col-sm-6" style="" id="wpsc_ticket_list_header_bg_color">
+                <div class="col-sm-6" style="" id="support_ticket_list_header_bg_color">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_list_header_bg_color" class="wpsc_color_picker"
-                           name="appearance_ticket_list[wpsc_ticket_list_header_bg_color]"
-                           value="<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_header_bg_color'] ?>"/>
+                    <input id="support_ticket_list_header_bg_color" class="wpsc_color_picker"
+                           name="appearance_ticket_list[support_ticket_list_header_bg_color]"
+                           value="<?php echo $wpsc_appearance_ticket_list['support_ticket_list_header_bg_color'] ?>"/>
                 </div>
-                <div class="col-sm-6" style="" id="wpsc_ticket_list_header_text_color">
+                <div class="col-sm-6" style="" id="support_ticket_list_header_text_color">
                     <p class="help-block"><?php _e( 'Color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_list_header_text_color" class="wpsc_color_picker"
-                           name="appearance_ticket_list[wpsc_ticket_list_header_text_color]"
-                           value="<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_header_text_color'] ?>"/>
+                    <input id="support_ticket_list_header_text_color" class="wpsc_color_picker"
+                           name="appearance_ticket_list[support_ticket_list_header_text_color]"
+                           value="<?php echo $wpsc_appearance_ticket_list['support_ticket_list_header_text_color'] ?>"/>
                 </div>
             </div>
         </div>
@@ -59,17 +59,17 @@ $wpsc_appearance_ticket_list = get_option( 'wpsc_appearance_ticket_list' );
         <div class="form-group">
             <label for="wpsc_default_buttons_action_bar_color"><?php _e( 'Ticket List Item Mouseover', 'supportcandy' ); ?></label></br>
             <div class="row">
-                <div class="col-sm-6" id="wpsc_ticket_list_item_mo_bg_color">
+                <div class="col-sm-6" id="support_ticket_list_item_mo_bg_color">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_list_item_mo_bg_color" class="wpsc_color_picker"
-                           name="appearance_ticket_list[wpsc_ticket_list_item_mo_bg_color]"
-                           value="<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_item_mo_bg_color'] ?>"/>
+                    <input id="support_ticket_list_item_mo_bg_color" class="wpsc_color_picker"
+                           name="appearance_ticket_list[support_ticket_list_item_mo_bg_color]"
+                           value="<?php echo $wpsc_appearance_ticket_list['support_ticket_list_item_mo_bg_color'] ?>"/>
                 </div>
-                <div class="col-sm-6" id="wpsc_ticket_list_item_mo_text_color">
+                <div class="col-sm-6" id="support_ticket_list_item_mo_text_color">
                     <p class="help-block"><?php _e( 'Color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_list_item_mo_text_color" class="wpsc_color_picker"
-                           name="appearance_ticket_list[wpsc_ticket_list_item_mo_text_color]"
-                           value="<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_item_mo_text_color'] ?>"/>
+                    <input id="support_ticket_list_item_mo_text_color" class="wpsc_color_picker"
+                           name="appearance_ticket_list[support_ticket_list_item_mo_text_color]"
+                           value="<?php echo $wpsc_appearance_ticket_list['support_ticket_list_item_mo_text_color'] ?>"/>
                 </div>
             </div>
         </div>

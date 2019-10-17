@@ -9,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
         <div class="wpsc_padding_space"></div>
         <div class="row" style="margin-bottom:20px;">
             <ul class="nav nav-pills wpsc_setting_pills">
-                <li id="wpsc_en_setting_general" role="presentation" class="active"><a
+                <li id="support_ticket_notification_setting_general" role="presentation" class="active"><a
                             href="javascript:wpsc_get_en_general_setting();"><?php _e( 'General Settings', 'supportcandy' ); ?></a>
                 </li>
-                <li id="wpsc_en_ticket_notifications" role="presentation"><a
+                <li id="support_ticket_notification_ticket_notifications" role="presentation"><a
                             href="javascript:wpsc_get_en_ticket_notifications();"><?php _e( 'Ticket Notifications', 'supportcandy' ); ?></a>
                 </li>
 				<?php do_action( 'wpsc_after_en_setting_pills' ); ?>

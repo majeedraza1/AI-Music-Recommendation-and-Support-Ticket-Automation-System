@@ -26,14 +26,14 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 			add_action( 'wpsc_set_change_fields', array( $this, 'change_field' ), 10, 4 );
 
 			// Label Counts
-			add_action( 'wpsc_ticket_created', array( $this, 'ticket_create_label_count' ) );
+			add_action( 'support_ticket_created', array( $this, 'ticket_create_label_count' ) );
 			add_action( 'wpsc_set_change_status', array( $this, 'change_status_label_count' ), 10, 3 );
 			add_action( 'wpsc_set_assign_agent', array( $this, 'assigned_agent_label_count' ), 10, 3 );
 			add_action( 'wpsc_set_delete_ticket', array( $this, 'delete_label_count' ) );
 			add_action( 'wpsc_restore_ticket', array( $this, 'restore_label_count' ) );
 
 			// Email Notifications
-			add_action( 'wpsc_ticket_created', array( $this, 'en_ticket_created' ), 100 );
+			add_action( 'support_ticket_created', array( $this, 'en_ticket_created' ), 100 );
 			add_action( 'wpsc_after_submit_reply', array( $this, 'en_submit_reply' ), 100, 2 );
 			add_action( 'wpsc_after_submit_note', array( $this, 'en_submit_note' ), 100, 2 );
 			add_action( 'wpsc_set_change_status', array( $this, 'en_change_status' ), 100, 3 );
@@ -68,16 +68,16 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 			$ticket_data                             = $wpscfunction->get_ticket( $ticket_id );
 			$ticket_customer_email                   = $ticket_data['customer_email'];
 			$ticket_status                           = $ticket_data['ticket_status'];
-			$wpsc_ticket_status_after_customer_reply = get_option( 'wpsc_ticket_status_after_customer_reply' );
+			$support_ticket_status_after_customer_reply = get_option( 'support_ticket_status_after_customer_reply' );
 
 			if ( $user && $user->ID && $user->has_cap( 'wpsc_agent' ) ) { // Reply by agent
-				$wpsc_ticket_status_after_agent_reply = get_option( 'wpsc_ticket_status_after_agent_reply' );
-				if ( $wpsc_ticket_status_after_agent_reply && $ticket_status != $wpsc_ticket_status_after_agent_reply ) {
-					$wpscfunction->change_status( $ticket_id, $wpsc_ticket_status_after_agent_reply );
+				$support_ticket_status_after_agent_reply = get_option( 'support_ticket_status_after_agent_reply' );
+				if ( $support_ticket_status_after_agent_reply && $ticket_status != $support_ticket_status_after_agent_reply ) {
+					$wpscfunction->change_status( $ticket_id, $support_ticket_status_after_agent_reply );
 				}
-			} else if ( $ticket_status != $wpsc_ticket_status_after_customer_reply ) {
-				if ( $wpsc_ticket_status_after_customer_reply && $ticket_status != $wpsc_ticket_status_after_customer_reply ) {
-					$wpscfunction->change_status( $ticket_id, $wpsc_ticket_status_after_customer_reply );
+			} else if ( $ticket_status != $support_ticket_status_after_customer_reply ) {
+				if ( $support_ticket_status_after_customer_reply && $ticket_status != $support_ticket_status_after_customer_reply ) {
+					$wpscfunction->change_status( $ticket_id, $support_ticket_status_after_customer_reply );
 				}
 			}
 		}
@@ -85,8 +85,8 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 		// Change status
 		function change_status( $ticket_id, $status_id, $prev_status ) {
 			global $wpscfunction, $current_user;
-			$status_obj      = get_term_by( 'id', $status_id, 'wpsc_statuses' );
-			$prev_status_obj = get_term_by( 'id', $prev_status, 'wpsc_statuses' );
+			$status_obj      = get_term_by( 'id', $status_id, 'ticket_status' );
+			$prev_status_obj = get_term_by( 'id', $prev_status, 'ticket_status' );
 			if ( $current_user->ID ) {
 				$log_str = sprintf( __( '%1$s changed status from %2$s to %3$s', 'supportcandy' ), '<strong>' . $current_user->display_name . '</strong>', '<strong>' . $prev_status_obj->name . '</strong>', '<strong>' . $status_obj->name . '</strong>' );
 			} else {
@@ -104,8 +104,8 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 		// Change category
 		function change_category( $ticket_id, $category_id, $prev_cat ) {
 			global $wpscfunction, $current_user;
-			$category_obj      = get_term_by( 'id', $category_id, 'wpsc_categories' );
-			$prev_category_obj = get_term_by( 'id', $prev_cat, 'wpsc_categories' );
+			$category_obj      = get_term_by( 'id', $category_id, 'ticket_category' );
+			$prev_category_obj = get_term_by( 'id', $prev_cat, 'ticket_category' );
 			if ( $current_user->ID ) {
 				$log_str = sprintf( __( '%1$s changed category from %2$s to %3$s', 'supportcandy' ), '<strong>' . $current_user->display_name . '</strong>', '<strong>' . $prev_category_obj->name . '</strong>', '<strong>' . $category_obj->name . '</strong>' );
 			} else {
@@ -123,8 +123,8 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 		// Change priority
 		function change_priority( $ticket_id, $priority_id, $prev_priority ) {
 			global $wpscfunction, $current_user;
-			$priority_obj      = get_term_by( 'id', $priority_id, 'wpsc_priorities' );
-			$prev_priority_obj = get_term_by( 'id', $prev_priority, 'wpsc_priorities' );
+			$priority_obj      = get_term_by( 'id', $priority_id, 'ticket_priority' );
+			$prev_priority_obj = get_term_by( 'id', $prev_priority, 'ticket_priority' );
 			if ( $current_user->ID ) {
 				$log_str = sprintf( __( '%1$s changed priority from %2$s to %3$s', 'supportcandy' ), '<strong>' . $current_user->display_name . '</strong>', '<strong>' . $prev_priority_obj->name . '</strong>', '<strong>' . $priority_obj->name . '</strong>' );
 			} else {
@@ -204,7 +204,7 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 			$agent_role          = get_option( 'support_ticket_agent_roles' );
 
 			$agents = get_terms( [
-				'taxonomy'   => 'wpsc_agents',
+				'taxonomy'   => 'support_agent',
 				'hide_empty' => false,
 				'meta_query' => array(
 					array(
@@ -327,7 +327,7 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 		//Change Fields
 		function change_field( $ticket_id, $fields_slug, $fields_value, $prev_fields_value ) {
 
-			$term_id_data = get_term_by( 'slug', $fields_slug, 'wpsc_ticket_custom_fields' );
+			$term_id_data = get_term_by( 'slug', $fields_slug, 'support_ticket_custom_fields' );
 			$wpsc_tf_type = get_term_meta( $term_id_data->term_id, 'wpsc_tf_type', true );
 			$label_field  = get_term_meta( $term_id_data->term_id, 'wpsc_tf_label', true );
 
@@ -410,8 +410,8 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 		//Check download file
 		function check_download_file() {
 			global $wpdb, $wpscfunction;
-			if ( isset( $_REQUEST['wpsc_attachment'] ) && isset( $_REQUEST['tid'] ) && isset( $_REQUEST['tac'] ) ) {
-				$attach_id        = intval( sanitize_text_field( $_REQUEST['wpsc_attachment'] ) );
+			if ( isset( $_REQUEST['support_ticket_attachment'] ) && isset( $_REQUEST['tid'] ) && isset( $_REQUEST['tac'] ) ) {
+				$attach_id        = intval( sanitize_text_field( $_REQUEST['support_ticket_attachment'] ) );
 				$auth_code        = intval( sanitize_text_field( $_REQUEST['tac'] ) );
 				$ticket_id        = intval( sanitize_text_field( $_REQUEST['tid'] ) );
 				$ticket_auth_code = $wpscfunction->get_ticket_fields( $ticket_id, 'ticket_auth_code' );
@@ -452,7 +452,7 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 		}
 
 		function wpsc_register_privacy_exporters( $exporters ) {
-			$exporters['wpsc_tickets'] = array(
+			$exporters['support_tickets'] = array(
 				'exporter_friendly_name' => __( 'Tickets', 'supportcandy' ),
 				'callback'               => array( $this, 'wpsc_privacy_ticket_exporter' ),
 			);
@@ -483,12 +483,12 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 
 			global $wpdb, $wpscfunction;
 
-			$sql         = "SELECT t.* from {$wpdb->prefix}wpsc_ticket  t WHERE t.customer_email = '$email_address' AND t.active = 1 ";
+			$sql         = "SELECT t.* from {$wpdb->prefix}support_ticket  t WHERE t.customer_email = '$email_address' AND t.active = 1 ";
 			$tickets     = $wpdb->get_results( $sql );
 			$ticket_list = json_decode( json_encode( $tickets ), true );
 
 			$fields = get_terms( [
-				'taxonomy'   => 'wpsc_ticket_custom_fields',
+				'taxonomy'   => 'support_ticket_custom_fields',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'meta_key'   => 'wpsc_tf_load_order',
@@ -509,10 +509,10 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 					'customer_name'  => 'Anonymized User',
 					'customer_email' => 'anonymous@anonymous.anonymous'
 				);
-				$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+				$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 
 				$args           = array(
-					'post_type'      => 'wpsc_ticket_thread',
+					'post_type'      => 'ticket_thread',
 					'post_status'    => 'publish',
 					'posts_per_page' => - 1,
 					'order'          => 'ASC',
@@ -554,13 +554,13 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 			$old_user_email = $old_user_data->user_email;
 			$new_user_email = $new_user_data->user_email;
 			if ( $new_user_name != $old_user_name || $new_user_email != $old_user_email ) {
-				$sql         = "SELECT t.* from {$wpdb->prefix}wpsc_ticket  t WHERE t.customer_email = '$old_user_email' AND t.active = 1 ";
+				$sql         = "SELECT t.* from {$wpdb->prefix}support_ticket  t WHERE t.customer_email = '$old_user_email' AND t.active = 1 ";
 				$tickets     = $wpdb->get_results( $sql );
 				$ticket_list = json_decode( json_encode( $tickets ), true );
 
 				if ( $ticket_list ) {
 					foreach ( $ticket_list as $ticket ) {
-						$wpdb->update( $wpdb->prefix . 'wpsc_ticket', array(
+						$wpdb->update( $wpdb->prefix . 'support_ticket', array(
 							'customer_name'  => $new_user_name,
 							'customer_email' => $new_user_email
 						), array( 'id' => $ticket['id'] ) );
@@ -569,7 +569,7 @@ if ( ! class_exists( 'WPSC_Actions' ) ) :
 			}
 
 			if ( $new_user_data->has_cap( 'wpsc_agent' ) ) {
-				$agent = get_term_by( 'slug', 'agent_' . $user_id, 'wpsc_agents' );
+				$agent = get_term_by( 'slug', 'agent_' . $user_id, 'support_agent' );
 
 				update_term_meta( $agent->term_id, 'label', $new_user_name );
 				update_term_meta( $agent->term_id, 'first_name', $new_user_data->first_name );

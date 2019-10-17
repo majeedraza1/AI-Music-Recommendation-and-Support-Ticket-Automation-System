@@ -11,7 +11,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'wpsc_agent' ) ) ) {
 $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 ] );
 

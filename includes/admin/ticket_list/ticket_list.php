@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li id="wpsc_customer_ticket_filters" role="presentation"><a
                                 href="javascript:wpsc_get_customer_ticket_filters();"><?php _e( 'Customer Ticket Filters', 'supportcandy' ); ?></a>
                     </li>
-                    <li id="wpsc_ticket_list_additional_settings" role="presentation"><a
+                    <li id="support_ticket_list_additional_settings" role="presentation"><a
                                 href="javascript:wpsc_get_ticket_list_additional_settings();"><?php _e( 'More Settings', 'supportcandy' ); ?></a>
                     </li>
 					<?php do_action( 'wpsc_after_ticket_list_setting_pills' ); ?>

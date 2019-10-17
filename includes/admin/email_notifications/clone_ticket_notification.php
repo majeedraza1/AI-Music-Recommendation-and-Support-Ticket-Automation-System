@@ -13,11 +13,11 @@ if ( ! $term_id ) {
 	die();
 }
 
-$source_term = get_term_by( 'id', $term_id, 'wpsc_en' );
+$source_term = get_term_by( 'id', $term_id, 'support_ticket_notification' );
 
 // Title
 $title = $source_term->name . ' clone';
-$term  = wp_insert_term( $title, 'wpsc_en' );
+$term  = wp_insert_term( $title, 'support_ticket_notification' );
 if ( $term && isset( $term['term_id'] ) ) {
 
 	$type = get_term_meta( $term_id, 'type', true );

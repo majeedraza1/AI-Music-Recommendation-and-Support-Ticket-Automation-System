@@ -13,7 +13,7 @@ if ( ! $term_id ) {
 	die();
 }
 
-$response = wp_delete_term( $term_id, 'wpsc_en' );
+$response = wp_delete_term( $term_id, 'support_ticket_notification' );
 
 if ( ! is_wp_error( $response ) ) {
 

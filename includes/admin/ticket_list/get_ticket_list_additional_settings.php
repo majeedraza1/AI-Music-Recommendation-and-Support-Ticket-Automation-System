@@ -9,7 +9,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $statuses = get_terms( [
-	'taxonomy'   => 'wpsc_statuses',
+	'taxonomy'   => 'ticket_status',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'order'      => 'ASC',
@@ -17,7 +17,7 @@ $statuses = get_terms( [
 ] );
 
 $orderby_fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'meta_query' => array(
 		array(
@@ -206,7 +206,7 @@ $orderby_fields = get_terms( [
     <button type="submit" class="btn btn-success"><?php _e( 'Save Changes', 'supportcandy' ); ?></button>
     <img class="wpsc_submit_wait" style="display:none;"
          src="<?php echo WPSC_PLUGIN_URL . 'asset/images/ajax-loader@2x.gif'; ?>">
-    <input type="hidden" name="action" value="wpsc_ticket_list"/>
+    <input type="hidden" name="action" value="support_ticket_list"/>
     <input type="hidden" name="setting_action" value="set_ticket_list_additional_settings"/>
 
 </form>

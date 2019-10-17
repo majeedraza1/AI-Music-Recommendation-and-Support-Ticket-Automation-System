@@ -13,6 +13,6 @@ foreach ( $ticket_ids as $ticket_id ) {
 	$meta_value = array(
 		'active' => '1'
 	);
-	$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $meta_value, array( 'id' => $ticket_id ) );
+	$wpdb->update( $wpdb->prefix . 'support_ticket', $meta_value, array( 'id' => $ticket_id ) );
 	do_action( 'wpsc_restore_ticket', $ticket_id );
 }

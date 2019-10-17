@@ -22,7 +22,7 @@ ob_start();
                 <ui class="wpsp_filter_display_container"></ui>
             </div>
         </div>
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_bulk_assign_agent"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
     </form>
@@ -36,7 +36,7 @@ ob_start();
                 source: function (request, response) {
                     var term = request.term;
                     request = {
-                        action: 'wpsc_tickets',
+                        action: 'support_tickets',
                         setting_action: 'filter_autocomplete',
                         term: term,
                         field: 'assigned_agent',

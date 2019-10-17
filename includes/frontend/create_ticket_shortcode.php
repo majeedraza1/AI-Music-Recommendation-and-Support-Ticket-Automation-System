@@ -22,7 +22,7 @@ wp_enqueue_script( 'wpsc-modal' );
 ?>
 
     <div class="bootstrap-iso">
-        <div id="wpsc_tickets_container" class="row" style="border:none;"></div>
+        <div id="support_tickets_container" class="row" style="border:none;"></div>
     </div>
 
 <?php

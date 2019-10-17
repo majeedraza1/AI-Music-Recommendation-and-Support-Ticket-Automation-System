@@ -12,7 +12,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'wpsc_agent' ) ) ) {
 $ticket_id = isset( $_POST['ticket_id'] ) ? intval( $_POST['ticket_id'] ) : 0;
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -121,4 +121,4 @@ foreach ( $fields as $field ) {
 	}
 	do_action( 'wpsc_set_change_agent_field', $field, $ticket_id, $wpsc_tf_type );
 }
-$wpdb->update( $wpdb->prefix . 'wpsc_ticket', array( 'date_updated' => date( "Y-m-d H:i:s" ) ), array( 'id' => $ticket_id ) );
+$wpdb->update( $wpdb->prefix . 'support_ticket', array( 'date_updated' => date( "Y-m-d H:i:s" ) ), array( 'id' => $ticket_id ) );

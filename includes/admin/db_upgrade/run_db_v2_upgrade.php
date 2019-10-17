@@ -17,7 +17,7 @@ $page_no       = isset( $_POST['page_no'] ) ? intval( $_POST['page_no'] ) : 1;
 $offset        = $post_per_page * ( $page_no - 1 );
 
 $args = array(
-	'post_type'      => 'wpsc_ticket',
+	'post_type'      => 'support_ticket',
 	'post_status'    => array( 'publish', 'trash' ),
 	'posts_per_page' => $post_per_page,
 	'offset'         => $offset,
@@ -88,7 +88,7 @@ foreach ( $tickets_list as $ticket ) :
 
 		// Custom fields
 		$fields = get_terms( [
-			'taxonomy'   => 'wpsc_ticket_custom_fields',
+			'taxonomy'   => 'support_ticket_custom_fields',
 			'hide_empty' => false,
 			'orderby'    => 'meta_value_num',
 			'meta_key'   => 'wpsc_tf_load_order',

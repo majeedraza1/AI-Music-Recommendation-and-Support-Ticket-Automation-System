@@ -11,7 +11,7 @@ $priority          = $this->get_priorities();
 $category          = $this->get_categories();
 $join              = array();
 
-$sql = "SELECT " . $select_str . " FROM " . $wpdb->prefix . "wpsc_ticket t";
+$sql = "SELECT " . $select_str . " FROM " . $wpdb->prefix . "support_ticket t";
 
 $layer1_where    = array();
 $layer1_relation = isset( $meta_query['relation'] ) ? $meta_query['relation'] : 'AND';
@@ -130,18 +130,18 @@ $join_str = '';
 foreach ( $join as $slug ) {
 
 	$alice    = str_replace( '-', '_', $slug );
-	$join_str .= "JOIN {$wpdb->prefix}wpsc_ticketmeta " . $alice . " ON t.id = " . $alice . ".ticket_id AND " . $alice . ".meta_key = '" . $slug . "' ";
+	$join_str .= "JOIN {$wpdb->prefix}support_ticketmeta " . $alice . " ON t.id = " . $alice . ".ticket_id AND " . $alice . ".meta_key = '" . $slug . "' ";
 
 }
 
 if ( $search ) {
-	$join_str .= "JOIN {$wpdb->prefix}wpsc_ticketmeta tm ON t.id = tm.ticket_id ";
+	$join_str .= "JOIN {$wpdb->prefix}support_ticketmeta tm ON t.id = tm.ticket_id ";
 }
 
 if ( $orderby && in_array( $orderby, $get_all_meta_keys ) ) {
 
 	$alice       = str_replace( '-', '_', $orderby );
-	$join_str    .= "JOIN {$wpdb->prefix}wpsc_ticketmeta " . $alice . " ON t.id = " . $alice . ".ticket_id AND " . $alice . ".meta_key = '" . $orderby . "' ";
+	$join_str    .= "JOIN {$wpdb->prefix}support_ticketmeta " . $alice . " ON t.id = " . $alice . ".ticket_id AND " . $alice . ".meta_key = '" . $orderby . "' ";
 	$orderby_str = " ORDER BY " . $alice . ".meta_value";
 
 } else if ( $orderby ) {

@@ -18,7 +18,7 @@ if ( ! $cat_name ) {
 	exit;
 }
 
-wp_update_term( $cat_id, 'wpsc_categories', array(
+wp_update_term( $cat_id, 'ticket_category', array(
 	'name' => $cat_name
 ) );
 

@@ -25,7 +25,7 @@ if ( ! $agent_role ) {
 
 $user_info = get_userdata( $agent_id );
 
-$term = wp_insert_term( 'agent_' . $agent_id, 'wpsc_agents' );
+$term = wp_insert_term( 'agent_' . $agent_id, 'support_agent' );
 if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 
 	add_term_meta( $term['term_id'], 'user_id', $agent_id );

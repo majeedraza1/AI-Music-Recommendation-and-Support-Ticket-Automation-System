@@ -62,7 +62,7 @@ switch ( $label_key ) {
 
 	case 'mine':
 		$agents = get_terms( [
-			'taxonomy'   => 'wpsc_agents',
+			'taxonomy'   => 'support_agent',
 			'hide_empty' => false,
 			'meta_query' => array(
 				'relation' => 'AND',
@@ -100,4 +100,4 @@ switch ( $label_key ) {
 
 $filter['query'] = $query;
 
-setcookie( 'wpsc_ticket_filter', json_encode( $filter ) );
+setcookie( 'support_ticket_filter', json_encode( $filter ) );

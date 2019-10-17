@@ -20,7 +20,7 @@ ob_start();
             <input type="text" id="subject" class="form-control" name="subject"
                    value="<?php echo stripslashes( $ticket_subject ); ?>"/>
         </div>
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_clone_ticket"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
     </form>

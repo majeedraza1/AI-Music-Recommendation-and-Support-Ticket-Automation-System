@@ -12,7 +12,7 @@ $ticket_id                    = isset( $_POST['ticket_id'] ) ? intval( $_POST['t
 $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -28,7 +28,7 @@ $fields = get_terms( [
 
 include WPSC_ABSPATH . 'includes/admin/tickets/create_ticket/class-ticket-list-format.php';
 
-$ticket_fields = new WPSC_Ticket_List();
+$ticket_fields = new support_ticket_List();
 
 ob_start();
 ?>
@@ -44,7 +44,7 @@ ob_start();
 			}
 			?>
         </div>
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_change_agent_fields"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
 

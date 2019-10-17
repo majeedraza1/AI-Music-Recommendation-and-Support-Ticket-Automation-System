@@ -17,7 +17,7 @@ $options = array();
 
 if ( is_numeric( $key ) ) {
 
-	$custom_field = get_term_by( 'id', $key, 'wpsc_ticket_custom_fields' );
+	$custom_field = get_term_by( 'id', $key, 'support_ticket_custom_fields' );
 	$field_type   = get_term_meta( $custom_field->term_id, 'wpsc_tf_type', true );
 
 	if ( $field_type == '0' ) {
@@ -25,7 +25,7 @@ if ( is_numeric( $key ) ) {
 		if ( $custom_field->slug == 'ticket_category' ) {
 
 			$categories = get_terms( [
-				'taxonomy'   => 'wpsc_categories',
+				'taxonomy'   => 'ticket_category',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -43,7 +43,7 @@ if ( is_numeric( $key ) ) {
 		if ( $custom_field->slug == 'ticket_priority' ) {
 
 			$priorities = get_terms( [
-				'taxonomy'   => 'wpsc_priorities',
+				'taxonomy'   => 'ticket_priority',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -61,7 +61,7 @@ if ( is_numeric( $key ) ) {
 		if ( $custom_field->slug == 'ticket_status' ) {
 
 			$statuses = get_terms( [
-				'taxonomy'   => 'wpsc_statuses',
+				'taxonomy'   => 'ticket_status',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -79,7 +79,7 @@ if ( is_numeric( $key ) ) {
 		if ( $custom_field->slug == 'assigned_agent' ) {
 
 			$agents = get_terms( [
-				'taxonomy'   => 'wpsc_agents',
+				'taxonomy'   => 'support_agent',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value',
 				'order'      => 'ASC',

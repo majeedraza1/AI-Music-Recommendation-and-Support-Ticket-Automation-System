@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
+if ( ! class_exists( 'support_ticket_Form_Field' ) ) :
 
-	class WPSC_Ticket_Form_Field {
+	class support_ticket_Form_Field {
 
 		var $slug;
 		var $type;
@@ -405,7 +405,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                 <div class="row attachment" style="margin-bottom:20px;">
                     <div id="<?php echo 'attach_' . $field->term_id ?>" class="row attachment_container"></div>
                     <div class="row attachment_link">
-                        <span onclick="wpsc_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','<?php echo $this->slug ?>');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
+                        <span onclick="support_ticket_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','<?php echo $this->slug ?>');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
                     </div>
                 </div>
             </div>
@@ -428,7 +428,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                     <option value=""></option>
 					<?php
 					$categories = get_terms( [
-						'taxonomy'   => 'wpsc_categories',
+						'taxonomy'   => 'ticket_category',
 						'hide_empty' => false,
 						'orderby'    => 'meta_value_num',
 						'order'      => 'ASC',
@@ -465,7 +465,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                     <option value=""></option>
 					<?php
 					$priorities = get_terms( [
-						'taxonomy'   => 'wpsc_priorities',
+						'taxonomy'   => 'ticket_priority',
 						'hide_empty' => false,
 						'orderby'    => 'meta_value_num',
 						'order'      => 'ASC',
@@ -502,7 +502,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                     <div class="row attachment" style="margin-bottom:20px;">
                         <div class="row attachment_link">
 							<?php if ( in_array( 'create', $wpsc_allow_attachment ) ) : ?>
-                                <span onclick="wpsc_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','desc_attachment');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
+                                <span onclick="support_ticket_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','desc_attachment');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
 							<?php endif; ?>
 							<?php if ( $current_user->has_cap( 'wpsc_agent' ) ): ?>
                                 <span id="wpsc_insert_macros"
@@ -552,7 +552,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                                 var form_data = new FormData();
                                 form_data.append('file', file);
                                 form_data.append('file_name', file.name);
-                                form_data.append('action', 'wpsc_tickets');
+                                form_data.append('action', 'support_tickets');
                                 form_data.append('setting_action', 'rb_upload_file');
 
                                 jQuery.ajax({

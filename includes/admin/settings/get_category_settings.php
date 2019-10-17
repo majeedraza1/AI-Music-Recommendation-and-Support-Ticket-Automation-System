@@ -9,7 +9,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $categories = get_terms( [
-	'taxonomy'   => 'wpsc_categories',
+	'taxonomy'   => 'ticket_category',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'order'      => 'ASC',

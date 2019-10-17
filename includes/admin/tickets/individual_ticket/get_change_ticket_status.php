@@ -24,7 +24,7 @@ ob_start();
             <select class="form-control" name="status">
 				<?php
 				$statuses = get_terms( [
-					'taxonomy'   => 'wpsc_statuses',
+					'taxonomy'   => 'ticket_status',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'order'      => 'ASC',
@@ -43,7 +43,7 @@ ob_start();
             <select class="form-control" name="category">
 				<?php
 				$categories = get_terms( [
-					'taxonomy'   => 'wpsc_categories',
+					'taxonomy'   => 'ticket_category',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'order'      => 'ASC',
@@ -62,7 +62,7 @@ ob_start();
             <select class="form-control" name="priority">
 				<?php
 				$priorities = get_terms( [
-					'taxonomy'   => 'wpsc_priorities',
+					'taxonomy'   => 'ticket_priority',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'order'      => 'ASC',
@@ -76,7 +76,7 @@ ob_start();
             </select>
         </div>
 		<?php do_action( 'wpsc_after_edit_change_ticket_status', $ticket_id ); ?>
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_change_ticket_status"/>
         <input type="hidden" id="wpsc_post_id" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
 

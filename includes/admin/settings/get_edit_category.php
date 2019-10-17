@@ -13,7 +13,7 @@ if ( ! $cat_id ) {
 	exit;
 }
 
-$category = get_term_by( 'id', $cat_id, 'wpsc_categories' );
+$category = get_term_by( 'id', $cat_id, 'ticket_category' );
 
 ob_start();
 ?>

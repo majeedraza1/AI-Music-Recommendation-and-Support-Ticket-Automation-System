@@ -46,7 +46,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
         <select class="form-control" name="support_ticket_default_status" id="support_ticket_default_status">
 			<?php
 			$statuses                   = get_terms( [
-				'taxonomy'   => 'wpsc_statuses',
+				'taxonomy'   => 'ticket_status',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -67,7 +67,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
         <select class="form-control" name="support_ticket_default_category" id="support_ticket_default_category">
 			<?php
 			$categories                   = get_terms( [
-				'taxonomy'   => 'wpsc_categories',
+				'taxonomy'   => 'ticket_category',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -88,7 +88,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
         <select class="form-control" name="support_ticket_default_priority" id="support_ticket_default_priority">
 			<?php
 			$priorities                   = get_terms( [
-				'taxonomy'   => 'wpsc_priorities',
+				'taxonomy'   => 'ticket_priority',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -104,15 +104,15 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
     </div>
 
     <div class="form-group">
-        <label for="wpsc_ticket_status_after_customer_reply"><?php _e( 'Ticket status after customer reply', 'supportcandy' ); ?></label>
+        <label for="support_ticket_status_after_customer_reply"><?php _e( 'Ticket status after customer reply', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( "This status will be applied to the ticket if customer post reply in ticket. 'Default' will not change status of the ticket in this case.", "wpsc" ); ?></p>
-        <select class="form-control" name="wpsc_ticket_status_after_customer_reply"
-                id="wpsc_ticket_status_after_customer_reply">
+        <select class="form-control" name="support_ticket_status_after_customer_reply"
+                id="support_ticket_status_after_customer_reply">
             <option value=""><?php _e( 'Default', 'supportcandy' ); ?></option>
 			<?php
-			$wpsc_ticket_status_after_customer_reply = get_option( 'wpsc_ticket_status_after_customer_reply' );
+			$support_ticket_status_after_customer_reply = get_option( 'support_ticket_status_after_customer_reply' );
 			foreach ( $statuses as $status ) :
-				$selected = $wpsc_ticket_status_after_customer_reply == $status->term_id ? 'selected="selected"' : '';
+				$selected = $support_ticket_status_after_customer_reply == $status->term_id ? 'selected="selected"' : '';
 				echo '<option ' . $selected . ' value="' . $status->term_id . '">' . $status->name . '</option>';
 			endforeach;
 			?>
@@ -120,15 +120,15 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
     </div>
 
     <div class="form-group">
-        <label for="wpsc_ticket_status_after_agent_reply"><?php _e( 'Ticket status after agent reply', 'supportcandy' ); ?></label>
+        <label for="support_ticket_status_after_agent_reply"><?php _e( 'Ticket status after agent reply', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( "This status will be applied to the ticket if agent or any support staff post reply in ticket. 'Default' will not change status of the ticket in this case.", "wpsc" ); ?></p>
-        <select class="form-control" name="wpsc_ticket_status_after_agent_reply"
-                id="wpsc_ticket_status_after_agent_reply">
+        <select class="form-control" name="support_ticket_status_after_agent_reply"
+                id="support_ticket_status_after_agent_reply">
             <option value=""><?php _e( 'Default', 'supportcandy' ); ?></option>
 			<?php
-			$wpsc_ticket_status_after_agent_reply = get_option( 'wpsc_ticket_status_after_agent_reply' );
+			$support_ticket_status_after_agent_reply = get_option( 'support_ticket_status_after_agent_reply' );
 			foreach ( $statuses as $status ) :
-				$selected = $wpsc_ticket_status_after_agent_reply == $status->term_id ? 'selected="selected"' : '';
+				$selected = $support_ticket_status_after_agent_reply == $status->term_id ? 'selected="selected"' : '';
 				echo '<option ' . $selected . ' value="' . $status->term_id . '">' . $status->name . '</option>';
 			endforeach;
 			?>
@@ -200,17 +200,17 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
     </div>
 
     <div class="form-group">
-        <label for="wpsc_ticket_alice"><?php _e( 'Ticket Alice in Email Notification Subject', 'supportcandy' ); ?></label>
+        <label for="support_ticket_alice"><?php _e( 'Ticket Alice in Email Notification Subject', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( "Label to represent ticket in email notification subject etc e.g. You may want to use this as a bug tracking then you can label it like issue #123, bug #132 etc. So that it should be  show in issue #123 or Bug #123. Please note this will only work in email subject. If you want to change all places, you will need to translate .pot", "wpsc" ); ?></p>
-        <input type="text" class="form-control" name="wpsc_ticket_alice" id="wpsc_ticket_alice"
-               value="<?php echo get_option( 'wpsc_ticket_alice' ); ?>"/>
+        <input type="text" class="form-control" name="support_ticket_alice" id="support_ticket_alice"
+               value="<?php echo get_option( 'support_ticket_alice' ); ?>"/>
     </div>
 
     <div class="form-group">
-        <label for="wpsc_attachment_max_filesize"><?php _e( 'Attachment max filesize(MB)', 'supportcandy' ); ?></label>
+        <label for="support_ticket_attachment_max_filesize"><?php _e( 'Attachment max filesize(MB)', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( "Maximum attachment size of file to be able to attach for attachment fields.", "wpsc" ); ?></p>
-        <input type="text" class="form-control" name="wpsc_attachment_max_filesize" id="wpsc_attachment_max_filesize"
-               value="<?php echo get_option( 'wpsc_attachment_max_filesize' ); ?>"/>
+        <input type="text" class="form-control" name="support_ticket_attachment_max_filesize" id="support_ticket_attachment_max_filesize"
+               value="<?php echo get_option( 'support_ticket_attachment_max_filesize' ); ?>"/>
     </div>
 
     <div class="form-group">
@@ -260,15 +260,15 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
         <p class="help-block"><?php _e( " Default Login on support page.", "supportcandy" ); ?></p>
         <select class="form-control" name="wpsc_default_login_setting" id="wpsc_default_login_setting">
 			<?php
-			$wpsc_enable_default_login = get_option( 'wpsc_default_login_setting' );
+			$support_ticket_notificationable_default_login = get_option( 'wpsc_default_login_setting' );
 
-			$selected = $wpsc_enable_default_login == '1' ? 'selected="selected"' : '';
+			$selected = $support_ticket_notificationable_default_login == '1' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="1">Support Candy Login form</option>';
 
-			$selected = $wpsc_enable_default_login == '2' ? 'selected="selected"' : '';
+			$selected = $support_ticket_notificationable_default_login == '2' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="2">WordPress Login Link</option>';
 
-			$selected = $wpsc_enable_default_login == '3' ? 'selected="selected"' : '';
+			$selected = $support_ticket_notificationable_default_login == '3' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="3">Custom Login URL</option>';
 			?>
         </select>
@@ -335,7 +335,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
     jQuery(document).ready(function () {
 
 		<?php
-		if($wpsc_enable_default_login == 3){
+		if($support_ticket_notificationable_default_login == 3){
 		?>
         jQuery('#custom_login').show();
 		<?php

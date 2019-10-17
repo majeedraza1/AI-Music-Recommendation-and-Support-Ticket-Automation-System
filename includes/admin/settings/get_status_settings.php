@@ -9,7 +9,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $statuses = get_terms( [
-	'taxonomy'   => 'wpsc_statuses',
+	'taxonomy'   => 'ticket_status',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'order'      => 'ASC',

@@ -15,31 +15,31 @@ $wpsc_appearance_individual_ticket_page = get_option( 'wpsc_individual_ticket_pa
           action="javascript:wpsc_set_appearance_individual_ticket_settings();">
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Ticket Widgets', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Ticket Widgets', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_widgets_bg_color" class="wpsc_color_picker"
-                           name="individual_ticket_page[wpsc_ticket_widgets_bg_color]?>"
-                           value="<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_bg_color'] ?>"/>
+                    <input id="support_ticket_widgets_bg_color" class="wpsc_color_picker"
+                           name="individual_ticket_page[support_ticket_widgets_bg_color]?>"
+                           value="<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_bg_color'] ?>"/>
                 </div>
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_widgets_text_color" class="wpsc_color_picker"
-                           name="individual_ticket_page[wpsc_ticket_widgets_text_color]"
-                           value="<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_text_color'] ?>"/>
+                    <input id="support_ticket_widgets_text_color" class="wpsc_color_picker"
+                           name="individual_ticket_page[support_ticket_widgets_text_color]"
+                           value="<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_text_color'] ?>"/>
                 </div>
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Border Color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_widgets_border_color" class="wpsc_color_picker"
-                           name="individual_ticket_page[wpsc_ticket_widgets_border_color]"
-                           value="<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_border_color'] ?>"/>
+                    <input id="support_ticket_widgets_border_color" class="wpsc_color_picker"
+                           name="individual_ticket_page[support_ticket_widgets_border_color]"
+                           value="<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_border_color'] ?>"/>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Report Thread', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Report Thread', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -63,7 +63,7 @@ $wpsc_appearance_individual_ticket_page = get_option( 'wpsc_individual_ticket_pa
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Reply Thread (Customer)', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Reply Thread (Customer)', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -87,7 +87,7 @@ $wpsc_appearance_individual_ticket_page = get_option( 'wpsc_individual_ticket_pa
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Reply Thread (Agent)', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Reply Thread (Agent)', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -111,7 +111,7 @@ $wpsc_appearance_individual_ticket_page = get_option( 'wpsc_individual_ticket_pa
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Private Note', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Private Note', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -135,31 +135,31 @@ $wpsc_appearance_individual_ticket_page = get_option( 'wpsc_individual_ticket_pa
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Ticket Logs', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Ticket Logs', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_logs_bg_color" class="wpsc_color_picker"
-                           name="individual_ticket_page[wpsc_ticket_logs_bg_color]?>"
-                           value="<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_logs_bg_color'] ?>"/>
+                    <input id="support_ticket_logs_bg_color" class="wpsc_color_picker"
+                           name="individual_ticket_page[support_ticket_logs_bg_color]?>"
+                           value="<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_logs_bg_color'] ?>"/>
                 </div>
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_logs_text_color" class="wpsc_color_picker"
-                           name="individual_ticket_page[wpsc_ticket_logs_text_color]"
-                           value="<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_logs_text_color'] ?>"/>
+                    <input id="support_ticket_logs_text_color" class="wpsc_color_picker"
+                           name="individual_ticket_page[support_ticket_logs_text_color]"
+                           value="<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_logs_text_color'] ?>"/>
                 </div>
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Border Color', 'supportcandy' ); ?></p>
-                    <input id="wpsc_ticket_logs_border_color" class="wpsc_color_picker"
-                           name="individual_ticket_page[wpsc_ticket_logs_border_color]"
-                           value="<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_logs_border_color'] ?>"/>
+                    <input id="support_ticket_logs_border_color" class="wpsc_color_picker"
+                           name="individual_ticket_page[support_ticket_logs_border_color]"
+                           value="<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_logs_border_color'] ?>"/>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Submit Reply Button', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Submit Reply Button', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -183,7 +183,7 @@ $wpsc_appearance_individual_ticket_page = get_option( 'wpsc_individual_ticket_pa
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Other Reply Form Buttons', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Other Reply Form Buttons', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -207,7 +207,7 @@ $wpsc_appearance_individual_ticket_page = get_option( 'wpsc_individual_ticket_pa
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Edit Buttons', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Edit Buttons', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-4" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>

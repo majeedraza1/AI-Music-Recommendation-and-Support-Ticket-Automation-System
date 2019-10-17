@@ -8,97 +8,11 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 	final class WPSC_Install {
 
 		public function __construct() {
-			add_action( 'init', array( $this, 'register_post_type' ), 100 );
-			$this->check_version();
-		}
-
-		// Register post types and texonomies
-		public function register_post_type() {
-
-			// Register cutom post type
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_post_type( 'wpsc_ticket', $args );
-
-			// Threads post
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_post_type( 'wpsc_ticket_thread', $args );
-
-			// Register categories texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_taxonomy( 'wpsc_categories', 'wpsc_ticket', $args );
-
-			// Register status texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_taxonomy( 'wpsc_statuses', 'wpsc_ticket', $args );
-
-			// Register priorities texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_taxonomy( 'wpsc_priorities', 'wpsc_ticket', $args );
-
-			// Register form field texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_taxonomy( 'wpsc_ticket_custom_fields', 'wpsc_ticket', $args );
-
-			// Register agent texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-
-			register_taxonomy( 'wpsc_ticket_widget', 'wpsc_ticket', $args );
-			// Register form field texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-
-			register_taxonomy( 'wpsc_agents', 'wpsc_ticket', $args );
-
-			// Register attachment texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_taxonomy( 'wpsc_attachment', 'wpsc_ticket', $args );
-
-			// Register ticket notifications texonomy
-			$args = array(
-				'public'  => false,
-				'rewrite' => false
-			);
-			register_taxonomy( 'wpsc_en', 'wpsc_ticket', $args );
-
-		}
-
-		/**
-		 * Check version of WPSC
-		 */
-		public function check_version() {
-
 			$installed_version = get_option( 'wpsc_current_version' );
 			if ( $installed_version != WPSC_VERSION ) {
 				$this->create_db_tables();
-				add_action( 'init', array( $this, 'upgrade' ), 101 );
 			}
-
+			add_action( 'init', array( $this, 'upgrade' ), 101 );
 		}
 
 		/**
@@ -113,7 +27,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 			$collate = 'CHARACTER SET utf8 COLLATE utf8_general_ci';
 
 			$tables = "
-					CREATE TABLE {$wpdb->prefix}wpsc_ticket (
+					CREATE TABLE {$wpdb->prefix}support_ticket (
 						id bigint(20) NOT NULL AUTO_INCREMENT,
 						ticket_status integer,
 						customer_name TINYTEXT NULL DEFAULT NULL,
@@ -130,7 +44,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 						active int(11) DEFAULT 1,
 						PRIMARY KEY  (id)
 					) $collate;
-					CREATE TABLE {$wpdb->prefix}wpsc_ticketmeta (
+					CREATE TABLE {$wpdb->prefix}support_ticketmeta (
 						id bigint(20) NOT NULL AUTO_INCREMENT,
 						ticket_id bigint(20),
 						meta_key LONGTEXT NULL DEFAULT NULL,
@@ -155,35 +69,35 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 			if ( $installed_version < '1.0.0' ) {
 
 				// Category Items
-				$term = wp_insert_term( __( 'General', 'supportcandy' ), 'wpsc_categories' );
+				$term = wp_insert_term( __( 'General', 'supportcandy' ), 'ticket_category' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'support_ticket_category_menu_order', '1' );
 					update_option( 'support_ticket_default_category', $term['term_id'] );
 				}
 
 				// Status Items
-				$term = wp_insert_term( __( 'Open', 'supportcandy' ), 'wpsc_statuses' );
+				$term = wp_insert_term( __( 'Open', 'supportcandy' ), 'ticket_status' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_status_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_status_background_color', '#d9534f' );
 					add_term_meta( $term['term_id'], 'support_ticket_status_menu_order', '1' );
 					update_option( 'support_ticket_default_status', $term['term_id'] );
 				}
-				$term = wp_insert_term( __( 'Awaiting customer reply', 'supportcandy' ), 'wpsc_statuses' );
+				$term = wp_insert_term( __( 'Awaiting customer reply', 'supportcandy' ), 'ticket_status' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_status_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_status_background_color', '#000000' );
 					add_term_meta( $term['term_id'], 'support_ticket_status_menu_order', '2' );
-					update_option( 'wpsc_ticket_status_after_agent_reply', $term['term_id'] );
+					update_option( 'support_ticket_status_after_agent_reply', $term['term_id'] );
 				}
-				$term = wp_insert_term( __( 'Awaiting agent reply', 'supportcandy' ), 'wpsc_statuses' );
+				$term = wp_insert_term( __( 'Awaiting agent reply', 'supportcandy' ), 'ticket_status' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_status_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_status_background_color', '#f0ad4e' );
 					add_term_meta( $term['term_id'], 'support_ticket_status_menu_order', '3' );
-					update_option( 'wpsc_ticket_status_after_customer_reply', $term['term_id'] );
+					update_option( 'support_ticket_status_after_customer_reply', $term['term_id'] );
 				}
-				$term = wp_insert_term( __( 'Closed', 'supportcandy' ), 'wpsc_statuses' );
+				$term = wp_insert_term( __( 'Closed', 'supportcandy' ), 'ticket_status' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_status_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_status_background_color', '#5cb85c' );
@@ -192,20 +106,20 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				}
 
 				// Priority Items
-				$term = wp_insert_term( __( 'Low', 'supportcandy' ), 'wpsc_priorities' );
+				$term = wp_insert_term( __( 'Low', 'supportcandy' ), 'ticket_priority' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_priority_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_priority_background_color', '#5bc0de' );
 					add_term_meta( $term['term_id'], 'support_ticket_priority_menu_order', '1' );
 					update_option( 'support_ticket_default_priority', $term['term_id'] );
 				}
-				$term = wp_insert_term( __( 'Medium', 'supportcandy' ), 'wpsc_priorities' );
+				$term = wp_insert_term( __( 'Medium', 'supportcandy' ), 'ticket_priority' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_priority_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_priority_background_color', '#f0ad4e' );
 					add_term_meta( $term['term_id'], 'support_ticket_priority_menu_order', '2' );
 				}
-				$term = wp_insert_term( __( 'High', 'supportcandy' ), 'wpsc_priorities' );
+				$term = wp_insert_term( __( 'High', 'supportcandy' ), 'ticket_priority' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_priority_color', '#ffffff' );
 					add_term_meta( $term['term_id'], 'wpsc_priority_background_color', '#d9534f' );
@@ -214,7 +128,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 
 
 				// Ticket form items
-				$term = wp_insert_term( 'ticket_id', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_id', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'ID', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -223,7 +137,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'number' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'number' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_customer_load_order', '1' );
@@ -232,7 +146,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_orderby', '1' );
 				}
-				$term = wp_insert_term( 'ticket_status', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_status', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Status', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -242,7 +156,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'number' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'number' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_customer_load_order', '2' );
@@ -250,7 +164,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_filter_customer_load_order', '2' );
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '2' );
 				}
-				$term = wp_insert_term( 'customer_name', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'customer_name', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Name', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'wpsc_tf_extra_info', __( 'Please insert your name.', 'supportcandy' ) );
@@ -264,13 +178,13 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'string' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'string' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_agent_load_order', '4' );
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '4' );
 				}
-				$term = wp_insert_term( 'customer_email', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'customer_email', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Email Address', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'wpsc_tf_extra_info', __( 'Please insert your email.', 'supportcandy' ) );
@@ -284,12 +198,12 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'string' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'string' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '5' );
 				}
-				$term = wp_insert_term( 'ticket_subject', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_subject', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Subject', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'wpsc_tf_extra_info', __( 'Short description of the ticket.', 'supportcandy' ) );
@@ -306,7 +220,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_tl_agent_load_order', '3' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'ticket_description', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_description', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Description', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'wpsc_tf_extra_info', __( 'Detailed description of the ticket', 'supportcandy' ) );
@@ -319,7 +233,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'ticket_category', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_category', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Category', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'wpsc_tf_extra_info', __( 'Please select category.', 'supportcandy' ) );
@@ -335,7 +249,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'number' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'number' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_customer_load_order', '6' );
@@ -343,7 +257,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_filter_customer_load_order', '6' );
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '6' );
 				}
-				$term = wp_insert_term( 'ticket_priority', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_priority', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Priority', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'wpsc_tf_extra_info', __( 'Please select priority.', 'supportcandy' ) );
@@ -354,7 +268,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'number' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'number' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_customer_load_order', '7' );
@@ -362,7 +276,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_filter_customer_load_order', '7' );
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '7' );
 				}
-				$term = wp_insert_term( 'assigned_agent', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'assigned_agent', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Assigned Agent', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -371,13 +285,13 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'number' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'number' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_agent_load_order', '8' );
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '8' );
 				}
-				$term = wp_insert_term( 'date_created', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'date_created', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Date Created', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -386,7 +300,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'string' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'string' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_agent_load_order', '9' );
@@ -394,7 +308,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_filter_agent_load_order', '9' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_orderby', '1' );
 				}
-				$term = wp_insert_term( 'date_updated', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'date_updated', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Date Updated', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -403,12 +317,12 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '1' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'string' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'string' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_customer_load_order', '10' );
 					add_term_meta( $term['term_id'], 'wpsc_tl_agent_load_order', '10' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_orderby', '1' );
 				}
-				$term = wp_insert_term( 'agent_created', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'agent_created', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Agent Created', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -417,11 +331,11 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_list_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', 'number' );
+					add_term_meta( $term['term_id'], 'support_ticket_filter_type', 'number' );
 					add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '0' );
 				}
-				$term = wp_insert_term( 'ticket_url', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_url', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Ticket URL', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -429,7 +343,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'last_reply', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'last_reply', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Last reply', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -437,7 +351,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'last_reply_user_name', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'last_reply_user_name', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Last reply user name', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -445,7 +359,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'last_reply_user_email', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'last_reply_user_email', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Last reply user email', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -453,7 +367,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'last_note', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'last_note', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Last Note', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -461,7 +375,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'last_note_user_name', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'last_note_user_name', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Last note user name', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -469,7 +383,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'last_note_user_email', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'last_note_user_email', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Last note user email', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -477,7 +391,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'current_user_name', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'current_user_name', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Current user name', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -485,7 +399,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'current_user_email', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'current_user_email', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'Current user email', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -493,7 +407,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_list', '0' );
 					add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '0' );
 				}
-				$term = wp_insert_term( 'ticket_history', 'wpsc_ticket_custom_fields' );
+				$term = wp_insert_term( 'ticket_history', 'support_ticket_custom_fields' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_tf_label', __( 'All threads in decending order except last reply', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'agentonly', '2' );
@@ -505,7 +419,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				// Agents
 				$admins = get_users( array( 'role' => 'administrator' ) );
 				foreach ( $admins as $admin ) {
-					$term = wp_insert_term( 'agent_' . $admin->ID, 'wpsc_agents' );
+					$term = wp_insert_term( 'agent_' . $admin->ID, 'support_agent' );
 					if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 						add_term_meta( $term['term_id'], 'user_id', $admin->ID );
 						add_term_meta( $term['term_id'], 'label', $admin->display_name );
@@ -517,7 +431,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				}
 
 				// Email Notifications
-				$term = wp_insert_term( __( 'New ticket customer confirmation', 'supportcandy' ), 'wpsc_en' );
+				$term = wp_insert_term( __( 'New ticket customer confirmation', 'supportcandy' ), 'support_ticket_notification' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'type', __( 'new_ticket', 'supportcandy' ) );
 					add_term_meta( $term['term_id'], 'subject', __( 'Your ticket has been created successfully!', 'supportcandy' ) );
@@ -526,7 +440,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'extra_recipients', array() );
 					add_term_meta( $term['term_id'], 'conditions', array() );
 				}
-				$term = wp_insert_term( __( 'New ticket staff notification', 'supportcandy' ), 'wpsc_en' );
+				$term = wp_insert_term( __( 'New ticket staff notification', 'supportcandy' ), 'support_ticket_notification' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'type', 'new_ticket' );
 					add_term_meta( $term['term_id'], 'subject', '{ticket_subject}' );
@@ -535,7 +449,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'extra_recipients', array() );
 					add_term_meta( $term['term_id'], 'conditions', array() );
 				}
-				$term = wp_insert_term( __( 'Reply ticket notification', 'supportcandy' ), 'wpsc_en' );
+				$term = wp_insert_term( __( 'Reply ticket notification', 'supportcandy' ), 'support_ticket_notification' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'type', 'ticket_reply' );
 					add_term_meta( $term['term_id'], 'subject', '{ticket_subject}' );
@@ -544,7 +458,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'extra_recipients', array() );
 					add_term_meta( $term['term_id'], 'conditions', array() );
 				}
-				$term = wp_insert_term( __( 'Close ticket customer notification', 'supportcandy' ), 'wpsc_en' );
+				$term = wp_insert_term( __( 'Close ticket customer notification', 'supportcandy' ), 'support_ticket_notification' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'type', 'change_status' );
 					add_term_meta( $term['term_id'], 'subject', __( 'Your ticket has been closed!', 'supportcandy' ) );
@@ -554,16 +468,16 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					add_term_meta( $term['term_id'], 'conditions', array( 11 => array( 6 ) ) );
 				}
 
-				update_option( 'wpsc_ticket_count', '1' );
+				update_option( 'support_ticket_count', '1' );
 
 				update_option( 'wpsc_allow_customer_close_ticket', '1' );
 				update_option( 'wpsc_reply_form_position', '1' );
 
 				update_option( 'wpsc_calender_date_format', 'yy-mm-dd' );
-				update_option( 'wpsc_attachment_max_filesize', '20' );
+				update_option( 'support_ticket_attachment_max_filesize', '20' );
 				update_option( 'wpsc_allow_guest_ticket', '0' );
 				update_option( 'wpsc_powered_by', '1' );
-				update_option( 'wpsc_ticket_alice', 'Ticket #' );
+				update_option( 'support_ticket_alice', 'Ticket #' );
 				update_option( 'wpsc_captcha', '1' );
 
 				$wpsc_thankyou_html = __( "<p>Dear {customer_name},</p><p>We have received your ticket and confirmation has been sent to your email address&nbsp;{customer_email}.</p><p>Your ticket id is #{ticket_id}. You will get email notification after we post reply in your ticket but in case email notification failed, you can check your ticket status on below link:</p><p>{ticket_url}</p>", 'supportcandy' );
@@ -585,12 +499,12 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 			}
 
 			if ( $installed_version < '1.0.1' ) {
-				$term = get_term_by( 'slug', 'date_created', 'wpsc_ticket_custom_fields' );
-				update_term_meta( $term->term_id, 'wpsc_ticket_filter_type', 'date' );
-				$term = get_term_by( 'slug', 'date_updated', 'wpsc_ticket_custom_fields' );
-				update_term_meta( $term->term_id, 'wpsc_ticket_filter_type', 'date' );
+				$term = get_term_by( 'slug', 'date_created', 'support_ticket_custom_fields' );
+				update_term_meta( $term->term_id, 'support_ticket_filter_type', 'date' );
+				$term = get_term_by( 'slug', 'date_updated', 'support_ticket_custom_fields' );
+				update_term_meta( $term->term_id, 'support_ticket_filter_type', 'date' );
 				$date_fields = get_terms( [
-					'taxonomy'   => 'wpsc_ticket_custom_fields',
+					'taxonomy'   => 'support_ticket_custom_fields',
 					'hide_empty' => false,
 					'meta_query' => array(
 						'relation' => 'AND',
@@ -602,12 +516,12 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					),
 				] );
 				foreach ( $date_fields as $term ) {
-					update_term_meta( $term->term_id, 'wpsc_ticket_filter_type', 'date' );
+					update_term_meta( $term->term_id, 'support_ticket_filter_type', 'date' );
 				}
 			}
 
 			if ( $installed_version < '1.0.4' ) {
-				$term = get_term_by( 'slug', 'ticket_priority', 'wpsc_ticket_custom_fields' );
+				$term = get_term_by( 'slug', 'ticket_priority', 'support_ticket_custom_fields' );
 				update_term_meta( $term->term_id, 'agentonly', '0' );
 				update_term_meta( $term->term_id, 'wpsc_tf_status', '0' );
 				update_term_meta( $term->term_id, 'wpsc_tf_conditional', '1' );
@@ -646,13 +560,13 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				// Appearance Ticket List Settings
 				$wpsc_appearance_ticket_list = array(
 
-					'wpsc_filter_widgets_bg_color'        => '#FFFFFF',
-					'wpsc_filter_widgets_text_color'      => '#2C3E50',
-					'wpsc_filter_widgets_border_color'    => '#C3C3C3',
-					'wpsc_ticket_list_header_bg_color'    => '#424949',
-					'wpsc_ticket_list_header_text_color'  => '#FFFFFF',
-					'wpsc_ticket_list_item_mo_bg_color'   => '#FFFFFF',
-					'wpsc_ticket_list_item_mo_text_color' => '#2C3E50',
+					'wpsc_filter_widgets_bg_color'           => '#FFFFFF',
+					'wpsc_filter_widgets_text_color'         => '#2C3E50',
+					'wpsc_filter_widgets_border_color'       => '#C3C3C3',
+					'support_ticket_list_header_bg_color'    => '#424949',
+					'support_ticket_list_header_text_color'  => '#FFFFFF',
+					'support_ticket_list_item_mo_bg_color'   => '#FFFFFF',
+					'support_ticket_list_item_mo_text_color' => '#2C3E50',
 				);
 
 				update_option( 'wpsc_appearance_ticket_list', $wpsc_appearance_ticket_list );
@@ -660,9 +574,9 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				// Appearance individual Ticket Page Settings
 				$wpsc_appearance_individual_ticket_page = array(
 
-					'wpsc_ticket_widgets_bg_color'           => '#FFFFFF',
-					'wpsc_ticket_widgets_text_color'         => '#000000',
-					'wpsc_ticket_widgets_border_color'       => '#C3C3C3',
+					'support_ticket_widgets_bg_color'        => '#FFFFFF',
+					'support_ticket_widgets_text_color'      => '#000000',
+					'support_ticket_widgets_border_color'    => '#C3C3C3',
 					'wpsc_report_thread_bg_color'            => '#FFFFFF',
 					'wpsc_report_thread_text_color'          => '#000000',
 					'wpsc_report_thread_border_color'        => '#C3C3C3',
@@ -672,9 +586,9 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 					'wpsc_private_note_bg_color'             => '#FEF9E7',
 					'wpsc_private_note_text_color'           => '#000000',
 					'wpsc_private_note_border_color'         => '#C3C3C3',
-					'wpsc_ticket_logs_bg_color'              => '#D6EAF8',
-					'wpsc_ticket_logs_text_color'            => '#000000',
-					'wpsc_ticket_logs_border_color'          => '#C3C3C3',
+					'support_ticket_logs_bg_color'           => '#D6EAF8',
+					'support_ticket_logs_text_color'         => '#000000',
+					'support_ticket_logs_border_color'       => '#C3C3C3',
 					'wpsc_submit_reply_btn_bg_color'         => '#419641',
 					'wpsc_submit_reply_btn_text_color'       => '#FFFFFF',
 					'wpsc_submit_reply_btn_border_color'     => '#C3C3C3',
@@ -795,16 +709,16 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				update_option( 'wpsc_appearance_ticket_list', $ticket_filter_app );
 
 				//Bug fix of ticket widget. Remove and add wigets again.
-				$wpsc_ticket_widgets = get_terms( [
-					'taxonomy'   => 'wpsc_ticket_widget',
+				$support_ticket_widgets = get_terms( [
+					'taxonomy'   => 'support_ticket_widget',
 					'hide_empty' => false
 				] );
 
-				foreach ( $wpsc_ticket_widgets as $wpsc_ticket_widget ) {
-					wp_delete_term( $wpsc_ticket_widget->term_id, 'wpsc_ticket_widget' );
-					delete_term_meta( $wpsc_ticket_widget->term_id, 'wpsc_ticket_widget_load_order' );
-					delete_term_meta( $wpsc_ticket_widget->term_id, 'wpsc_ticket_widget_type' );
-					delete_term_meta( $wpsc_ticket_widget->term_id, 'wpsc_ticket_widget_role' );
+				foreach ( $support_ticket_widgets as $support_ticket_widget ) {
+					wp_delete_term( $support_ticket_widget->term_id, 'support_ticket_widget' );
+					delete_term_meta( $support_ticket_widget->term_id, 'support_ticket_widget_load_order' );
+					delete_term_meta( $support_ticket_widget->term_id, 'support_ticket_widget_type' );
+					delete_term_meta( $support_ticket_widget->term_id, 'support_ticket_widget_role' );
 				}
 
 				$agent_role_ids = array();
@@ -816,44 +730,44 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				$customer_access   = $agent_role_ids;
 				$customer_access[] = 'customer';
 
-				$term = wp_insert_term( 'Status', 'wpsc_ticket_widget' );
+				$term = wp_insert_term( 'Status', 'support_ticket_widget' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_label', __( 'Status', 'supportcandy' ) );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_load_order', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_type', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_role', $customer_access );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_load_order', '1' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_type', '1' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_role', $customer_access );
 				}
 
-				$term = wp_insert_term( 'Raised By', 'wpsc_ticket_widget' );
+				$term = wp_insert_term( 'Raised By', 'support_ticket_widget' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_label', __( 'Raised By', 'supportcandy' ) );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_load_order', '2' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_type', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_role', $agent_role_ids );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_load_order', '2' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_type', '1' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_role', $agent_role_ids );
 				}
 
-				$term = wp_insert_term( 'Assign Agent', 'wpsc_ticket_widget' );
+				$term = wp_insert_term( 'Assign Agent', 'support_ticket_widget' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_label', __( 'Assign Agent', 'supportcandy' ) );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_load_order', '3' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_type', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_role', $agent_role_ids );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_load_order', '3' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_type', '1' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_role', $agent_role_ids );
 				}
 
-				$term = wp_insert_term( 'Ticket Fields', 'wpsc_ticket_widget' );
+				$term = wp_insert_term( 'Ticket Fields', 'support_ticket_widget' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_label', __( 'Ticket Fields', 'supportcandy' ) );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_load_order', '4' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_type', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_role', $customer_access );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_load_order', '4' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_type', '1' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_role', $customer_access );
 				}
 
-				$term = wp_insert_term( 'Agent Only Fields', 'wpsc_ticket_widget' );
+				$term = wp_insert_term( 'Agent Only Fields', 'support_ticket_widget' );
 				if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 					add_term_meta( $term['term_id'], 'wpsc_label', __( 'Agent Only Fields', 'supportcandy' ) );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_load_order', '5' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_type', '1' );
-					add_term_meta( $term['term_id'], 'wpsc_ticket_widget_role', $agent_role_ids );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_load_order', '5' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_type', '1' );
+					add_term_meta( $term['term_id'], 'support_ticket_widget_role', $agent_role_ids );
 				}
 
 				update_option( 'wpsc_personal_data_retention_type', 'disable' );
@@ -862,7 +776,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 
 				//mark all custom fields as non personal field
 				$fields = get_terms( [
-					'taxonomy'   => 'wpsc_ticket_custom_fields',
+					'taxonomy'   => 'support_ticket_custom_fields',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'meta_key'   => 'wpsc_tf_load_order',
@@ -883,7 +797,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 
 			if ( $installed_version < '1.1.0' ) {
 
-				update_option( 'wpsc_ticket_url_permission', '1' );
+				update_option( 'support_ticket_url_permission', '1' );
 
 				update_option( 'wpsc_sign_out', 1 );
 
@@ -918,7 +832,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 			}
 
 			if ( $installed_version < '1.1.3' ) {
-				update_option( 'wpsc_ticket_public_mode', 0 );
+				update_option( 'support_ticket_public_mode', 0 );
 				update_option( 'wpsc_show_and_hide_filters', 1 );
 			}
 
@@ -977,39 +891,39 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 
 			if ( $installed_version < '2.0.0' ) {
 
-				update_option( 'wpsc_ticket_id_type', 1 );
+				update_option( 'support_ticket_id_type', 1 );
 				update_option( 'wpsc_hide_show_priority', 1 );
 
 				$wpsc_allow_attachment = array( 'create', 'reply' );
 				update_option( 'wpsc_allow_attachment', $wpsc_allow_attachment );
 
-				$term_data = get_term_by( 'slug', 'ticket_status', 'wpsc_ticket_custom_fields' );
+				$term_data = get_term_by( 'slug', 'ticket_status', 'support_ticket_custom_fields' );
 				if ( $term_data ) {
 					add_term_meta( $term_data->term_id, 'wpsc_allow_orderby', '1' );
 				}
 
-				$term_data = get_term_by( 'slug', 'ticket_priority', 'wpsc_ticket_custom_fields' );
+				$term_data = get_term_by( 'slug', 'ticket_priority', 'support_ticket_custom_fields' );
 				if ( $term_data ) {
 					add_term_meta( $term_data->term_id, 'wpsc_allow_orderby', '1' );
 				}
 
-				$term_data = get_term_by( 'slug', 'ticket_category', 'wpsc_ticket_custom_fields' );
+				$term_data = get_term_by( 'slug', 'ticket_category', 'support_ticket_custom_fields' );
 				if ( $term_data ) {
 					add_term_meta( $term_data->term_id, 'wpsc_allow_orderby', '1' );
 				}
 
-				$term_data = get_term_by( 'slug', 'customer_name', 'wpsc_ticket_custom_fields' );
+				$term_data = get_term_by( 'slug', 'customer_name', 'support_ticket_custom_fields' );
 				if ( $term_data ) {
 					add_term_meta( $term_data->term_id, 'wpsc_allow_orderby', '1' );
 				}
 
-				$term_data = get_term_by( 'slug', 'customer_email', 'wpsc_ticket_custom_fields' );
+				$term_data = get_term_by( 'slug', 'customer_email', 'support_ticket_custom_fields' );
 				if ( $term_data ) {
 					add_term_meta( $term_data->term_id, 'wpsc_allow_orderby', '1' );
 				}
 
 				$fields = get_terms( [
-					'taxonomy'   => 'wpsc_ticket_custom_fields',
+					'taxonomy'   => 'support_ticket_custom_fields',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'meta_key'   => 'wpsc_tf_load_order',
@@ -1044,7 +958,7 @@ if ( ! class_exists( 'WPSC_Install' ) ) :
 				update_option( 'wpsc_thread_limit', 5 );
 
 				$email_templates = get_terms( [
-					'taxonomy'   => 'wpsc_en',
+					'taxonomy'   => 'support_ticket_notification',
 					'hide_empty' => false,
 					'orderby'    => 'ID',
 					'order'      => 'ASC',

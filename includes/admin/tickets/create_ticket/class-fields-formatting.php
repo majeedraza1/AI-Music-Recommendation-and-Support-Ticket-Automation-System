@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( ! class_exists( 'WPSC_Ticket_Field_Formatting' ) ) :
+if ( ! class_exists( 'support_ticket_Field_Formatting' ) ) :
 
-	class WPSC_Ticket_Field_Formatting {
+	class support_ticket_Field_Formatting {
 
 		public function get_field_val( $field ) {
 
@@ -21,7 +21,7 @@ if ( ! class_exists( 'WPSC_Ticket_Field_Formatting' ) ) :
 				?>
                 <div class="wpsp_sidebar_labels">
                     <strong><?php _e( $field_label, 'supportcandy' ) ?>:</strong>
-                    <table class="wpsc_attachment_tbl">
+                    <table class="support_ticket_attachment_tbl">
                         <tbody>
 						<?php
 						foreach ( $attachments as $attachment ):
@@ -33,7 +33,7 @@ if ( ! class_exists( 'WPSC_Ticket_Field_Formatting' ) ) :
 							}
 							$upload_dir   = wp_upload_dir();
 							$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-							$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+							$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 							?>
                             <tr>
                                 <td>

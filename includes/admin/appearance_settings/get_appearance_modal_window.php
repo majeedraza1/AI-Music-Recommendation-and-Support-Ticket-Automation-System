@@ -15,7 +15,7 @@ $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
           action="javascript:wpsc_set_appearance_modal_window_settings();">
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Header', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Header', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-6" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -33,7 +33,7 @@ $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Footer', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Footer', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-6" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -45,7 +45,7 @@ $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Close Button', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Close Button', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-6" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>
@@ -63,7 +63,7 @@ $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
         </div>
 
         <div class="form-group">
-            <label for="wpsc_ticket_widgets_color"><?php _e( 'Action Button', 'supportcandy' ); ?></label></br>
+            <label for="support_ticket_widgets_color"><?php _e( 'Action Button', 'supportcandy' ); ?></label></br>
             <div class="row">
                 <div class="col-sm-6" style="">
                     <p class="help-block"><?php _e( 'Background color', 'supportcandy' ); ?></p>

@@ -8,7 +8,7 @@ $wpsc_thread_limit = get_option( 'wpsc_thread_limit' );
 $ticket_history = '';
 
 $threads = get_posts( array(
-	'post_type'      => 'wpsc_ticket_thread',
+	'post_type'      => 'ticket_thread',
 	'post_status'    => 'publish',
 	'posts_per_page' => $wpsc_thread_limit + 1,
 	'orderby'        => 'date',

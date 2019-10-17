@@ -10,10 +10,10 @@ $ticket_ids     = explode( ',', $ticket_id_data );
 
 foreach ( $ticket_ids as $ticket_id ) {
 
-	$wpdb->delete( $wpdb->prefix . 'wpsc_ticket', array( 'id' => $ticket_id ) );
+	$wpdb->delete( $wpdb->prefix . 'support_ticket', array( 'id' => $ticket_id ) );
 
 	$args           = array(
-		'post_type'      => 'wpsc_ticket_thread',
+		'post_type'      => 'ticket_thread',
 		'post_status'    => array( 'publish', 'trash' ),
 		'posts_per_page' => - 1,
 		'meta_query'     => array(

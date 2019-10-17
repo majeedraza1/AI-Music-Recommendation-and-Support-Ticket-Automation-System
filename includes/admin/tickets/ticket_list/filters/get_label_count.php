@@ -44,7 +44,7 @@ if ( $filter_count_flag ):
 			$agent_permissions = $wpscfunction->get_current_agent_permissions();
 
 			$agents = get_terms( [
-				'taxonomy'   => 'wpsc_agents',
+				'taxonomy'   => 'support_agent',
 				'hide_empty' => false,
 				'meta_query' => array(
 					'relation' => 'AND',

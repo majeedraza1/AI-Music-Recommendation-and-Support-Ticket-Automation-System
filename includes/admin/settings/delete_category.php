@@ -16,7 +16,7 @@ if ( ! $cat_id ) {
 $support_ticket_default_category = get_option( 'support_ticket_default_category' );
 
 if ( $support_ticket_default_category != $cat_id ) {
-	wp_delete_term( $cat_id, 'wpsc_categories' );
+	wp_delete_term( $cat_id, 'ticket_category' );
 	do_action( 'wpsc_delete_category', $cat_id );
 	echo '{ "sucess_status":"1","messege":"' . __( 'Category deleted successfully.', 'supportcandy' ) . '" }';
 } else {

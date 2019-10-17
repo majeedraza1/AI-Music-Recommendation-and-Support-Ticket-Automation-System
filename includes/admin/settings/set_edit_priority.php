@@ -33,7 +33,7 @@ if ( $priority_color == $priority_bg_color ) {
 	die();
 }
 
-wp_update_term( $priority_id, 'wpsc_priorities', array(
+wp_update_term( $priority_id, 'ticket_priority', array(
 	'name' => $priority_name
 ) );
 update_term_meta( $priority_id, 'wpsc_priority_color', $priority_color );

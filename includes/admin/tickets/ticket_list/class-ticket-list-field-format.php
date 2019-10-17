@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-if ( ! class_exists( 'WPSC_Ticket_List_Field' ) ) :
+if ( ! class_exists( 'support_ticket_List_Field' ) ) :
 
-	class WPSC_Ticket_List_Field {
+	class support_ticket_List_Field {
 
 		var $list_item;
 		var $ticket;
@@ -106,7 +106,7 @@ if ( ! class_exists( 'WPSC_Ticket_List_Field' ) ) :
 		}
 
 		function print_ticket_status() {
-			$status           = get_term_by( 'id', $this->val, 'wpsc_statuses' );
+			$status           = get_term_by( 'id', $this->val, 'ticket_status' );
 			$color            = get_term_meta( $status->term_id, 'wpsc_status_color', true );
 			$background_color = get_term_meta( $status->term_id, 'wpsc_status_background_color', true );
 			?>
@@ -116,12 +116,12 @@ if ( ! class_exists( 'WPSC_Ticket_List_Field' ) ) :
 		}
 
 		function print_ticket_category() {
-			$category = get_term_by( 'id', $this->val, 'wpsc_categories' );
+			$category = get_term_by( 'id', $this->val, 'ticket_category' );
 			echo $category->name;
 		}
 
 		function print_ticket_priority() {
-			$priority         = get_term_by( 'id', $this->val, 'wpsc_priorities' );
+			$priority         = get_term_by( 'id', $this->val, 'ticket_priority' );
 			$color            = get_term_meta( $priority->term_id, 'wpsc_priority_color', true );
 			$background_color = get_term_meta( $priority->term_id, 'wpsc_priority_background_color', true );
 			?>
@@ -171,7 +171,7 @@ if ( ! class_exists( 'WPSC_Ticket_List_Field' ) ) :
 			$arr       = array();
 			foreach ( $this->val as $key => $value ) {
 				if ( $value ) {
-					$agent = get_term_by( 'id', $value, 'wpsc_agents' );
+					$agent = get_term_by( 'id', $value, 'support_agent' );
 					if ( $agent ) {
 						$arr[] = get_term_meta( $agent->term_id, 'label', true );
 					}

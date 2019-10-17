@@ -19,7 +19,7 @@ if ( $user ) {
 	$user->remove_cap( 'wpsc_agent' );
 }
 
-wp_delete_term( $agent_id, 'wpsc_agents' );
+wp_delete_term( $agent_id, 'support_agent' );
 
 do_action( 'wpsc_delete_agent', $agent_id );
 

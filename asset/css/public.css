@@ -3,7 +3,7 @@
     font-size: 13px !important;
 }
 
-#wpsc_tickets_container {
+#support_tickets_container {
     border-radius: 4px;
     border: 1px solid #1C5D8A;
     background-color: #fff;
@@ -12,7 +12,7 @@
     width: 99%;
 }
 
-#wpsc_tickets_container .wpsc_loading_icon {
+#support_tickets_container .wpsc_loading_icon {
     margin-top: 118px;
 }
 
@@ -54,7 +54,7 @@
     position: relative;
 }
 
-#wpsc_ticket_search {
+#support_ticket_search {
     padding: 0 30px !important;
 }
 
@@ -118,29 +118,29 @@
     }
 }
 
-.wpsc_ticket_list_container {
+.support_ticket_list_container {
     padding-top: 20px;
     min-height: 500px !important;
 }
 
-.wpsc_ticket_list_container td, .wpsc_ticket_list_container th, .wpsc_ticket_list_container tr, .wpsc_ticket_list_container table {
+.support_ticket_list_container td, .support_ticket_list_container th, .support_ticket_list_container tr, .support_ticket_list_container table {
     border: none !important;
 }
 
-.wpsc_ticket_list_container td, .wpsc_ticket_list_container th {
+.support_ticket_list_container td, .support_ticket_list_container th {
     white-space: nowrap;
 }
 
-.wpsc_ticket_list_container th {
+.support_ticket_list_container th {
     background-color: #424949 !important;
     color: #ffffff !important;
 }
 
-.wpsc_ticket_list_container tr:hover {
+.support_ticket_list_container tr:hover {
     cursor: pointer;
 }
 
-.wpsc_ticket_list_container input[type=checkbox] {
+.support_ticket_list_container input[type=checkbox] {
     margin: 0 !important;
     vertical-align: middle !important;
 }
@@ -355,12 +355,12 @@
     border-radius: 4px;
 }
 
-.wpsc_attachment_tbl table, .wpsc_attachment_tbl th, .wpsc_attachment_tbl td {
+.support_ticket_attachment_tbl table, .support_ticket_attachment_tbl th, .support_ticket_attachment_tbl td {
     border: hidden !important;
     padding: 0px !important;
 }
 
-.wpsc_ticket_thread_expander {
+.ticket_thread_expander {
     margin-top: 10px;
     color: #003eff;
     cursor: pointer;
@@ -370,7 +370,7 @@
     overflow: hidden;
 }
 
-.wpsc_ticket_thread_content img {
+.ticket_thread_content img {
     cursor: pointer;
 }
 
@@ -379,11 +379,11 @@
     width: 100% !important;
 }
 
-#wpsc_ticket_fields {
+#support_ticket_fields {
     margin: 10px 0;
 }
 
-#wpsc_ticket_aof_fields {
+#support_ticket_aof_fields {
     margin: 10px 0;
 }
 

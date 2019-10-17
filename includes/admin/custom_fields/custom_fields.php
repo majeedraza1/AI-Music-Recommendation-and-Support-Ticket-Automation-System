@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <div class="wpsc_padding_space"></div>
         <div class="row" style="margin-bottom:20px;">
             <ul class="nav nav-pills wpsc_setting_pills">
-                <li id="wpsc_ticket_custom_fields" role="presentation" class="active"><a
+                <li id="support_ticket_custom_fields" role="presentation" class="active"><a
                             href="javascript:wpsc_get_ticket_form_fields();"><?php _e( 'Ticket Form Fields', 'supportcandy' ); ?></a>
                 </li>
                 <li id="wpsc_agentonly_fields" role="presentation"><a

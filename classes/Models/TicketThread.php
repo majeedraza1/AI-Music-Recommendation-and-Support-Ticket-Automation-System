@@ -14,7 +14,7 @@ class TicketThread extends PostTypeModel {
 	 *
 	 * @var string
 	 */
-	protected $post_type = 'wpsc_ticket_thread';
+	protected $post_type = 'ticket_thread';
 
 	/**
 	 * Available thread types
@@ -241,7 +241,7 @@ class TicketThread extends PostTypeModel {
 
 				$upload_dir   = wp_upload_dir();
 				$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $save_file_name;
-				$download_url = $is_image ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment_id . '&tid=' . $ticket_id . '&tac=' . 0;
+				$download_url = $is_image ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment_id . '&tid=' . $ticket_id . '&tac=' . 0;
 
 				$attachments[] = [
 					'filename'       => get_term_meta( $attachment_id, 'filename', true ),

@@ -15,7 +15,7 @@ $customer_email               = $ticket_data['customer_email'];
 $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -29,12 +29,12 @@ $fields = get_terms( [
 	),
 ] );
 ob_start();
-$cust_name_term       = get_term_by( 'slug', 'customer_name', 'wpsc_ticket_custom_fields' );
+$cust_name_term       = get_term_by( 'slug', 'customer_name', 'support_ticket_custom_fields' );
 $cust_name            = get_term_meta( $cust_name_term->term_id, 'wpsc_tf_label', true );
 $cust_name_extra_info = get_term_meta( $cust_name_term->term_id, 'wpsc_tf_extra_info', true );
 
 
-$cust_email_term       = get_term_by( 'slug', 'customer_email', 'wpsc_ticket_custom_fields' );
+$cust_email_term       = get_term_by( 'slug', 'customer_email', 'support_ticket_custom_fields' );
 $cust_email            = get_term_meta( $cust_email_term->term_id, 'wpsc_tf_label', true );
 $cust_email_extra_info = get_term_meta( $cust_email_term->term_id, 'wpsc_tf_extra_info', true );
 
@@ -58,7 +58,7 @@ $cust_email_extra_info = get_term_meta( $cust_email_term->term_id, 'wpsc_tf_extr
             </div>
         </div>
 
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_change_raised_by"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
 
@@ -72,7 +72,7 @@ $cust_email_extra_info = get_term_meta( $cust_email_term->term_id, 'wpsc_tf_extr
                 source: function (request, response) {
                     var term = request.term;
                     request = {
-                        action: 'wpsc_tickets',
+                        action: 'support_tickets',
                         setting_action: 'get_users',
                         term: term
                     }

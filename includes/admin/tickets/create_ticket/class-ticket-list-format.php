@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
+if ( ! class_exists( 'support_ticket_Form_Field' ) ) :
 
-	class WPSC_Ticket_List {
+	class support_ticket_List {
 
 		var $slug;
 		var $type;
@@ -398,12 +398,12 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                 </label>
                 <div class="row attachment" style="margin-bottom:10px;">
                     <div class="row attachment_link">
-                        <span onclick="wpsc_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','<?php echo $field->slug ?>');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
+                        <span onclick="support_ticket_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','<?php echo $field->slug ?>');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
                     </div>
                     <div id="<?php echo 'attach_' . $field->term_id ?>" class="row attachment_container"></div>
                 </div>
 				<?php if ( $attachments ): ?>
-                    <table class="wpsc_attachment_tbl">
+                    <table class="support_ticket_attachment_tbl">
                         <tbody>
 						<?php
 						foreach ( $attachments
@@ -416,7 +416,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
 						}
 						$upload_dir   = wp_upload_dir();
 						$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-						$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+						$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 						?>
                         <tr>
                             <td>
@@ -452,7 +452,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                     <option value=""></option>
 					<?php
 					$categories = get_terms( [
-						'taxonomy'   => 'wpsc_categories',
+						'taxonomy'   => 'ticket_category',
 						'hide_empty' => false,
 						'orderby'    => 'meta_value_num',
 						'order'      => 'ASC',
@@ -480,7 +480,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                     <option value=""></option>
 					<?php
 					$priorities = get_terms( [
-						'taxonomy'   => 'wpsc_priorities',
+						'taxonomy'   => 'ticket_priority',
 						'hide_empty' => false,
 						'orderby'    => 'meta_value_num',
 						'order'      => 'ASC',
@@ -507,7 +507,7 @@ if ( ! class_exists( 'WPSC_Ticket_Form_Field' ) ) :
                           name="<?php echo $this->slug; ?>"></textarea>
                 <div class="row attachment" style="margin-bottom:20px;">
                     <div class="row attachment_link">
-                        <span onclick="wpsc_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','desc_attachment');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
+                        <span onclick="support_ticket_attachment_upload('<?php echo 'attach_' . $field->term_id ?>','desc_attachment');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
                         <span onclick="wpsc_get_templates()"><?php _e( 'Insert Macros', 'supportcandy' ) ?></span>
                         <span>Canned Reply</span>
                     </div>

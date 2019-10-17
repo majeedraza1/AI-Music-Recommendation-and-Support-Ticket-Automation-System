@@ -13,7 +13,7 @@ if ( ! $field_id ) {
 	exit;
 }
 
-$custom_field = get_term_by( 'id', $field_id, 'wpsc_ticket_custom_fields' );
+$custom_field = get_term_by( 'id', $field_id, 'support_ticket_custom_fields' );
 
 $wpsc_tf_label         = get_term_meta( $custom_field->term_id, 'wpsc_tf_label', true );
 $wpsc_tf_extra_info    = get_term_meta( $custom_field->term_id, 'wpsc_tf_extra_info', true );

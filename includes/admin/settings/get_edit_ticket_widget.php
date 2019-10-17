@@ -13,28 +13,28 @@ $ticket_widget_id = isset( $_POST ) && isset( $_POST['ticket_widget_id'] ) ? int
 if ( ! $ticket_widget_id ) {
 	exit;
 }
-$ticket_widget      = get_term_by( 'id', $ticket_widget_id, 'wpsc_ticket_widget' );
+$ticket_widget      = get_term_by( 'id', $ticket_widget_id, 'support_ticket_widget' );
 $ticket_widget_name = get_term_meta( $ticket_widget_id, 'wpsc_label', true );
 $agent_role         = get_option( 'support_ticket_agent_roles' );
 ob_start();
 ?>
 <form id="wpsc_frm_general_settings" method="post">
     <div class="form-group">
-        <label for="wpsc_ticket_widget_name"><?php _e( 'Edit Ticket Widget', 'supportcandy' ); ?></label>
+        <label for="support_ticket_widget_name"><?php _e( 'Edit Ticket Widget', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( 'Title', 'supportcandy' ); ?></p>
-        <input id="wpsc_ticket_widget_name" class="form-control" name="wpsc_ticket_widget_name"
+        <input id="support_ticket_widget_name" class="form-control" name="support_ticket_widget_name"
                value="<?php echo $ticket_widget_name; ?>"/>
     </div>
 
     <div class="form-group">
-        <label for="wpsc_ticket_widget_type"><?php _e( 'Type', 'supportcandy' ); ?></label>
+        <label for="support_ticket_widget_type"><?php _e( 'Type', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( 'Show/hide ticket widget in open ticket.', 'supportcandy' ); ?></p>
-        <select class="form-control" name="wpsc_ticket_widget_type" id="wpsc_ticket_widget_type">
+        <select class="form-control" name="support_ticket_widget_type" id="support_ticket_widget_type">
 			<?php
-			$wpsc_ticket_widget_type = get_term_meta( $ticket_widget->term_id, 'wpsc_ticket_widget_type', true );
-			$selected                = $wpsc_ticket_widget_type == '1' ? 'selected="selected"' : '';
+			$support_ticket_widget_type = get_term_meta( $ticket_widget->term_id, 'support_ticket_widget_type', true );
+			$selected                = $support_ticket_widget_type == '1' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="1">' . __( 'Enable', 'supportcandy' ) . '</option>';
-			$selected = $wpsc_ticket_widget_type == '0' ? 'selected="selected"' : '';
+			$selected = $support_ticket_widget_type == '0' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="0">' . __( 'Disable', 'supportcandy' ) . '</option>';
 			?>
         </select>
@@ -42,16 +42,16 @@ ob_start();
 
     <div class="form-group">
 		<?php
-		$wpsc_ticket_widget_role = get_term_meta( $ticket_widget->term_id, 'wpsc_ticket_widget_role', true );
+		$support_ticket_widget_role = get_term_meta( $ticket_widget->term_id, 'support_ticket_widget_role', true );
 		?>
-        <label for="wpsc_ticket_widget_role"><?php _e( 'Role', 'supportcandy' ); ?></label>
+        <label for="support_ticket_widget_role"><?php _e( 'Role', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( 'Selected users can see the widget.', 'supportcandy' ); ?></p>
         <div class="row">
 			<?php foreach ( $agent_role as $key => $role ) {
-				$checked = in_array( $key, $wpsc_ticket_widget_role ) ? 'checked="checked"' : '';
+				$checked = in_array( $key, $support_ticket_widget_role ) ? 'checked="checked"' : '';
 				?>
                 <div class="col-sm-4" style="margin-bottom:10px; display:flex;">
-                    <div style="width:25px;"><input id="wpsc_ticket_widget_role" type="checkbox" <?php echo $checked ?>
+                    <div style="width:25px;"><input id="support_ticket_widget_role" type="checkbox" <?php echo $checked ?>
                                                     name="ticket_widget_role"
                                                     value="<?php echo htmlentities( $key ) ?>"/></div>
                     <div style="padding-top:3px;"><?php echo( $role['label'] ) ?></div>
@@ -60,8 +60,8 @@ ob_start();
 			}
 			?>
             <div class="col-sm-4" style="margin-bottom:10px; display:flex;">
-                <div style="width:25px;"><input id="wpsc_ticket_widget_role"
-                                                type="checkbox" <?php echo in_array( 'customer', $wpsc_ticket_widget_role ) ? 'checked="checked"' : '' ?>
+                <div style="width:25px;"><input id="support_ticket_widget_role"
+                                                type="checkbox" <?php echo in_array( 'customer', $support_ticket_widget_role ) ? 'checked="checked"' : '' ?>
                                                 name="ticket_widget_role" value="<?php echo 'customer' ?>"/></div>
                 <div style="padding-top:3px;"><?php _e( 'Customer', 'supportcandy' ) ?></div>
             </div>

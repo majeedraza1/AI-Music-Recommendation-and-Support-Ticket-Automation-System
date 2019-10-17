@@ -18,17 +18,17 @@ $ticket_status                 = $wpscfunction->get_ticket_status( $ticket_id );
 $wpsc_allow_reply_confirmation = get_option( 'wpsc_allow_reply_confirmation' );
 $wpsc_thread_date_format       = get_option( 'wpsc_thread_date_format' );
 $ticket_widgets                = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_widget',
+	'taxonomy'   => 'support_ticket_widget',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'order'      => 'ASC',
-	'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_ticket_widget_load_order' ) ),
+	'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_widget_load_order' ) ),
 ] );
 
 $role_id = get_user_option( 'support_ticket_agent_roles' );
 
 include_once WPSC_ABSPATH . 'includes/admin/tickets/create_ticket/class-fields-formatting.php';
-$fields_format = new WPSC_Ticket_Field_Formatting();
+$fields_format = new support_ticket_Field_Formatting();
 
 $wpsc_close_ticket_status = get_option( 'wpsc_close_ticket_status' );
 
@@ -113,7 +113,7 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 
             <div class="row wpsc_it_subject_widget">
                 <h4>
-                    [<?php echo get_option( 'wpsc_ticket_alice' ) . $ticket_id ?>
+                    [<?php echo get_option( 'support_ticket_alice' ) . $ticket_id ?>
                     ] <?php echo stripcslashes( $ticket['ticket_subject'] ); ?>
 					<?php if ( $wpscfunction->has_permission( 'change_ticket_fields', $ticket_id ) && $ticket_status ): ?>
                         <button id="wpsc_individual_edit_ticket_subject"
@@ -134,7 +134,7 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 				<?php
 				$order              = $reply_form_position ? 'DESC' : 'ASC';
 				$args               = array(
-					'post_type'      => 'wpsc_ticket_thread',
+					'post_type'      => 'ticket_thread',
 					'post_status'    => 'publish',
 					'orderby'        => 'date',
 					'order'          => $order,
@@ -196,8 +196,8 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 								$wpsc_view_more = get_option( 'wpsc_view_more' );
 								if ( $wpsc_view_more ) {
 									?>
-                                    <div onclick="wpsc_ticket_thread_expander_toggle(this);"
-                                         class="col-md-12 wpsc_ticket_thread_expander"
+                                    <div onclick="ticket_thread_expander_toggle(this);"
+                                         class="col-md-12 ticket_thread_expander"
                                          style="padding: 0px; display: none;">
 										<?php _e( 'View More ...', 'supportcandy' ) ?>
                                     </div>
@@ -205,9 +205,9 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 								} ?>
 								<?php if ( $attachments ): ?>
                                     <br>
-                                    <strong class="wpsc_attachment_title"><?php _e( 'Attachments', 'supportcandy' ); ?>
+                                    <strong class="support_ticket_attachment_title"><?php _e( 'Attachments', 'supportcandy' ); ?>
                                         :</strong><br>
-                                    <table class="wpsc_attachment_tbl">
+                                    <table class="support_ticket_attachment_tbl">
                                         <tbody>
 										<?php
 										foreach ( $attachments as $attachment ):
@@ -218,13 +218,13 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 											}
 											$upload_dir   = wp_upload_dir();
 											$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-											$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+											$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 											?>
-                                            <tr class="wpsc_attachment_tr">
+                                            <tr class="support_ticket_attachment_tr">
                                                 <td>
-                                                    <a class="wpsc_attachment_link" href="<?php echo $download_url ?>"
+                                                    <a class="support_ticket_attachment_link" href="<?php echo $download_url ?>"
                                                        target="_blank">
-                                                        <span class="wpsc_attachment_file_name"
+                                                        <span class="support_ticket_attachment_file_name"
                                                               style="padding: 7px;"><?php echo $attach['filename']; ?></span></a>
                                                 </td>
                                             </tr>
@@ -277,17 +277,17 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 								$wpsc_view_more = get_option( 'wpsc_view_more' );
 								if ( $wpsc_view_more ) {
 									?>
-                                    <div onclick="wpsc_ticket_thread_expander_toggle(this);"
-                                         class="col-md-12 wpsc_ticket_thread_expander"
+                                    <div onclick="ticket_thread_expander_toggle(this);"
+                                         class="col-md-12 ticket_thread_expander"
                                          style="padding: 0px; display: none;">
 										<?php _e( 'View More ...', 'supportcandy' ) ?>
                                     </div>
 									<?php
 								} ?>
 								<?php if ( $attachments ): ?>
-                                    <strong class="wpsc_attachment_title"><?php _e( 'Attachments', 'supportcandy' ); ?>
+                                    <strong class="support_ticket_attachment_title"><?php _e( 'Attachments', 'supportcandy' ); ?>
                                         :</strong><br>
-                                    <table class="wpsc_attachment_tbl">
+                                    <table class="support_ticket_attachment_tbl">
                                         <tbody>
 										<?php
 										foreach ( $attachments as $attachment ):
@@ -298,13 +298,13 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 											}
 											$upload_dir   = wp_upload_dir();
 											$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-											$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+											$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 											?>
-                                            <tr class="wpsc_attachment_tr">
+                                            <tr class="support_ticket_attachment_tr">
                                                 <td>
-                                                    <a class="wpsc_attachment_link" href="<?php echo $download_url ?>"
+                                                    <a class="support_ticket_attachment_link" href="<?php echo $download_url ?>"
                                                        target="_blank">
-                                                        <span class="wpsc_attachment_file_name"
+                                                        <span class="support_ticket_attachment_file_name"
                                                               style="padding: 7px;"><?php echo $attach['filename']; ?></span></a>
                                                 </td>
                                             </tr>
@@ -351,17 +351,17 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 								$wpsc_view_more = get_option( 'wpsc_view_more' );
 								if ( $wpsc_view_more ) {
 									?>
-                                    <div onclick="wpsc_ticket_thread_expander_toggle(this);"
-                                         class="col-md-12 wpsc_ticket_thread_expander"
+                                    <div onclick="ticket_thread_expander_toggle(this);"
+                                         class="col-md-12 ticket_thread_expander"
                                          style="padding: 0px; display: none;">
 										<?php _e( 'View More ...', 'supportcandy' ) ?>
                                     </div>
 									<?php
 								} ?>
 								<?php if ( $attachments ): ?>
-                                    <strong class="wpsc_attachment_title"><?php _e( 'Attachments', 'supportcandy' ); ?>
+                                    <strong class="support_ticket_attachment_title"><?php _e( 'Attachments', 'supportcandy' ); ?>
                                         :</strong><br>
-                                    <table class="wpsc_attachment_tbl">
+                                    <table class="support_ticket_attachment_tbl">
                                         <tbody>
 										<?php
 										foreach ( $attachments as $attachment ):
@@ -373,14 +373,14 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 											}
 											$upload_dir   = wp_upload_dir();
 											$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $attach['save_file_name'];
-											$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?wpsc_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
+											$download_url = $attach['is_image'] ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment . '&tid=' . $ticket_id . '&tac=' . $auth_id;
 
 											?>
-                                            <tr class="wpsc_attachment_tr">
+                                            <tr class="support_ticket_attachment_tr">
                                                 <td>
-                                                    <a class="wpsc_attachment_link" href="<?php echo $download_url ?>"
+                                                    <a class="support_ticket_attachment_link" href="<?php echo $download_url ?>"
                                                        target="_blank">
-                                                        <span class="wpsc_attachment_file_name"
+                                                        <span class="support_ticket_attachment_file_name"
                                                               style="padding: 7px;"><?php echo $attach['filename']; ?></span></a>
                                                 </td>
                                             </tr>
@@ -396,7 +396,7 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 					if ( $thread_type == 'log' && apply_filters( 'wpsc_thread_log_visibility', $current_user->has_cap( 'wpsc_agent' ) ) ):
 						?>
                         <div class="col-md-8 col-md-offset-2 wpsc_thread_log"
-                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_logs_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_logs_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_logs_border_color'] ?> !important;">
+                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_logs_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_logs_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_logs_border_color'] ?> !important;">
 							<?php
 							if ( $wpsc_thread_date_format == 'timestamp' ) {
 								$date = sprintf( __( 'reported %1$s', 'supportcandy' ), $wpscfunction->time_elapsed_timestamp( $thread->post_date_gmt ) );
@@ -428,18 +428,18 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 
 			<?php
 			foreach ( $ticket_widgets as $key => $ticket_widget ):
-				$wpsc_ticket_widget_type = get_term_meta( $ticket_widget->term_id, 'wpsc_ticket_widget_type', true );
-				$wpsc_ticket_widget_role = get_term_meta( $ticket_widget->term_id, 'wpsc_ticket_widget_role', true );
+				$support_ticket_widget_type = get_term_meta( $ticket_widget->term_id, 'support_ticket_widget_type', true );
+				$support_ticket_widget_role = get_term_meta( $ticket_widget->term_id, 'support_ticket_widget_role', true );
 				$ticket_widget_name = get_term_meta( $ticket_widget->term_id, 'wpsc_label', true );
 				?>
 				<?php do_action( 'wpsc_add_ticket_widget', $ticket_id, $ticket_widget, $ticket_widgets ) ?>
 				<?php
 				if ( $ticket_widget->slug == "status" ):
 
-					if ( $wpsc_ticket_widget_type && ( in_array( $role_id, $wpsc_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $wpsc_ticket_widget_role ) ) ) {
+					if ( $support_ticket_widget_type && ( in_array( $role_id, $support_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $support_ticket_widget_role ) ) ) {
 						?>
                         <div class="row" id="wpsc_status_widget"
-                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_border_color'] ?> !important;">
+                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_border_color'] ?> !important;">
                             <h4 class="widget_header"><i
                                         class="fa fa-arrow-circle-right"></i> <?php echo $ticket_widget_name; ?>
 								<?php if ( $wpscfunction->has_permission( 'change_status', $ticket_id ) && $ticket_status ): ?>
@@ -451,7 +451,7 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
                             </h4>
                             <hr class="widget_divider">
 							<?php
-							$status                  = get_term_by( 'id', $status_id, 'wpsc_statuses' );
+							$status                  = get_term_by( 'id', $status_id, 'ticket_status' );
 							$status_color            = get_term_meta( $status->term_id, 'wpsc_status_color', true );
 							$status_background_color = get_term_meta( $status->term_id, 'wpsc_status_background_color', true );
 							?>
@@ -459,13 +459,13 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
                                 <span class="wpsp_admin_label"
                                       style="background-color:<?php echo $status_background_color ?>;color:<?php echo $status_color ?>;"><?php echo $status->name ?></span>
                             </div>
-							<?php $category = get_term_by( 'id', $category_id, 'wpsc_categories' ); ?>
+							<?php $category = get_term_by( 'id', $category_id, 'ticket_category' ); ?>
                             <div class="wpsp_sidebar_labels"><strong><?php _e( 'Category', 'supportcandy' ) ?>
                                     :</strong> <?php echo $category->name ?> </div>
 							<?php
 							$wpsc_hide_show_priority      = get_option( 'wpsc_hide_show_priority' );
 							if ( $current_user->has_cap( 'wpsc_agent' ) || ( ! $current_user->has_cap( 'wpsc_agent' ) && $wpsc_hide_show_priority ) ):
-								$priority = get_term_by( 'id', $priority_id, 'wpsc_priorities' );
+								$priority = get_term_by( 'id', $priority_id, 'ticket_priority' );
 								$priority_color           = get_term_meta( $priority->term_id, 'wpsc_priority_color', true );
 								$priority_backgound_color = get_term_meta( $priority->term_id, 'wpsc_priority_background_color', true );
 								?>
@@ -486,10 +486,10 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 
 				<?php
 				if ( $ticket_widget->slug == "raised-by" ):
-					if ( $wpsc_ticket_widget_type && ( in_array( $role_id, $wpsc_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $wpsc_ticket_widget_role ) ) ) {
+					if ( $support_ticket_widget_type && ( in_array( $role_id, $support_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $support_ticket_widget_role ) ) ) {
 						?>
                         <div class="row" id="wpsc_raised_by_widget"
-                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_border_color'] ?> !important;">
+                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_border_color'] ?> !important;">
                             <h4 class="widget_header"><i class="fas fa-user-tie"></i> <?php echo $ticket_widget_name; ?>
 								<?php if ( $wpscfunction->has_permission( 'change_raised_by', $ticket_id ) && $ticket_status ): ?>
                                     <button id="wpsc_individual_change_raised_by"
@@ -520,10 +520,10 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 
 				<?php
 				if ( $ticket_widget->slug == "assign-agent" ):
-					if ( $wpsc_ticket_widget_type && ( in_array( $role_id, $wpsc_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $wpsc_ticket_widget_role ) ) ) {
+					if ( $support_ticket_widget_type && ( in_array( $role_id, $support_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $support_ticket_widget_role ) ) ) {
 						?>
                         <div class="row assigned_agent" id="wpsc_assign_agent_widget"
-                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_border_color'] ?> !important;">
+                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_border_color'] ?> !important;">
                             <h4 class="widget_header"><i class="fas fa-users"></i> <?php echo $ticket_widget_name; ?>
 								<?php if ( $wpscfunction->has_permission( 'assign_agent', $ticket_id ) && $ticket_status ): ?>
                                     <button id="wpsc_individual_change_assign_agent"
@@ -568,10 +568,10 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 				?>
 				<?php
 				if ( $ticket_widget->slug == "ticket-fields" ):
-					if ( $wpsc_ticket_widget_type && ( in_array( $role_id, $wpsc_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $wpsc_ticket_widget_role ) ) ) {
+					if ( $support_ticket_widget_type && ( in_array( $role_id, $support_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $support_ticket_widget_role ) ) ) {
 						?>
-                        <div class="row" id="wpsc_ticket_fields_widget"
-                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_border_color'] ?> !important;">
+                        <div class="row" id="support_ticket_fields_widget"
+                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_border_color'] ?> !important;">
                             <h4 class="widget_header"><i class="fab fa-wpforms"></i> <?php echo $ticket_widget_name; ?>
 								<?php if ( $wpscfunction->has_permission( 'change_ticket_fields', $ticket_id ) && $ticket_status ): ?>
                                     <button id="wpsc_individual_change_ticket_fields"
@@ -581,10 +581,10 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 								<?php endif; ?>
                             </h4>
                             <hr class="widget_divider">
-                            <div id="wpsc_ticket_fields">
+                            <div id="support_ticket_fields">
 								<?php
 								$fields = get_terms( [
-									'taxonomy'   => 'wpsc_ticket_custom_fields',
+									'taxonomy'   => 'support_ticket_custom_fields',
 									'hide_empty' => false,
 									'orderby'    => 'meta_value_num',
 									'meta_key'   => 'wpsc_tf_load_order',
@@ -628,10 +628,10 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 
 				<?php
 				if ( $ticket_widget->slug == "agent-only-fields" ):
-					if ( $wpsc_ticket_widget_type && ( in_array( $role_id, $wpsc_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $wpsc_ticket_widget_role ) ) ) {
+					if ( $support_ticket_widget_type && ( in_array( $role_id, $support_ticket_widget_role ) || ! $current_user->has_cap( 'wpsc_agent' ) && in_array( 'customer', $support_ticket_widget_role ) ) ) {
 						?>
                         <div class="row" id="wpsc_agent_only_fields_widget"
-                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['wpsc_ticket_widgets_border_color'] ?> !important;">
+                             style="background-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_text_color'] ?> !important;border-color:<?php echo $wpsc_appearance_individual_ticket_page['support_ticket_widgets_border_color'] ?> !important;">
                             <h4 class="widget_header"><i class="fab fa-wpforms"></i> <?php echo $ticket_widget_name; ?>
 								<?php if ( $wpscfunction->has_permission( 'change_agentonly_fields', $ticket_id ) && $ticket_status ): ?>
                                     <button id="wpsc_individual_change_agent_fields"
@@ -641,10 +641,10 @@ $edit_btn_css = 'background-color:' . $wpsc_appearance_individual_ticket_page['w
 								<?php endif; ?>
                             </h4>
                             <hr class="widget_divider">
-                            <div id="wpsc_ticket_aof_fields">
+                            <div id="support_ticket_aof_fields">
 								<?php
 								$fields     = get_terms( [
-									'taxonomy'   => 'wpsc_ticket_custom_fields',
+									'taxonomy'   => 'support_ticket_custom_fields',
 									'hide_empty' => false,
 									'orderby'    => 'meta_value_num',
 									'meta_key'   => 'wpsc_tf_load_order',
@@ -727,7 +727,7 @@ if ( is_array( $toolbar_active ) ) {
                     var form_data = new FormData();
                     form_data.append('file', file);
                     form_data.append('file_name', file.name);
-                    form_data.append('action', 'wpsc_tickets');
+                    form_data.append('action', 'support_tickets');
                     form_data.append('setting_action', 'rb_upload_file');
 
                     jQuery.ajax({
@@ -800,7 +800,7 @@ if ( is_array( $toolbar_active ) ) {
         function wpsc_post_note(description) {
             var dataform = new FormData(jQuery('#wpsc_frm_tkt_reply')[0]);
             jQuery('.wpsc_reply_widget').html(wpsc_admin.loading_html);
-            dataform.append('action', 'wpsc_tickets');
+            dataform.append('action', 'support_tickets');
             dataform.append('setting_action', 'submit_note');
             dataform.append('reply_body', description);
             jQuery.ajax({
@@ -821,7 +821,7 @@ if ( is_array( $toolbar_active ) ) {
 			<?php } ?>
             var dataform = new FormData(jQuery('#wpsc_frm_tkt_reply')[0]);
             jQuery('.wpsc_reply_widget').html(wpsc_admin.loading_html);
-            dataform.append('action', 'wpsc_tickets');
+            dataform.append('action', 'support_tickets');
             dataform.append('setting_action', 'submit_reply');
             dataform.append('reply_body', description);
             jQuery.ajax({
@@ -844,15 +844,15 @@ if ( is_array( $toolbar_active ) ) {
 				if($wpsc_view_more){?>
                 if (height > 100) {
                     jQuery(this).height(100);
-                    jQuery(this).parent().find('.wpsc_ticket_thread_expander').text(wpsc_admin.view_more);
-                    jQuery(this).parent().find('.wpsc_ticket_thread_expander').show();
+                    jQuery(this).parent().find('.ticket_thread_expander').text(wpsc_admin.view_more);
+                    jQuery(this).parent().find('.ticket_thread_expander').show();
                 }<?php
 				} else{?>
                 jQuery(this).parent().find('.thread_messege').height('auto');<?php
 				} ?>
 
             });
-            jQuery('.wpsc_ticket_thread_content img').addClass('img-responsive');
+            jQuery('.ticket_thread_content img').addClass('img-responsive');
 
         });
     </script>

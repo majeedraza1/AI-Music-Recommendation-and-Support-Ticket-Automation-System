@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $condition_options = array();
 
 $custom_fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value',
 	'meta_key'   => 'wpsc_tf_label',

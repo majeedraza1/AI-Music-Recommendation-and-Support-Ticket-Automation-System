@@ -14,13 +14,13 @@ $wpsc_thread_limit        = get_option( 'wpsc_thread_limit' );
 
 <form id="wpsc_frm_advanced_settings" method="post" action="javascript:wpsc_set_advanced_settings();">
     <div class="form-group">
-        <label for="wpsc_ticket_url_permission"><?php _e( 'Ticket URL Permissions', 'supportcandy' ); ?></label>
-        <select class="form-control" name="wpsc_ticket_url_permission" id="wpsc_ticket_url_permission">
+        <label for="support_ticket_url_permission"><?php _e( 'Ticket URL Permissions', 'supportcandy' ); ?></label>
+        <select class="form-control" name="support_ticket_url_permission" id="support_ticket_url_permission">
 			<?php
-			$wpsc_ticket_url_permission = get_option( 'wpsc_ticket_url_permission' );
-			$selected                   = $wpsc_ticket_url_permission == '1' ? 'selected="selected"' : '';
+			$support_ticket_url_permission = get_option( 'support_ticket_url_permission' );
+			$selected                   = $support_ticket_url_permission == '1' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="1">' . __( 'Anyone can see', 'supportcandy' ) . '</option>';
-			$selected = $wpsc_ticket_url_permission == '0' ? 'selected="selected"' : '';
+			$selected = $support_ticket_url_permission == '0' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="0">' . __( 'Login required', 'supportcandy' ) . '</option>';
 			?>
         </select>
@@ -55,14 +55,14 @@ $wpsc_thread_limit        = get_option( 'wpsc_thread_limit' );
     </div>
 
     <div class="form-group">
-        <label for="wpsc_ticket_public_mode"><?php _e( 'Public Mode', 'supportcandy' ); ?></label>
+        <label for="support_ticket_public_mode"><?php _e( 'Public Mode', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( "If you enable this setting then all tickets will be visible to all users and they can reply to each others tickets.", "supportcandy" ); ?></p>
-        <select class="form-control" name="wpsc_ticket_public_mode" id="wpsc_ticket_public_mode">
+        <select class="form-control" name="support_ticket_public_mode" id="support_ticket_public_mode">
 			<?php
-			$wpsc_ticket_public_mode = get_option( 'wpsc_ticket_public_mode' );
-			$selected                = $wpsc_ticket_public_mode == '1' ? 'selected="selected"' : '';
+			$support_ticket_public_mode = get_option( 'support_ticket_public_mode' );
+			$selected                = $support_ticket_public_mode == '1' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="1">' . __( 'Enable', 'supportcandy' ) . '</option>';
-			$selected = $wpsc_ticket_public_mode == '0' ? 'selected="selected"' : '';
+			$selected = $support_ticket_public_mode == '0' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="0">' . __( 'Disable', 'supportcandy' ) . '</option>';
 			?>
         </select>
@@ -218,12 +218,12 @@ $wpsc_thread_limit        = get_option( 'wpsc_thread_limit' );
     <div class="form-group">
         <label for="wpsc_sign_out"><?php _e( 'Ticket ID', 'supportcandy' ); ?></label>
         <p class="help-block"><?php _e( "This is applicable for Ticket id being created for new ticket.", "supportcandy" ); ?></p>
-        <select class="form-control" name="wpsc_ticket_id_type" id="wpsc_ticket_id_type">
+        <select class="form-control" name="support_ticket_id_type" id="support_ticket_id_type">
 			<?php
-			$wpsc_ticket_id_type = get_option( 'wpsc_ticket_id_type' );
-			$selected            = $wpsc_ticket_id_type == '1' ? 'selected="selected"' : '';
+			$support_ticket_id_type = get_option( 'support_ticket_id_type' );
+			$selected            = $support_ticket_id_type == '1' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="1">' . __( 'Sequential', 'supportcandy' ) . '</option>';
-			$selected = $wpsc_ticket_id_type == '0' ? 'selected="selected"' : '';
+			$selected = $support_ticket_id_type == '0' ? 'selected="selected"' : '';
 			echo '<option ' . $selected . ' value="0">' . __( 'Random', 'supportcandy' ) . '</option>';
 			?>
         </select>
@@ -238,7 +238,7 @@ $wpsc_thread_limit        = get_option( 'wpsc_thread_limit' );
                        value="<?php echo htmlentities( $wpsc_custom_ticket_count ) ?>"/>
             </div>
             <div class="col-sm-6">
-                <button id="wpsc_ticket_count_btn" type="button" class="btn btn-success"
+                <button id="support_ticket_count_btn" type="button" class="btn btn-success"
                         onclick="wpsc_custom_ticket_number();"><?php _e( 'Save', 'supportcandy' ); ?></button>
                 <img class="wpsc_submit_wait_1" style="display:none;"
                      src="<?php echo WPSC_PLUGIN_URL . 'asset/images/ajax-loader@2x.gif'; ?>">

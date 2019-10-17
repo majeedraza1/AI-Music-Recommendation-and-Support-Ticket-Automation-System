@@ -39,7 +39,7 @@ foreach ( $visibility as $key => $value ) {
 	$visibility[ $key ] = sanitize_text_field( $value );
 }
 
-$term = wp_insert_term( $field_label, 'wpsc_ticket_custom_fields' );
+$term = wp_insert_term( $field_label, 'support_ticket_custom_fields' );
 if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 	$load_order = $wpdb->get_var( "select max(meta_value) as load_order from {$wpdb->prefix}termmeta WHERE meta_key='wpsc_tf_load_order'" );
 	add_term_meta( $term['term_id'], 'wpsc_tf_label', $field_label );
@@ -64,7 +64,7 @@ if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 
 	if ( $field_types[ $field_type ]['allow_ticket_filter'] ) {
 		add_term_meta( $term['term_id'], 'wpsc_allow_ticket_filter', '1' );
-		add_term_meta( $term['term_id'], 'wpsc_ticket_filter_type', $field_types[ $field_type ]['ticket_filter_type'] );
+		add_term_meta( $term['term_id'], 'support_ticket_filter_type', $field_types[ $field_type ]['ticket_filter_type'] );
 		add_term_meta( $term['term_id'], 'wpsc_customer_ticket_filter_status', '0' );
 		add_term_meta( $term['term_id'], 'wpsc_agent_ticket_filter_status', '0' );
 	} else {
@@ -80,7 +80,7 @@ if ( ! is_wp_error( $term ) && isset( $term['term_id'] ) ) {
 	$check_str = $wpscfunction->check_str_is_non_english( $field_label );
 
 	if ( ! $check_str ) {
-		wp_update_term( $term['term_id'], 'wpsc_ticket_custom_fields', array( 'slug' => 'cust_' . $term['term_id'] ) );
+		wp_update_term( $term['term_id'], 'support_ticket_custom_fields', array( 'slug' => 'cust_' . $term['term_id'] ) );
 	}
 
 	do_action( 'wpsc_set_add_form_field', $term['term_id'] );

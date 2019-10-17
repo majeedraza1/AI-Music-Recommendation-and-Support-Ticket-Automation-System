@@ -24,7 +24,7 @@ ob_start();
         <textarea id="wpsc_therad_edit"
                   name="thread_body"><?php echo stripslashes( htmlspecialchars_decode( $thread_body, ENT_QUOTES ) ) ?></textarea>
 
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_edit_thread"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
         <input type="hidden" name="thread_id" value="<?php echo htmlentities( $thread_id ) ?>"/>

@@ -30,7 +30,7 @@ $values = array(
 );
 
 $custom_fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_visibility',
@@ -59,7 +59,7 @@ if ( $custom_fields ) {
 }
 
 $args            = array(
-	'post_type'   => 'wpsc_ticket_thread',
+	'post_type'   => 'ticket_thread',
 	'post_status' => 'publish',
 	'order'       => 'ASC',
 	'meta_query'  => array(

@@ -33,7 +33,7 @@ if ( $status_color == $status_bg_color ) {
 	die();
 }
 
-wp_update_term( $status_id, 'wpsc_statuses', array(
+wp_update_term( $status_id, 'ticket_status', array(
 	'name' => $status_name
 ) );
 update_term_meta( $status_id, 'wpsc_status_color', $status_color );

@@ -19,7 +19,7 @@ ob_start();
                    value="<?php echo htmlentities( stripcslashes( $ticket_subject ) ) ?>"/>
         </div>
 
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_edit_ticket_subject"/>
         <input type="hidden" id="wpsc_post_id" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
 

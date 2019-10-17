@@ -25,12 +25,12 @@ $support_ticket_default_priority = isset( $_POST ) && isset( $_POST['support_tic
 update_option( 'support_ticket_default_priority', $support_ticket_default_priority );
 
 // Ticket status after customer reply
-$wpsc_ticket_status_after_customer_reply = isset( $_POST ) && isset( $_POST['wpsc_ticket_status_after_customer_reply'] ) ? sanitize_text_field( $_POST['wpsc_ticket_status_after_customer_reply'] ) : '';
-update_option( 'wpsc_ticket_status_after_customer_reply', $wpsc_ticket_status_after_customer_reply );
+$support_ticket_status_after_customer_reply = isset( $_POST ) && isset( $_POST['support_ticket_status_after_customer_reply'] ) ? sanitize_text_field( $_POST['support_ticket_status_after_customer_reply'] ) : '';
+update_option( 'support_ticket_status_after_customer_reply', $support_ticket_status_after_customer_reply );
 
 // Ticket status after agent reply
-$wpsc_ticket_status_after_agent_reply = isset( $_POST ) && isset( $_POST['wpsc_ticket_status_after_agent_reply'] ) ? sanitize_text_field( $_POST['wpsc_ticket_status_after_agent_reply'] ) : '';
-update_option( 'wpsc_ticket_status_after_agent_reply', $wpsc_ticket_status_after_agent_reply );
+$support_ticket_status_after_agent_reply = isset( $_POST ) && isset( $_POST['support_ticket_status_after_agent_reply'] ) ? sanitize_text_field( $_POST['support_ticket_status_after_agent_reply'] ) : '';
+update_option( 'support_ticket_status_after_agent_reply', $support_ticket_status_after_agent_reply );
 
 // Close ticket status
 $wpsc_close_ticket_status = isset( $_POST ) && isset( $_POST['wpsc_close_ticket_status'] ) ? sanitize_text_field( $_POST['wpsc_close_ticket_status'] ) : '';
@@ -49,8 +49,8 @@ $wpsc_calender_date_format = isset( $_POST ) && isset( $_POST['wpsc_calender_dat
 update_option( 'wpsc_calender_date_format', $wpsc_calender_date_format );
 
 // Attachment max filesize
-$wpsc_attachment_max_filesize = isset( $_POST ) && isset( $_POST['wpsc_attachment_max_filesize'] ) ? sanitize_text_field( $_POST['wpsc_attachment_max_filesize'] ) : '20';
-update_option( 'wpsc_attachment_max_filesize', $wpsc_attachment_max_filesize );
+$support_ticket_attachment_max_filesize = isset( $_POST ) && isset( $_POST['support_ticket_attachment_max_filesize'] ) ? sanitize_text_field( $_POST['support_ticket_attachment_max_filesize'] ) : '20';
+update_option( 'support_ticket_attachment_max_filesize', $support_ticket_attachment_max_filesize );
 
 // Allow guest ticket
 $wpsc_allow_guest_ticket = isset( $_POST ) && isset( $_POST['wpsc_allow_guest_ticket'] ) ? sanitize_text_field( $_POST['wpsc_allow_guest_ticket'] ) : '0';
@@ -59,8 +59,8 @@ update_option( 'wpsc_allow_guest_ticket', $wpsc_allow_guest_ticket );
 $wpsc_allow_tinymce_in_guest_ticket = isset( $_POST ) && isset( $_POST['wpsc_allow_tinymce_in_guest_ticket'] ) ? sanitize_text_field( $_POST['wpsc_allow_tinymce_in_guest_ticket'] ) : '0';
 update_option( 'wpsc_allow_tinymce_in_guest_ticket', $wpsc_allow_tinymce_in_guest_ticket );
 
-$wpsc_ticket_alice = isset( $_POST ) && isset( $_POST['wpsc_ticket_alice'] ) ? sanitize_text_field( $_POST['wpsc_ticket_alice'] ) : 'Ticket';
-update_option( 'wpsc_ticket_alice', $wpsc_ticket_alice );
+$support_ticket_alice = isset( $_POST ) && isset( $_POST['support_ticket_alice'] ) ? sanitize_text_field( $_POST['support_ticket_alice'] ) : 'Ticket';
+update_option( 'support_ticket_alice', $support_ticket_alice );
 
 // Custom Login
 $wpsc_custom_login_url = isset( $_POST ) && isset( $_POST['wpsc_custom_login_url'] ) ? sanitize_text_field( $_POST['wpsc_custom_login_url'] ) : '';
@@ -70,8 +70,8 @@ update_option( 'wpsc_custom_login_url', $wpsc_custom_login_url );
 $wpsc_reply_to_close_ticket = isset( $_POST ) && isset( $_POST['wpsc_reply_to_close_ticket'] ) ? sanitize_text_field( $_POST['wpsc_reply_to_close_ticket'] ) : '0';
 update_option( 'wpsc_reply_to_close_ticket', $wpsc_reply_to_close_ticket );
 
-$wpsc_enable_default_login = isset( $_POST ) && isset( $_POST['wpsc_default_login_setting'] ) ? sanitize_text_field( $_POST['wpsc_default_login_setting'] ) : '1';
-update_option( 'wpsc_default_login_setting', $wpsc_enable_default_login );
+$support_ticket_notificationable_default_login = isset( $_POST ) && isset( $_POST['wpsc_default_login_setting'] ) ? sanitize_text_field( $_POST['wpsc_default_login_setting'] ) : '1';
+update_option( 'wpsc_default_login_setting', $support_ticket_notificationable_default_login );
 
 //User Registration
 $wpsc_user_registration = isset( $_POST ) && isset( $_POST['wpsc_user_registration'] ) ? sanitize_text_field( $_POST['wpsc_user_registration'] ) : '';

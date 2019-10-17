@@ -10,11 +10,11 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $ticket_widgets = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_widget',
+	'taxonomy'   => 'support_ticket_widget',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'order'      => 'ASC',
-	'meta_query' => array( 'order_clause' => array( 'key' => 'wpsc_ticket_widget_load_order' ) ),
+	'meta_query' => array( 'order_clause' => array( 'key' => 'support_ticket_widget_load_order' ) ),
 ] );
 
 ?>
@@ -26,8 +26,8 @@ $ticket_widgets = get_terms( [
 <ul class="wpsc-sortable">
 	<?php foreach ( $ticket_widgets as $ticket_widget ) {
 		$ticket_widget_name      = get_term_meta( $ticket_widget->term_id, 'wpsc_label', true );
-		$wpsc_ticket_widget_type = get_term_meta( $ticket_widget->term_id, 'wpsc_ticket_widget_type', true );
-		$bg_color                = $wpsc_ticket_widget_type == '1' ? '#1E90FF' : '#ff0000';
+		$support_ticket_widget_type = get_term_meta( $ticket_widget->term_id, 'support_ticket_widget_type', true );
+		$bg_color                = $support_ticket_widget_type == '1' ? '#1E90FF' : '#ff0000';
 		?>
         <li class="ui-state-default" data-id="<?php echo $ticket_widget->term_id ?>">
             <div class="wpsc-flex-container" style="background-color:<?php echo $bg_color ?>;color:#fff;">
@@ -87,8 +87,8 @@ $ticket_widgets = get_terms( [
         event.preventDefault();
         jQuery('.wpsc_submit_wait').show();
         var selectedrole = new Array();
-        var ticket_widget_name = jQuery('#wpsc_ticket_widget_name').val();
-        var ticket_widget_type = jQuery('#wpsc_ticket_widget_type').val();
+        var ticket_widget_name = jQuery('#support_ticket_widget_name').val();
+        var ticket_widget_type = jQuery('#support_ticket_widget_type').val();
         jQuery("input[name='ticket_widget_role']:checked").each(function () {
             selectedrole.push(this.value);
         });

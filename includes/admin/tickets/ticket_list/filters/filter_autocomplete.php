@@ -20,7 +20,7 @@ switch ( $field_slug ) {
 	case 'ticket_status':
 
 		$statuses = get_terms( [
-			'taxonomy'   => 'wpsc_statuses',
+			'taxonomy'   => 'ticket_status',
 			'hide_empty' => false,
 			'search'     => $term,
 		] );
@@ -37,7 +37,7 @@ switch ( $field_slug ) {
 	case 'ticket_category':
 
 		$categories = get_terms( [
-			'taxonomy'   => 'wpsc_categories',
+			'taxonomy'   => 'ticket_category',
 			'hide_empty' => false,
 			'search'     => $term,
 		] );
@@ -54,7 +54,7 @@ switch ( $field_slug ) {
 	case 'ticket_priority':
 
 		$priorities = get_terms( [
-			'taxonomy'   => 'wpsc_priorities',
+			'taxonomy'   => 'ticket_priority',
 			'hide_empty' => false,
 			'search'     => $term,
 		] );
@@ -72,7 +72,7 @@ switch ( $field_slug ) {
 	case 'agent_created':
 
 		$agents = get_terms( [
-			'taxonomy'   => 'wpsc_agents',
+			'taxonomy'   => 'support_agent',
 			'hide_empty' => false,
 			'number'     => 5,
 			'meta_query' => array(
@@ -123,7 +123,7 @@ switch ( $field_slug ) {
 
 			$get_all_meta_keys = $wpscfunction->get_all_meta_keys();
 
-			$sql = "SELECT DISTINCT t.*  FROM " . $wpdb->prefix . "wpsc_ticket t ";
+			$sql = "SELECT DISTINCT t.*  FROM " . $wpdb->prefix . "support_ticket t ";
 
 			$join_str = '';
 
@@ -153,7 +153,7 @@ switch ( $field_slug ) {
 
 			foreach ( $join as $slug ) {
 				$alice    = str_replace( '-', '_', $slug );
-				$join_str = "JOIN {$wpdb->prefix}wpsc_ticketmeta " . $alice . " ON t.id = " . $alice . ".ticket_id AND " . $alice . ".meta_key = '" . $slug . "' ";
+				$join_str = "JOIN {$wpdb->prefix}support_ticketmeta " . $alice . " ON t.id = " . $alice . ".ticket_id AND " . $alice . ".meta_key = '" . $slug . "' ";
 			}
 
 			//combining query

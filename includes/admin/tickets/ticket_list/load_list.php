@@ -197,12 +197,12 @@ include WPSC_ABSPATH . 'includes/admin/tickets/ticket_list/filters/get_label_cou
     </div>
 
 	<?php if ( ! $wpsc_show_and_hide_filters ) { ?>
-        <div class="col-sm-12 col-md-12 wpsc_ticket_list_container table-responsive">
+        <div class="col-sm-12 col-md-12 support_ticket_list_container table-responsive">
 			<?php include WPSC_ABSPATH . 'includes/admin/tickets/ticket_list/get_ticket_list.php'; ?>
         </div>
 	<?php } else {
 		?>
-        <div class="col-sm-12 col-md-10 wpsc_ticket_list_container table-responsive">
+        <div class="col-sm-12 col-md-10 support_ticket_list_container table-responsive">
 			<?php include WPSC_ABSPATH . 'includes/admin/tickets/ticket_list/get_ticket_list.php'; ?>
         </div>
 	<?php } ?>
@@ -230,15 +230,15 @@ include WPSC_ABSPATH . 'includes/admin/tickets/ticket_list/filters/get_label_cou
             jQuery('#wpsc_md_filters').removeClass('hidden');
             jQuery('#wpsc_md_filters').addClass('hidden-xs');
             jQuery('#wpsc_md_filters').addClass('hidden-sm');
-            jQuery('.wpsc_ticket_list_container').removeClass('col-md-12');
-            jQuery('.wpsc_ticket_list_container').addClass('col-md-10');
+            jQuery('.support_ticket_list_container').removeClass('col-md-12');
+            jQuery('.support_ticket_list_container').addClass('col-md-10');
             jQuery(e).html('<i class="fa fa-filter"></i> <?php _e( 'Hide Filters', 'supportcandy' )?>');
         } else {
             jQuery('#wpsc_md_filters').removeClass('hidden-xs');
             jQuery('#wpsc_md_filters').removeClass('hidden-sm');
             jQuery('#wpsc_md_filters').addClass('hidden');
-            jQuery('.wpsc_ticket_list_container').removeClass('col-md-10');
-            jQuery('.wpsc_ticket_list_container').addClass('col-md-12');
+            jQuery('.support_ticket_list_container').removeClass('col-md-10');
+            jQuery('.support_ticket_list_container').addClass('col-md-12');
             jQuery(e).html('<i class="fa fa-filter"></i> <?php _e( 'Show Filters', 'supportcandy' )?>');
         }
     }
@@ -257,11 +257,11 @@ include WPSC_ABSPATH . 'includes/admin/tickets/ticket_list/filters/get_label_cou
     function wpsc_refresh_ticket_list() {
         if (wpsc_autorefresh_status) {
             var data = {
-                action: 'wpsc_tickets',
+                action: 'support_tickets',
                 setting_action: 'get_ticket_list'
             };
             jQuery.post(wpsc_admin.ajax_url, data, function (response) {
-                jQuery('.wpsc_ticket_list_container').html(response);
+                jQuery('.support_ticket_list_container').html(response);
                 toggle_ticket_list_actions();
                 setTimeout(wpsc_refresh_ticket_list, 60000);
             });

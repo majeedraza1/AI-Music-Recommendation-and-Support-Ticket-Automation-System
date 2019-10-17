@@ -29,18 +29,18 @@ if ( ! $ticket_status && $current_user && ! $current_user->has_cap( 'manage_opti
 	die();
 }
 
-$wpsc_ticket_url_permission = get_option( 'wpsc_ticket_url_permission' );
-if ( ! is_user_logged_in() && ! $wpsc_ticket_url_permission ) {
+$support_ticket_url_permission = get_option( 'support_ticket_url_permission' );
+if ( ! is_user_logged_in() && ! $support_ticket_url_permission ) {
 	include WPSC_ABSPATH . 'includes/admin/tickets/sign_in/sign_in.php';
 	die();
 }
 
-$wpsc_ticket_public_mode = get_option( 'wpsc_ticket_public_mode' );
-if ( ( $wpscfunction->has_permission( 'view_ticket', $ticket_id ) || $wpsc_ticket_public_mode ) && is_user_logged_in() ) {
+$support_ticket_public_mode = get_option( 'support_ticket_public_mode' );
+if ( ( $wpscfunction->has_permission( 'view_ticket', $ticket_id ) || $support_ticket_public_mode ) && is_user_logged_in() ) {
 
 	include WPSC_ABSPATH . 'includes/admin/tickets/individual_ticket/load_individual_ticket.php';
 
-} else if ( $ticket_auth_code == $auth_code && $wpsc_ticket_url_permission ) {
+} else if ( $ticket_auth_code == $auth_code && $support_ticket_url_permission ) {
 
 	include WPSC_ABSPATH . 'includes/admin/tickets/individual_ticket/load_guest_individual_ticket.php';
 

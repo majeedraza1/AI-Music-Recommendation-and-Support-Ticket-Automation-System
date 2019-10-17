@@ -28,7 +28,7 @@ $wpsc_appearance_modal_window = get_option( 'wpsc_modal_window' );
 
     <div class="bootstrap-iso">
 
-        <div id="wpsc_tickets_container" class="row"
+        <div id="support_tickets_container" class="row"
              style="background-color:<?php echo $general_appearance['wpsc_bg_color'] ?> !important;color:<?php echo $general_appearance['wpsc_text_color'] ?> !important; border-color:<?php echo $general_appearance['wpsc_action_bar_color'] ?> !important;"></div>
 
         <div id="wpsc_alert_success" class="alert alert-success wpsc_alert" style="display:none;" role="alert">

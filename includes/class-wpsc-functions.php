@@ -230,7 +230,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 
 		// Get current user filter
 		function get_current_filter() {
-			$filter = isset( $_COOKIE['wpsc_ticket_filter'] ) ? $_COOKIE['wpsc_ticket_filter'] : '';
+			$filter = isset( $_COOKIE['support_ticket_filter'] ) ? $_COOKIE['support_ticket_filter'] : '';
 			if ( ! $filter ) {
 				$filter = $this->get_default_filter();
 			} else {
@@ -242,8 +242,8 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 
 		// Get sort type for current orderby field
 		function get_field_sort_type( $field_slug ) {
-			$term               = get_term_by( 'slug', $field_slug, 'wpsc_ticket_custom_fields' );
-			$ticket_filter_type = get_term_meta( $term->term_id, 'wpsc_ticket_filter_type', true );
+			$term               = get_term_by( 'slug', $field_slug, 'support_ticket_custom_fields' );
+			$ticket_filter_type = get_term_meta( $term->term_id, 'support_ticket_filter_type', true );
 			switch ( $ticket_filter_type ) {
 				case 'number':
 					$sort_type = 'meta_value_num';
@@ -284,28 +284,28 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 
 				case 'ticket_status':
 
-					$term = get_term_by( 'id', $val, 'wpsc_statuses' );
+					$term = get_term_by( 'id', $val, 'ticket_status' );
 
 					return $term ? $term->name : '';
 					break;
 
 				case 'ticket_category':
 
-					$term = get_term_by( 'id', $val, 'wpsc_categories' );
+					$term = get_term_by( 'id', $val, 'ticket_category' );
 
 					return $term ? $term->name : '';
 					break;
 
 				case 'ticket_priority':
 
-					$term = get_term_by( 'id', $val, 'wpsc_priorities' );
+					$term = get_term_by( 'id', $val, 'ticket_priority' );
 
 					return $term ? $term->name : '';
 					break;
 
 				case 'ticket_widget':
 
-					$term = get_term_by( 'id', $val, 'wpsc_ticket_widget' );
+					$term = get_term_by( 'id', $val, 'support_ticket_widget' );
 
 					return $term ? $term->name : '';
 					break;
@@ -316,7 +316,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 					if ( $val == 0 ) {
 						return __( 'None' );
 					}
-					$term = get_term_by( 'id', $val, 'wpsc_agents' );
+					$term = get_term_by( 'id', $val, 'support_agent' );
 					if ( $term ) {
 						$label = get_term_meta( $term->term_id, 'label', true );
 
@@ -402,7 +402,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			$values      = array(
 				'ticket_status' => $status_id
 			);
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+			$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 			do_action( 'wpsc_set_change_status', $ticket_id, $status_id, $prev_status );
 		}
 
@@ -412,7 +412,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			$values   = array(
 				'ticket_category' => $category_id
 			);
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+			$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 			do_action( 'wpsc_set_change_category', $ticket_id, $category_id, $prev_cat );
 		}
 
@@ -422,7 +422,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			$values        = array(
 				'ticket_priority' => $priority_id
 			);
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+			$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 			do_action( 'wpsc_set_change_priority', $ticket_id, $priority_id, $prev_priority );
 		}
 
@@ -433,7 +433,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 				'customer_name'  => $name,
 				'customer_email' => $email
 			);
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array(
+			$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array(
 				'customer_name' => $prev_name,
 				'id'            => $ticket_id
 			) );
@@ -449,15 +449,15 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 					$wpscfunction->add_ticket_meta( $ticket_id, $fields_slug, $value );
 				}
 			} else {
-				$term              = get_term_by( 'slug', $fields_slug, 'wpsc_ticket_custom_fields' );
+				$term              = get_term_by( 'slug', $fields_slug, 'support_ticket_custom_fields' );
 				$wpsc_tf_type      = get_term_meta( $term->term_id, 'wpsc_tf_type', true );
 				$prev_fields_value = $wpscfunction->get_ticket_meta( $ticket_id, $fields_slug, true );
 				$values            = array(
 					'meta_value' => $fields_value,
 				);
-				$get_ticket_field  = $wpdb->get_var( "SELECT meta_key FROM {$wpdb->prefix}wpsc_ticketmeta WHERE id='$ticket_id' AND meta_key = '$fields_slug'" );
+				$get_ticket_field  = $wpdb->get_var( "SELECT meta_key FROM {$wpdb->prefix}support_ticketmeta WHERE id='$ticket_id' AND meta_key = '$fields_slug'" );
 				if ( ! $get_ticket_field ) {
-					$wpdb->insert( $wpdb->prefix . 'wpsc_ticketmeta',
+					$wpdb->insert( $wpdb->prefix . 'support_ticketmeta',
 						array(
 							'ticket_id'  => $ticket_id,
 							'meta_key'   => $fields_slug,
@@ -475,14 +475,14 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			$values = array(
 				'active' => '0'
 			);
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+			$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 			do_action( 'wpsc_set_delete_ticket', $ticket_id );
 		}
 
 		// Get post id for ticket id
 		function get_ticket_post_id( $ticket_id ) {
 			$posts       = get_posts( array(
-				'post_type'   => 'wpsc_ticket',
+				'post_type'   => 'support_ticket',
 				'post_status' => array( 'publish', 'trash' ),
 				'meta_query'  => array(
 					'relation' => 'AND',
@@ -501,28 +501,28 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 
 		// Get status name by status id
 		function get_status_name( $status_id ) {
-			$status = get_term_by( 'id', $status_id, 'wpsc_statuses' );
+			$status = get_term_by( 'id', $status_id, 'ticket_status' );
 
 			return $status->name;
 		}
 
 		// Get category name by category id
 		function get_category_name( $category_id ) {
-			$category = get_term_by( 'id', $category_id, 'wpsc_categories' );
+			$category = get_term_by( 'id', $category_id, 'ticket_category' );
 
 			return $category->name;
 		}
 
 		// Get priority name by category id
 		function get_priority_name( $priority_id ) {
-			$priority = get_term_by( 'id', $priority_id, 'wpsc_priorities' );
+			$priority = get_term_by( 'id', $priority_id, 'ticket_priority' );
 
 			return $priority->name;
 		}
 
 		// Get ticket_widget name by ticket_widget id
 		function get_ticket_widget_name( $ticket_widget_id ) {
-			$ticket_widget = get_term_by( 'id', $ticket_widget_id, 'wpsc_ticket_widget' );
+			$ticket_widget = get_term_by( 'id', $ticket_widget_id, 'support_ticket_widget' );
 
 			return $ticket_widget->name;
 		}
@@ -530,7 +530,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		// Get ticket description
 		function get_ticket_description( $ticket_id ) {
 			$threads       = get_posts( array(
-				'post_type'   => 'wpsc_ticket_thread',
+				'post_type'   => 'ticket_thread',
 				'post_status' => 'publish',
 				'meta_query'  => array(
 					'relation' => 'AND',
@@ -567,7 +567,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		// Get last reply
 		function get_last_reply( $ticket_id ) {
 			$threads   = get_posts( array(
-				'post_type'      => 'wpsc_ticket_thread',
+				'post_type'      => 'ticket_thread',
 				'post_status'    => 'publish',
 				'posts_per_page' => '1',
 				'orderby'        => 'date',
@@ -609,7 +609,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		// Get last note
 		function get_last_note( $ticket_id ) {
 			$threads   = get_posts( array(
-				'post_type'      => 'wpsc_ticket_thread',
+				'post_type'      => 'ticket_thread',
 				'post_status'    => 'publish',
 				'posts_per_page' => '1',
 				'orderby'        => 'date',
@@ -718,7 +718,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			global $wpdb;
 			$thread_id = wp_insert_post(
 				array(
-					'post_type'    => 'wpsc_ticket_thread',
+					'post_type'    => 'ticket_thread',
 					'post_content' => $args['reply_body'],
 					'post_status'  => 'publish',
 				)
@@ -735,7 +735,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			$values    = array(
 				'date_updated' => date( "Y-m-d H:i:s" )
 			);
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+			$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 
 			return $thread_id;
 		}
@@ -745,7 +745,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			global $wpdb;
 			$thread_id = wp_insert_post(
 				array(
-					'post_type'    => 'wpsc_ticket_thread',
+					'post_type'    => 'ticket_thread',
 					'post_content' => $args['reply_body'],
 					'post_status'  => 'publish',
 					'post_date'    => $args['create_time'],
@@ -763,7 +763,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			$values    = array(
 				'date_updated' => date( "Y-m-d H:i:s" )
 			);
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+			$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 
 			return $thread_id;
 		}
@@ -779,7 +779,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		function get_current_user_agent_id() {
 			global $current_user;
 			$agents = get_terms( [
-				'taxonomy'   => 'wpsc_agents',
+				'taxonomy'   => 'support_agent',
 				'hide_empty' => false,
 				'meta_query' => array(
 					'relation' => 'AND',
@@ -856,7 +856,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		// User permissions
 		function has_permission( $permission, $ticket_id = 0 ) {
 			global $wpscfunction;
-			$wpsc_ticket_public_mode = get_option( 'wpsc_ticket_public_mode' );
+			$support_ticket_public_mode = get_option( 'support_ticket_public_mode' );
 			global $current_user;
 			if ( ! $current_user->ID ) {
 				return false;
@@ -873,12 +873,12 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 					break;
 
 				case 'reply_ticket':
-					$response = $customer_email == $current_user->user_email || $this->agent_has_permission( 'reply_unassigned', $ticket_id ) || $this->agent_has_permission( 'reply_assigned_me', $ticket_id ) || $this->agent_has_permission( 'reply_assigned_others', $ticket_id ) || ( ! $current_user->has_cap( 'wpsc_agent' ) && $wpsc_ticket_public_mode ) ? true : false;
+					$response = $customer_email == $current_user->user_email || $this->agent_has_permission( 'reply_unassigned', $ticket_id ) || $this->agent_has_permission( 'reply_assigned_me', $ticket_id ) || $this->agent_has_permission( 'reply_assigned_others', $ticket_id ) || ( ! $current_user->has_cap( 'wpsc_agent' ) && $support_ticket_public_mode ) ? true : false;
 					break;
-					$term = wp_insert_term( __( 'Status', 'supportcandy' ), 'wpsc_ticket_widget' );
+					$term = wp_insert_term( __( 'Status', 'supportcandy' ), 'support_ticket_widget' );
 					if ( $term && isset( $term['term_id'] ) ) {
-						add_term_meta( $term['term_id'], 'wpsc_ticket_widget_load_order', '1' );
-						update_option( 'wpsc_ticket_widget_updated', $term['term_id'] );
+						add_term_meta( $term['term_id'], 'support_ticket_widget_load_order', '1' );
+						update_option( 'support_ticket_widget_updated', $term['term_id'] );
 					}
 
 				case 'add_note':
@@ -933,7 +933,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 				'change_priority' => __( 'Change Ticket Priority', 'supportcandy' )
 			);
 
-			return apply_filters( 'wpsc_en_types', $notification_types );
+			return apply_filters( 'support_ticket_notification_types', $notification_types );
 		}
 
 		// Get Field value by value id
@@ -965,7 +965,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		function get_ticket( $ticket_id ) {
 			global $wpdb;
 			$ticket_data = array();
-			$ticket      = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wpsc_ticket WHERE id='$ticket_id' " );
+			$ticket      = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}support_ticket WHERE id='$ticket_id' " );
 			if ( $ticket ) {
 				$ticket_data = json_decode( json_encode( $ticket ), true );
 			}
@@ -975,7 +975,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 
 		function get_ticket_fields( $ticket_id, $select_field ) {
 			global $wpdb;
-			$get_ticket_field_value = $wpdb->get_var( " SELECT $select_field FROM {$wpdb->prefix}wpsc_ticket WHERE id='$ticket_id' " );
+			$get_ticket_field_value = $wpdb->get_var( " SELECT $select_field FROM {$wpdb->prefix}support_ticket WHERE id='$ticket_id' " );
 			$ticket_field_value     = $get_ticket_field_value ? $get_ticket_field_value : '';
 
 			return stripslashes( $ticket_field_value );
@@ -989,13 +989,13 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 			global $wpdb;
 			if ( $flag ) {
 
-				$get_meta    = $wpdb->get_var( "SELECT meta_value FROM {$wpdb->prefix}wpsc_ticketmeta WHERE ticket_id= '$ticket_id' AND meta_key = '$meta_key' " );
+				$get_meta    = $wpdb->get_var( "SELECT meta_value FROM {$wpdb->prefix}support_ticketmeta WHERE ticket_id= '$ticket_id' AND meta_key = '$meta_key' " );
 				$ticket_meta = stripslashes( $get_meta ) ? stripslashes( $get_meta ) : '';
 
 			} else {
 
 				$ticket_meta = array();
-				$results     = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}wpsc_ticketmeta WHERE ticket_id= '$ticket_id' AND meta_key = '$meta_key'" );
+				$results     = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}support_ticketmeta WHERE ticket_id= '$ticket_id' AND meta_key = '$meta_key'" );
 				if ( $results ) {
 					foreach ( $results as $result ) {
 						$ticket_meta[] = stripslashes( $result->meta_value );
@@ -1008,7 +1008,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 
 		function get_ticket_status( $ticket_id ) {
 			global $wpdb;
-			$ticket_status = $wpdb->get_var( "SELECT active FROM {$wpdb->prefix}wpsc_ticket WHERE id='$ticket_id' " );
+			$ticket_status = $wpdb->get_var( "SELECT active FROM {$wpdb->prefix}support_ticket WHERE id='$ticket_id' " );
 
 			return intval( $ticket_status );
 		}
@@ -1019,7 +1019,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		function add_ticket_meta( $ticket_id, $meta_key, $meta_value ) {
 			global $wpdb;
 			$wpdb->insert(
-				$wpdb->prefix . 'wpsc_ticketmeta',
+				$wpdb->prefix . 'support_ticketmeta',
 				array(
 					'ticket_id'  => $ticket_id,
 					'meta_key'   => $meta_key,
@@ -1032,7 +1032,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		 */
 		function update_ticket_meta( $ticket_id, $meta_key, $meta_value ) {
 			global $wpdb;
-			$wpdb->update( $wpdb->prefix . 'wpsc_ticketmeta', $meta_value, array(
+			$wpdb->update( $wpdb->prefix . 'support_ticketmeta', $meta_value, array(
 				'ticket_id' => $ticket_id,
 				'meta_key'  => $meta_key
 			) );
@@ -1040,7 +1040,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 
 		function delete_ticket_meta( $ticket_id, $meta_key ) {
 			global $wpdb;
-			$wpdb->delete( $wpdb->prefix . 'wpsc_ticketmeta', array(
+			$wpdb->delete( $wpdb->prefix . 'support_ticketmeta', array(
 				'ticket_id' => $ticket_id,
 				'meta_key'  => $meta_key
 			) );
@@ -1062,7 +1062,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		function get_all_meta_keys() {
 
 			$c_fields = get_terms( [
-				'taxonomy'   => 'wpsc_ticket_custom_fields',
+				'taxonomy'   => 'support_ticket_custom_fields',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'meta_key'   => 'wpsc_tf_load_order',
@@ -1105,7 +1105,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		 */
 		public function create_new_ticket( $values ) {
 			global $wpdb;
-			$wpdb->insert( $wpdb->prefix . 'wpsc_ticket', $values );
+			$wpdb->insert( $wpdb->prefix . 'support_ticket', $values );
 			$ticket_id = $wpdb->insert_id;
 
 			return $ticket_id;
@@ -1117,7 +1117,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		function get_statuses() {
 			$status_ids = array();
 			$statuses   = get_terms( [
-				'taxonomy'   => 'wpsc_statuses',
+				'taxonomy'   => 'ticket_status',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -1136,7 +1136,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		function get_priorities() {
 			$priority_ids = array();
 			$priorities   = get_terms( [
-				'taxonomy'   => 'wpsc_priorities',
+				'taxonomy'   => 'ticket_priority',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -1155,7 +1155,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 		function get_categories() {
 			$category_ids = array();
 			$categories   = get_terms( [
-				'taxonomy'   => 'wpsc_categories',
+				'taxonomy'   => 'ticket_category',
 				'hide_empty' => false,
 				'orderby'    => 'meta_value_num',
 				'order'      => 'ASC',
@@ -1209,7 +1209,7 @@ if ( ! class_exists( 'WPSC_Functions' ) ) :
 				$agent_permissions = $this->get_current_agent_permissions();
 
 				$agents = get_terms( [
-					'taxonomy'   => 'wpsc_agents',
+					'taxonomy'   => 'support_agent',
 					'hide_empty' => false,
 					'meta_query' => array(
 						'relation' => 'AND',

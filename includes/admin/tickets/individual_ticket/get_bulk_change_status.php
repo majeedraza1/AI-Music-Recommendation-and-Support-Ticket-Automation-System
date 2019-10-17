@@ -21,7 +21,7 @@ ob_start();
                 <option></option>
 				<?php
 				$statuses                   = get_terms( [
-					'taxonomy'   => 'wpsc_statuses',
+					'taxonomy'   => 'ticket_status',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'order'      => 'ASC',
@@ -41,7 +41,7 @@ ob_start();
                 <option value=""></option>
 				<?php
 				$categories                   = get_terms( [
-					'taxonomy'   => 'wpsc_categories',
+					'taxonomy'   => 'ticket_category',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'order'      => 'ASC',
@@ -61,7 +61,7 @@ ob_start();
                 <option value=""></option>
 				<?php
 				$priorities                   = get_terms( [
-					'taxonomy'   => 'wpsc_priorities',
+					'taxonomy'   => 'ticket_priority',
 					'hide_empty' => false,
 					'orderby'    => 'meta_value_num',
 					'order'      => 'ASC',
@@ -75,7 +75,7 @@ ob_start();
             </select>
         </div>
 		<?php do_action( 'wpsc_after_bulk_change_ticket_status', $ticket_id ); ?>
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_bulk_change_status"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
 

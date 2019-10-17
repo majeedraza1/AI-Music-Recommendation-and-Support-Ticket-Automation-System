@@ -26,7 +26,7 @@ foreach ( $unique_conditions as $field_key => $unique_condition ) {
 
 		foreach ( $unique_condition as $condition ) {
 
-			$custom_field      = get_term_by( 'id', $field_key, 'wpsc_ticket_custom_fields' );
+			$custom_field      = get_term_by( 'id', $field_key, 'support_ticket_custom_fields' );
 			$custom_field_type = get_term_meta( $custom_field->term_id, 'wpsc_tf_type', true );
 
 			if ( $custom_field_type == '0' ) {

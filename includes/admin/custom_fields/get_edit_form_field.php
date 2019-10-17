@@ -13,7 +13,7 @@ if ( ! $field_id ) {
 	exit;
 }
 
-$custom_field = get_term_by( 'id', $field_id, 'wpsc_ticket_custom_fields' );
+$custom_field = get_term_by( 'id', $field_id, 'support_ticket_custom_fields' );
 
 $wpsc_tf_label         = get_term_meta( $custom_field->term_id, 'wpsc_tf_label', true );
 $wpsc_tf_extra_info    = get_term_meta( $custom_field->term_id, 'wpsc_tf_extra_info', true );
@@ -111,15 +111,15 @@ ob_start();
 				<?php
 				foreach ( $wpsc_tf_visibility as $key => $value ) {
 					$condition   = explode( '--', stripslashes( $value ) );
-					$tf          = get_term_by( 'id', $condition[0], 'wpsc_ticket_custom_fields' );
+					$tf          = get_term_by( 'id', $condition[0], 'support_ticket_custom_fields' );
 					$label       = get_term_meta( $condition[0], 'wpsc_tf_label', true );
 					$value_label = $condition[1];
 					if ( $tf->slug == 'ticket_category' ) {
-						$category    = get_term_by( 'id', $value_label, 'wpsc_categories' );
+						$category    = get_term_by( 'id', $value_label, 'ticket_category' );
 						$value_label = $category->name;
 					}
 					if ( $tf->slug == 'ticket_priority' ) {
-						$priority    = get_term_by( 'id', $value_label, 'wpsc_priorities' );
+						$priority    = get_term_by( 'id', $value_label, 'ticket_priority' );
 						$value_label = $priority->name;
 					}
 					?>
@@ -146,7 +146,7 @@ ob_start();
                     <option value=""><?php _e( 'Select field', 'supportcandy' ); ?></option>
 					<?php
 					$fields = get_terms( [
-						'taxonomy'   => 'wpsc_ticket_custom_fields',
+						'taxonomy'   => 'support_ticket_custom_fields',
 						'hide_empty' => false,
 						'orderby'    => 'meta_value_num',
 						'meta_key'   => 'wpsc_tf_load_order',

@@ -13,7 +13,7 @@ if ( ! $field_id ) {
 	exit;
 }
 
-$custom_field = get_term_by( 'id', $field_id, 'wpsc_ticket_custom_fields' );
+$custom_field = get_term_by( 'id', $field_id, 'support_ticket_custom_fields' );
 
 $field_label = isset( $_POST ) && isset( $_POST['field_label'] ) ? sanitize_text_field( $_POST['field_label'] ) : '';
 if ( ! $field_label ) {
@@ -57,7 +57,7 @@ if ( $old_tf_type != $field_type ) {
 	}
 	if ( $field_types[ $field_type ]['allow_ticket_filter'] ) {
 		update_term_meta( $field_id, 'wpsc_allow_ticket_filter', '1' );
-		update_term_meta( $field_id, 'wpsc_ticket_filter_type', $field_types[ $field_type ]['ticket_filter_type'] );
+		update_term_meta( $field_id, 'support_ticket_filter_type', $field_types[ $field_type ]['ticket_filter_type'] );
 		update_term_meta( $field_id, 'wpsc_customer_ticket_filter_status', '0', '0' );
 		update_term_meta( $field_id, 'wpsc_agent_ticket_filter_status', '0' );
 	} else {

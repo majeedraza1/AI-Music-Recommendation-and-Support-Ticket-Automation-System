@@ -11,7 +11,7 @@ if ( ! $ticket_id ) {
 }
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_visibility',
@@ -116,4 +116,4 @@ foreach ( $fields as $field ) {
 	}
 	do_action( 'wpsc_set_change_ticket_field', $field, $ticket_id, $wpsc_tf_type );
 }
-$wpdb->update( $wpdb->prefix . 'wpsc_ticket', array( 'date_updated' => date( "Y-m-d H:i:s" ) ), array( 'id' => $ticket_id ) );
+$wpdb->update( $wpdb->prefix . 'support_ticket', array( 'date_updated' => date( "Y-m-d H:i:s" ) ), array( 'id' => $ticket_id ) );

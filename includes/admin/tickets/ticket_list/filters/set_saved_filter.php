@@ -23,4 +23,4 @@ if ( ! isset( $saved_filters[ $key ] ) ) {
 
 $filter = $saved_filters[ $key ];
 
-setcookie( 'wpsc_ticket_filter', json_encode( $filter ) );
+setcookie( 'support_ticket_filter', json_encode( $filter ) );

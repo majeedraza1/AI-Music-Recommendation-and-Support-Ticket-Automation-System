@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $wpscfunction, $current_user;
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 ] );
 
@@ -49,7 +49,7 @@ $wpsc_allow_attachment         = get_option( 'wpsc_allow_attachment' );
 				$wpsc_guest_can_upload_files = get_option( 'wpsc_guest_can_upload_files' );
 				if ( $wpsc_guest_can_upload_files ): ?>
 					<?php if ( in_array( 'reply', $wpsc_allow_attachment ) ) : ?>
-                        <span onclick="wpsc_attachment_upload('<?php echo 'attach_' . $term_id ?>','desc_attachment');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
+                        <span onclick="support_ticket_attachment_upload('<?php echo 'attach_' . $term_id ?>','desc_attachment');"><?php _e( 'Attach file', 'supportcandy' ) ?></span>
 					<?php endif; ?>
 				<?php endif; ?>
             </div>
@@ -90,7 +90,7 @@ $wpsc_allow_attachment         = get_option( 'wpsc_allow_attachment' );
 		<?php
 		}?>
         var dataform = new FormData(jQuery('#wpsc_frm_tkt_reply')[0]);
-        dataform.append('action', 'wpsc_tickets');
+        dataform.append('action', 'support_tickets');
         dataform.append('setting_action', 'submit_reply');
         dataform.append('reply_body', description);
         jQuery('.wpsc_reply_widget').html(wpsc_admin.loading_html);
@@ -106,7 +106,7 @@ $wpsc_allow_attachment         = get_option( 'wpsc_allow_attachment' );
             });
     }
 
-    function wpsc_attachment_upload(id, name) {
+    function support_ticket_attachment_upload(id, name) {
         jQuery('#attachment_upload').unbind('change');
         jQuery('#attachment_upload').on('change', function () {
             var flag = false;
@@ -122,14 +122,14 @@ $wpsc_allow_attachment         = get_option( 'wpsc_allow_attachment' );
             }
 
             var current_filesize = file.size / 1000000;
-            if (current_filesize ><?php echo get_option( 'wpsc_attachment_max_filesize' )?>) {
+            if (current_filesize ><?php echo get_option( 'support_ticket_attachment_max_filesize' )?>) {
                 flag = true;
                 alert('<?php _e( 'File size exceed allowed limit!', 'supportcandy' )?>');
             }
 
             if (!flag) {
 
-                var html_str = '<div class="row wpsc_attachment">' +
+                var html_str = '<div class="row support_ticket_attachment">' +
                     '<div class="progress" style="float: none !important; width: unset !important;">' +
                     '<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">' +
                     file.name +
@@ -140,12 +140,12 @@ $wpsc_allow_attachment         = get_option( 'wpsc_allow_attachment' );
 
                 jQuery('#' + id).append(html_str);
 
-                var attachment = jQuery('#' + id).find('.wpsc_attachment').last();
+                var attachment = jQuery('#' + id).find('.support_ticket_attachment').last();
 
                 var data = new FormData();
                 data.append('file', file);
                 data.append('arr_name', name);
-                data.append('action', 'wpsc_tickets');
+                data.append('action', 'support_tickets');
                 data.append('setting_action', 'upload_file');
 
                 jQuery.ajax({

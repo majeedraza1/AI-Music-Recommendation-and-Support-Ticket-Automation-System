@@ -72,9 +72,9 @@ if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 
 }
 
-$wpsc_ticket_public_mode = get_option( 'wpsc_ticket_public_mode' );
+$support_ticket_public_mode = get_option( 'support_ticket_public_mode' );
 
-if ( ! $current_user->has_cap( 'wpsc_agent' ) && $wpsc_ticket_public_mode ) {
+if ( ! $current_user->has_cap( 'wpsc_agent' ) && $support_ticket_public_mode ) {
 	$restrict_rules[] = array(
 		'key'     => 'active',
 		'value'   => 1,
@@ -94,9 +94,9 @@ $offset = ( $filter['page'] - 1 ) * $post_per_page;
 ?>
 
 <form id="frm_additional_filters" action="javascript:wpsc_set_custom_filter();" method="post">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 wpsc_ticket_search_box"
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 support_ticket_search_box"
          style="margin-bottom:20px;padding:0;">
-        <input type="text" id="wpsc_ticket_search" class="form-control" name="custom_filter[s]"
+        <input type="text" id="support_ticket_search" class="form-control" name="custom_filter[s]"
                value="<?php echo trim( $filter['custom_filter']['s'] ) ?>" autocomplete="off"
                placeholder="<?php _e( 'Search...', 'supportcandy' ) ?>">
         <i class="fa fa-search wpsc_search_btn wpsc_search_btn_sarch"></i>
@@ -107,7 +107,7 @@ $offset = ( $filter['page'] - 1 ) * $post_per_page;
 				<?php
 				if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 					$fields = get_terms( [
-						'taxonomy'   => 'wpsc_ticket_custom_fields',
+						'taxonomy'   => 'support_ticket_custom_fields',
 						'hide_empty' => false,
 						'orderby'    => 'meta_value_num',
 						'meta_key'   => 'wpsc_filter_agent_load_order',
@@ -128,7 +128,7 @@ $offset = ( $filter['page'] - 1 ) * $post_per_page;
 					] );
 				} else {
 					$fields = get_terms( [
-						'taxonomy'   => 'wpsc_ticket_custom_fields',
+						'taxonomy'   => 'support_ticket_custom_fields',
 						'hide_empty' => false,
 						'orderby'    => 'meta_value_num',
 						'meta_key'   => 'wpsc_filter_customer_load_order',
@@ -150,7 +150,7 @@ $offset = ( $filter['page'] - 1 ) * $post_per_page;
 				}
 				foreach ( $fields as $field ) {
 					$label       = get_term_meta( $field->term_id, 'wpsc_tf_label', true );
-					$filter_type = get_term_meta( $field->term_id, 'wpsc_ticket_filter_type', true );
+					$filter_type = get_term_meta( $field->term_id, 'support_ticket_filter_type', true );
 					if ( $filter_type == 'string' || $filter_type == 'number' ) {
 						if ( $field->slug == 'ticket_id' ) {
 							$field->slug = 'id';
@@ -240,7 +240,7 @@ $offset = ( $filter['page'] - 1 ) * $post_per_page;
                         source: function (request, response) {
                             var term = request.term;
                             request = {
-                                action: 'wpsc_tickets',
+                                action: 'support_tickets',
                                 setting_action: 'filter_autocomplete',
                                 term: term,
                                 field: jQuery(this.element).data('field'),
@@ -276,7 +276,7 @@ $offset = ( $filter['page'] - 1 ) * $post_per_page;
                     }
                     var dataform = new FormData(jQuery('#frm_additional_filters')[0]);
                     dataform.append('filter_name', filter_name);
-                    dataform.append('action', 'wpsc_tickets');
+                    dataform.append('action', 'support_tickets');
                     dataform.append('setting_action', 'set_save_ticket_filter');
                     jQuery('.wpsc_popup_action').text('<?php _e( 'Please wait ...', 'supportcandy' )?>');
                     jQuery('.wpsc_popup_action, #wpsc_popup_body input').attr("disabled", "disabled");
@@ -311,7 +311,7 @@ $offset = ( $filter['page'] - 1 ) * $post_per_page;
         <input type="hidden" name="filter" value="all">
     </div>
 
-    <input type="hidden" name="action" value="wpsc_tickets">
+    <input type="hidden" name="action" value="support_tickets">
     <input type="hidden" name="setting_action" value="set_custom_filter">
     <input type="hidden" id="wpsc_pg_no" name="page_no" value="<?php echo htmlentities( $filter['page'] ) ?>">
     <input type="hidden" id="wpsc_th_orderby" name="orderby" value="<?php echo htmlentities( $filter['orderby'] ) ?>">
@@ -364,7 +364,7 @@ if ( $total_items <= $current_page * $post_per_page ) {
 
 if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 	$ticket_list_items = get_terms( [
-		'taxonomy'   => 'wpsc_ticket_custom_fields',
+		'taxonomy'   => 'support_ticket_custom_fields',
 		'hide_empty' => false,
 		'orderby'    => 'meta_value_num',
 		'meta_key'   => 'wpsc_tl_agent_load_order',
@@ -385,7 +385,7 @@ if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 	] );
 } else {
 	$ticket_list_items = get_terms( [
-		'taxonomy'   => 'wpsc_ticket_custom_fields',
+		'taxonomy'   => 'support_ticket_custom_fields',
 		'hide_empty' => false,
 		'orderby'    => 'meta_value_num',
 		'meta_key'   => 'wpsc_tl_customer_load_order',
@@ -424,10 +424,10 @@ if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 	}
 	?>
 </div>
-<table id="tbl_wpsc_ticket_list" class="table">
+<table id="tbl_support_ticket_list" class="table">
     <tr>
         <th class="wpsc_th_check_all"
-            style="background-color:<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_header_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_header_text_color'] ?> !important;">
+            style="background-color:<?php echo $wpsc_appearance_ticket_list['support_ticket_list_header_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_ticket_list['support_ticket_list_header_text_color'] ?> !important;">
             <input id="chk_all_ticket_list" onchange="toggle_list_checkboxes(this);" type="checkbox"/></th>
 		<?php
 		foreach ( $ticket_list_items as $list_item ) {
@@ -436,7 +436,7 @@ if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 			?>
             <th class="wpsc_th_<?php echo $list_item->slug ?>"
                 onclick="<?php echo $allow_orderby ? 'wpsc_header_sort(\'' . $list_item->slug . '\')' : '' ?>"
-                style="background-color:<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_header_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_ticket_list['wpsc_ticket_list_header_text_color'] ?> !important;">
+                style="background-color:<?php echo $wpsc_appearance_ticket_list['support_ticket_list_header_bg_color'] ?> !important;color:<?php echo $wpsc_appearance_ticket_list['support_ticket_list_header_text_color'] ?> !important;">
 				<?php
 				_e( $label, 'supportcandy' );
 				if ( $filter['orderby'] == $list_item->slug && $filter['order'] == 'ASC' ) {
@@ -454,7 +454,7 @@ if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 	<?php
 
 	include_once WPSC_ABSPATH . 'includes/admin/tickets/ticket_list/class-ticket-list-field-format.php';
-	$format = new WPSC_Ticket_List_Field();
+	$format = new support_ticket_List_Field();
 	if ( $ticket_list ) {
 		foreach ( $ticket_list as $ticket ) {
 			?>
@@ -486,7 +486,7 @@ if ( $current_user->has_cap( 'wpsc_agent' ) ) {
 </table>
 
 <?php
-$wpsc_tl_row_item_css = 'background-color:' . $wpsc_appearance_ticket_list['wpsc_ticket_list_item_mo_bg_color'] . ' !important;color:' . $wpsc_appearance_ticket_list['wpsc_ticket_list_item_mo_text_color'] . ' !important;';
+$wpsc_tl_row_item_css = 'background-color:' . $wpsc_appearance_ticket_list['support_ticket_list_item_mo_bg_color'] . ' !important;color:' . $wpsc_appearance_ticket_list['support_ticket_list_item_mo_text_color'] . ' !important;';
 ?>
 <style type="text/css">
     .wpsc_tl_row_item:hover {
@@ -496,13 +496,13 @@ $wpsc_tl_row_item_css = 'background-color:' . $wpsc_appearance_ticket_list['wpsc
 <?php
 if ( $ticket_list ) : ?>
     <div class="row" style="margin-bottom:20px;">
-        <div class="col-md-4 col-md-offset-4 wpsc_ticket_list_nxt_pre_page" style="text-align: center;">
+        <div class="col-md-4 col-md-offset-4 support_ticket_list_nxt_pre_page" style="text-align: center;">
             <button class="btn btn-default btn-sm" <?php echo $filter['page'] == 1 ? 'disabled' : '' ?>
-                    onclick="wpsc_ticket_prev_page();"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                    onclick="support_ticket_prev_page();"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
             </button>
             <strong><?php echo $current_page ?></strong> of <strong><?php echo $total_pages ?></strong> Pages
             <button class="btn btn-default btn-sm" <?php echo $filter['page'] == $total_pages ? 'disabled' : '' ?>
-                    onclick="wpsc_ticket_next_page();"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                    onclick="support_ticket_next_page();"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
             </button>
         </div>
     </div>

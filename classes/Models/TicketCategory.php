@@ -15,7 +15,7 @@ class TicketCategory extends AbstractModel {
 	 *
 	 * @var string
 	 */
-	protected static $taxonomy = 'wpsc_categories';
+	protected static $taxonomy = 'ticket_category';
 
 	/**
 	 * The primary key for the model.

@@ -33,7 +33,7 @@ if ( $user_data ) {
 // Agent created
 if ( $current_user->has_cap( 'wpsc_agent' ) && $customer_email != $current_user->user_email ) {
 	$agents = get_terms( [
-		'taxonomy'   => 'wpsc_agents',
+		'taxonomy'   => 'support_agent',
 		'hide_empty' => false,
 		'meta_query' => array(
 			'relation' => 'AND',
@@ -52,7 +52,7 @@ if ( $current_user->has_cap( 'wpsc_agent' ) && $customer_email != $current_user-
 	$agent_created_value = 0;
 }
 
-$wpdb->insert( $wpdb->prefix . 'wpsc_ticket',
+$wpdb->insert( $wpdb->prefix . 'support_ticket',
 	array(
 		'ticket_status'    => $default_status,
 		'customer_name'    => $customer_name,
@@ -75,7 +75,7 @@ $wpscfunction->add_ticket_meta( $ticket_id, 'assigned_agent', 0 );
 
 // Custom fields
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -143,4 +143,4 @@ if ( $description_attachment ) {
 		update_term_meta( $attachment_id, 'active', '1' );
 	}
 }
-do_action( 'wpsc_ticket_created', $ticket_id );
+do_action( 'support_ticket_created', $ticket_id );

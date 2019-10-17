@@ -9,7 +9,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $priorities = get_terms( [
-	'taxonomy'   => 'wpsc_priorities',
+	'taxonomy'   => 'ticket_priority',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'order'      => 'ASC',

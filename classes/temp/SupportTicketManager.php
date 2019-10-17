@@ -207,7 +207,7 @@ class SupportTicketManager {
 
 	public function settings() {
 		$categories = get_terms( [
-			'taxonomy'   => 'wpsc_categories',
+			'taxonomy'   => 'ticket_category',
 			'hide_empty' => false,
 			'orderby'    => 'meta_value_num',
 			'order'      => 'ASC',

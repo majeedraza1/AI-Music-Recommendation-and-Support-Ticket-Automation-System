@@ -9,7 +9,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $agents = get_terms( [
-	'taxonomy'   => 'wpsc_agents',
+	'taxonomy'   => 'support_agent',
 	'hide_empty' => false,
 	'meta_query' => array(
 		array(

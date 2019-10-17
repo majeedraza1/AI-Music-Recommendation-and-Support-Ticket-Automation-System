@@ -19,7 +19,7 @@ if ( $support_ticket_default_priority == $priority_id ) {
 	die();
 }
 
-wp_delete_term( $priority_id, 'wpsc_priorities' );
+wp_delete_term( $priority_id, 'ticket_priority' );
 
 do_action( 'wpsc_delete_priority', $cat_id );
 

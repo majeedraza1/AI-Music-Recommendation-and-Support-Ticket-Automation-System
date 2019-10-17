@@ -15,5 +15,5 @@ $values = array(
 	'ticket_subject' => $subject
 );
 
-$wpdb->update( $wpdb->prefix . 'wpsc_ticket', $values, array( 'id' => $ticket_id ) );
+$wpdb->update( $wpdb->prefix . 'support_ticket', $values, array( 'id' => $ticket_id ) );
 ?>

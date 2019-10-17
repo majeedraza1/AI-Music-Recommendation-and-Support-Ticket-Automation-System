@@ -11,10 +11,10 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'wpsc_agent' ) ) ) {
 
 $ticket_id = isset( $_POST['ticket_id'] ) ? sanitize_text_field( $_POST['ticket_id'] ) : '';
 
-$wpdb->delete( $wpdb->prefix . 'wpsc_ticket', array( 'id' => $ticket_id ) );
+$wpdb->delete( $wpdb->prefix . 'support_ticket', array( 'id' => $ticket_id ) );
 
 $args           = array(
-	'post_type'      => 'wpsc_ticket_thread',
+	'post_type'      => 'ticket_thread',
 	'post_status'    => array( 'publish', 'trash' ),
 	'posts_per_page' => - 1,
 	'meta_query'     => array(

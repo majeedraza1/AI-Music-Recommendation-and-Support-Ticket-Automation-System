@@ -5,10 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $wpscfunction, $current_user;
 
-$from_name     = get_option( 'wpsc_en_from_name', '' );
-$from_email    = get_option( 'wpsc_en_from_email', '' );
-$reply_to      = get_option( 'wpsc_en_reply_to', '' );
-$ignore_emails = get_option( 'wpsc_en_ignore_emails', '' );
+$from_name     = get_option( 'support_ticket_notification_from_name', '' );
+$from_email    = get_option( 'support_ticket_notification_from_email', '' );
+$reply_to      = get_option( 'support_ticket_notification_reply_to', '' );
+$ignore_emails = get_option( 'support_ticket_notification_ignore_emails', '' );
 
 if ( ! $from_name || ! $from_email ) {
 	return;
@@ -16,7 +16,7 @@ if ( ! $from_name || ! $from_email ) {
 
 
 $email_templates = get_terms( [
-	'taxonomy'   => 'wpsc_en',
+	'taxonomy'   => 'support_ticket_notification',
 	'hide_empty' => false,
 	'orderby'    => 'ID',
 	'order'      => 'ASC',
@@ -36,7 +36,7 @@ foreach ( $email_templates as $email ) :
 	if ( $wpscfunction->check_ticket_conditions( $conditions, $ticket_id ) ) :
 
 		$subject          = $wpscfunction->replace_macro( get_term_meta( $email->term_id, 'subject', true ), $ticket_id );
-		$subject          = '[' . get_option( 'wpsc_ticket_alice', '' ) . $ticket_id . '] ' . $subject;
+		$subject          = '[' . get_option( 'support_ticket_alice', '' ) . $ticket_id . '] ' . $subject;
 		$body             = $wpscfunction->replace_macro( get_term_meta( $email->term_id, 'body', true ), $ticket_id );
 		$recipients       = get_term_meta( $email->term_id, 'recipients', true );
 		$extra_recipients = get_term_meta( $email->term_id, 'extra_recipients', true );
@@ -45,7 +45,7 @@ foreach ( $email_templates as $email ) :
 		foreach ( $recipients as $recipient ) {
 			if ( is_numeric( $recipient ) ) {
 				$agents = get_terms( [
-					'taxonomy'   => 'wpsc_agents',
+					'taxonomy'   => 'support_agent',
 					'hide_empty' => false,
 					'meta_query' => array(
 						'relation' => 'AND',
@@ -81,7 +81,7 @@ foreach ( $email_templates as $email ) :
 		$email_addresses = array_unique( $email_addresses );
 		$email_addresses = array_diff( $email_addresses, $ignore_emails );
 		$email_addresses = array_diff( $email_addresses, array( $current_user->user_email ) );
-		$email_addresses = apply_filters( 'wpsc_en_change_priority_email_addresses', $email_addresses, $email, $ticket_id );
+		$email_addresses = apply_filters( 'support_ticket_notification_change_priority_email_addresses', $email_addresses, $email, $ticket_id );
 		$email_addresses = array_values( $email_addresses );
 
 		$to = isset( $email_addresses[0] ) ? $email_addresses[0] : '';

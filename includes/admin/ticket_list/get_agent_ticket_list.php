@@ -9,7 +9,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 }
 
 $fields = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tl_agent_load_order',
@@ -60,7 +60,7 @@ $fields = get_terms( [
         jQuery(".wpsc-sortable").on("sortupdate", function (event, ui) {
             var ids = jQuery(this).sortable("toArray", {attribute: 'data-id'});
             var data = {
-                action: 'wpsc_ticket_list',
+                action: 'support_ticket_list',
                 setting_action: 'set_agent_list_order',
                 field_ids: ids
             };
@@ -82,7 +82,7 @@ $fields = get_terms( [
     function wpsc_get_add_agent_list_field() {
         wpsc_modal_open(wpsc_admin.add_list_item);
         var data = {
-            action: 'wpsc_ticket_list',
+            action: 'support_ticket_list',
             setting_action: 'get_add_agent_list_field'
         };
         jQuery.post(wpsc_admin.ajax_url, data, function (response_str) {
@@ -97,7 +97,7 @@ $fields = get_terms( [
         jQuery('.wpsc_popup_action').text('<?php _e( 'Please wait ...', 'supportcandy' )?>');
         jQuery('.wpsc_popup_action, #wpsc_popup_body input').attr("disabled", "disabled");
         var data = {
-            action: 'wpsc_ticket_list',
+            action: 'support_ticket_list',
             setting_action: 'set_add_agent_list_field',
             field_id: field_id
         };
@@ -130,7 +130,7 @@ $fields = get_terms( [
         var flag = confirm(wpsc_admin.are_you_sure);
         if (flag) {
             var data = {
-                action: 'wpsc_ticket_list',
+                action: 'support_ticket_list',
                 setting_action: 'delete_agent_list_field',
                 field_id: field_id
             };

@@ -26,17 +26,17 @@ class SupportTicket extends DatabaseModel {
 	 *
 	 * @var string
 	 */
-	protected $table = 'wpsc_ticket';
+	protected $table = 'support_ticket';
 
 	/**
 	 * @var string
 	 */
-	protected $meta_table = 'wpsc_ticketmeta';
+	protected $meta_table = 'support_ticketmeta';
 
 	/**
 	 * @var string
 	 */
-	protected $post_type = 'wpsc_ticket_thread';
+	protected $post_type = 'ticket_thread';
 
 	/**
 	 * @var string
@@ -316,7 +316,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_ticket_status() {
 		$ticket_status = $this->get( 'ticket_status' );
-		$terms         = get_term_by( 'id', $ticket_status, 'wpsc_statuses' );
+		$terms         = get_term_by( 'id', $ticket_status, 'ticket_status' );
 
 		if ( $terms instanceof WP_Term ) {
 			return $terms->to_array();
@@ -332,7 +332,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_ticket_category() {
 		$ticket_status = $this->get( 'ticket_category' );
-		$terms         = get_term_by( 'id', $ticket_status, 'wpsc_categories' );
+		$terms         = get_term_by( 'id', $ticket_status, 'ticket_category' );
 		if ( $terms instanceof WP_Term ) {
 			return $terms->to_array();
 		}
@@ -347,7 +347,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_ticket_priority() {
 		$ticket_status = $this->get( 'ticket_priority' );
-		$terms         = get_term_by( 'id', $ticket_status, 'wpsc_priorities' );
+		$terms         = get_term_by( 'id', $ticket_status, 'ticket_priority' );
 
 		if ( $terms instanceof WP_Term ) {
 			return $terms->to_array();
@@ -768,7 +768,7 @@ class SupportTicket extends DatabaseModel {
 		}
 		// WP_Term_Query arguments
 		$args = array(
-			'taxonomy'   => array( 'wpsc_categories', 'wpsc_priorities', 'wpsc_statuses' ),
+			'taxonomy'   => array( 'ticket_category', 'ticket_priority', 'ticket_status' ),
 			'hide_empty' => false,
 			'name__like' => $query,
 		);
@@ -942,7 +942,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_ticket_statuses_terms() {
 		$terms = get_terms( array(
-			'taxonomy'   => 'wpsc_statuses',
+			'taxonomy'   => 'ticket_status',
 			'hide_empty' => false,
 		) );
 
@@ -956,7 +956,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_categories_terms() {
 		$terms = get_terms( array(
-			'taxonomy'   => 'wpsc_categories',
+			'taxonomy'   => 'ticket_category',
 			'hide_empty' => false,
 		) );
 
@@ -970,7 +970,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_priorities_terms() {
 		$terms = get_terms( array(
-			'taxonomy'   => 'wpsc_priorities',
+			'taxonomy'   => 'ticket_priority',
 			'hide_empty' => false,
 		) );
 
@@ -984,7 +984,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_agents_terms() {
 		$terms = get_terms( array(
-			'taxonomy'   => 'wpsc_agents',
+			'taxonomy'   => 'support_agent',
 			'hide_empty' => false,
 		) );
 

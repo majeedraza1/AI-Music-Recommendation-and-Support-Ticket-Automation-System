@@ -40,7 +40,7 @@ $assigned_agents = $wpscfunction->get_ticket_meta( $ticket_id, 'assigned_agent' 
 			}
 			?>
         </div>
-        <input type="hidden" name="action" value="wpsc_tickets"/>
+        <input type="hidden" name="action" value="support_tickets"/>
         <input type="hidden" name="setting_action" value="set_change_assign_agent"/>
         <input type="hidden" name="ticket_id" value="<?php echo htmlentities( $ticket_id ) ?>"/>
     </form>
@@ -61,7 +61,7 @@ $assigned_agents = $wpscfunction->get_ticket_meta( $ticket_id, 'assigned_agent' 
                 source: function (request, response) {
                     var term = request.term;
                     request = {
-                        action: 'wpsc_tickets',
+                        action: 'support_tickets',
                         setting_action: 'filter_autocomplete',
                         term: term,
                         field: 'assigned_agent',

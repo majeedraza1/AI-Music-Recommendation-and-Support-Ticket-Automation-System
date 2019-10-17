@@ -14,7 +14,7 @@ $wpsc_terms_and_conditions_html = get_option( 'wpsc_terms_and_conditions_html' )
 $wpsc_recaptcha_type            = get_option( 'wpsc_recaptcha_type' );
 $wpsc_get_site_key              = get_option( 'wpsc_get_site_key' );
 $fields                         = get_terms( [
-	'taxonomy'   => 'wpsc_ticket_custom_fields',
+	'taxonomy'   => 'support_ticket_custom_fields',
 	'hide_empty' => false,
 	'orderby'    => 'meta_value_num',
 	'meta_key'   => 'wpsc_tf_load_order',
@@ -30,7 +30,7 @@ $fields                         = get_terms( [
 
 include WPSC_ABSPATH . 'includes/admin/tickets/create_ticket/class-ticket-form-field-format.php';
 
-$form_field = new WPSC_Ticket_Form_Field();
+$form_field = new support_ticket_Form_Field();
 
 $general_appearance = get_option( 'wpsc_appearance_general_settings' );
 
@@ -166,7 +166,7 @@ if ( apply_filters( 'wpsc_print_create_ticket_html', true ) ):
             <input type="file" id="attachment_upload" class="hidden" onchange="">
             <input type="hidden" id="wpsc_nonce" value="<?php echo wp_create_nonce() ?>">
 
-            <input type="hidden" name="action" value="wpsc_tickets">
+            <input type="hidden" name="action" value="support_tickets">
             <input type="hidden" name="setting_action" value="submit_ticket">
             <input type="hidden" id="captcha_code" name="captcha_code" value="">
 
@@ -193,7 +193,7 @@ if ( apply_filters( 'wpsc_print_create_ticket_html', true ) ):
                 source: function (request, response) {
                     var term = request.term;
                     request = {
-                        action: 'wpsc_tickets',
+                        action: 'support_tickets',
                         setting_action: 'get_users',
                         term: term
                     }
@@ -212,7 +212,7 @@ if ( apply_filters( 'wpsc_print_create_ticket_html', true ) ):
             jQuery(e).hide();
             jQuery('#captcha_wait').show();
             var data = {
-                action: 'wpsc_tickets',
+                action: 'support_tickets',
                 setting_action: 'get_captcha_code'
             };
             jQuery.post(wpsc_admin.ajax_url, data, function (response) {
@@ -296,7 +296,7 @@ if ( apply_filters( 'wpsc_print_create_ticket_html', true ) ):
 
         }
 
-        function wpsc_attachment_upload(id, name) {
+        function support_ticket_attachment_upload(id, name) {
             jQuery('#attachment_upload').unbind('change');
             jQuery('#attachment_upload').on('change', function () {
                 var flag = false;
@@ -312,7 +312,7 @@ if ( apply_filters( 'wpsc_print_create_ticket_html', true ) ):
                 }
 
                 var current_filesize = file.size / 1000000;
-                if (current_filesize ><?php echo get_option( 'wpsc_attachment_max_filesize' )?>) {
+                if (current_filesize ><?php echo get_option( 'support_ticket_attachment_max_filesize' )?>) {
                     flag = true;
                     alert("<?php _e( 'File size exceed allowed limit!', 'supportcandy' )?>");
                 }
@@ -335,7 +335,7 @@ if ( apply_filters( 'wpsc_print_create_ticket_html', true ) ):
                     var data = new FormData();
                     data.append('file', file);
                     data.append('arr_name', name);
-                    data.append('action', 'wpsc_tickets');
+                    data.append('action', 'support_tickets');
                     data.append('setting_action', 'upload_file');
                     data.append('nonce', jQuery('#wpsc_nonce').val().trim());
 

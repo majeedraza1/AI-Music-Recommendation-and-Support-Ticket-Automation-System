@@ -11,7 +11,7 @@ if ( ! ( $current_user->ID && $current_user->has_cap( 'manage_options' ) ) ) {
 $notification_types = $wpscfunction->get_email_notification_types();
 
 $email_templates = get_terms( [
-	'taxonomy'   => 'wpsc_en',
+	'taxonomy'   => 'support_ticket_notification',
 	'hide_empty' => false,
 	'orderby'    => 'ID',
 	'order'      => 'ASC',
