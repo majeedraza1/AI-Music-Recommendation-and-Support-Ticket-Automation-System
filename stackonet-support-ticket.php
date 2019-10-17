@@ -175,4 +175,8 @@ class StackonetSupportTicket {
 	}
 }
 
-StackonetSupportTicket::init();
+function stackonet_support_ticket() {
+	return StackonetSupportTicket::init();
+}
+
+stackonet_support_ticket();
