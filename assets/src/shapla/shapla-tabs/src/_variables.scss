@@ -1,5 +1,5 @@
-$primary-color: #3273DC !default;
-$on-primary-color: #fff !default;
+$primary-color: var(--stackonet-ticket-primary, #3273DC) !default;
+$on-primary-color: var(--stackonet-ticket-on-primary, #fff) !default;
 
 $tabs-border-bottom-color: #dbdbdb !default;
 $tabs-border-bottom-style: solid !default;

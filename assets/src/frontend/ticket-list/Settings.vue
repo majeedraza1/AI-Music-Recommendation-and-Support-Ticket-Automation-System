@@ -82,7 +82,7 @@
                 this.$router.push({name: 'SupportTicketList'})
             },
             getSettingsFields() {
-                axios.get('settings').then(response => {
+                axios.get('settings', {params: {user_options: true}}).then(response => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     let data = response.data.data;
                     this.panels = data.panels;
@@ -96,7 +96,7 @@
             },
             saveOptions() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('settings', {options: this.options}).then(() => {
+                axios.post('settings/user', {options: this.options}).then(() => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Success!',
@@ -122,5 +122,11 @@
         max-width: 1140px;
         margin-left: auto;
         margin-right: auto;
+
+        table.form-table {
+            th {
+                vertical-align: top;
+            }
+        }
     }
 </style>

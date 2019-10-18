@@ -25,16 +25,27 @@ class Settings {
 			self::$instance = new self();
 
 			add_action( 'wp_loaded', [ self::$instance, 'settings' ] );
-			add_action( 'wp_head', [ self::$instance, 'support_ticket_colors' ], 1 );
+
+			add_action( 'admin_head', [ self::$instance, 'support_ticket_colors' ] );
+			add_action( 'wp_head', [ self::$instance, 'support_ticket_colors' ] );
 		}
 
 		return self::$instance;
 	}
 
 	public function support_ticket_colors() {
-		$options         = get_option( 'stackonet_support_ticket' );
-		$primary_color   = isset( $options['primary_color'] ) ? esc_attr( $options['primary_color'] ) : '#f58730';
-		$secondary_color = isset( $options['secondary_color'] ) ? esc_attr( $options['secondary_color'] ) : '#9c27b0';
+		$primary_color   = get_option( 'support_ticket_primary_color', '#f58730' );
+		$secondary_color = get_option( 'support_ticket_secondary_color', '#9c27b0' );
+		$secondary_color = ! empty( $secondary_color ) ? $secondary_color : $primary_color;
+
+		$current_user = wp_get_current_user();
+		if ( $current_user->exists() ) {
+			$options         = get_user_meta( $current_user->ID, '_stackonet_support_ticket', true );
+			$primary_color   = isset( $options['support_ticket_primary_color'] ) ? $options['support_ticket_primary_color'] : $primary_color;
+			$secondary_color = isset( $options['support_ticket_secondary_color'] ) ? $options['support_ticket_secondary_color'] : $secondary_color;
+			$secondary_color = ! empty( $secondary_color ) ? $secondary_color : $primary_color;
+		}
+
 		?>
         <style type="text/css">
             :root {
@@ -106,7 +117,7 @@ class Settings {
 			),
 			array(
 				'section'           => 'general_settings_section',
-				'id'                => 'default_ticket_status',
+				'id'                => 'support_ticket_default_status',
 				'type'              => 'select',
 				'title'             => __( 'Default ticket status', 'stackonet-support-ticket' ),
 				'description'       => __( 'This status will get applied for newly created ticket.', 'stackonet-support-ticket' ),
@@ -116,7 +127,7 @@ class Settings {
 			),
 			array(
 				'section'           => 'general_settings_section',
-				'id'                => 'default_ticket_category',
+				'id'                => 'support_ticket_default_category',
 				'type'              => 'select',
 				'title'             => __( 'Default ticket category', 'stackonet-support-ticket' ),
 				'description'       => __( 'This category will get applied for newly created ticket.', 'stackonet-support-ticket' ),
@@ -126,7 +137,7 @@ class Settings {
 			),
 			array(
 				'section'           => 'general_settings_section',
-				'id'                => 'default_ticket_priority',
+				'id'                => 'support_ticket_default_priority',
 				'type'              => 'select',
 				'title'             => __( 'Default ticket priority', 'stackonet-support-ticket' ),
 				'description'       => __( 'This priority will get applied for newly created ticket.', 'stackonet-support-ticket' ),
@@ -136,7 +147,7 @@ class Settings {
 			),
 			array(
 				'section'           => 'general_settings_section',
-				'id'                => 'ticket_status_after_customer_reply',
+				'id'                => 'support_ticket_status_after_customer_reply',
 				'type'              => 'select',
 				'title'             => __( 'Ticket status after customer reply', 'stackonet-support-ticket' ),
 				'description'       => __( 'This status will be applied to the ticket if customer post reply in ticket.', 'stackonet-support-ticket' ),
@@ -146,7 +157,7 @@ class Settings {
 			),
 			array(
 				'section'           => 'general_settings_section',
-				'id'                => 'ticket_status_after_agent_reply',
+				'id'                => 'support_ticket_status_after_agent_reply',
 				'type'              => 'select',
 				'title'             => __( 'Ticket status after agent reply', 'stackonet-support-ticket' ),
 				'description'       => __( 'This status will be applied to the ticket if agent or any support staff post reply in ticket.', 'stackonet-support-ticket' ),
@@ -156,7 +167,7 @@ class Settings {
 			),
 			array(
 				'section'           => 'general_settings_section',
-				'id'                => 'close_ticket_status',
+				'id'                => 'support_ticket_close_ticket_status',
 				'type'              => 'select',
 				'title'             => __( 'Close ticket status', 'stackonet-support-ticket' ),
 				'description'       => __( 'Status to apply if \'Close Ticket\' button clicked for a ticket.', 'stackonet-support-ticket' ),
@@ -166,7 +177,7 @@ class Settings {
 			),
 			array(
 				'section'     => 'general_settings_section',
-				'id'          => 'allow_customer_close_ticket',
+				'id'          => 'support_ticket_allow_customer_close_ticket',
 				'type'        => 'select',
 				'title'       => __( 'Allow customer to close ticket', 'stackonet-support-ticket' ),
 				'description' => __( 'Enables \'Close Ticket\' button for customer inside open ticket screen.', 'stackonet-support-ticket' ),
@@ -183,7 +194,7 @@ class Settings {
 		$fields = array(
 			array(
 				'section'     => 'colors_settings_section',
-				'id'          => 'primary_color',
+				'id'          => 'support_ticket_primary_color',
 				'type'        => 'color',
 				'title'       => __( 'Primary Color', 'stackonet-support-ticket' ),
 				'description' => __( 'Choose primary color.', 'stackonet-support-ticket' ),
@@ -192,10 +203,10 @@ class Settings {
 			),
 			array(
 				'section'     => 'colors_settings_section',
-				'id'          => 'secondary_color',
+				'id'          => 'support_ticket_secondary_color',
 				'type'        => 'color',
 				'title'       => __( 'Secondary Color', 'stackonet-support-ticket' ),
-				'description' => __( 'Choose secondary color.', 'stackonet-support-ticket' ),
+				'description' => __( 'Choose secondary color. Leave blank if you do not want secondary color.', 'stackonet-support-ticket' ),
 				'priority'    => 105,
 				'default'     => '#9c27b0',
 			),

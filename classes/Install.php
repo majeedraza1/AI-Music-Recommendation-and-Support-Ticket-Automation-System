@@ -140,7 +140,7 @@ class Install {
 	 * Add default options
 	 */
 	private static function add_default_options() {
-		update_option( 'support_ticket_allow_customer_close_ticket', '1' );
+		update_option( 'support_ticket_allow_customer_close_ticket', 'yes' );
 
 		$support_ticket_thankyou_html = __( "<p>Dear {customer_name},</p><p>We have received your ticket and confirmation has been sent to your email address&nbsp;{customer_email}.</p><p>Your ticket id is #{ticket_id}. You will get email notification after we post reply in your ticket but in case email notification failed, you can check your ticket status on below link:</p><p>{ticket_url}</p>", 'supportcandy' );
 		update_option( 'support_ticket_thankyou_html', $support_ticket_thankyou_html );

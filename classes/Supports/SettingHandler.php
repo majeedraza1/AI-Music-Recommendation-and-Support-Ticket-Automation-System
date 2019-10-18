@@ -254,10 +254,17 @@ class SettingHandler {
 
 	/**
 	 * @param array $options
+	 * @param bool $individual
 	 */
-	public function update( array $options ) {
+	public function update( array $options, $individual = false ) {
 		$sanitized_options = $this->sanitize_options( $options );
-		update_option( $this->option_name, $sanitized_options );
+		if ( $individual ) {
+			foreach ( $sanitized_options as $option_name => $option_value ) {
+				update_option( $option_name, $option_value );
+			}
+		} else {
+			update_option( $this->option_name, $sanitized_options );
+		}
 	}
 
 	/**
@@ -314,9 +321,24 @@ class SettingHandler {
 
 	/**
 	 * Get options parsed with default value
+	 *
+	 * @param bool $individual
+	 *
 	 * @return array
 	 */
-	public function get_options() {
+	public function get_options( $individual = false ) {
+
+		if ( $individual ) {
+			$options = [];
+			foreach ( $this->get_fields() as $value ) {
+				$default = isset( $value['default'] ) ? $value['default'] : '';
+
+				$options[ $value['id'] ] = get_option( $value['id'], $default );
+			}
+
+			return $this->options = $options;
+		}
+
 		$defaults = array();
 
 		foreach ( $this->get_fields() as $value ) {
