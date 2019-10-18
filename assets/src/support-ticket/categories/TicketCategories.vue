@@ -1,8 +1,5 @@
 <template>
     <div>
-        <h1 class="wp-heading-inline">Categories</h1>
-        <hr class="wp-header-end"/>
-
         <draggable :list="categories" class="list-group" handle=".handle" @update="updateMenuOrder">
             <div v-for="_category in categories" :key="_category.term_id">
                 <div class="shapla-box shapla-box--role flex w-full content-center mdl-shadow--2dp">

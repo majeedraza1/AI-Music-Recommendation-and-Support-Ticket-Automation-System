@@ -1,8 +1,5 @@
 <template>
     <div>
-        <h1 class="wp-heading-inline">Statuses</h1>
-        <hr class="wp-header-end"/>
-
         <draggable :list="statuses" class="list-group" handle=".handle" @update="updateMenuOrder">
             <div v-for="_status in statuses" :key="_status.term_id">
                 <div class="shapla-box shapla-box--role flex w-full content-center mdl-shadow--2dp">

@@ -1,6 +1,8 @@
 @import "utilities/all";
 @import "utilities-classes/all";
 @import "shapla-box";
+@import "~vue-select/src/scss/vue-select";
+
 body.has-support-ticket .site-content {
 	background: #f5f7fb;
 }

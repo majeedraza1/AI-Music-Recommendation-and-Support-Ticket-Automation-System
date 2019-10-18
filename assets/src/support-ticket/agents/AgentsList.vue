@@ -1,6 +1,5 @@
 <template>
     <div>
-        <div class="clear"></div>
         <tabs>
             <tab name="Support Agents" :selected="true">
                 <data-table

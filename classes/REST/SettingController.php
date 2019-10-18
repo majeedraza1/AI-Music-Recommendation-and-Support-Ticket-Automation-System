@@ -109,8 +109,13 @@ class SettingController extends ApiController {
 			return $this->respondUnauthorized();
 		}
 
-		$settings          = SettingHandler::init();
-		$options           = $request->get_param( 'options' );
+		$settings = SettingHandler::init();
+		$options  = $request->get_param( 'options' );
+
+		if ( current_user_can( 'manage_options' ) ) {
+			$settings->update( $options, true );
+		}
+
 		$sanitized_options = $settings->sanitize_options( $options );
 
 		$defaults = [

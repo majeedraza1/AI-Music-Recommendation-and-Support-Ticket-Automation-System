@@ -40,24 +40,11 @@ class Admin {
 	 * Add admin menu
 	 */
 	public function add_admin_menu() {
-		global $submenu;
 		$capability = 'manage_options';
 		$slug       = 'stackonet-support-ticket';
 		$hook       = add_menu_page( __( 'Support - beta', 'stackonet-toolkit' ), __( 'Support - beta', 'stackonet-toolkit' ),
 			$capability, $slug, [ self::$instance, 'menu_page_callback' ], 'dashicons-format-chat', 6 );
-		$menus      = [
-			[ 'title' => __( 'Tickets', 'stackonet-toolkit' ), 'slug' => '#/' ],
-			[ 'title' => __( 'Agents', 'stackonet-toolkit' ), 'slug' => '#/agents' ],
-			[ 'title' => __( 'Categories', 'stackonet-toolkit' ), 'slug' => '#/categories' ],
-			[ 'title' => __( 'Statuses', 'stackonet-toolkit' ), 'slug' => '#/statuses' ],
-			[ 'title' => __( 'Priorities', 'stackonet-toolkit' ), 'slug' => '#/priorities' ],
-			[ 'title' => __( 'Settings', 'stackonet-toolkit' ), 'slug' => '#/settings' ],
-		];
-		if ( current_user_can( $capability ) ) {
-			foreach ( $menus as $menu ) {
-				$submenu[ $slug ][] = [ $menu['title'], $capability, 'admin.php?page=' . $slug . $menu['slug'] ];
-			}
-		}
+
 		add_action( 'load-' . $hook, [ self::$instance, 'init_support_tickets_hooks' ] );
 	}
 
@@ -65,65 +52,16 @@ class Admin {
 	 * Menu page callback
 	 */
 	public function menu_page_callback() {
-		echo '<div class="wrap"><div id="stackonet-support-tickets-admin"></div></div>';
+		// echo '<div class="wrap"><div id="stackonet-support-tickets-admin"></div></div>';
+		echo '<div class="wrap"><div id="stackonet_support_ticket_list"></div></div>';
+		include STACKONET_SUPPORT_TICKET_PATH . '/assets/icon/icons.svg';
 	}
 
 	/**
 	 * Load required styles and scripts
 	 */
 	public static function init_support_tickets_hooks() {
-		wp_enqueue_style( 'stackonet-support-ticket-admin' );
-		wp_enqueue_script( 'stackonet-support-ticket-admin' );
-
-		$data          = [
-			'root'  => esc_url_raw( rest_url( 'stackonet-support-ticket/v1' ) ),
-			'nonce' => wp_create_nonce( 'wp_rest' ),
-		];
-		$supportTicket = new SupportTicket();
-
-		/** @var WP_Post[] $pages */
-		$pages = get_pages();
-		foreach ( $pages as $page ) {
-			$data['pages'][] = [ 'id' => $page->ID, 'title' => $page->post_title ];
-		}
-
-		$_statuses        = $supportTicket->get_ticket_statuses_terms();
-		$data['statuses'] = [ [ 'key' => 'all', 'label' => 'All Statuses', 'count' => 0, 'active' => true ] ];
-		foreach ( $_statuses as $status ) {
-			$data['statuses'][] = [ 'key' => $status->term_id, 'label' => $status->name, 'count' => 0, ];
-		}
-		$data['statuses'][] = [ 'key' => 'trash', 'label' => 'Trash', 'count' => 0, 'active' => false ];
-
-
-		$_categories        = $supportTicket->get_categories_terms();
-		$data['categories'] = [ [ 'key' => 'all', 'label' => 'All Categories', 'count' => 0, 'active' => true ] ];
-		foreach ( $_categories as $status ) {
-			$data['categories'][] = [ 'key' => $status->term_id, 'label' => $status->name, 'count' => 0, ];
-		}
-
-		$_priorities        = $supportTicket->get_priorities_terms();
-		$data['priorities'] = [ [ 'key' => 'all', 'label' => 'All Priorities', 'count' => 0, 'active' => true ] ];
-		foreach ( $_priorities as $status ) {
-			$data['priorities'][] = [ 'key' => $status->term_id, 'label' => $status->name, 'count' => 0, ];
-		}
-
-		$data['count_trash'] = $supportTicket->count_inactive_records();
-
-		$data['ticket_categories'] = TicketCategory::get_all();
-		$data['ticket_statuses']   = TicketStatus::get_all();
-		$data['ticket_priorities'] = TicketPriority::get_all();
-		$data['support_agents']    = SupportAgent::get_all();
-
-		$user                  = wp_get_current_user();
-		$data['user']          = [
-			'display_name' => $user->display_name,
-			'user_email'   => $user->user_email,
-		];
-		$data['cities']        = ( new SupportTicket() )->find_all_cities();
-		$data['caps_settings'] = AgentRole::form_settings();
-
-		$data['search_categories'] = (array) get_option( 'stackonet_ticket_search_categories' );
-
-		wp_localize_script( 'stackonet-support-ticket-admin', 'SupportTickets', $data );
+		wp_enqueue_style( STACKONET_SUPPORT_TICKET . '-frontend' );
+		wp_enqueue_script( STACKONET_SUPPORT_TICKET . '-frontend' );
 	}
 }

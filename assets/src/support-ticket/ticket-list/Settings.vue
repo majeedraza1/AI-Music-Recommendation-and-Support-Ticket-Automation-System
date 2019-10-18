@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <h1 class="wp-heading-inline">Settings</h1>
-        <hr class="wp-header-end">
+    <div class="stackonet-support-ticket-settings">
         <tabs>
             <tab v-for="(panel,index) in panels" :key="panel.id" :name="panel.title" :selected="index === 0">
                 <template v-for="section in sections" v-if="panel.id === section.panel">
@@ -25,9 +23,6 @@
                                     <template v-else-if="field.type === 'radio'">
                                         <radio-buttons :options="field" v-model="options[field.id]"></radio-buttons>
                                     </template>
-                                    <template v-else-if="field.type === 'color'">
-                                        <color-picker v-model="options[field.id]"></color-picker>
-                                    </template>
                                     <template v-else-if="field.type === 'select'">
                                         <select class="regular-text" v-model="options[field.id]">
                                             <option value="">-- Choose --</option>
@@ -46,25 +41,48 @@
                     </table>
 
                 </template>
+                <p class="submit">
+                    <input type="submit" class="button stackonet-primary" value="Save Changes"
+                           @click.prevent="saveOptions">
+                </p>
+            </tab>
+
+            <tab name="Categories">
+                <ticket-categories></ticket-categories>
+            </tab>
+
+            <tab name="Priorities">
+                <ticket-priorities></ticket-priorities>
+            </tab>
+
+            <tab name="Statuses">
+                <ticket-statuses></ticket-statuses>
+            </tab>
+
+            <tab name="Agents">
+                <agents-list></agents-list>
             </tab>
         </tabs>
-
-        <p class="submit">
-            <input type="submit" class="button button-primary" value="Save Changes" @click.prevent="saveOptions">
-        </p>
     </div>
 </template>
 
 <script>
+
     import axios from 'axios';
     import {tabs, tab} from 'shapla-tabs';
     import radioButtons from "shapla-radio-buttons";
     import Switches from "../../components/Switches";
-    import ColorPicker from "../../wp/ColorPicker";
+    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import TicketCategories from "../../support-ticket/categories/TicketCategories";
+    import TicketPriorities from "../../support-ticket/priorities/TicketPriorities";
+    import AgentsList from "../../support-ticket/agents/AgentsList";
+    import TicketStatuses from "../../support-ticket/statuses/TicketStatuses";
 
     export default {
         name: "Settings",
-        components: {ColorPicker, tabs, tab, radioButtons, Switches},
+        components: {
+            TicketStatuses, AgentsList, TicketPriorities, TicketCategories, MdlButton, tabs, tab, radioButtons, Switches
+        },
         data() {
             return {
                 options: {},
@@ -73,14 +91,17 @@
                 fields: [],
             }
         },
-        computed: {},
         mounted() {
             this.$store.commit('SET_LOADING_STATUS', false);
+            this.$store.commit('SET_SHOW_SIDE_NAVE', false);
             this.getSettingsFields();
         },
         methods: {
+            backToTicketList() {
+                this.$router.push({name: 'SupportTicketList'})
+            },
             getSettingsFields() {
-                axios.get('settings').then(response => {
+                axios.get('settings', {params: {user_options: true}}).then(response => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     let data = response.data.data;
                     this.panels = data.panels;
@@ -94,7 +115,7 @@
             },
             saveOptions() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('settings', {options: this.options}).then(() => {
+                axios.post('settings/user', {options: this.options}).then(() => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Success!',
@@ -115,6 +136,13 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss">
+    .stackonet-support-ticket-settings {
 
+        table.form-table {
+            th {
+                vertical-align: top;
+            }
+        }
+    }
 </style>

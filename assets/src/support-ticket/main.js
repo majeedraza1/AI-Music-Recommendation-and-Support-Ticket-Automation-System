@@ -1,25 +1,22 @@
 import Vue from 'vue';
-import router from './routers.js';
-import store from './store.js';
-import menuFix from "./utils/admin-menu-fix.js";
-import SupportTicket from './tickets/SupportTicket.vue'
-import {modal} from 'shapla-confirm-modal'
+import SupportTicket from './ticket-list/SupportTicket'
 import axios from "axios";
+import store from './store'
+import router from "./routers";
+import {modal} from 'shapla-confirm-modal'
 
 Vue.config.productionTip = false;
 
 Vue.use(modal);
 
-if (window.SupportTickets.nonce) {
-    axios.defaults.headers.common['X-WP-Nonce'] = window.SupportTickets.nonce;
+if (window.StackonetToolkit.restNonce) {
+    axios.defaults.headers.common['X-WP-Nonce'] = window.StackonetToolkit.restNonce;
 }
 
-axios.defaults.baseURL = window.SupportTickets.root;
+axios.defaults.baseURL = window.StackonetToolkit.restRoot;
 
-let el = document.querySelector('#stackonet-support-tickets-admin');
+let el = document.querySelector('#stackonet_support_ticket_list');
 if (el) {
-    new Vue({el: el, store: store, router: router, render: h => h(SupportTicket)});
+    document.querySelector('body').classList.add('has-support-ticket');
+    new Vue({el, store, router, render: h => h(SupportTicket)});
 }
-
-// fix the admin menu for the slug "stackonet-support-ticket"
-menuFix('stackonet-support-ticket');

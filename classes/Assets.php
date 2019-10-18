@@ -2,6 +2,8 @@
 
 namespace StackonetSupportTicket;
 
+use StackonetSupportTicket\Models\AgentRole;
+
 defined( 'ABSPATH' ) || exit;
 
 class Assets {
@@ -72,7 +74,7 @@ class Assets {
 		$this->assets_url  = STACKONET_SUPPORT_TICKET_ASSETS;
 
 		if ( $this->is_script_debug_enabled() ) {
-			$this->version = time();
+			$this->version = $this->version . '-' . time();
 		}
 
 		$this->register_scripts( $this->get_scripts() );
@@ -116,19 +118,9 @@ class Assets {
 	 */
 	public function get_scripts() {
 		$scripts = [
-			'tinymce-editor'                 => [
-				'src'       => includes_url( 'js/tinymce/tinymce.min.js' ),
-				'deps'      => [],
-				'in_footer' => true
-			],
 			$this->plugin_name . '-frontend' => [
 				'src'       => $this->assets_url . '/js/frontend.js',
-				'deps'      => [ 'tinymce-editor' ],
-				'in_footer' => true
-			],
-			$this->plugin_name . '-admin'    => [
-				'src'       => $this->assets_url . '/js/admin.js',
-				'deps'      => [ 'tinymce-editor', 'wp-color-picker' ],
+				'deps'      => [ 'wp-tinymce' ],
 				'in_footer' => true
 			]
 		];
@@ -145,11 +137,7 @@ class Assets {
 		$styles = [
 			$this->plugin_name . '-frontend' => [
 				'src' => $this->assets_url . '/css/frontend.css'
-			],
-			$this->plugin_name . '-admin'    => [
-				'src'  => $this->assets_url . '/css/admin.css',
-				'deps' => [ 'wp-color-picker' ],
-			],
+			]
 		];
 
 		return $styles;
@@ -174,6 +162,10 @@ class Assets {
 			$data['restNonce']    = wp_create_nonce( 'wp_rest' );
 			$data['display_name'] = $current_user->display_name;
 			$data['user_email']   = $current_user->user_email;
+		}
+
+		if ( current_user_can( 'manage_options' ) ) {
+			$data['caps_settings'] = AgentRole::form_settings();
 		}
 
 		echo '<script>window.StackonetToolkit = ' . wp_json_encode( $data ) . '</script>';
