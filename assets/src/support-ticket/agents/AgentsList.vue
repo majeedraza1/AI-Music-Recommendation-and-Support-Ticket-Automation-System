@@ -311,14 +311,6 @@
         align-items: center;
     }
 
-    .button-add-agent-container,
-    .button-add-role-container {
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        z-index: 10;
-    }
-
     .agent-capabilities {
         margin-bottom: 16px;
     }

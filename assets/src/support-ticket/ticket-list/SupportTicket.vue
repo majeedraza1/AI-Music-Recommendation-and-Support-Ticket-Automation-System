@@ -127,12 +127,15 @@
 </script>
 
 <style lang="scss">
-    @import "../../material-design-lite/shadow/shadow";
-
     .Support-ticket-wrapper {
         display: flex;
         justify-content: space-between;
         min-height: 80vh;
+
+        svg {
+            color: var(--stackonet-ticket-text-icon, rgba(0, 0, 0, 0.38));
+            fill: var(--stackonet-ticket-text-icon, rgba(0, 0, 0, 0.38));
+        }
     }
 
     .admin-support-tickets-container {

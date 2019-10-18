@@ -41,10 +41,14 @@
                     </table>
 
                 </template>
-                <p class="submit">
-                    <input type="submit" class="button stackonet-primary" value="Save Changes"
-                           @click.prevent="saveOptions">
-                </p>
+                <div class="button-save-settings-container">
+                    <mdl-fab @click="saveOptions">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+                        </svg>
+                    </mdl-fab>
+                </div>
             </tab>
 
             <tab name="Categories">
@@ -77,10 +81,12 @@
     import TicketPriorities from "../../support-ticket/priorities/TicketPriorities";
     import AgentsList from "../../support-ticket/agents/AgentsList";
     import TicketStatuses from "../../support-ticket/statuses/TicketStatuses";
+    import MdlFab from "../../material-design-lite/button/mdlFab";
 
     export default {
         name: "Settings",
         components: {
+            MdlFab,
             TicketStatuses, AgentsList, TicketPriorities, TicketCategories, MdlButton, tabs, tab, radioButtons, Switches
         },
         data() {
