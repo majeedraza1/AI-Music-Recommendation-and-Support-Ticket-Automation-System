@@ -128,7 +128,7 @@ class Assets {
 			],
 			$this->plugin_name . '-admin'    => [
 				'src'       => $this->assets_url . '/js/admin.js',
-				'deps'      => [ 'wp-color-picker' ],
+				'deps'      => [ 'tinymce-editor', 'wp-color-picker' ],
 				'in_footer' => true
 			]
 		];

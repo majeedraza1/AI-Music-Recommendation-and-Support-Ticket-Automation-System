@@ -2,10 +2,10 @@
 	<div class="stackont-single-support-ticket-container">
 
 		<div class="stackont-single-support-ticket-actions">
-			<mdl-button type="raised" color="primary" @click="openNewTicket">
+			<mdl-button class="stackonet-primary" type="raised" color="primary" @click="openNewTicket">
 				New Ticket
 			</mdl-button>
-			<mdl-button type="raised" color="default" @click="ticketList">
+			<mdl-button class="stackonet-primary" type="raised" color="default" @click="ticketList">
 				Ticket List
 			</mdl-button>
 		</div>
@@ -25,8 +25,8 @@
 					<div>
 						<editor :init="mce" v-model="content"></editor>
 						<div style="text-align: right;margin-top:10px;" v-show="content.length">
-							<mdl-button type="raised" color="default" @click="addNote">Add Note</mdl-button>
-							<mdl-button type="raised" color="primary" @click="submitReply">Submit Reply</mdl-button>
+							<mdl-button class="stackonet-primary" type="raised" color="default" @click="addNote">Add Note</mdl-button>
+							<mdl-button class="stackonet-primary" type="raised" color="primary" @click="submitReply">Submit Reply</mdl-button>
 						</div>
 					</div>
 
@@ -210,7 +210,7 @@
 		<modal :active="activeThreadModal" title="Edit this Thread" @close="closeThreadEditor">
 			<editor :init="mce" v-model="activeThreadContent"></editor>
 			<template slot="foot">
-				<mdl-button @click="updateThread">Save</mdl-button>
+				<mdl-button class="stackonet-primary" @click="updateThread">Save</mdl-button>
 			</template>
 		</modal>
 
@@ -231,7 +231,7 @@
 				</select>
 			</list-item>
 			<template slot="foot">
-				<mdl-button @click="updateTicketStatus">Save</mdl-button>
+				<mdl-button class="stackonet-primary" @click="updateTicketStatus">Save</mdl-button>
 			</template>
 		</modal>
 
@@ -250,7 +250,7 @@
 				</div>
 			</template>
 			<template slot="foot">
-				<mdl-button @click="updateAssignAgents">Save</mdl-button>
+				<mdl-button class="stackonet-primary" @click="updateAssignAgents">Save</mdl-button>
 			</template>
 		</modal>
 

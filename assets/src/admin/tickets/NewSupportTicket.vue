@@ -3,7 +3,7 @@
 
 		<div class="display-flex justify-space-between">
 			<div class="flex-item">
-				<mdl-button type="raised" color="default" @click="ticketList">
+				<mdl-button class="stackonet-primary" type="raised" color="default" @click="ticketList">
 					<icon><i class="fa fa-list" aria-hidden="true"></i></icon>
 					Ticket List
 				</mdl-button>
@@ -62,7 +62,7 @@
 
 			<column :desktop="12">
 				<div class="form-field">
-					<mdl-button type="raised" color="primary" :disabled="!canSubmit" @click="submitTicket">Submit
+					<mdl-button class="stackonet-primary" type="raised" color="primary" :disabled="!canSubmit" @click="submitTicket">Submit
 						Ticket
 					</mdl-button>
 				</div>

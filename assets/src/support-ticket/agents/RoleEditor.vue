@@ -21,7 +21,7 @@
             </columns>
         </div>
         <template slot="foot">
-            <mdl-button type="raised" color="primary" @click="submit">{{btnSave}}</mdl-button>
+            <mdl-button class="stackonet-primary" type="raised" color="primary" @click="submit">{{btnSave}}</mdl-button>
         </template>
     </modal>
 </template>

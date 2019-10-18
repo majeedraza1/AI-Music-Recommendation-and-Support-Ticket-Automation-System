@@ -48,7 +48,7 @@
         </tabs>
 
         <p class="submit">
-            <input type="submit" class="button button-primary" value="Save Changes" @click.prevent="saveOptions">
+            <input type="submit" class="button stackonet-primary" value="Save Changes" @click.prevent="saveOptions">
         </p>
     </div>
 </template>

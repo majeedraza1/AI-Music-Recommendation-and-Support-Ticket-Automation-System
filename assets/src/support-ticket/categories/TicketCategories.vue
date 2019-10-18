@@ -38,7 +38,7 @@
             <animated-input v-model="categoryName" label="Category"></animated-input>
             <div class="help has-error" v-if="categoryNameError.length">{{categoryNameError}}</div>
             <template slot="foot">
-                <mdl-button type="raised" color="primary" :disabled="categoryName.length < 3" @click="createCategory">
+                <mdl-button class="stackonet-primary" type="raised" color="primary" :disabled="categoryName.length < 3" @click="createCategory">
                     Create
                 </mdl-button>
             </template>

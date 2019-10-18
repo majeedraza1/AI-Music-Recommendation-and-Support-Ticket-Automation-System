@@ -53,7 +53,7 @@
 
             <column :desktop="12">
                 <div class="form-field">
-                    <mdl-button type="raised" color="primary" :disabled="!canSubmit" @click="submitTicket">Submit
+                    <mdl-button type="raised" color="primary" class="stackonet-primary" :disabled="!canSubmit" @click="submitTicket">Submit
                         Ticket
                     </mdl-button>
                 </div>

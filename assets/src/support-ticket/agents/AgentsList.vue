@@ -35,7 +35,7 @@
                         </columns>
                     </div>
                     <template slot="foot">
-                        <mdl-button type="raised" color="primary" :disabled="!canCreateAgent" @click="createNewAgent">
+                        <mdl-button class="stackonet-primary" type="raised" color="primary" :disabled="!canCreateAgent" @click="createNewAgent">
                             Create
                         </mdl-button>
                     </template>
@@ -48,7 +48,7 @@
                         </select>
                     </div>
                     <template slot="foot">
-                        <mdl-button type="raised" color="primary" @click="updateAgentRole">
+                        <mdl-button class="stackonet-primary" type="raised" color="primary" @click="updateAgentRole">
                             Create
                         </mdl-button>
                     </template>

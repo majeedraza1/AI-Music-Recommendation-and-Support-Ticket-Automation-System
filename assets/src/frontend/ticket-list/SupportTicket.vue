@@ -4,7 +4,7 @@
         <div class="support-tickets-side-nav">
 
             <div v-if="!showSideNav" class="support-tickets-side-nav__back-button">
-                <mdl-button type="raised" color="primary" @click="backToTicketList">
+                <mdl-button class="stackonet-primary" type="raised" color="primary" @click="backToTicketList">
                     Back
                 </mdl-button>
             </div>

@@ -6,9 +6,9 @@
  * Author: Stackonet Services (Pvt.) Ltd.
  * Author URI: https://stackonet.com/
  * Requires at least: 4.9
- * Tested up to: 5.2
+ * Tested up to: 5.3
  * Text Domain: stackonet-support-ticket
- * Domain Path: /lang
+ * Domain Path: /languages
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -145,8 +145,6 @@ class StackonetSupportTicket {
 	 * Function to run on plugin activation
 	 */
 	public function activation() {
-		StackonetSupportTicket\RoleAndCapability::activation();
-		( new  StackonetSupportTicket\Models\SupportTicket )->create_table();
 		StackonetSupportTicket\Install::init();
 	}
 

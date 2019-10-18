@@ -1,6 +1,21 @@
 .stackonet-primary {
-	//background-color: $primary !important;
-	background-color: #dde0f9 !important;
-	//color: $on-primary !important;
-	color: #000 !important;
+	background-color: var(--stackonet-ticket-primary, #dde0f9) !important;
+	color: var(--stackonet-ticket-on-primary, #000) !important;
+}
+
+.stackonet-secondary {
+	background-color: var(--stackonet-ticket-secondary, #dde0f9) !important;
+	color: var(--stackonet-ticket-on-secondary, #000) !important;
+}
+
+.stackonet-text-primary {
+	color: var(--stackonet-ticket-text-primary, rgba(0, 0, 0, 0.87)) !important;
+}
+
+.stackonet-text-secondary {
+	color: var(--stackonet-ticket-text-secondary, rgba(0, 0, 0, 0.54)) !important;
+}
+
+.stackonet-text-icon {
+	color: var(--stackonet-ticket-text-icon, rgba(0, 0, 0, 0.38)) !important;
 }

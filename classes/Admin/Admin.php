@@ -30,13 +30,16 @@ class Admin {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
-			add_action( 'admin_menu', [ self::$instance, 'support_ticket_menu' ] );
+			add_action( 'admin_menu', [ self::$instance, 'add_admin_menu' ] );
 		}
 
 		return self::$instance;
 	}
 
-	public function support_ticket_menu() {
+	/**
+	 * Add admin menu
+	 */
+	public function add_admin_menu() {
 		global $submenu;
 		$capability = 'manage_options';
 		$slug       = 'stackonet-support-ticket';
@@ -58,24 +61,11 @@ class Admin {
 		add_action( 'load-' . $hook, [ self::$instance, 'init_support_tickets_hooks' ] );
 	}
 
-	public function menu_page_callback() {
-		echo '<div class="wrap"><div id="stackonet-support-tickets-admin"></div></div>';
-		add_action( 'admin_footer', [ $this, 'tinymce_script' ], 9 );
-	}
-
 	/**
 	 * Menu page callback
 	 */
-	public function support_tickets_callback() {
-		add_action( 'admin_footer', [ $this, 'tinymce_script' ], 9 );
-		echo '<div class="wrap"><div id="admin-stackonet-support-tickets"></div></div>';
-	}
-
-	/**
-	 * Load tinymce scripts
-	 */
-	public function tinymce_script() {
-		echo '<script type="text/javascript" src="' . includes_url( 'js/tinymce/tinymce.min.js' ) . '"></script>';
+	public function menu_page_callback() {
+		echo '<div class="wrap"><div id="stackonet-support-tickets-admin"></div></div>';
 	}
 
 	/**

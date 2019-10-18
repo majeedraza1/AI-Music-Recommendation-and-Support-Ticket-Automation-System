@@ -27,6 +27,7 @@
 			getClasses() {
 				return {
 					'mdl-button--colored': this.colored,
+					'stackonet-primary': this.colored,
 					'mdl-js-ripple-effect': this.ripple,
 					'mdl-button--mini-fab': this.mini,
 				}

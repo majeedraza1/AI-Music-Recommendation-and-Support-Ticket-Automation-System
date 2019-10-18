@@ -36,6 +36,7 @@
 					'mdl-button--raised': this.type === 'raised',
 					'mdl-button--colored': this.color === 'primary' && this.type !== 'flat',
 					'mdl-button--primary': this.color === 'primary' && this.type === 'flat',
+					'stackonet-primary': this.color === 'primary' && this.type === 'flat',
 					'mdl-button--accent': this.color === 'accent',
 				}
 			}

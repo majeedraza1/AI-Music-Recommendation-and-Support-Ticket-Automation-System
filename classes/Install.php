@@ -2,8 +2,10 @@
 
 namespace StackonetSupportTicket;
 
+use StackonetSupportTicket\Admin\PostType;
 use StackonetSupportTicket\Models\AgentRole;
 use StackonetSupportTicket\Models\SupportAgent;
+use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketCategory;
 use StackonetSupportTicket\Models\TicketPriority;
 use StackonetSupportTicket\Models\TicketStatus;
@@ -29,9 +31,15 @@ class Install {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
+
+			RoleAndCapability::activation();
+			PostType::activation();
+
+			( new  SupportTicket )->create_table();
+			self::create_meta_table();
+
 			self::add_default_roles();
 			self::add_support_ticket_agents();
-			self::create_meta_table();
 			self::add_default_data();
 			self::add_default_options();
 		}

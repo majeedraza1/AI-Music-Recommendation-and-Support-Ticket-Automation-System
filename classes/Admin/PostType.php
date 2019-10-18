@@ -30,6 +30,14 @@ class PostType {
 	}
 
 	/**
+	 * Run this function on plugin activation
+	 */
+	public static function activation() {
+		( new static() )->register_post_type();
+		( new static() )->register_taxonomy();
+	}
+
+	/**
 	 * Register post types
 	 */
 	public function register_post_type() {
