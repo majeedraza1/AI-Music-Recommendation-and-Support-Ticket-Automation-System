@@ -168,10 +168,10 @@ export default new Vuex.Store({
     // Save as Vue computed property
     getters: {
         display_name() {
-            return window.StackonetToolkit.display_name;
+            return window.StackonetSupportTicket.display_name;
         },
         user_email() {
-            return window.StackonetToolkit.user_email;
+            return window.StackonetSupportTicket.user_email;
         }
     },
 });

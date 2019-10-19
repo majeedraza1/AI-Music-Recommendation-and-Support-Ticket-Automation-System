@@ -169,7 +169,7 @@
                 this.selectedItems = ids;
             },
             exportExcel() {
-                let ajaxurl = window.StackonetToolkit.ajaxurl;
+                let ajaxurl = window.StackonetSupportTicket.ajaxurl;
                 window.location.href = `${ajaxurl}?action=download_support_ticket&ticket_status=${this.status}&ticket_category=${this.category}&ticket_priority=${this.priority}`;
             },
             onActionClick(action, item) {

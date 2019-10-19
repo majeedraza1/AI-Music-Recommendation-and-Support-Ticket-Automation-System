@@ -90,7 +90,7 @@
         },
         computed: {
             caps_settings() {
-                return StackonetToolkit.caps_settings;
+                return StackonetSupportTicket.caps_settings;
             }
         },
         methods: {

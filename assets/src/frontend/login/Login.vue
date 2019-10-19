@@ -58,7 +58,7 @@
         },
         computed: {
             lostPasswordUrl() {
-                return StackonetToolkit.lostPasswordUrl;
+                return StackonetSupportTicket.lostPasswordUrl;
             },
             canSubmit() {
                 return !!(this.user_login.length >= 4 && this.password.length >= 4);

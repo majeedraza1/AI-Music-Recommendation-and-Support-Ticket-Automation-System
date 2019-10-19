@@ -168,6 +168,6 @@ class Assets {
 			$data['caps_settings'] = AgentRole::form_settings();
 		}
 
-		echo '<script>window.StackonetToolkit = ' . wp_json_encode( $data ) . '</script>';
+		echo '<script>window.StackonetSupportTicket = ' . wp_json_encode( $data ) . '</script>';
 	}
 }

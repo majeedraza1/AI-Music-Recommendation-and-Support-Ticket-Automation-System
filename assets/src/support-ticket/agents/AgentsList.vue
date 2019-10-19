@@ -265,7 +265,7 @@
                 })
             },
             fetchUsers(search, loading) {
-                axios.get(StackonetToolkit.wpRestRoot + '/users', {
+                axios.get(StackonetSupportTicket.wpRestRoot + '/users', {
                     params: {search: search}
                 }).then(response => {
                     let _data = response.data;
