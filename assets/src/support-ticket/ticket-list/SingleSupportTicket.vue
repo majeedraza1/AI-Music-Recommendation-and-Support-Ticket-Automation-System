@@ -359,7 +359,7 @@
                     return;
                 }
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('support-ticket/' + this.id + '/sms', {
+                axios.post(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id + '/sms', {
                     content: this.ticket_twilio_sms_content,
                     send_to_customer: this.ticket_twilio_sms_customer_phone,
                     send_to_custom_number: this.ticket_twilio_sms_enable_custom_phone,
@@ -434,7 +434,7 @@
             },
             updateAssignAgents() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('support-ticket/' + this.id + '/agent', {agents_ids: this.support_agents_ids}).then(() => {
+                axios.post(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id + '/agent', {agents_ids: this.support_agents_ids}).then(() => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     this.activeAgentModal = false;
                     this.support_agents_ids = [];
@@ -456,7 +456,7 @@
             },
             updateTicketStatus() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.put('support-ticket/' + this.id, {
+                axios.put(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id, {
                     ticket_category: this.ticket_category,
                     ticket_priority: this.ticket_priority,
                     ticket_status: this.ticket_status,
@@ -474,7 +474,7 @@
             },
             updateSubject() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.put('support-ticket/' + this.id, {
+                axios.put(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id, {
                     ticket_subject: this.ticket_subject,
                 }).then(() => {
                     this.$store.commit('SET_LOADING_STATUS', false);
@@ -488,7 +488,7 @@
             },
             addThread(thread_type, thread_content) {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('support-ticket/' + this.id + '/thread/', {
+                axios.post(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id + '/thread/', {
                     thread_type: thread_type,
                     thread_content: thread_content,
                 }).then(() => {
@@ -502,7 +502,7 @@
             },
             updateThread() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.put('support-ticket/' + this.id + '/thread/' + this.activeThread.thread_id, {
+                axios.put(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id + '/thread/' + this.activeThread.thread_id, {
                     post_content: this.activeThreadContent,
                 }).then(() => {
                     this.$store.commit('SET_LOADING_STATUS', false);
@@ -518,7 +518,7 @@
             deleteThread(thread) {
                 if (confirm('Are you sure to delete this thread?')) {
                     this.$store.commit('SET_LOADING_STATUS', true);
-                    axios.delete('support-ticket/' + this.id + '/thread/' + thread.thread_id).then(() => {
+                    axios.delete(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id + '/thread/' + thread.thread_id).then(() => {
                         this.$store.commit('SET_LOADING_STATUS', false);
                         this.getItem();
                     }).catch(error => {
@@ -538,7 +538,7 @@
             },
             getItem() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.get('support-ticket/' + this.id).then(response => {
+                axios.get(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id).then(response => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     this.item = response.data.data.ticket;
                     this.threads = response.data.data.threads;

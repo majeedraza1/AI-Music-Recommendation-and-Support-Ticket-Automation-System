@@ -34,7 +34,8 @@
                         </columns>
                     </div>
                     <template slot="foot">
-                        <mdl-button class="stackonet-primary" type="raised" color="primary" :disabled="!canCreateAgent" @click="createNewAgent">
+                        <mdl-button class="stackonet-primary" type="raised" color="primary" :disabled="!canCreateAgent"
+                                    @click="createNewAgent">
                             Create
                         </mdl-button>
                     </template>
@@ -166,7 +167,7 @@
                 }
             },
             trashAction(item) {
-                this.delete_item('agents/' + item).then(() => {
+                this.delete_item(StackonetSupportTicket.restRoot + '/agents/' + item).then(() => {
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Success!',
                         message: 'Support agent has been deleted.',
@@ -184,14 +185,14 @@
                 });
             },
             getAgents() {
-                this.get_item('agents').then(data => {
+                this.get_item(StackonetSupportTicket.restRoot + '/agents').then(data => {
                     this.agents = data.items;
                 }).catch(error => {
                     console.log(error);
                 })
             },
             getRoles() {
-                this.get_item('roles').then(data => {
+                this.get_item(StackonetSupportTicket.restRoot + '/roles').then(data => {
                     this.roles = data.roles;
                 }).catch(error => {
                     console.log(error);
@@ -212,7 +213,7 @@
             deleteRole(role) {
                 this.$modal.confirm('Are you sure to delete this role?').then(confirm => {
                     if (confirm) {
-                        this.delete_item('role', {params: {role: role.role}}).then(() => {
+                        this.delete_item(StackonetSupportTicket.restRoot + '/role', {params: {role: role.role}}).then(() => {
                             this.$delete(this.roles, this.roles.indexOf(role));
                         }).catch(error => {
                             if (error.response.data.message) {
@@ -227,7 +228,7 @@
                 })
             },
             addNewRole(role) {
-                this.create_item('roles', role).then(() => {
+                this.create_item(StackonetSupportTicket.restRoot + '/roles', role).then(() => {
                     this.closeAddNewRoleModal();
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Created!',
@@ -246,7 +247,7 @@
                 })
             },
             updateRole(role) {
-                this.update_item('role', role).then(() => {
+                this.update_item(StackonetSupportTicket.restRoot + '/role', role).then(() => {
                     this.closeEditRoleModal();
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Updated!',
@@ -280,7 +281,7 @@
             },
             createNewAgent() {
                 this.agentError = '';
-                this.create_item('agents', {
+                this.create_item(StackonetSupportTicket.restRoot + '/agents', {
                     user_id: this.addAgentActiveAgent.id,
                     role_id: this.addAgentActiveRole.role,
                 }).then(() => {
@@ -291,7 +292,7 @@
                 });
             },
             updateAgentRole() {
-                this.update_item('agents/' + this.editAgentActiveAgent.term_id, {
+                this.update_item(StackonetSupportTicket.restRoot + '/agents/' + this.editAgentActiveAgent.term_id, {
                     role_id: this.editAgentActiveAgent.role_id,
                 }).then(() => {
                     this.showEditAgentModal = false;

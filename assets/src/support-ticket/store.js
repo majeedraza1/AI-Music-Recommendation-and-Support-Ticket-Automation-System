@@ -97,7 +97,7 @@ export default new Vuex.Store({
     actions: {
         getTickets({commit, state}) {
             commit('SET_LOADING_STATUS', true);
-            axios.get('tickets',
+            axios.get(StackonetSupportTicket.restRoot + '/tickets',
                 {
                     params: {
                         ticket_status: state.status,
@@ -125,7 +125,7 @@ export default new Vuex.Store({
         },
         getCategories({commit}) {
             commit('SET_LOADING_STATUS', true);
-            axios.get('categories').then(response => {
+            axios.get(StackonetSupportTicket.restRoot + '/categories').then(response => {
                 commit('SET_LOADING_STATUS', false);
                 commit('SET_CATEGORIES', response.data.data.items);
             }).catch(error => {
@@ -135,7 +135,7 @@ export default new Vuex.Store({
         },
         getPriorities({commit}) {
             commit('SET_LOADING_STATUS', true);
-            axios.get('priorities').then(response => {
+            axios.get(StackonetSupportTicket.restRoot + '/priorities').then(response => {
                 commit('SET_LOADING_STATUS', false);
                 commit('SET_PRIORITIES', response.data.data.items);
             }).catch(error => {
@@ -145,7 +145,7 @@ export default new Vuex.Store({
         },
         getStatuses({commit}) {
             commit('SET_LOADING_STATUS', true);
-            axios.get('statuses').then(response => {
+            axios.get(StackonetSupportTicket.restRoot + '/statuses').then(response => {
                 commit('SET_LOADING_STATUS', false);
                 commit('SET_STATUSES', response.data.data.items);
             }).catch(error => {
@@ -155,7 +155,7 @@ export default new Vuex.Store({
         },
         getAgents({commit}) {
             commit('SET_LOADING_STATUS', true);
-            axios.get('agents').then(response => {
+            axios.get(StackonetSupportTicket.restRoot + '/agents').then(response => {
                 commit('SET_LOADING_STATUS', false);
                 commit('SET_AGENTS', response.data.data.items);
             }).catch(error => {

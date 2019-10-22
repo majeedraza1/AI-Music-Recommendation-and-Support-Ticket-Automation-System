@@ -87,14 +87,14 @@
         },
         methods: {
             getPriorities() {
-                this.get_item('priorities').then(data => {
+                this.get_item(StackonetSupportTicket.restRoot + '/priorities').then(data => {
                     this.priorities = data.items;
                 }).catch(error => {
                     console.log(error);
                 })
             },
             createPriority() {
-                this.create_item('priorities', {name: this.priorityName}).then(() => {
+                this.create_item(StackonetSupportTicket.restRoot + '/priorities', {name: this.priorityName}).then(() => {
                     this.showAddPriorityModal = false;
                     this.getPriorities();
                 }).catch(error => {
@@ -107,7 +107,7 @@
             },
             updatePriority() {
                 this.editError = '';
-                this.create_item('priorities/' + this.editActivePriority.term_id, {
+                this.create_item(StackonetSupportTicket.restRoot + '/priorities/' + this.editActivePriority.term_id, {
                     name: this.editActivePriority.name,
                     slug: this.editActivePriority.slug,
                 }).then(() => {
@@ -121,7 +121,7 @@
             deletePriority(priority) {
                 this.$modal.confirm('Are you sure to delete this priority?').then(confirm => {
                     if (confirm) {
-                        this.delete_item('priorities/' + priority.term_id).then(() => {
+                        this.delete_item(StackonetSupportTicket.restRoot + '/priorities/' + priority.term_id).then(() => {
                             this.$store.commit('SET_SNACKBAR', {
                                 title: 'Success!',
                                 message: 'Priority has been deleted?',
@@ -136,7 +136,7 @@
             },
             updateMenuOrder() {
                 let menu_orders = this.priorities.map(el => el.term_id);
-                this.create_item('priorities/batch', {menu_orders: menu_orders}).then(() => {
+                this.create_item(StackonetSupportTicket.restRoot + '/priorities/batch', {menu_orders: menu_orders}).then(() => {
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Success!',
                         message: 'Priority orders have been updated.',

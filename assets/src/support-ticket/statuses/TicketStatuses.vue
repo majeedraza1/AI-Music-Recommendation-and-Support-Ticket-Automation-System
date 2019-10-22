@@ -87,14 +87,14 @@
         },
         methods: {
             getStatuses() {
-                this.get_item('statuses').then(data => {
+                this.get_item(StackonetSupportTicket.restRoot + '/statuses').then(data => {
                     this.statuses = data.items;
                 }).catch(error => {
                     console.log(error);
                 })
             },
             createStatus() {
-                this.create_item('statuses', {name: this.statusName}).then(() => {
+                this.create_item(StackonetSupportTicket.restRoot + '/statuses', {name: this.statusName}).then(() => {
                     this.showAddStatusModal = false;
                     this.getStatuses();
                 }).catch(error => {
@@ -107,7 +107,7 @@
             },
             updateStatus() {
                 this.editError = '';
-                this.create_item('statuses/' + this.editActiveStatus.term_id, {
+                this.create_item(StackonetSupportTicket.restRoot + '/statuses/' + this.editActiveStatus.term_id, {
                     name: this.editActiveStatus.name,
                     slug: this.editActiveStatus.slug,
                 }).then(() => {
@@ -121,7 +121,7 @@
             deleteStatus(status) {
                 this.$modal.confirm('Are you sure to delete this status?').then(confirm => {
                     if (confirm) {
-                        this.delete_item('statuses/' + status.term_id).then(() => {
+                        this.delete_item(StackonetSupportTicket.restRoot + '/statuses/' + status.term_id).then(() => {
                             this.$store.commit('SET_SNACKBAR', {
                                 title: 'Success!',
                                 message: 'Status has been deleted?',
@@ -136,7 +136,7 @@
             },
             updateMenuOrder() {
                 let menu_orders = this.statuses.map(el => el.term_id);
-                this.create_item('statuses/batch', {menu_orders: menu_orders}).then(() => {
+                this.create_item(StackonetSupportTicket.restRoot + '/statuses/batch', {menu_orders: menu_orders}).then(() => {
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Success!',
                         message: 'Status orders have been updated.',

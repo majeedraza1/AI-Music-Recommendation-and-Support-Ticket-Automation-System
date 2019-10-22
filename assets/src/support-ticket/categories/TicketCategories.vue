@@ -96,14 +96,14 @@
         },
         methods: {
             getCategories() {
-                this.get_item('categories').then(data => {
+                this.get_item(StackonetSupportTicket.restRoot + '/categories').then(data => {
                     this.categories = data.items;
                 }).catch(error => {
                     console.log(error);
                 })
             },
             createCategory() {
-                this.create_item('categories', {name: this.categoryName}).then(() => {
+                this.create_item(StackonetSupportTicket.restRoot + '/categories', {name: this.categoryName}).then(() => {
                     this.showAddCategoryModal = false;
                     this.getCategories();
                 }).catch(error => {
@@ -116,7 +116,7 @@
             },
             updateCategory() {
                 this.editError = '';
-                this.create_item('categories/' + this.editActiveCategory.term_id, {
+                this.create_item(StackonetSupportTicket.restRoot + '/categories/' + this.editActiveCategory.term_id, {
                     name: this.editActiveCategory.name,
                     slug: this.editActiveCategory.slug,
                 }).then(() => {
@@ -130,7 +130,7 @@
             deleteCategory(category) {
                 this.$modal.confirm('Are you sure to delete this category?').then(confirm => {
                     if (confirm) {
-                        this.delete_item('categories/' + category.term_id).then(() => {
+                        this.delete_item(StackonetSupportTicket.restRoot + '/categories/' + category.term_id).then(() => {
                             this.$store.commit('SET_SNACKBAR', {
                                 title: 'Success!',
                                 message: 'Category has been deleted?',
@@ -145,7 +145,7 @@
             },
             updateMenuOrder() {
                 let menu_orders = this.categories.map(el => el.term_id);
-                this.create_item('categories/batch', {menu_orders: menu_orders}).then(() => {
+                this.create_item(StackonetSupportTicket.restRoot + '/categories/batch', {menu_orders: menu_orders}).then(() => {
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Success!',
                         message: 'Category orders have been updated.',

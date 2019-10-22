@@ -75,9 +75,9 @@
 <script>
     import axios from 'axios';
     import {mapState} from 'vuex'
-    import dataTable from "shapla-data-table";
-    import Icon from "icon/icon";
-    import Search from "search/Search";
+    import dataTable from "../../shapla/shapla-data-table";
+    import Icon from "../../shapla/icon/icon";
+    import Search from "../../shapla/search/Search";
     import MdlButton from "../../material-design-lite/button/mdlButton";
     import SearchForm from "../../shapla/shapla-data-table/src/searchForm";
     import {columns, column} from 'shapla-columns'
@@ -209,7 +209,10 @@
             },
             trashAction(item, action) {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('support-ticket/delete', {id: item.id, action: action}).then(() => {
+                axios.post(StackonetSupportTicket.restRoot + '/support-ticket/delete', {
+                    id: item.id,
+                    action: action
+                }).then(() => {
                     this.getItems();
                     this.$store.commit('SET_LOADING_STATUS', false);
                 }).catch(() => {
@@ -218,7 +221,10 @@
             },
             batchTrashAction(ids, action) {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('support-ticket/batch_delete', {ids: ids, action: action}).then(() => {
+                axios.post(StackonetSupportTicket.restRoot + '/support-ticket/batch_delete', {
+                    ids: ids,
+                    action: action
+                }).then(() => {
                     this.getItems();
                     this.$store.commit('SET_LOADING_STATUS', false);
                 }).catch(error => {

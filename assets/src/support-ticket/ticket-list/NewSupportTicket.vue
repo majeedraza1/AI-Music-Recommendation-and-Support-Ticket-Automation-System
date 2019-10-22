@@ -53,7 +53,8 @@
 
             <column :desktop="12">
                 <div class="form-field">
-                    <mdl-button type="raised" color="primary" class="stackonet-primary" :disabled="!canSubmit" @click="submitTicket">Submit
+                    <mdl-button type="raised" color="primary" class="stackonet-primary" :disabled="!canSubmit"
+                                @click="submitTicket">Submit
                         Ticket
                     </mdl-button>
                 </div>
@@ -128,23 +129,21 @@
             },
             submitTicket() {
                 let self = this;
-                axios
-                    .post('support-ticket', {
-                        customer_name: self.customer_name,
-                        customer_email: self.customer_email,
-                        ticket_subject: self.ticket_subject,
-                        ticket_content: self.ticket_content,
-                        ticket_category: self.ticket_category,
-                        ticket_priority: self.ticket_priority,
-                    })
-                    .then((response) => {
-                        self.$store.commit('SET_LOADING_STATUS', false);
-                        let id = response.data.data.ticket_id;
-                        this.$router.push({name: 'SingleSupportTicket', params: {id: id}});
-                    })
-                    .catch((error) => {
-                        self.$store.commit('SET_LOADING_STATUS', false);
-                    });
+                axios.post(StackonetSupportTicket.restRoot + '/support-ticket', {
+                    customer_name: self.customer_name,
+                    customer_email: self.customer_email,
+                    ticket_subject: self.ticket_subject,
+                    ticket_content: self.ticket_content,
+                    ticket_category: self.ticket_category,
+                    ticket_priority: self.ticket_priority,
+                }).then((response) => {
+                    self.$store.commit('SET_LOADING_STATUS', false);
+                    let id = response.data.data.ticket_id;
+                    this.$router.push({name: 'SingleSupportTicket', params: {id: id}});
+                }).catch(error => {
+                    console.log(error);
+                    self.$store.commit('SET_LOADING_STATUS', false);
+                });
             }
         }
     }

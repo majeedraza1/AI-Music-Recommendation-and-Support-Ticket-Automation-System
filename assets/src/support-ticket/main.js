@@ -13,7 +13,7 @@ if (window.StackonetSupportTicket.restNonce) {
     axios.defaults.headers.common['X-WP-Nonce'] = window.StackonetSupportTicket.restNonce;
 }
 
-axios.defaults.baseURL = window.StackonetSupportTicket.restRoot;
+// axios.defaults.baseURL = window.StackonetSupportTicket.restRoot;
 
 let el = document.querySelector('#stackonet_support_ticket_list');
 if (el) {

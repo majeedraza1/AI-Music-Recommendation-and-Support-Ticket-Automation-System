@@ -73,8 +73,8 @@
 <script>
 
     import axios from 'axios';
-    import {tabs, tab} from 'shapla-tabs';
-    import radioButtons from "shapla-radio-buttons";
+    import {tabs, tab} from '../../shapla/shapla-tabs';
+    import radioButtons from "../../shapla/shapla-radio-buttons";
     import Switches from "../../components/Switches";
     import MdlButton from "../../material-design-lite/button/mdlButton";
     import TicketCategories from "../../support-ticket/categories/TicketCategories";
@@ -107,7 +107,7 @@
                 this.$router.push({name: 'SupportTicketList'})
             },
             getSettingsFields() {
-                axios.get('settings', {params: {user_options: true}}).then(response => {
+                axios.get(StackonetSupportTicket.restRoot + '/settings', {params: {user_options: true}}).then(response => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     let data = response.data.data;
                     this.panels = data.panels;
@@ -121,7 +121,7 @@
             },
             saveOptions() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post('settings/user', {options: this.options}).then(() => {
+                axios.post(StackonetSupportTicket.restRoot + '/settings/user', {options: this.options}).then(() => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     this.$store.commit('SET_SNACKBAR', {
                         title: 'Success!',
