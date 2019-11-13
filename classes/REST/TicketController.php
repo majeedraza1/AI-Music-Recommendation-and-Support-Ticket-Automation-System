@@ -136,6 +136,13 @@ class TicketController extends ApiController {
 				'callback' => [ $this, 'delete_item' ]
 			],
 		] );
+
+		register_rest_route( $this->namespace, '/tickets/batch', [
+			[
+				'methods'  => WP_REST_Server::CREATABLE,
+				'callback' => [ $this, 'update_batch_items' ],
+			],
+		] );
 	}
 
 	/**
@@ -397,6 +404,41 @@ class TicketController extends ApiController {
 		}
 
 		return $this->respondOK( "#{$id} Support ticket has been deleted" );
+	}
+
+	/**
+	 * Update batch items
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function update_batch_items( $request ) {
+		$trash_ids = $request->get_param( 'trash' );
+		$trash_ids = is_array( $trash_ids ) ? array_map( 'intval', $trash_ids ) : [];
+		foreach ( $trash_ids as $id ) {
+			if ( current_user_can( 'delete_ticket', $id ) ) {
+				( new SupportTicket )->trash( $id );
+			}
+		}
+
+		$restore_ids = $request->get_param( 'restore' );
+		$restore_ids = is_array( $restore_ids ) ? array_map( 'intval', $restore_ids ) : [];
+		foreach ( $restore_ids as $id ) {
+			if ( current_user_can( 'delete_ticket', $id ) ) {
+				( new SupportTicket )->restore( $id );
+			}
+		}
+
+		$delete_ids = $request->get_param( 'delete' );
+		$delete_ids = is_array( $delete_ids ) ? array_map( 'intval', $delete_ids ) : [];
+		foreach ( $delete_ids as $id ) {
+			if ( current_user_can( 'delete_ticket', $id ) ) {
+				( new SupportTicket )->delete( $id );
+			}
+		}
+
+		return $this->respondOK();
 	}
 
 	/**
