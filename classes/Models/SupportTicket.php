@@ -818,12 +818,16 @@ class SupportTicket extends DatabaseModel {
 	 *
 	 * @param int $id
 	 *
-	 * @return array|self
+	 * @return false|self
 	 */
 	public function find_by_id( $id ) {
 		$item = parent::find_by_id( $id );
 
-		return new self( $item );
+		if ( $item ) {
+			return new self( $item );
+		}
+
+		return false;
 	}
 
 	/**

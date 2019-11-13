@@ -61,3 +61,47 @@ Params:
 
 
 </details>
+
+### Get a ticket
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[GET /wp-json/stackonet-support-ticket/v1/tickets/{id}]`
+
+Replace `{id}` with actual ticket id.
+
+</details>
+
+### Update a ticket
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/tickets/{id}]`
+
+Replace `{id}` with actual ticket id.
+
+Params: This endpoint accept same argument as create endpoint.
+
+</details>
+
+### Delete a ticket
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/tickets/{id}]`
+
+Replace `{id}` with actual ticket id.
+
+</details>
