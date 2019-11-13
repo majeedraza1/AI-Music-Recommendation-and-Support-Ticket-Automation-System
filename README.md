@@ -34,3 +34,30 @@ Params:
 
 
 </details>
+
+### Create a ticket
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/tickets]`
+
+Params:
+
+| Property          | Type      | Required  | Default   | Description                   |
+|-------------------|-----------|-----------|-----------|-------------------------------|
+| `name`            | string    | **yes**   | `null`    | User full name.               |
+| `email`           | string    | **yes**   | `null`    | User email address.           |
+| `subject`         | string    | **yes**   | `null`    | Ticket subject.               |
+| `content`         | string    | **yes**   | `null`    | Ticket content.               |
+| `phone_number`    | string    | **no**    | `null`    | User phone number.            |
+| `category`        | integer   | **no**    | `null`    | Ticket category id.           |
+| `status`          | integer   | **no**    | `null`    | Ticket status id.             |
+| `priority`        | integer   | **no**    | `null`    | Ticket priority.              |
+| `attachments`     | array     | **no**    | `[]`      | Array of WordPress media ID.  |
+
+
+</details>
