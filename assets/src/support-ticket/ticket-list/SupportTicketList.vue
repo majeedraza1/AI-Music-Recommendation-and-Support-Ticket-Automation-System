@@ -191,7 +191,7 @@
             },
             trashItems() {
                 if (this.selectedItems.length) {
-                    if ('trash' === this.status) {
+                    if ('trash' === this.label) {
                         this.onBulkAction('delete', this.selectedItems);
                     } else {
                         this.onBulkAction('trash', this.selectedItems);
@@ -209,9 +209,10 @@
             },
             trashAction(item, action) {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post(StackonetSupportTicket.restRoot + '/support-ticket/delete', {
-                    id: item.id,
-                    action: action
+                axios.delete(StackonetSupportTicket.restRoot + '/tickets/' + item.id, {
+                    params: {
+                        action: action
+                    }
                 }).then(() => {
                     this.getItems();
                     this.$store.commit('SET_LOADING_STATUS', false);
@@ -221,10 +222,10 @@
             },
             batchTrashAction(ids, action) {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.post(StackonetSupportTicket.restRoot + '/support-ticket/batch_delete', {
-                    ids: ids,
-                    action: action
-                }).then(() => {
+                let data = {};
+                data[action] = ids;
+                console.log(data);
+                axios.post(StackonetSupportTicket.restRoot + '/tickets/batch', data).then(() => {
                     this.getItems();
                     this.$store.commit('SET_LOADING_STATUS', false);
                 }).catch(error => {

@@ -104,4 +104,31 @@ Endpoint
 
 Replace `{id}` with actual ticket id.
 
+Params:
+
+| Property  | Type     | Required | Default | Description                                        |
+|-----------|----------|----------|---------|----------------------------------------------------|
+| `action`  | string   | **no**   | `trash` | Value can be `trash` or `restore` or `delete`.     |
+
+
+</details>
+
+### Update batch tickets
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/tickets/batch]`
+
+Params:
+
+| Property  | Type     | Required | Default | Description                           |
+|-----------|----------|----------|---------|---------------------------------------|
+| `trash`   | array    | **no**   | `[]`    | Array of ticket id to be trashed.     |
+| `restore` | array    | **no**   | `[]`    | Array of ticket id to be restored.    |
+| `delete`  | array    | **no**   | `[]`    | Array of ticket id to be deleted.     |
+
 </details>

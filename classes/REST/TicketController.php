@@ -141,6 +141,7 @@ class TicketController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => [ $this, 'update_batch_items' ],
+				'args'     => $this->get_batch_update_params(),
 			],
 		] );
 	}
@@ -393,17 +394,21 @@ class TicketController extends ApiController {
 			return $this->respondUnauthorized();
 		}
 
+		$message = "#{$id} Support ticket has been trashed";
+
 		if ( 'trash' == $action ) {
 			$class->trash( $id );
 		}
 		if ( 'restore' == $action ) {
+			$message = "#{$id} Support ticket has been restored";
 			$class->restore( $id );
 		}
 		if ( 'delete' == $action ) {
+			$message = "#{$id} Support ticket has been deleted";
 			$class->delete( $id );
 		}
 
-		return $this->respondOK( "#{$id} Support ticket has been deleted" );
+		return $this->respondOK( $message );
 	}
 
 	/**
@@ -416,26 +421,38 @@ class TicketController extends ApiController {
 	public function update_batch_items( $request ) {
 		$trash_ids = $request->get_param( 'trash' );
 		$trash_ids = is_array( $trash_ids ) ? array_map( 'intval', $trash_ids ) : [];
-		foreach ( $trash_ids as $id ) {
-			if ( current_user_can( 'delete_ticket', $id ) ) {
-				( new SupportTicket )->trash( $id );
+		if ( count( $trash_ids ) ) {
+			foreach ( $trash_ids as $id ) {
+				if ( current_user_can( 'delete_ticket', $id ) ) {
+					( new SupportTicket )->trash( $id );
+				}
 			}
+
+			return $this->respondOK( [ 'trashed' => $trash_ids ] );
 		}
 
 		$restore_ids = $request->get_param( 'restore' );
 		$restore_ids = is_array( $restore_ids ) ? array_map( 'intval', $restore_ids ) : [];
-		foreach ( $restore_ids as $id ) {
-			if ( current_user_can( 'delete_ticket', $id ) ) {
-				( new SupportTicket )->restore( $id );
+		if ( count( $restore_ids ) ) {
+			foreach ( $restore_ids as $id ) {
+				if ( current_user_can( 'delete_ticket', $id ) ) {
+					( new SupportTicket )->restore( $id );
+				}
 			}
+
+			return $this->respondOK( [ 'restored' => $restore_ids ] );
 		}
 
 		$delete_ids = $request->get_param( 'delete' );
 		$delete_ids = is_array( $delete_ids ) ? array_map( 'intval', $delete_ids ) : [];
-		foreach ( $delete_ids as $id ) {
-			if ( current_user_can( 'delete_ticket', $id ) ) {
-				( new SupportTicket )->delete( $id );
+		if ( count( $delete_ids ) ) {
+			foreach ( $delete_ids as $id ) {
+				if ( current_user_can( 'delete_ticket', $id ) ) {
+					( new SupportTicket )->delete( $id );
+				}
 			}
+
+			return $this->respondOK( [ 'deleted' => $delete_ids ] );
 		}
 
 		return $this->respondOK();
@@ -585,6 +602,34 @@ class TicketController extends ApiController {
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 		);
+	}
+
+	/**
+	 * Get batch update items args
+	 *
+	 * @return array
+	 */
+	public function get_batch_update_params() {
+		return [
+			'trash'   => [
+				'description'       => __( 'Array of ticket id to be trashed.', 'stackonet-support-ticker' ),
+				'type'              => 'array',
+				'required'          => false,
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'restore' => [
+				'description'       => __( 'Array of ticket id to be restored.', 'stackonet-support-ticker' ),
+				'type'              => 'array',
+				'required'          => false,
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'delete'  => [
+				'description'       => __( 'Array of ticket id to be deleted.', 'stackonet-support-ticker' ),
+				'type'              => 'array',
+				'required'          => false,
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+		];
 	}
 
 	/**

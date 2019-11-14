@@ -47,10 +47,6 @@ class SupportTicketController extends ApiController {
 			[ 'methods' => WP_REST_Server::CREATABLE, 'callback' => [ $this, 'create_item' ], ],
 		] );
 
-		register_rest_route( $this->namespace, '/customer-support-ticket', [
-			[ 'methods' => WP_REST_Server::CREATABLE, 'callback' => [ $this, 'create_support_item' ], ],
-		] );
-
 		register_rest_route( $this->namespace, '/support-ticket/(?P<id>\d+)', [
 			[ 'methods' => WP_REST_Server::READABLE, 'callback' => [ $this, 'get_item' ] ],
 			[ 'methods' => WP_REST_Server::EDITABLE, 'callback' => [ $this, 'update_item' ] ],
@@ -83,14 +79,6 @@ class SupportTicketController extends ApiController {
 		register_rest_route( $this->namespace, '/support-ticket/(?P<id>\d+)/thread/(?P<thread_id>\d+)', [
 			[ 'methods' => WP_REST_Server::EDITABLE, 'callback' => [ $this, 'update_thread' ] ],
 			[ 'methods' => WP_REST_Server::DELETABLE, 'callback' => [ $this, 'delete_thread' ] ],
-		] );
-
-		register_rest_route( $this->namespace, '/support-ticket/delete', [
-			[ 'methods' => WP_REST_Server::CREATABLE, 'callback' => [ $this, 'delete_item' ] ],
-		] );
-
-		register_rest_route( $this->namespace, '/support-ticket/batch_delete', [
-			[ 'methods' => WP_REST_Server::CREATABLE, 'callback' => [ $this, 'delete_items' ] ],
 		] );
 	}
 
@@ -352,83 +340,6 @@ class SupportTicketController extends ApiController {
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 * @throws Exception
 	 */
-	public function create_support_item( $request ) {
-		$customer_name   = $request->get_param( 'customer_name' );
-		$customer_email  = $request->get_param( 'customer_email' );
-		$ticket_subject  = $request->get_param( 'ticket_subject' );
-		$ticket_content  = $request->get_param( 'ticket_content' );
-		$ticket_category = $request->get_param( 'ticket_category' );
-		$phone_number    = $request->get_param( 'phone_number' );
-
-		if ( empty( $customer_email ) || empty( $customer_name ) ) {
-			return $this->respondUnprocessableEntity( null, 'Customer name and email are required.' );
-		}
-
-		if ( empty( $ticket_subject ) || empty( $ticket_content ) ) {
-			return $this->respondUnprocessableEntity( null, 'Ticket subject and content are required.' );
-		}
-
-		$category = get_option( 'wpsc_default_contact_form_ticket_category' );
-
-		$data = [
-			'ticket_subject'   => $ticket_subject,
-			'customer_name'    => $customer_name,
-			'customer_email'   => $customer_email,
-			'ticket_category'  => $ticket_category,
-			'user_type'        => get_current_user_id() ? 'user' : 'guest',
-			'ticket_status'    => get_option( 'support_ticket_default_status' ),
-			'ticket_priority'  => get_option( 'support_ticket_default_priority' ),
-			'ip_address'       => isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '',
-			'agent_created'    => 0,
-			'ticket_auth_code' => bin2hex( random_bytes( 5 ) ),
-			'active'           => 1
-		];
-
-		$SupportTicket = new SupportTicket;
-		$ticket_id     = $SupportTicket->create( $data );
-
-		ob_start(); ?>
-        <table class="table--support-order">
-            <tr>
-                <td>Name:</td>
-                <td><strong><?php echo $customer_name ?></strong></td>
-            </tr>
-            <tr>
-                <td>Phone:</td>
-                <td><strong><?php echo $phone_number ?></strong></td>
-            </tr>
-            <tr>
-                <td>Content:</td>
-                <td><strong><?php echo $ticket_content; ?></strong></td>
-            </tr>
-        </table>
-		<?php
-		$html = ob_get_clean();
-
-		if ( $ticket_id ) {
-			$SupportTicket->update_metadata( $ticket_id, 'assigned_agent', '0' );
-			( new TicketThread() )->create( [
-				'ticket_id'      => $ticket_id,
-				'post_content'   => $html,
-				'customer_name'  => $customer_name,
-				'customer_email' => $customer_email,
-				'thread_type'    => 'report',
-			] );
-
-			return $this->respondCreated( [ 'ticket_id' => $ticket_id ] );
-		}
-
-		return $this->respondInternalServerError();
-	}
-
-	/**
-	 * Retrieves one item from the collection.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 *
-	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
-	 * @throws Exception
-	 */
 	public function get_item( $request ) {
 		if ( ! current_user_can( 'read_tickets' ) ) {
 			return $this->respondUnauthorized();
@@ -535,87 +446,6 @@ class SupportTicketController extends ApiController {
 		}
 
 		return $this->respondInternalServerError();
-	}
-
-	/**
-	 * Deletes one item from the collection.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 *
-	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
-	 */
-	public function delete_item( $request ) {
-		$id     = $request->get_param( 'id' );
-		$action = $request->get_param( 'action' );
-
-		$id     = ! empty( $id ) ? absint( $id ) : 0;
-		$action = ! empty( $action ) ? sanitize_text_field( $action ) : '';
-
-		if ( ! in_array( $action, [ 'trash', 'restore', 'delete' ] ) ) {
-			return $this->respondUnauthorized();
-		}
-
-		$class  = new SupportTicket();
-		$survey = $class->find_by_id( $id );
-
-		if ( ! $survey instanceof SupportTicket ) {
-			return $this->respondNotFound();
-		}
-
-		if ( ! current_user_can( 'delete_ticket', $id ) ) {
-			return $this->respondUnauthorized();
-		}
-
-		if ( 'trash' == $action ) {
-			$class->trash( $id );
-		}
-		if ( 'restore' == $action ) {
-			$class->restore( $id );
-		}
-		if ( 'delete' == $action ) {
-			$class->delete( $id );
-		}
-
-		return $this->respondOK( "#{$id} Support ticket has been deleted" );
-	}
-
-	/**
-	 * Deletes multiple items from the collection.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 *
-	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
-	 */
-	public function delete_items( $request ) {
-		$ids    = $request->get_param( 'ids' );
-		$ids    = is_array( $ids ) ? array_map( 'intval', $ids ) : [];
-		$action = $request->get_param( 'action' );
-		$action = ! empty( $action ) ? sanitize_text_field( $action ) : '';
-
-		if ( ! in_array( $action, [ 'trash', 'restore', 'delete' ] ) ) {
-			return $this->respondUnprocessableEntity();
-		}
-
-		$class = new SupportTicket();
-
-		foreach ( $ids as $id ) {
-
-			if ( ! current_user_can( 'delete_ticket', $id ) ) {
-				continue;
-			}
-
-			if ( 'trash' == $action ) {
-				$class->trash( $id );
-			}
-			if ( 'restore' == $action ) {
-				$class->restore( $id );
-			}
-			if ( 'delete' == $action ) {
-				$class->delete( $id );
-			}
-		}
-
-		return $this->respondOK( "Support tickets has been deleted" );
 	}
 
 	/**
