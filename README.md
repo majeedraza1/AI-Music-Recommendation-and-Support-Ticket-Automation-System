@@ -132,3 +132,80 @@ Params:
 | `delete`  | array    | **no**   | `[]`    | Array of ticket id to be deleted.     |
 
 </details>
+
+### Create ticket thread
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/tickets/{id}/thread]`
+
+Replace `{id}` with actual ticket id.
+
+Params:
+
+| Property              | Type     | Required | Default | Description                                                                           |
+|-----------------------|----------|----------|---------|---------------------------------------------------------------------------------------|
+| `thread_type`         | string   | **no**   | `null`  | Thread type. Value can be `report` or `log` or `reply` or `note` or `sms` or `email`. |
+| `thread_content`      | array    | **no**   | `null`  | Thread content.                                                                       |
+| `thread_attachments`  | array    | **no**   | `[]`    | Thread attachments. Array of WordPress media attachment id.                           |
+
+</details>
+
+### Update ticket thread
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/tickets/{id}/thread/{thread_id}]`
+
+Replace `{id}` with actual ticket id. and replace `{thread_id}` with actual thread id.
+
+Params:
+
+| Property              | Type     | Required | Default | Description       |
+|-----------------------|----------|----------|---------|-------------------|
+| `thread_content`      | array    | **no**   | `null`  | Thread content.   |
+
+</details>
+
+### Delete a ticket thread
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/tickets/{id}/thread/{thread_id}]`
+
+Replace `{id}` with actual ticket id. and replace `{thread_id}` with actual thread id.
+
+</details>
+
+
+### Update a ticket agent(s)
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/tickets/{id}/agent]`
+
+Replace `{id}` with actual ticket id.
+
+Params:
+
+| Property      | Type     | Required | Default | Description                             |
+|---------------|----------|----------|---------|-----------------------------------------|
+| `agents_ids`  | array    | **no**   | `[]`    | Array of agents ids to assign ticket.   |
+
+</details>
