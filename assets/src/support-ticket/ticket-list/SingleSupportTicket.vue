@@ -456,7 +456,7 @@
             },
             updateTicketStatus() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.put(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id, {
+                axios.put(StackonetSupportTicket.restRoot + '/tickets/' + this.id, {
                     ticket_category: this.ticket_category,
                     ticket_priority: this.ticket_priority,
                     ticket_status: this.ticket_status,
@@ -474,7 +474,7 @@
             },
             updateSubject() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.put(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id, {
+                axios.put(StackonetSupportTicket.restRoot + '/tickets/' + this.id, {
                     ticket_subject: this.ticket_subject,
                 }).then(() => {
                     this.$store.commit('SET_LOADING_STATUS', false);
@@ -538,7 +538,7 @@
             },
             getItem() {
                 this.$store.commit('SET_LOADING_STATUS', true);
-                axios.get(StackonetSupportTicket.restRoot + '/support-ticket/' + this.id).then(response => {
+                axios.get(StackonetSupportTicket.restRoot + '/tickets/' + this.id).then(response => {
                     this.$store.commit('SET_LOADING_STATUS', false);
                     this.item = response.data.data.ticket;
                     this.threads = response.data.data.threads;

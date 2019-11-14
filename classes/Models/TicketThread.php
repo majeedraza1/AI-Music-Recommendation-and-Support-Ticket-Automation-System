@@ -21,7 +21,7 @@ class TicketThread extends PostTypeModel {
 	 *
 	 * @var array
 	 */
-	protected $valid_thread_types = [ 'report', 'log', 'reply', 'note', 'sms', 'email' ];
+	protected static $valid_thread_types = [ 'report', 'log', 'reply', 'note', 'sms', 'email' ];
 
 	/**
 	 * WP_Post class
@@ -63,6 +63,13 @@ class TicketThread extends PostTypeModel {
 			$this->read_metadata();
 			$this->read_attachments_data();
 		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function get_thread_types() {
+		return apply_filters( 'ticket_thread_types', self::$valid_thread_types );
 	}
 
 	/**
@@ -180,7 +187,7 @@ class TicketThread extends PostTypeModel {
 		$customer_name  = isset( $data['customer_name'] ) ? $data['customer_name'] : '';
 		$customer_email = isset( $data['customer_email'] ) ? $data['customer_email'] : '';
 		$thread_type    = isset( $data['thread_type'] ) ? $data['thread_type'] : '';
-		$thread_type    = in_array( $thread_type, $this->valid_thread_types ) ? $thread_type : '';
+		$thread_type    = in_array( $thread_type, static::$valid_thread_types ) ? $thread_type : '';
 		$attachments    = isset( $data['attachments'] ) && is_array( $data['attachments'] ) ? $data['attachments'] : [];
 
 		update_post_meta( $post_id, 'ticket_id', $ticket_id );
