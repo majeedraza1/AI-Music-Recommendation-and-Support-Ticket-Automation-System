@@ -292,8 +292,96 @@ Endpoint
 
 Params:
 
+| Property      | Type     | Required | Default | Description                                                         |
+|---------------|----------|----------|---------|---------------------------------------------------------------------|
+| `menu_orders` | array    | **no**   | `[]`    | Array of all categories ID. New order will be set by numeric order. |
+
+</details>
+
+
+### Get collection of statuses
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[GET /wp-json/stackonet-support-ticket/v1/statuses]`
+
+</details>
+
+
+### Create a status
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/statuses]`
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                   |
+|---------------|----------|----------|---------|-----------------------------------------------|
+| `name`        | string   | **yes**  | `null`  | Status name.                                  |
+| `slug`        | string   | **no**   | `null`  | Status slug. Must be unique for status.       |
+| `description` | string   | **no**   | `null`  | Status description.                           |
+| `parent`      | integer  | **no**   | `null`  | Parent status ID.                             |
+
+</details>
+
+### Update a status
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/statuses/{id}]`
+
+Replace `{id}` with actual status id.
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                   |
+|---------------|----------|----------|---------|-----------------------------------------------|
+| `name`        | string   | **no**   | `null`  | Status name.                                  |
+| `slug`        | string   | **no**   | `null`  | Status slug. Must be unique for status.       |
+
+</details>
+
+### Delete a status
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/statuses/{id}]`
+
+Replace `{id}` with actual status id.
+
+</details>
+
+### Update statuses sorting order
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/statuses/batch]`
+
+Params:
+
 | Property      | Type     | Required | Default | Description                                                        |
 |---------------|----------|----------|---------|--------------------------------------------------------------------|
-| `menu_orders` | array   | **no**   | `[]`  |Array of all categories ID. New order will be set by numeric order.    |
+| `menu_orders` | array    | **no**   | `[]`    | Array of all statuses ID. New order will be set by numeric order.  |
 
 </details>
