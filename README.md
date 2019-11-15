@@ -474,3 +474,71 @@ Params:
 | `menu_orders` | array    | **no**   | `[]`    | Array of all priorities ID. New order will be set by numeric order. |
 
 </details>
+
+
+
+### Get collection of agents
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[GET /wp-json/stackonet-support-ticket/v1/agents]`
+
+</details>
+
+
+### Create an agent
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/agents]`
+
+Params:
+
+| Property      | Type     | Required | Default | Description           |
+|---------------|----------|----------|---------|-----------------------|
+| `user_id`     | integer  | **yes**  | `null`  | WordPress user ID.    |
+| `role_id`     | string   | **yes**  | `null`  | Agent role ID.        |
+
+</details>
+
+### Update an agent
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/agents/{id}]`
+
+Replace `{id}` with actual agent id.
+
+Params:
+
+| Property      | Type     | Required | Default | Description       |
+|---------------|----------|----------|---------|-------------------|
+| `role_id`     | string   | **no**   | `null`  | Agent role ID.    |
+
+</details>
+
+### Delete an agent
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/agents/{id}]`
+
+Replace `{id}` with actual agent id.
+
+</details>

@@ -52,6 +52,12 @@ class AgentController extends ApiController {
 			],
 		] );
 		register_rest_route( $this->namespace, '/agents/(?P<id>\d+)', [
+			'args' => [
+				'id' => [
+					'description' => __( 'Unique identifier for the agent.' ),
+					'type'        => 'integer',
+				],
+			],
 			[
 				'methods'  => WP_REST_Server::READABLE,
 				'callback' => [ $this, 'get_item' ],
@@ -59,17 +65,11 @@ class AgentController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::EDITABLE,
 				'callback' => [ $this, 'update_item' ],
+				'args'     => $this->get_update_item_params()
 			],
 			[
 				'methods'  => WP_REST_Server::DELETABLE,
 				'callback' => [ $this, 'delete_item' ],
-			],
-		] );
-		register_rest_route( $this->namespace, '/agents/batch', [
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'update_batch_items' ],
-				'args'     => $this->get_batch_update_params()
 			],
 		] );
 	}
@@ -95,7 +95,7 @@ class AgentController extends ApiController {
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$id    = (int) $request->get_param( 'id' );
+		$id = (int) $request->get_param( 'id' );
 
 		$agent = SupportAgent::find_by_id( $id );
 
@@ -196,10 +196,6 @@ class AgentController extends ApiController {
 		return $this->respondInternalServerError();
 	}
 
-	public function update_batch_items() {
-
-	}
-
 	/**
 	 * Retrieves the query params for create new item.
 	 *
@@ -225,9 +221,20 @@ class AgentController extends ApiController {
 		];
 	}
 
-	public function get_batch_update_params() {
-		$this->get_collection_params();
-
-		return [];
+	/**
+	 * Retrieves the query params for update an item.
+	 *
+	 * @return array
+	 */
+	public function get_update_item_params() {
+		return [
+			'role_id' => array(
+				'description'       => 'Agent role ID.',
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			)
+		];
 	}
 }
