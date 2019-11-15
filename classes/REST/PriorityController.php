@@ -49,9 +49,16 @@ class PriorityController extends ApiController {
 			],
 		] );
 		register_rest_route( $this->namespace, '/priorities/(?P<id>\d+)', [
+			'args' => [
+				'id' => [
+					'description' => __( 'Unique identifier for the priority.' ),
+					'type'        => 'integer',
+				],
+			],
 			[
 				'methods'  => WP_REST_Server::EDITABLE,
 				'callback' => [ $this, 'update_item' ],
+				'args'     => $this->get_update_item_params()
 			],
 			[
 				'methods'  => WP_REST_Server::DELETABLE,
@@ -208,6 +215,30 @@ class PriorityController extends ApiController {
 				'type'              => 'integer',
 				'required'          => false,
 				'sanitize_callback' => 'intval',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+		];
+	}
+
+	/**
+	 * Get update item args
+	 *
+	 * @return array
+	 */
+	public function get_update_item_params() {
+		return [
+			'name' => [
+				'description'       => __( 'Priority name.', 'stackonet-support-ticker' ),
+				'type'              => 'string',
+				'required'          => false,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'slug' => [
+				'description'       => __( 'Priority slug. Must be unique for priority.', 'stackonet-support-ticker' ),
+				'type'              => 'string',
+				'required'          => false,
+				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];

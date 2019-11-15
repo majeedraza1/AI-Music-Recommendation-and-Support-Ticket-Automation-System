@@ -385,3 +385,92 @@ Params:
 | `menu_orders` | array    | **no**   | `[]`    | Array of all statuses ID. New order will be set by numeric order.  |
 
 </details>
+
+
+
+### Get collection of priorities
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[GET /wp-json/stackonet-support-ticket/v1/priorities]`
+
+</details>
+
+
+### Create a priority
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/priorities]`
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                   |
+|---------------|----------|----------|---------|-----------------------------------------------|
+| `name`        | string   | **yes**  | `null`  | Priority name.                                |
+| `slug`        | string   | **no**   | `null`  | Priority slug. Must be unique for priority.   |
+| `description` | string   | **no**   | `null`  | Priority description.                         |
+| `parent`      | integer  | **no**   | `null`  | Parent priority ID.                           |
+
+</details>
+
+### Update a priority
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/priorities/{id}]`
+
+Replace `{id}` with actual priority id.
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                   |
+|---------------|----------|----------|---------|-----------------------------------------------|
+| `name`        | string   | **no**   | `null`  | Priority name.                                |
+| `slug`        | string   | **no**   | `null`  | Priority slug. Must be unique for priority.   |
+
+</details>
+
+### Delete a priority
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/priorities/{id}]`
+
+Replace `{id}` with actual priority id.
+
+</details>
+
+### Update priorities sorting order
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/priorities/batch]`
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                                         |
+|---------------|----------|----------|---------|---------------------------------------------------------------------|
+| `menu_orders` | array    | **no**   | `[]`    | Array of all priorities ID. New order will be set by numeric order. |
+
+</details>
