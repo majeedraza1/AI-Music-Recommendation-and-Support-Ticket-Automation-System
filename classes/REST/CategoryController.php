@@ -50,9 +50,16 @@ class CategoryController extends ApiController {
 			],
 		] );
 		register_rest_route( $this->namespace, '/categories/(?P<id>\d+)', [
+			'args' => [
+				'id' => [
+					'description' => __( 'Unique identifier for the category.' ),
+					'type'        => 'integer',
+				],
+			],
 			[
 				'methods'  => WP_REST_Server::EDITABLE,
 				'callback' => [ $this, 'update_item' ],
+				'args'     => $this->get_update_item_params()
 			],
 			[
 				'methods'  => WP_REST_Server::DELETABLE,
@@ -210,6 +217,30 @@ class CategoryController extends ApiController {
 				'type'              => 'integer',
 				'required'          => false,
 				'sanitize_callback' => 'intval',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+		];
+	}
+
+	/**
+	 * Get update item args
+	 *
+	 * @return array
+	 */
+	public function get_update_item_params() {
+		return [
+			'name' => [
+				'description'       => __( 'Category name.', 'stackonet-support-ticker' ),
+				'type'              => 'string',
+				'required'          => false,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'slug' => [
+				'description'       => __( 'Category slug. Must be unique for category.', 'stackonet-support-ticker' ),
+				'type'              => 'string',
+				'required'          => false,
+				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];

@@ -39,6 +39,7 @@ class LoginController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => [ $this, 'login' ],
+				'args'     => $this->get_login_params()
 			],
 		] );
 	}
@@ -50,10 +51,10 @@ class LoginController extends ApiController {
 	 */
 	public function login( $request ) {
 		if ( is_user_logged_in() ) {
-			return $this->respondUnauthorized( null, 'Sorry, Your are already logged in.' );
+			return $this->respondUnauthorized( 'already_logged_in', 'Sorry, Your are already logged in.' );
 		}
 
-		$user_login = $request->get_param( 'user_login' );
+		$user_login = $request->get_param( 'username' );
 		$password   = $request->get_param( 'password' );
 		$remember   = (bool) $request->get_param( 'remember' );
 
@@ -78,7 +79,8 @@ class LoginController extends ApiController {
 		$user = wp_signon( $credentials, false );
 
 		if ( is_wp_error( $user ) ) {
-			return $this->respondUnprocessableEntity( null, null,
+			return $this->respondUnprocessableEntity(
+				$user->get_error_code(), $user->get_error_message( $user->get_error_code() ),
 				[ 'password' => [ 'Password is not correct.' ] ] );
 		}
 
@@ -86,5 +88,36 @@ class LoginController extends ApiController {
 		wp_set_auth_cookie( $user->ID, false );
 
 		return $this->respondOK( [ 'action' => 'reload' ] );
+	}
+
+	/**
+	 * Retrieves the query params for the login.
+	 *
+	 * @return array Query parameters for the login.
+	 */
+	public function get_login_params() {
+		return array(
+			'username' => array(
+				'description'       => __( 'Email address or username' ),
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'password' => array(
+				'description'       => __( 'User password' ),
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'remember' => array(
+				'description'       => __( 'Remember user for long time.' ),
+				'type'              => 'boolean',
+				'default'           => false,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+		);
 	}
 }

@@ -209,3 +209,91 @@ Params:
 | `agents_ids`  | array    | **no**   | `[]`    | Array of agents ids to assign ticket.   |
 
 </details>
+
+
+### Get collection of categories
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[GET /wp-json/stackonet-support-ticket/v1/categories]`
+
+</details>
+
+
+### Create a category
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/categories]`
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                   |
+|---------------|----------|----------|---------|-----------------------------------------------|
+| `name`        | string   | **yes**  | `null`  | Category name.                                |
+| `slug`        | string   | **no**   | `null`  | Category slug. Must be unique for category.   |
+| `description` | string   | **no**   | `null`  | Category description.                         |
+| `parent`      | integer  | **no**   | `null`  | Parent category ID.                           |
+
+</details>
+
+### Update a category
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/categories/{id}]`
+
+Replace `{id}` with actual category id.
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                   |
+|---------------|----------|----------|---------|-----------------------------------------------|
+| `name`        | string   | **no**   | `null`  | Category name.                                |
+| `slug`        | string   | **no**   | `null`  | Category slug. Must be unique for category.   |
+
+</details>
+
+### Delete a category
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/categories/{id}]`
+
+Replace `{id}` with actual ticket id.
+
+</details>
+
+### Update categories sorting order
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/categories/batch]`
+
+Params:
+
+| Property      | Type     | Required | Default | Description                                                        |
+|---------------|----------|----------|---------|--------------------------------------------------------------------|
+| `menu_orders` | array   | **no**   | `[]`  |Array of all categories ID. New order will be set by numeric order.    |
+
+</details>

@@ -74,7 +74,7 @@
             submitForm() {
                 this.loading = true;
                 axios.post('login', {
-                    user_login: this.user_login,
+                    username: this.user_login,
                     password: this.password,
                     remember: this.remember,
                 }).then(() => {
