@@ -2,10 +2,10 @@
 /**
  * Plugin Name: Stackonet Support Ticket
  * Description: Easy & Powerful support ticket system for WordPress
- * Version: 1.0.0-alpha
+ * Version: 1.0.0
  * Author: Stackonet Services (Pvt.) Ltd.
- * Author URI: https://stackonet.com/
- * Requires at least: 4.9
+ * Author URI: https://stackonet.com
+ * Requires at least: 5.0
  * Tested up to: 5.3
  * Text Domain: stackonet-support-ticket
  * Domain Path: /languages
@@ -34,7 +34,7 @@ class StackonetSupportTicket {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-alpha';
+	public $version = '1.0.0';
 
 	/**
 	 * Holds various class instances
@@ -129,12 +129,13 @@ class StackonetSupportTicket {
 			$this->container['rest-ticket']       = StackonetSupportTicket\REST\TicketController::init();
 			$this->container['rest-thread']       = StackonetSupportTicket\REST\TicketThreadController::init();
 			$this->container['rest-ticket_agent'] = StackonetSupportTicket\REST\TicketAgentController::init();
+			$this->container['rest-ticket_sms']   = StackonetSupportTicket\REST\TicketSmsController::init();
+			$this->container['rest-support']      = StackonetSupportTicket\REST\SupportTicketController::init();
 			$this->container['rest-category']     = StackonetSupportTicket\REST\CategoryController::init();
 			$this->container['rest-status']       = StackonetSupportTicket\REST\StatusController::init();
 			$this->container['rest-priority']     = StackonetSupportTicket\REST\PriorityController::init();
 			$this->container['rest-agent']        = StackonetSupportTicket\REST\AgentController::init();
 			$this->container['rest-role']         = StackonetSupportTicket\REST\AgentRoleController::init();
-			$this->container['rest-support']      = StackonetSupportTicket\REST\SupportTicketController::init();
 			$this->container['rest-settings']     = StackonetSupportTicket\REST\SettingController::init();
 		}
 
