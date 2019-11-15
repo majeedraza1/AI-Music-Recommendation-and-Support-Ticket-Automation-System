@@ -542,3 +542,76 @@ Endpoint
 Replace `{id}` with actual agent id.
 
 </details>
+
+
+### Get collection of roles
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[GET /wp-json/stackonet-support-ticket/v1/roles]`
+
+</details>
+
+
+### Create a role
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/roles]`
+
+Params:
+
+| Property       | Type     | Required | Default | Description                                  |
+|----------------|----------|----------|---------|----------------------------------------------|
+| `role`         | string   | **yes**  | `null`  | Role slug. Role slug cannot change latter.   |
+| `name`         | string   | **yes**  | `null`  | Role display name.                           |
+| `capabilities` | object   | **yes**  | `null`  | Role capabilities.                           |
+
+</details>
+
+### Update a role
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/role]`
+
+Params:
+
+| Property       | Type     | Required | Default | Description          |
+|----------------|----------|----------|---------|----------------------|
+| `role`         | string   | **yes**  | `null`  | Role slug.           |
+| `name`         | string   | **no**   | `null`  | Role display name.   |
+| `capabilities` | object   | **no**   | `null`  | Role capabilities.   |
+
+</details>
+
+### Delete a role
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/role]`
+
+Params:
+
+| Property       | Type     | Required | Default | Description          |
+|----------------|----------|----------|---------|----------------------|
+| `role`         | string   | **yes**  | `null`  | Role slug.           |
+
+
+</details>
