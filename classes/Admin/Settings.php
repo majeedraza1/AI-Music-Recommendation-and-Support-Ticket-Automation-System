@@ -73,12 +73,7 @@ class Settings {
 				'id'       => 'general_settings_panel',
 				'title'    => __( 'General', 'stackonet-support-ticket' ),
 				'priority' => 10,
-			),
-			array(
-				'id'       => 'colors_panel',
-				'title'    => __( 'Colors', 'stackonet-support-ticket' ),
-				'priority' => 20,
-			),
+			)
 		);
 
 		// Add settings page tab
@@ -91,14 +86,7 @@ class Settings {
 				'description' => __( 'Plugin general options.', 'stackonet-support-ticket' ),
 				'panel'       => 'general_settings_panel',
 				'priority'    => 10,
-			),
-			array(
-				'id'          => 'colors_settings_section',
-				'title'       => __( 'Colors', 'stackonet-support-ticket' ),
-				'description' => __( 'Plugin color options.', 'stackonet-support-ticket' ),
-				'panel'       => 'colors_panel',
-				'priority'    => 20,
-			),
+			)
 		);
 
 		// Add Sections
@@ -189,30 +177,6 @@ class Settings {
 			),
 		);
 
-		$option_page->add_fields( $fields );
-
-		$fields = array(
-			array(
-				'section'     => 'colors_settings_section',
-				'id'          => 'support_ticket_primary_color',
-				'type'        => 'color',
-				'title'       => __( 'Primary Color', 'stackonet-support-ticket' ),
-				'description' => __( 'Choose primary color.', 'stackonet-support-ticket' ),
-				'priority'    => 100,
-				'default'     => '#f58730',
-			),
-			array(
-				'section'     => 'colors_settings_section',
-				'id'          => 'support_ticket_secondary_color',
-				'type'        => 'color',
-				'title'       => __( 'Secondary Color', 'stackonet-support-ticket' ),
-				'description' => __( 'Choose secondary color. Leave blank if you do not want secondary color.', 'stackonet-support-ticket' ),
-				'priority'    => 105,
-				'default'     => '#9c27b0',
-			),
-		);
-
-		// Add Sections
 		$option_page->add_fields( $fields );
 	}
 

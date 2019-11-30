@@ -27,7 +27,7 @@
                 <div><a :href="lostPasswordUrl">Forgot your password?</a></div>
             </div>
             <div>
-                <big-button :fullwidth="true" :disabled="!canSubmit">Log in</big-button>
+                <shapla-button theme="primary" :fullwidth="true" :disabled="!canSubmit">Log in</shapla-button>
             </div>
         </form>
         <spinner :active="loading"></spinner>
@@ -38,12 +38,12 @@
     import axios from 'axios'
     import spinner from 'shapla-spinner'
     import AnimatedInput from "../../components/AnimatedInput";
-    import BigButton from "../../components/BigButton";
+    import shaplaButton from "shapla-button";
     import MdlCheckbox from "../../material-design-lite/checkbox/mdlCheckbox";
 
     export default {
         name: "Login",
-        components: {MdlCheckbox, BigButton, AnimatedInput, spinner},
+        components: {MdlCheckbox, shaplaButton, AnimatedInput, spinner},
         data() {
             return {
                 loading: false,

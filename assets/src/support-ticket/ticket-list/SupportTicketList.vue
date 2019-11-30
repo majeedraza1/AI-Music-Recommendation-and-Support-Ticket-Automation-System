@@ -35,7 +35,7 @@
                 </column>
                 <column>
                     <div class="search-box">
-                        <search-form @search="searchTicket" @clear="searchTicket"></search-form>
+                        <search-form @search="searchTicket" @clear="searchTicket"/>
                     </div>
                 </column>
             </columns>
@@ -43,7 +43,7 @@
         <data-table
                 action-column="ticket_subject"
                 :columns="columns"
-                :rows="tickets"
+                :items="tickets"
                 :total-items="pagination.totalCount"
                 :total-pages="pagination.pageCount"
                 :per-page="pagination.limit"
@@ -76,14 +76,13 @@
     import {mapState} from 'vuex';
     import {column, columns} from 'shapla-columns';
     import shaplaButton from "shapla-button";
-    import dataTable from "../../shapla/shapla-data-table";
+    import searchForm from "shapla-search-form";
+    import dataTable from "shapla-data-table";
     import Icon from "../../shapla/icon/icon";
-    import Search from "../../shapla/search/Search";
-    import SearchForm from "../../shapla/shapla-data-table/src/searchForm";
 
     export default {
         name: "SupportTicketList",
-        components: {SearchForm, Icon, shaplaButton, dataTable, Search, columns, column},
+        components: {Icon, shaplaButton, dataTable, searchForm, columns, column},
 
         data() {
             return {

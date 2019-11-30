@@ -4,7 +4,7 @@
             <tab name="Support Agents" :selected="true">
                 <data-table
                         :columns="columns"
-                        :rows="agents"
+                        :items="agents"
                         :actions="actions"
                         @action:click="onActionClick"
                         action-column="display_name"
@@ -97,12 +97,12 @@
     import modal from 'shapla-modal'
     import {column, columns} from 'shapla-columns'
     import {tab, tabs} from "shapla-tabs";
-    import dataTable from "../../shapla/shapla-data-table/src/dataTable";
+    import shaplaButton from "shapla-button";
+    import dataTable from "shapla-data-table";
     import {CrudMixin} from "../../components/CrudMixin";
     import AnimatedInput from "../../components/AnimatedInput";
     import MdlSwitch from "../../material-design-lite/switch/mdlSwitch";
     import RoleEditor from "./RoleEditor";
-    import shaplaButton from "shapla-button";
 
     export default {
         name: "AgentsList",

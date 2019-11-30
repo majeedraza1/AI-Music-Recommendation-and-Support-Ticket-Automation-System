@@ -17,9 +17,6 @@
 										<textarea class="regular-text" :id="field.id" :rows="field.rows"
                                                   v-model="options[field.id]"></textarea>
                                     </template>
-                                    <template v-else-if="field.type === 'checkbox'">
-                                        <switches v-model="options[field.id]"></switches>
-                                    </template>
                                     <template v-else-if="field.type === 'radio'">
                                         <radio-buttons :options="field" v-model="options[field.id]"></radio-buttons>
                                     </template>
@@ -75,7 +72,6 @@
     import axios from 'axios';
     import {tab, tabs} from 'shapla-tabs';
     import radioButtons from "../../shapla/shapla-radio-buttons";
-    import Switches from "../../components/Switches";
     import shaplaButton from "shapla-button";
     import TicketCategories from "../../support-ticket/categories/TicketCategories";
     import TicketPriorities from "../../support-ticket/priorities/TicketPriorities";
@@ -85,15 +81,7 @@
     export default {
         name: "Settings",
         components: {
-            TicketStatuses,
-            AgentsList,
-            TicketPriorities,
-            TicketCategories,
-            shaplaButton,
-            tabs,
-            tab,
-            radioButtons,
-            Switches
+            TicketStatuses, AgentsList, TicketPriorities, TicketCategories, shaplaButton, tabs, tab, radioButtons
         },
         data() {
             return {
