@@ -42,29 +42,29 @@
 
                 </template>
                 <div class="button-save-settings-container">
-                    <mdl-fab @click="saveOptions">
+                    <shapla-button theme="primary" size="medium" :fab="true" @click="saveOptions">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0z" fill="none"/>
                             <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
                         </svg>
-                    </mdl-fab>
+                    </shapla-button>
                 </div>
             </tab>
 
             <tab name="Categories">
-                <ticket-categories></ticket-categories>
+                <ticket-categories/>
             </tab>
 
             <tab name="Priorities">
-                <ticket-priorities></ticket-priorities>
+                <ticket-priorities/>
             </tab>
 
             <tab name="Statuses">
-                <ticket-statuses></ticket-statuses>
+                <ticket-statuses/>
             </tab>
 
             <tab name="Agents">
-                <agents-list></agents-list>
+                <agents-list/>
             </tab>
         </tabs>
     </div>
@@ -73,21 +73,27 @@
 <script>
 
     import axios from 'axios';
-    import {tabs, tab} from '../../shapla/shapla-tabs';
+    import {tab, tabs} from 'shapla-tabs';
     import radioButtons from "../../shapla/shapla-radio-buttons";
     import Switches from "../../components/Switches";
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
     import TicketCategories from "../../support-ticket/categories/TicketCategories";
     import TicketPriorities from "../../support-ticket/priorities/TicketPriorities";
     import AgentsList from "../../support-ticket/agents/AgentsList";
     import TicketStatuses from "../../support-ticket/statuses/TicketStatuses";
-    import MdlFab from "../../material-design-lite/button/mdlFab";
 
     export default {
         name: "Settings",
         components: {
-            MdlFab,
-            TicketStatuses, AgentsList, TicketPriorities, TicketCategories, MdlButton, tabs, tab, radioButtons, Switches
+            TicketStatuses,
+            AgentsList,
+            TicketPriorities,
+            TicketCategories,
+            shaplaButton,
+            tabs,
+            tab,
+            radioButtons,
+            Switches
         },
         data() {
             return {

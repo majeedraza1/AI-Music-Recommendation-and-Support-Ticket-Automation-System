@@ -31,28 +31,29 @@
         </draggable>
 
         <modal :active="showAddStatusModal" @close="showAddStatusModal = false" title="Add Status">
-            <animated-input v-model="statusName" label="Status"></animated-input>
+            <animated-input v-model="statusName" label="Status"/>
             <div class="help has-error" v-if="statusNameError.length">{{statusNameError}}</div>
             <template slot="foot">
-                <mdl-button type="raised" color="primary" :disabled="statusName.length < 3" @click="createStatus">
+                <shapla-button theme="primary" :disabled="statusName.length < 3" @click="createStatus">
                     Create
-                </mdl-button>
+                </shapla-button>
             </template>
         </modal>
 
         <modal :active="showEditStatusModal" @close="showEditStatusModal = false" title="Edit Status">
             <template v-if="Object.keys(editActiveStatus).length">
-                <animated-input v-model="editActiveStatus.name" label="Status Name"></animated-input>
-                <animated-input v-model="editActiveStatus.slug" label="Status Slug"></animated-input>
+                <animated-input v-model="editActiveStatus.name" label="Status Name"/>
+                <animated-input v-model="editActiveStatus.slug" label="Status Slug"/>
                 <p class="help has-error" v-if="editError.length" v-html="editError"></p>
             </template>
             <template slot="foot">
-                <mdl-button type="raised" color="primary" @click="updateStatus">Update</mdl-button>
+                <shapla-button theme="primary" @click="updateStatus">Update</shapla-button>
             </template>
         </modal>
 
         <div class="button-add-status-container" title="Add Status">
-            <mdl-fab @click="showAddStatusModal = true">+</mdl-fab>
+            <shapla-button theme="primary" :fab="true" size="medium" @click="showAddStatusModal = true">+
+            </shapla-button>
         </div>
     </div>
 </template>
@@ -61,13 +62,12 @@
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
     import {CrudMixin} from "../../components/CrudMixin";
-    import MdlFab from "../../material-design-lite/button/mdlFab";
     import AnimatedInput from "../../components/AnimatedInput";
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
 
     export default {
         name: "TicketStatuses",
-        components: {MdlButton, MdlFab, modal, AnimatedInput, draggable},
+        components: {shaplaButton, modal, AnimatedInput, draggable},
         mixins: [CrudMixin],
         data() {
             return {

@@ -1,7 +1,7 @@
 <template>
     <div class="stackont-support-ticket-container">
         <div class="button--new-ticket-container">
-            <mdl-fab @click="openNewTicket">+</mdl-fab>
+            <shapla-button theme="primary" :fab="true" size="medium" @click="openNewTicket">+</shapla-button>
         </div>
         <div class="clear"></div>
         <div class="stackonet-support-ticket-icon-search">
@@ -15,20 +15,20 @@
                         <div @click="exportExcel">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Import Export</title>
-                                <use xlink:href="#icon-import_export"></use>
+                                <use xlink:href="#icon-import_export"/>
                             </svg>
                         </div>
                         <div v-if="label==='trash'" @click="restoreItems" class="button-restore"
                              :class="{'is-active':selectedItems.length}">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Restore</title>
-                                <use xlink:href="#icon-settings_restore"></use>
+                                <use xlink:href="#icon-settings_restore"/>
                             </svg>
                         </div>
                         <div @click="trashItems" class="button-trash" :class="{'is-active':selectedItems.length}">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Trash</title>
-                                <use xlink:href="#icon-delete_outline"></use>
+                                <use xlink:href="#icon-delete_outline"/>
                             </svg>
                         </div>
                     </div>
@@ -69,23 +69,21 @@
 			</span>
         </data-table>
     </div>
-
 </template>
 
 <script>
     import axios from 'axios';
-    import {mapState} from 'vuex'
+    import {mapState} from 'vuex';
+    import {column, columns} from 'shapla-columns';
+    import shaplaButton from "shapla-button";
     import dataTable from "../../shapla/shapla-data-table";
     import Icon from "../../shapla/icon/icon";
     import Search from "../../shapla/search/Search";
-    import MdlButton from "../../material-design-lite/button/mdlButton";
     import SearchForm from "../../shapla/shapla-data-table/src/searchForm";
-    import {columns, column} from 'shapla-columns'
-    import MdlFab from "../../material-design-lite/button/mdlFab";
 
     export default {
         name: "SupportTicketList",
-        components: {MdlFab, SearchForm, Icon, MdlButton, dataTable, Search, columns, column},
+        components: {SearchForm, Icon, shaplaButton, dataTable, Search, columns, column},
 
         data() {
             return {

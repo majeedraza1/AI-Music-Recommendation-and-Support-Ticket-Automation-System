@@ -38,29 +38,29 @@
         </draggable>
 
         <modal :active="showAddCategoryModal" @close="showAddCategoryModal = false" title="Add Category">
-            <animated-input v-model="categoryName" label="Category"></animated-input>
+            <animated-input v-model="categoryName" label="Category"/>
             <div class="help has-error" v-if="categoryNameError.length">{{categoryNameError}}</div>
             <template slot="foot">
-                <mdl-button class="stackonet-primary" type="raised" color="primary" :disabled="categoryName.length < 3"
-                            @click="createCategory">
+                <shapla-button theme="primary" :disabled="categoryName.length < 3" @click="createCategory">
                     Create
-                </mdl-button>
+                </shapla-button>
             </template>
         </modal>
 
         <modal :active="showEditCategoryModal" @close="showEditCategoryModal = false" title="Edit Category">
             <template v-if="Object.keys(editActiveCategory).length">
-                <animated-input v-model="editActiveCategory.name" label="Category Name"></animated-input>
-                <animated-input v-model="editActiveCategory.slug" label="Category Slug"></animated-input>
+                <animated-input v-model="editActiveCategory.name" label="Category Name"/>
+                <animated-input v-model="editActiveCategory.slug" label="Category Slug"/>
                 <p class="help has-error" v-if="editError.length" v-html="editError"></p>
             </template>
             <template slot="foot">
-                <mdl-button type="raised" color="primary" @click="updateCategory">Update</mdl-button>
+                <shapla-button theme="primary" @click="updateCategory">Update</shapla-button>
             </template>
         </modal>
 
         <div class="button-add-category-container" title="Add Category">
-            <mdl-fab @click="showAddCategoryModal = true">+</mdl-fab>
+            <shapla-button theme="primary" size="medium" :fab="true" @click="showAddCategoryModal = true">+
+            </shapla-button>
         </div>
     </div>
 </template>
@@ -69,14 +69,13 @@
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
     import {CrudMixin} from "../../components/CrudMixin";
-    import MdlFab from "../../material-design-lite/button/mdlFab";
     import AnimatedInput from "../../components/AnimatedInput";
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
     import Icon from "../../shapla/icon/icon";
 
     export default {
         name: "TicketCategories",
-        components: {Icon, MdlButton, MdlFab, modal, AnimatedInput, draggable},
+        components: {Icon, shaplaButton, modal, AnimatedInput, draggable},
         mixins: [CrudMixin],
         data() {
             return {

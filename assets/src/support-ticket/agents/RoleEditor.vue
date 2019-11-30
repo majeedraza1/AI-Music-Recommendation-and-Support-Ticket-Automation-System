@@ -3,10 +3,10 @@
         <div class="stackonet-role-editor">
             <columns :multiline="true">
                 <column :tablet="12">
-                    <animated-input label="Role" :required="true" v-model="role"></animated-input>
+                    <animated-input label="Role" :required="true" v-model="role"/>
                 </column>
                 <column :tablet="12">
-                    <animated-input label="Role Name" :required="true" v-model="name"></animated-input>
+                    <animated-input label="Role Name" :required="true" v-model="name"/>
                 </column>
                 <column :tablet="12" v-for="_setting in caps_settings" :key="_setting.id">
                     <div class="clearfix flex w-full stackonet-role-editor__capabilities">
@@ -21,21 +21,23 @@
             </columns>
         </div>
         <template slot="foot">
-            <mdl-button class="stackonet-primary" type="raised" color="primary" @click="submit">{{btnSave}}</mdl-button>
+            <shapla-button class="stackonet-primary" theme="primary" @click="submit">
+                {{btnSave}}
+            </shapla-button>
         </template>
     </modal>
 </template>
 
 <script>
-    import {columns, column} from 'shapla-columns'
+    import {column, columns} from 'shapla-columns'
     import modal from 'shapla-modal'
     import AnimatedInput from "../../components/AnimatedInput";
     import MdlSwitch from "../../material-design-lite/switch/mdlSwitch";
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
 
     export default {
         name: "RoleEditor",
-        components: {MdlButton, MdlSwitch, AnimatedInput, columns, column, modal},
+        components: {shaplaButton, MdlSwitch, AnimatedInput, columns, column, modal},
         props: {
             active: {type: Boolean, required: true},
             title: {type: String, default: 'Add Role'},

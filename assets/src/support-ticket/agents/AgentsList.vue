@@ -15,7 +15,8 @@
                     </template>
                 </data-table>
                 <div class="button-add-agent-container" title="Add Agent">
-                    <mdl-fab @click="showAddAgentModal = true">+</mdl-fab>
+                    <shapla-button theme="primary" size="medium" :fab="true" @click="showAddAgentModal = true">+
+                    </shapla-button>
                 </div>
                 <modal :active="showAddAgentModal" @close="showAddAgentModal = false" title="Add Agent">
                     <div class="modal--add-agent-inner" style="min-height: 200px">
@@ -34,10 +35,9 @@
                         </columns>
                     </div>
                     <template slot="foot">
-                        <mdl-button class="stackonet-primary" type="raised" color="primary" :disabled="!canCreateAgent"
-                                    @click="createNewAgent">
-                            Create
-                        </mdl-button>
+                        <shapla-button class="stackonet-primary" theme="primary" :disabled="!canCreateAgent"
+                                       @click="createNewAgent"> Create
+                        </shapla-button>
                     </template>
                 </modal>
                 <modal :active="showEditAgentModal" @close="showEditAgentModal = false" title="Edit Agent Role">
@@ -48,9 +48,9 @@
                         </select>
                     </div>
                     <template slot="foot">
-                        <mdl-button class="stackonet-primary" type="raised" color="primary" @click="updateAgentRole">
+                        <shapla-button class="stackonet-primary" theme="primary" @click="updateAgentRole">
                             Create
-                        </mdl-button>
+                        </shapla-button>
                     </template>
                 </modal>
             </tab>
@@ -77,14 +77,16 @@
                     </div>
                 </div>
                 <div class="button-add-role-container" title="Add Role">
-                    <mdl-fab @click="showAddRoleModal = true">+</mdl-fab>
+                    <shapla-button theme="primary" size="medium" :fab="true" @click="showAddRoleModal = true">
+                        +
+                    </shapla-button>
                 </div>
             </tab>
         </tabs>
         <role-editor :value="role" :active="showAddRoleModal" @close="closeAddNewRoleModal"
-                     @submit="addNewRole"></role-editor>
+                     @submit="addNewRole"/>
         <role-editor :value="activeRole" :active="showEditRoleModal" @close="closeEditRoleModal"
-                     @submit="updateRole"></role-editor>
+                     @submit="updateRole"/>
     </div>
 </template>
 
@@ -93,22 +95,21 @@
     import axios from 'axios';
     import vSelect from 'vue-select'
     import modal from 'shapla-modal'
-    import {columns, column} from 'shapla-columns'
-    import {tabs, tab} from "../../shapla/shapla-tabs";
+    import {column, columns} from 'shapla-columns'
+    import {tab, tabs} from "shapla-tabs";
     import dataTable from "../../shapla/shapla-data-table/src/dataTable";
     import {CrudMixin} from "../../components/CrudMixin";
-    import MdlFab from "../../material-design-lite/button/mdlFab";
     import AnimatedInput from "../../components/AnimatedInput";
     import MdlSwitch from "../../material-design-lite/switch/mdlSwitch";
     import RoleEditor from "./RoleEditor";
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
 
     export default {
         name: "AgentsList",
         mixins: [CrudMixin],
         components: {
-            MdlButton, RoleEditor, MdlSwitch, AnimatedInput, vSelect, MdlFab, dataTable,
-            tabs, tab, modal, columns, column
+            shaplaButton, RoleEditor, MdlSwitch, AnimatedInput, vSelect,
+            dataTable, tabs, tab, modal, columns, column
         },
         data() {
             return {

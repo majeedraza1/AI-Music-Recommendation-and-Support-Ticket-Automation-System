@@ -2,9 +2,7 @@
     <div class="support-tickets-side-nav">
 
         <div v-if="!showSideNav" class="support-tickets-side-nav__back-button">
-            <mdl-button class="stackonet-primary" type="raised" color="primary" @click="backToTicketList">
-                Back
-            </mdl-button>
+            <shapla-button theme="primary" @click="backToTicketList"> Back</shapla-button>
         </div>
 
         <template v-if="showSideNav">
@@ -13,7 +11,7 @@
                 <toggle :name="filter.name" :selected="index === 0">
                     <template slot="icon">
                         <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-format_list_bulleted"></use>
+                            <use xlink:href="#icon-format_list_bulleted"/>
                         </svg>
                     </template>
                     <span class="support-tickets-side-nav__text" v-for="_option in filter.options"
@@ -29,7 +27,7 @@
                 <div class="support-tickets-side-nav__title">
                     <span class="support-tickets-side-nav__icon">
                         <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-delete_outline"></use>
+                            <use xlink:href="#icon-delete_outline"/>
                         </svg>
                     </span>
                     <span class="support-tickets-side-nav__text" :class="{'is-active':trashedTickets.active}"
@@ -44,7 +42,7 @@
                 <div class="support-tickets-side-nav__title">
                     <span class="support-tickets-side-nav__icon">
                         <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-settings"></use>
+                            <use xlink:href="#icon-settings"/>
                         </svg>
                     </span>
                     <span class="support-tickets-side-nav__text" @click="gotToSettings">
@@ -59,12 +57,12 @@
 
 <script>
     import {mapState} from 'vuex';
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
     import Toggle from "../../components/Toggle";
 
     export default {
         name: "SupportTicketSideNav",
-        components: {Toggle, MdlButton},
+        components: {Toggle, shaplaButton},
         data() {
             return {
                 isSelected: false,

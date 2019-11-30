@@ -50,11 +50,13 @@
 	"dependencies": {
 		"@tinymce/tinymce-vue": "^3.0.1",
 		"axios": "^0.18.0",
+		"shapla-button": "^1.0.4",
 		"shapla-columns": "^1.0.1",
 		"shapla-delete": "^1.0.1",
 		"shapla-modal": "^1.0.3",
 		"shapla-notifications": "^1.0.3",
 		"shapla-spinner": "^1.0.3",
+		"shapla-tabs": "^1.0.2",
 		"vue": "^2.5.22",
 		"vue-router": "^3.0.2",
 		"vue-select": "^3.2.0",

@@ -27,7 +27,7 @@
             <column :desktop="12">
                 <div class="form-field">
                     <label for="ticket_description">Description</label>
-                    <editor id="ticket_description" :init="mce" v-model="ticket_content"></editor>
+                    <editor id="ticket_description" :init="mce" v-model="ticket_content"/>
                 </div>
             </column>
 
@@ -53,10 +53,9 @@
 
             <column :desktop="12">
                 <div class="form-field">
-                    <mdl-button type="raised" color="primary" class="stackonet-primary" :disabled="!canSubmit"
-                                @click="submitTicket">Submit
-                        Ticket
-                    </mdl-button>
+                    <shapla-button theme="primary" :disabled="!canSubmit" @click="submitTicket">
+                        Submit Ticket
+                    </shapla-button>
                 </div>
             </column>
         </columns>
@@ -65,16 +64,16 @@
 </template>
 
 <script>
-    import {mapState, mapGetters} from 'vuex';
     import axios from 'axios'
+    import {mapGetters, mapState} from 'vuex';
     import Editor from '@tinymce/tinymce-vue'
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
+    import {column, columns} from "shapla-columns";
     import Icon from "../../shapla/icon/icon";
-    import {columns, column} from "shapla-columns";
 
     export default {
         name: "NewSupportTicket",
-        components: {column, columns, Icon, MdlButton, Editor},
+        components: {column, columns, Icon, shaplaButton, Editor},
         data() {
             return {
                 customer_name: '',

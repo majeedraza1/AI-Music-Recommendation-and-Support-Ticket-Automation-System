@@ -13,10 +13,10 @@
                     </div>
 
                     <div>
-                        <editor :init="mce" v-model="content"></editor>
+                        <editor :init="mce" v-model="content"/>
                         <div style="text-align: right;margin-top:20px;" v-show="content.length">
-                            <mdl-button type="raised" color="default" @click="addNote">Add Note</mdl-button>
-                            <mdl-button type="raised" color="primary" @click="submitReply">Submit Reply</mdl-button>
+                            <shapla-button theme="default" @click="addNote">Add Note</shapla-button>
+                            <shapla-button theme="primary" @click="submitReply">Submit Reply</shapla-button>
                         </div>
                     </div>
 
@@ -182,13 +182,15 @@
 						</span>
                             </template>
                         </p>
-                        <p><textarea type="text" name="ticket_twilio_sms" id="ticket_twilio_sms"
-                                     v-model="ticket_twilio_sms_content"
-                                     class="input-text" style="width: 100%;" rows="4" value=""></textarea></p>
+                        <p>
+                            <textarea type="text" name="ticket_twilio_sms" id="ticket_twilio_sms"
+                                      v-model="ticket_twilio_sms_content"
+                                      class="input-text" style="width: 100%;" rows="4" value=""></textarea>
+                        </p>
                         <p style="margin-bottom:0">
-                            <mdl-button type="raised" color="primary" id="wc_twilio_sms_order_send_message"
-                                        @click="sendSms">Send SMS
-                            </mdl-button>
+                            <shapla-button theme="primary" id="wc_twilio_sms_order_send_message" @click="sendSms">
+                                Send SMS
+                            </shapla-button>
 
                             <span id="wc_twilio_sms_order_message_char_count"
                                   style="color: green; float: right; font-size: 16px;">{{ticket_twilio_sms_content.length}}</span>
@@ -201,9 +203,9 @@
 
         </columns>
         <modal :active="activeThreadModal" title="Edit this Thread" @close="closeThreadEditor">
-            <editor :init="mce" v-model="activeThreadContent"></editor>
+            <editor :init="mce" v-model="activeThreadContent"/>
             <template slot="foot">
-                <mdl-button @click="updateThread">Save</mdl-button>
+                <shapla-button theme="primary" @click="updateThread">Save</shapla-button>
             </template>
         </modal>
 
@@ -224,7 +226,7 @@
                 </select>
             </list-item>
             <template slot="foot">
-                <mdl-button @click="updateTicketStatus">Save</mdl-button>
+                <shapla-button theme="primary" @click="updateTicketStatus">Save</shapla-button>
             </template>
         </modal>
 
@@ -235,7 +237,7 @@
                          :class="{'is-active':support_agents_ids.indexOf(_agent.id) !== -1}">
                         <div class="shapla-chip__contact">
                             <image-container>
-                                <img :src="_agent.avatar_url" width="32" height="32">
+                                <img :src="_agent.avatar_url" width="32" height="32" alt="">
                             </image-container>
                         </div>
                         <span class="shapla-chip__text">{{_agent.display_name}} - {{_agent.role_label}}</span>
@@ -243,7 +245,7 @@
                 </div>
             </template>
             <template slot="foot">
-                <mdl-button @click="updateAssignAgents">Save</mdl-button>
+                <shapla-button theme="primary" @click="updateAssignAgents">Save</shapla-button>
             </template>
         </modal>
 
@@ -262,14 +264,14 @@
                 </div>
             </template>
             <template slot="foot">
-                <mdl-button @click="activeTwilioAgentModal = false">Confirm</mdl-button>
+                <shapla-button theme="primary" @click="activeTwilioAgentModal = false">Confirm</shapla-button>
             </template>
         </modal>
 
         <modal :active="activeTitleModal" title="Change Ticket Subject" @close="activeTitleModal = false">
             <textarea v-model="ticket_subject" style="width: 100%;"></textarea>
             <template slot="foot">
-                <mdl-button @click="updateSubject">Save</mdl-button>
+                <shapla-button theme="primary" @click="updateSubject">Save</shapla-button>
             </template>
         </modal>
     </div>
@@ -277,11 +279,11 @@
 
 <script>
     import axios from 'axios';
-    import {columns, column} from 'shapla-columns'
     import {mapState} from 'vuex';
+    import {column, columns} from 'shapla-columns'
+    import shaplaButton from 'shapla-button'
     import modal from 'shapla-modal'
     import Editor from '@tinymce/tinymce-vue'
-    import mdlButton from '../../material-design-lite/button/mdlButton'
     import ListItem from '../../components/ListItem'
     import ImageContainer from "../../shapla/image/image";
     import Icon from "../../shapla/icon/icon";
@@ -289,7 +291,7 @@
 
     export default {
         name: "SingleSupportTicket",
-        components: {MdlCheckbox, Icon, ImageContainer, mdlButton, columns, column, ListItem, Editor, modal},
+        components: {MdlCheckbox, Icon, ImageContainer, shaplaButton, columns, column, ListItem, Editor, modal},
         data() {
             return {
                 loading: false,

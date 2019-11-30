@@ -34,25 +34,26 @@
             <animated-input v-model="priorityName" label="Priority"></animated-input>
             <div class="help has-error" v-if="priorityNameError.length">{{priorityNameError}}</div>
             <template slot="foot">
-                <mdl-button type="raised" color="primary" :disabled="priorityName.length < 3" @click="createPriority">
+                <shapla-button theme="primary" :disabled="priorityName.length < 3" @click="createPriority">
                     Create
-                </mdl-button>
+                </shapla-button>
             </template>
         </modal>
 
         <modal :active="showEditPriorityModal" @close="showEditPriorityModal = false" title="Edit Priority">
             <template v-if="Object.keys(editActivePriority).length">
-                <animated-input v-model="editActivePriority.name" label="Priority Name"></animated-input>
-                <animated-input v-model="editActivePriority.slug" label="Priority Slug"></animated-input>
+                <animated-input v-model="editActivePriority.name" label="Priority Name"/>
+                <animated-input v-model="editActivePriority.slug" label="Priority Slug"/>
                 <p class="help has-error" v-if="editError.length" v-html="editError"></p>
             </template>
             <template slot="foot">
-                <mdl-button type="raised" color="primary" @click="updatePriority">Update</mdl-button>
+                <shapla-button theme="primary" @click="updatePriority">Update</shapla-button>
             </template>
         </modal>
 
         <div class="button-add-priority-container" title="Add Priority">
-            <mdl-fab @click="showAddPriorityModal = true">+</mdl-fab>
+            <shapla-button theme="primary" size="medium" :fab="true" @click="showAddPriorityModal = true">+
+            </shapla-button>
         </div>
     </div>
 </template>
@@ -61,13 +62,12 @@
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
     import {CrudMixin} from "../../components/CrudMixin";
-    import MdlFab from "../../material-design-lite/button/mdlFab";
     import AnimatedInput from "../../components/AnimatedInput";
-    import MdlButton from "../../material-design-lite/button/mdlButton";
+    import shaplaButton from "shapla-button";
 
     export default {
         name: "TicketPriorities",
-        components: {MdlButton, MdlFab, modal, AnimatedInput, draggable},
+        components: {shaplaButton, modal, AnimatedInput, draggable},
         mixins: [CrudMixin],
         data() {
             return {
