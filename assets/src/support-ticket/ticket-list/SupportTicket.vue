@@ -1,13 +1,13 @@
 <template>
     <div class="Support-ticket-wrapper">
 
-        <support-ticket-side-nav></support-ticket-side-nav>
+        <support-ticket-side-nav/>
 
         <div class="admin-support-tickets-container">
-            <router-view></router-view>
-            <spinner :active="loading"></spinner>
-            <notification v-model="snackbar"></notification>
-            <confirm-dialog></confirm-dialog>
+            <router-view/>
+            <spinner :active="loading"/>
+            <notification v-model="snackbar"/>
+            <confirm-dialog/>
         </div>
     </div>
 
@@ -17,7 +17,7 @@
     import {mapState} from 'vuex';
     import notification from 'shapla-notifications';
     import spinner from "shapla-spinner";
-    import {ConfirmDialog} from '../../shapla/shapla-confirm-modal/src';
+    import {ConfirmDialog} from 'shapla-confirm-dialog';
     import SupportTicketSideNav from "./SupportTicketSideNav";
 
     export default {

@@ -52,6 +52,7 @@
 		"axios": "^0.18.0",
 		"shapla-button": "^1.0.4",
 		"shapla-columns": "^1.0.1",
+		"shapla-confirm-dialog": "^1.0.0",
 		"shapla-data-table": "^1.0.1",
 		"shapla-delete": "^1.0.1",
 		"shapla-modal": "^1.0.3",

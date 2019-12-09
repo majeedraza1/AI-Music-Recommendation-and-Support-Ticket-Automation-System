@@ -61,7 +61,7 @@
 <script>
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
-    import {CrudMixin} from "../../components/CrudMixin";
+    import {CrudMixin} from "../../mixins/CrudMixin";
     import AnimatedInput from "../../components/AnimatedInput";
     import shaplaButton from "shapla-button";
 
@@ -119,7 +119,7 @@
                 })
             },
             deletePriority(priority) {
-                this.$modal.confirm('Are you sure to delete this priority?').then(confirm => {
+                this.$dialog.confirm('Are you sure to delete this priority?').then(confirm => {
                     if (confirm) {
                         this.delete_item(StackonetSupportTicket.restRoot + '/priorities/' + priority.term_id).then(() => {
                             this.$store.commit('SET_SNACKBAR', {

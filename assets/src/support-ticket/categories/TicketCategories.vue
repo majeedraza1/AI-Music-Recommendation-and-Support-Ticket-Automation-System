@@ -68,7 +68,7 @@
 <script>
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
-    import {CrudMixin} from "../../components/CrudMixin";
+    import {CrudMixin} from "../../mixins/CrudMixin";
     import AnimatedInput from "../../components/AnimatedInput";
     import shaplaButton from "shapla-button";
     import Icon from "../../shapla/icon/icon";
@@ -127,7 +127,7 @@
                 })
             },
             deleteCategory(category) {
-                this.$modal.confirm('Are you sure to delete this category?').then(confirm => {
+                this.$dialog.confirm('Are you sure to delete this category?').then(confirm => {
                     if (confirm) {
                         this.delete_item(StackonetSupportTicket.restRoot + '/categories/' + category.term_id).then(() => {
                             this.$store.commit('SET_SNACKBAR', {

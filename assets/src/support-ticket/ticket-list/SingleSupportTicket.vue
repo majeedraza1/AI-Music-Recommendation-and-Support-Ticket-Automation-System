@@ -387,9 +387,11 @@
                 this.addThread('note', this.content);
             },
             submitReply() {
-                if (confirm('Are you sure?')) {
-                    this.addThread('reply', this.content);
-                }
+                this.$dialog.confirm('Are you sure?').then(confirmed => {
+                    if (confirmed) {
+                        this.addThread('reply', this.content);
+                    }
+                });
             },
             openTitleModal() {
                 this.ticket_subject = this.item.ticket_subject;

@@ -99,7 +99,7 @@
     import {tab, tabs} from "shapla-tabs";
     import shaplaButton from "shapla-button";
     import dataTable from "shapla-data-table";
-    import {CrudMixin} from "../../components/CrudMixin";
+    import {CrudMixin} from "../../mixins/CrudMixin";
     import AnimatedInput from "../../components/AnimatedInput";
     import MdlSwitch from "../../material-design-lite/switch/mdlSwitch";
     import RoleEditor from "./RoleEditor";
@@ -160,7 +160,7 @@
                     this.editAgentActiveAgent = item;
                 }
                 if ('delete' === action) {
-                    this.$modal.confirm('Are you sure to delete this agent?').then(confirm => {
+                    this.$dialog.confirm('Are you sure to delete this agent?').then(confirm => {
                         if (confirm) {
                             this.trashAction(item.term_id);
                         }
@@ -212,7 +212,7 @@
                 this.showEditRoleModal = true;
             },
             deleteRole(role) {
-                this.$modal.confirm('Are you sure to delete this role?').then(confirm => {
+                this.$dialog.confirm('Are you sure to delete this role?').then(confirm => {
                     if (confirm) {
                         this.delete_item(StackonetSupportTicket.restRoot + '/role', {params: {role: role.role}}).then(() => {
                             this.$delete(this.roles, this.roles.indexOf(role));

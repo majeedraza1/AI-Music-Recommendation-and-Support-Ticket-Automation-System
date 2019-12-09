@@ -3,11 +3,11 @@ import SupportTicket from './ticket-list/SupportTicket'
 import axios from "axios";
 import store from './store'
 import router from "./routers";
-import {modal} from 'shapla-confirm-modal'
+import Dialog from 'shapla-confirm-dialog'
 
 Vue.config.productionTip = false;
 
-Vue.use(modal);
+Vue.use(Dialog);
 
 if (window.StackonetSupportTicket.restNonce) {
     axios.defaults.headers.common['X-WP-Nonce'] = window.StackonetSupportTicket.restNonce;
