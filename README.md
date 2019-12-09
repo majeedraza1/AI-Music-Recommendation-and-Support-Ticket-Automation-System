@@ -615,3 +615,42 @@ Params:
 
 
 </details>
+
+
+### Get collection of attachments
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[GET /wp-json/stackonet-support-ticket/v1/attachments]`
+
+</details>
+
+### Upload an attachment
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/attachments]`
+
+</details>
+
+### Delete an attachment
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[DELETE /wp-json/stackonet-support-ticket/v1/attachments/:id]`
+
+Replace `{id}` with actual attachment id.
+
+</details>

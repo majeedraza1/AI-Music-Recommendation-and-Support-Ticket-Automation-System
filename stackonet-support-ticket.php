@@ -126,6 +126,7 @@ class StackonetSupportTicket {
 		if ( $this->is_request( 'frontend' ) ) {
 			$this->container['frontend']          = StackonetSupportTicket\Frontend::init();
 			$this->container['rest-login']        = StackonetSupportTicket\REST\LoginController::init();
+			$this->container['rest-attachment']   = StackonetSupportTicket\REST\AttachmentController::init();
 			$this->container['rest-ticket']       = StackonetSupportTicket\REST\TicketController::init();
 			$this->container['rest-thread']       = StackonetSupportTicket\REST\TicketThreadController::init();
 			$this->container['rest-ticket_agent'] = StackonetSupportTicket\REST\TicketAgentController::init();
