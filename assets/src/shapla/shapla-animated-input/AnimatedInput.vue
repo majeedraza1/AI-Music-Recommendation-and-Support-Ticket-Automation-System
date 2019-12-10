@@ -13,7 +13,7 @@
 				@input="handleInputEvent($event)"
 				@focus="handleFocusEvent($event)"
 				@blur="handleBlurEvent($event)"
-			></textarea>
+			/>
 				<input
 					v-else
 					:type="type"
@@ -35,10 +35,10 @@
 					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
 					   transform="translate(-128.000000, -71.000000)">
 						<g transform="translate(128.000000, 71.000000)">
-							<circle id="Oval-3-Copy" fill="#F44545" cx="9.5" cy="9.5" r="9.5"></circle>
+							<circle id="Oval-3-Copy" fill="#F44545" cx="9.5" cy="9.5" r="9.5"/>
 							<path
 								d="M10.458,4.074 L10.01,10.976 L8.652,10.976 L8.204,4.074 L10.458,4.074 Z M8.232,13.006 C8.232,12.39 8.722,11.886 9.324,11.886 C9.94,11.886 10.444,12.39 10.444,13.006 C10.444,13.622 9.94,14.112 9.324,14.112 C8.722,14.112 8.232,13.622 8.232,13.006 Z"
-								id="!-copy" fill="#FFFFFF"></path>
+								id="!-copy" fill="#FFFFFF"/>
 						</g>
 					</g>
 				</svg>
@@ -48,10 +48,10 @@
 					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
 					   transform="translate(-163.000000, -71.000000)">
 						<g transform="translate(163.000000, 71.000000)">
-							<circle fill="#12FFCD" cx="9.5" cy="9.5" r="9.5"></circle>
+							<circle fill="#12FFCD" cx="9.5" cy="9.5" r="9.5"/>
 							<g id="v's-copy-3" transform="translate(5.000000, 7.000000)" stroke="#FFFFFF"
 							   stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-								<polyline points="0 3.16268347 3.30322266 6 9 0"></polyline>
+								<polyline points="0 3.16268347 3.30322266 6 9 0"/>
 							</g>
 						</g>
 					</g>

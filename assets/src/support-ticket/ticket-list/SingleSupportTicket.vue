@@ -284,7 +284,7 @@
     import shaplaButton from 'shapla-button'
     import modal from 'shapla-modal'
     import Editor from '@tinymce/tinymce-vue'
-    import ListItem from '../../components/ListItem'
+    import ListItem from '../../shapla/shapla-list-item/ListItem'
     import ImageContainer from "../../shapla/image/image";
     import Icon from "../../shapla/icon/icon";
     import MdlCheckbox from "../../material-design-lite/checkbox/mdlCheckbox";
@@ -591,26 +591,6 @@
                 padding: 0;
                 font-size: 20px;
                 margin: 0 0 1em;
-            }
-        }
-
-        .mdl-list-item {
-            align-items: center;
-            display: flex;
-            justify-content: flex-start;
-
-            &:not(:last-child) {
-                margin-bottom: 5px;
-                padding-bottom: 5px;
-            }
-
-            &-label {
-                width: 80px;
-            }
-
-            &-separator {
-                text-align: center;
-                width: 20px;
             }
         }
 

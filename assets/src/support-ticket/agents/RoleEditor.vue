@@ -10,12 +10,12 @@
                 </column>
                 <column :tablet="12" v-for="_setting in caps_settings" :key="_setting.id">
                     <div class="clearfix flex w-full stackonet-role-editor__capabilities">
-                        <mdl-switch v-model="capabilities[_setting.id]">
+                        <shapla-switch v-model="capabilities[_setting.id]">
                             <div class="stackonet-role-editor__capability">
                                 <strong class="stackonet-role-editor__capability-title">{{_setting.label}}</strong>
                                 <span class="stackonet-role-editor__capability-description">{{_setting.description}}</span>
                             </div>
-                        </mdl-switch>
+                        </shapla-switch>
                     </div>
                 </column>
             </columns>
@@ -31,13 +31,13 @@
 <script>
     import {column, columns} from 'shapla-columns'
     import modal from 'shapla-modal'
-    import AnimatedInput from "../../components/AnimatedInput";
-    import MdlSwitch from "../../material-design-lite/switch/mdlSwitch";
+    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
+    import shaplaSwitch from "../../shapla/shapla-switch";
     import shaplaButton from "shapla-button";
 
     export default {
         name: "RoleEditor",
-        components: {shaplaButton, MdlSwitch, AnimatedInput, columns, column, modal},
+        components: {shaplaButton, shaplaSwitch, AnimatedInput, columns, column, modal},
         props: {
             active: {type: Boolean, required: true},
             title: {type: String, default: 'Add Role'},

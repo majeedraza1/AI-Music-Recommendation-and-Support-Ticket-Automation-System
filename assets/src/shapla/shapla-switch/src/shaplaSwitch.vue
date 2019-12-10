@@ -1,25 +1,22 @@
 <template>
-    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" :class="{'is-checked':shouldBeChecked}">
-        <input type="checkbox" class="mdl-switch__input"
+    <label class="shapla-switch" :class="{'is-checked':shouldBeChecked}">
+        <input type="checkbox" class="shapla-switch__input"
                :checked="shouldBeChecked"
                :value="value"
                :disabled="disabled"
                @change="updateInput"
         >
-        <span class="mdl-switch__label"><slot>{{ label }}</slot></span>
+        <span class="shapla-switch__label"><slot>{{ label }}</slot></span>
+        <span class="shapla-switch__track"></span>
+        <span class="shapla-switch__thumb">
+            <span class="shapla-switch__focus-helper"></span>
+        </span>
     </label>
 </template>
 
 <script>
-    import {MaterialSwitch} from './MaterialSwitch.js';
-    import {MaterialRipple} from '../ripple/MaterialRipple.js';
-
     export default {
-        name: "mdlSwitch",
-        mounted() {
-            new MaterialSwitch(this.$el);
-            new MaterialRipple(this.$el.querySelector('.mdl-js-ripple-effect'));
-        },
+        name: "shaplaSwitch",
         model: {
             prop: 'modelValue',
             event: 'change'

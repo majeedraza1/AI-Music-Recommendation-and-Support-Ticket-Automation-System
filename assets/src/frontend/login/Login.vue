@@ -37,7 +37,7 @@
 <script>
     import axios from 'axios'
     import spinner from 'shapla-spinner'
-    import AnimatedInput from "../../components/AnimatedInput";
+    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
     import shaplaButton from "shapla-button";
     import MdlCheckbox from "../../material-design-lite/checkbox/mdlCheckbox";
 

@@ -100,15 +100,14 @@
     import shaplaButton from "shapla-button";
     import dataTable from "shapla-data-table";
     import {CrudMixin} from "../../mixins/CrudMixin";
-    import AnimatedInput from "../../components/AnimatedInput";
-    import MdlSwitch from "../../material-design-lite/switch/mdlSwitch";
+    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
     import RoleEditor from "./RoleEditor";
 
     export default {
         name: "AgentsList",
         mixins: [CrudMixin],
         components: {
-            shaplaButton, RoleEditor, MdlSwitch, AnimatedInput, vSelect,
+            shaplaButton, RoleEditor, AnimatedInput, vSelect,
             dataTable, tabs, tab, modal, columns, column
         },
         data() {

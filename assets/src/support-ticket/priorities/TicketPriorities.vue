@@ -62,7 +62,7 @@
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
     import {CrudMixin} from "../../mixins/CrudMixin";
-    import AnimatedInput from "../../components/AnimatedInput";
+    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
     import shaplaButton from "shapla-button";
 
     export default {
