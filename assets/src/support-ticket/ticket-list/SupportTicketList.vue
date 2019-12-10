@@ -237,16 +237,6 @@
 <style lang="scss">
     .stackont-support-ticket-container {
         padding-top: 2rem;
-
-        .shapla-search-form__input {
-            padding-left: 2.5em;
-        }
-
-        .shapla-search-form__submit {
-            right: auto;
-            left: 3px;
-            top: 5px;
-        }
     }
 
     .button-restore,

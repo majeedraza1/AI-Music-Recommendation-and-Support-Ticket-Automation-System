@@ -60,6 +60,7 @@
 		"shapla-search-form": "^1.0.1",
 		"shapla-spinner": "^1.0.3",
 		"shapla-tabs": "^1.0.2",
+		"shapla-toggles": "^1.0.0",
 		"vue": "^2.5.22",
 		"vue-router": "^3.0.2",
 		"vue-select": "^3.2.0",

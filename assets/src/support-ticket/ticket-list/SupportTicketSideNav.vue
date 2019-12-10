@@ -6,14 +6,9 @@
         </div>
 
         <template v-if="showSideNav">
-            <div class="support-tickets-side-nav__item" v-for="(filter, index) in filters"
-                 v-if="filter.options.length">
-                <toggle :name="filter.name" :selected="index === 0">
-                    <template slot="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-format_list_bulleted"/>
-                        </svg>
-                    </template>
+            <toggles :boxed-mode="false" :show-divider="false">
+                <toggle :name="filter.name" :selected="index === 0" :key="filter.name"
+                        v-if="filter.options.length" v-for="(filter, index) in filters">
                     <span class="support-tickets-side-nav__text" v-for="_option in filter.options"
                           :class="{'is-active':_option.active}" @click="changeFilter(_option.value,filter.id)">
                         <span class="support-tickets-side-nav__label">{{_option.label}}</span>
@@ -21,7 +16,7 @@
                     </span>
 
                 </toggle>
-            </div>
+            </toggles>
 
             <div class="support-tickets-side-nav__item">
                 <div class="support-tickets-side-nav__title">
@@ -58,11 +53,11 @@
 <script>
     import {mapState} from 'vuex';
     import shaplaButton from "shapla-button";
-    import Toggle from "../../components/Toggle";
+    import {toggles, toggle} from "shapla-toggles";
 
     export default {
         name: "SupportTicketSideNav",
-        components: {Toggle, shaplaButton},
+        components: {toggles, toggle, shaplaButton},
         data() {
             return {
                 isSelected: false,
@@ -109,6 +104,8 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss">
+    .support-tickets-side-nav {
 
+    }
 </style>

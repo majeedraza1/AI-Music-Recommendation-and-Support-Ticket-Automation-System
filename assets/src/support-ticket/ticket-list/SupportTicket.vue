@@ -57,7 +57,7 @@
 
     .support-tickets-side-nav {
         background-color: #fff;
-        padding: 2rem;
+        padding: 20px;
         max-width: 350px;
         min-width: 280px;
 
@@ -73,8 +73,18 @@
             margin-bottom: 0;
         }
 
+        .shapla-toggle-panel__heading {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .shapla-toggle-panel__title-text {
+            font-size: inherit;
+        }
+
         .shapla-toggle-panel__content {
-            padding-left: 20px;
+            padding-left: 0;
+            padding-right: 0;
 
             .support-tickets-side-nav__text {
                 margin-bottom: 10px;
@@ -85,6 +95,7 @@
         &__item {
             display: flex;
             margin-bottom: 1rem;
+            margin-top: 1rem;
         }
 
         &__title {
@@ -96,6 +107,7 @@
         &__icon {
             height: 24px;
             width: 24px;
+            margin-right: 10px;
         }
 
         &__text {
@@ -139,12 +151,6 @@
                 color: var(--stackonet-ticket-on-primary);
             }
         }
-    }
-
-    .shapla-search-form__input {
-        box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08) !important;
-        border-radius: 25px !important;
-        border: none !important;
     }
 
     .stackonet-support-ticket-icon-search {
