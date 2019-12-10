@@ -2,7 +2,7 @@
     <div>
         <draggable :list="statuses" class="list-group" handle=".handle" @update="updateMenuOrder">
             <div v-for="_status in statuses" :key="_status.term_id">
-                <div class="shapla-box shapla-box--role flex w-full content-center mdl-shadow--2dp">
+                <div class="shapla-box shapla-box--role flex w-full content-center shadow--2dp">
                     <div>
                         <strong>{{_status.name}}</strong>
                     </div>

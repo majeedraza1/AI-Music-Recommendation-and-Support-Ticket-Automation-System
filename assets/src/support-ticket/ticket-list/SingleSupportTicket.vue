@@ -151,16 +151,17 @@
                     <div class="shapla-widget-box__content padding-15">
                         <div class="shapla-widget-box__customer-phone">
 
-                            <mdl-checkbox id="ticket_twilio_sms_customer_phone"
+                            <shapla-checkbox id="ticket_twilio_sms_customer_phone"
                                           v-model="ticket_twilio_sms_customer_phone"><strong>Customer Phone: </strong>
                                 {{item.customer_phone}}
-                            </mdl-checkbox>
+                            </shapla-checkbox>
                         </div>
                         <div class="shapla-widget-box__customer-phone">
 
-                            <mdl-checkbox id="users_can_register"
+                            <shapla-checkbox id="users_can_register"
                                           v-model="ticket_twilio_sms_enable_custom_phone"><strong>Custom
-                                Phone: </strong></mdl-checkbox>
+                                Phone: </strong>
+                            </shapla-checkbox>
                             <input type="text" v-model="ticket_twilio_sms_custom_phone"/>
 
                         </div>
@@ -287,11 +288,11 @@
     import ListItem from '../../shapla/shapla-list-item/ListItem'
     import ImageContainer from "../../shapla/image/image";
     import Icon from "../../shapla/icon/icon";
-    import MdlCheckbox from "../../material-design-lite/checkbox/mdlCheckbox";
+    import shaplaCheckbox from "../../shapla/shapla-checkbox";
 
     export default {
         name: "SingleSupportTicket",
-        components: {MdlCheckbox, Icon, ImageContainer, shaplaButton, columns, column, ListItem, Editor, modal},
+        components: {shaplaCheckbox, Icon, ImageContainer, shaplaButton, columns, column, ListItem, Editor, modal},
         data() {
             return {
                 loading: false,

@@ -56,7 +56,7 @@
             </tab>
             <tab name="Roles & Capabilities">
                 <div v-for="role in roles" :key="role.role">
-                    <div class="shapla-box shapla-box--role flex w-full content-center mdl-shadow--2dp">
+                    <div class="shapla-box shapla-box--role flex w-full content-center shadow--2dp">
                         <div>
                             <strong>{{role.name}}</strong>
                         </div>

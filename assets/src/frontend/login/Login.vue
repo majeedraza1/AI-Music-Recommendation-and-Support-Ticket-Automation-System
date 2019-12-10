@@ -22,7 +22,7 @@
             </div>
             <div class="flex space-between m-b-20">
                 <div>
-                    <mdl-checkbox v-model="remember">Remember me</mdl-checkbox>
+                    <shapla-checkbox v-model="remember">Remember me</shapla-checkbox>
                 </div>
                 <div><a :href="lostPasswordUrl">Forgot your password?</a></div>
             </div>
@@ -30,20 +30,20 @@
                 <shapla-button theme="primary" :fullwidth="true" :disabled="!canSubmit">Log in</shapla-button>
             </div>
         </form>
-        <spinner :active="loading"></spinner>
+        <spinner :active="loading"/>
     </div>
 </template>
 
 <script>
     import axios from 'axios'
     import spinner from 'shapla-spinner'
-    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
     import shaplaButton from "shapla-button";
-    import MdlCheckbox from "../../material-design-lite/checkbox/mdlCheckbox";
+    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
+    import shaplaCheckbox from "../../shapla/shapla-checkbox";
 
     export default {
         name: "Login",
-        components: {MdlCheckbox, shaplaButton, AnimatedInput, spinner},
+        components: {shaplaCheckbox, shaplaButton, AnimatedInput, spinner},
         data() {
             return {
                 loading: false,
