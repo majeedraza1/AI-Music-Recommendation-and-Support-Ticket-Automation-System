@@ -1,3 +1,5 @@
+@import "colors";
+
 $checkbox-label-font-size: 16px !default;
 $checkbox-label-height: 24px !default;
 $checkbox-button-size: 16px !default;
@@ -6,11 +8,10 @@ $checkbox-padding: 8px !default;
 $checkbox-top-offset: ($checkbox-label-height - $checkbox-button-size - $checkbox-inner-margin) / 2;
 $checkbox-ripple-size: $checkbox-label-height * 1.5;
 
-$color-primary: "245, 135, 48" !default; //$palette-indigo-500 !default;
-$color-black: "0,0,0";
+$color-primary: #f58730 !default; //$palette-indigo-500 !default;
+$color-black: #000;
 
-$checkbox-color: unquote("rgb(#{$color-primary})") !default;
-$checkbox-off-color: unquote("rgba(#{$color-black}, 0.54)") !default;
-$checkbox-disabled-color: unquote("rgba(#{$color-black}, 0.26)") !default;
-$checkbox-focus-color: unquote("rgba(#{$color-primary}, 0.26)") !default;
-// $checkbox-image-path: $image_path;
+$checkbox-color: $primary !default;
+$checkbox-off-color: rgba($color-black, 0.54) !default;
+$checkbox-disabled-color: rgba($color-black, 0.26) !default;
+$checkbox-focus-color: rgba($color-primary, 0.26) !default;

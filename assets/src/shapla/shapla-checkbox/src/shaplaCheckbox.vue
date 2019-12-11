@@ -5,6 +5,7 @@
                :value="value"
                :disabled="disabled"
                @change="updateInput"
+               @focus="updateFocusEvent"
         >
         <span class="shapla-checkbox__label"><slot>{{ label }}</slot></span>
         <span class="shapla-checkbox__focus-helper"></span>
@@ -30,7 +31,9 @@
             label: {type: String, default: ''},
         },
         data() {
-            return {}
+            return {
+                isFocus: false
+            }
         },
         computed: {
             shouldBeChecked() {
@@ -63,6 +66,9 @@
                 } else {
                     this.$emit('change', isChecked ? this.trueValue : this.falseValue)
                 }
+            },
+            updateFocusEvent() {
+                this.isFocus = true;
             }
         }
     }
