@@ -128,13 +128,13 @@
             },
             submitTicket() {
                 let self = this;
-                axios.post(StackonetSupportTicket.restRoot + '/support-ticket', {
-                    customer_name: self.customer_name,
-                    customer_email: self.customer_email,
-                    ticket_subject: self.ticket_subject,
-                    ticket_content: self.ticket_content,
-                    ticket_category: self.ticket_category,
-                    ticket_priority: self.ticket_priority,
+                axios.post(StackonetSupportTicket.restRoot + '/tickets', {
+                    name: self.customer_name,
+                    email: self.customer_email,
+                    subject: self.ticket_subject,
+                    content: self.ticket_content,
+                    category: self.ticket_category,
+                    priority: self.ticket_priority,
                 }).then((response) => {
                     self.$store.commit('SET_LOADING_STATUS', false);
                     let id = response.data.data.ticket_id;

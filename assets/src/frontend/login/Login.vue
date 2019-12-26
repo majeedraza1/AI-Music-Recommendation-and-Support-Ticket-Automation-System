@@ -38,8 +38,8 @@
     import axios from 'axios'
     import spinner from 'shapla-spinner'
     import shaplaButton from "shapla-button";
+    import shaplaCheckbox from "shapla-checkbox";
     import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
-    import shaplaCheckbox from "../../shapla/shapla-checkbox";
 
     export default {
         name: "Login",

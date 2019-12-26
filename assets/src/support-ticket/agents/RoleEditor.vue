@@ -32,7 +32,7 @@
     import {column, columns} from 'shapla-columns'
     import modal from 'shapla-modal'
     import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
-    import shaplaSwitch from "../../shapla/shapla-switch";
+    import shaplaSwitch from "shapla-switch";
     import shaplaButton from "shapla-button";
 
     export default {

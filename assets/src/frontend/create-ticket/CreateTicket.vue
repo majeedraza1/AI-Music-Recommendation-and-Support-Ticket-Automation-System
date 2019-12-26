@@ -38,7 +38,7 @@
                             <strong class="support-ticket-form__label">{{fields.content.label}}</strong>
                             <span class="support-ticket-form__description">{{fields.content.description}}</span>
                         </label>
-                        <editor id="ticket_content" :init="mce" v-model="ticket.content"></editor>
+                        <editor id="ticket_content" :init="mce" v-model="ticket.content"/>
                     </div>
                 </column>
                 <column :tablet="12" v-if="fields.category">

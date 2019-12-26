@@ -288,7 +288,7 @@
     import ListItem from '../../shapla/shapla-list-item/ListItem'
     import ImageContainer from "../../shapla/image/image";
     import Icon from "../../shapla/icon/icon";
-    import shaplaCheckbox from "../../shapla/shapla-checkbox";
+    import shaplaCheckbox from "shapla-checkbox";
 
     export default {
         name: "SingleSupportTicket",
