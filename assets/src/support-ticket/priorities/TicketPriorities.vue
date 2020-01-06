@@ -31,7 +31,7 @@
         </draggable>
 
         <modal :active="showAddPriorityModal" @close="showAddPriorityModal = false" title="Add Priority">
-            <animated-input v-model="priorityName" label="Priority"></animated-input>
+            <text-field v-model="priorityName" label="Priority"/>
             <div class="help has-error" v-if="priorityNameError.length">{{priorityNameError}}</div>
             <template slot="foot">
                 <shapla-button theme="primary" :disabled="priorityName.length < 3" @click="createPriority">
@@ -42,9 +42,9 @@
 
         <modal :active="showEditPriorityModal" @close="showEditPriorityModal = false" title="Edit Priority">
             <template v-if="Object.keys(editActivePriority).length">
-                <animated-input v-model="editActivePriority.name" label="Priority Name"/>
-                <animated-input v-model="editActivePriority.slug" label="Priority Slug"/>
-                <p class="help has-error" v-if="editError.length" v-html="editError"></p>
+                <text-field v-model="editActivePriority.name" label="Priority Name"/>
+                <text-field v-model="editActivePriority.slug" label="Priority Slug"/>
+                <p class="help has-error" v-if="editError.length" v-html="editError"/>
             </template>
             <template slot="foot">
                 <shapla-button theme="primary" @click="updatePriority">Update</shapla-button>
@@ -62,12 +62,12 @@
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
     import {CrudMixin} from "../../mixins/CrudMixin";
-    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
+    import textField from "shapla-text-field";
     import shaplaButton from "shapla-button";
 
     export default {
         name: "TicketPriorities",
-        components: {shaplaButton, modal, AnimatedInput, draggable},
+        components: {shaplaButton, modal, textField, draggable},
         mixins: [CrudMixin],
         data() {
             return {

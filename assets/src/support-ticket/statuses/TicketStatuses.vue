@@ -31,7 +31,7 @@
         </draggable>
 
         <modal :active="showAddStatusModal" @close="showAddStatusModal = false" title="Add Status">
-            <animated-input v-model="statusName" label="Status"/>
+            <text-field v-model="statusName" label="Status"/>
             <div class="help has-error" v-if="statusNameError.length">{{statusNameError}}</div>
             <template slot="foot">
                 <shapla-button theme="primary" :disabled="statusName.length < 3" @click="createStatus">
@@ -42,9 +42,9 @@
 
         <modal :active="showEditStatusModal" @close="showEditStatusModal = false" title="Edit Status">
             <template v-if="Object.keys(editActiveStatus).length">
-                <animated-input v-model="editActiveStatus.name" label="Status Name"/>
-                <animated-input v-model="editActiveStatus.slug" label="Status Slug"/>
-                <p class="help has-error" v-if="editError.length" v-html="editError"></p>
+                <text-field v-model="editActiveStatus.name" label="Status Name"/>
+                <text-field v-model="editActiveStatus.slug" label="Status Slug"/>
+                <p class="help has-error" v-if="editError.length" v-html="editError"/>
             </template>
             <template slot="foot">
                 <shapla-button theme="primary" @click="updateStatus">Update</shapla-button>
@@ -62,12 +62,12 @@
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
     import {CrudMixin} from "../../mixins/CrudMixin";
-    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
+    import textField from "shapla-text-field";
     import shaplaButton from "shapla-button";
 
     export default {
         name: "TicketStatuses",
-        components: {shaplaButton, modal, AnimatedInput, draggable},
+        components: {shaplaButton, modal, textField, draggable},
         mixins: [CrudMixin],
         data() {
             return {

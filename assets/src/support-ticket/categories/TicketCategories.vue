@@ -38,7 +38,7 @@
         </draggable>
 
         <modal :active="showAddCategoryModal" @close="showAddCategoryModal = false" title="Add Category">
-            <animated-input v-model="categoryName" label="Category"/>
+            <text-field v-model="categoryName" label="Category"/>
             <div class="help has-error" v-if="categoryNameError.length">{{categoryNameError}}</div>
             <template slot="foot">
                 <shapla-button theme="primary" :disabled="categoryName.length < 3" @click="createCategory">
@@ -49,9 +49,9 @@
 
         <modal :active="showEditCategoryModal" @close="showEditCategoryModal = false" title="Edit Category">
             <template v-if="Object.keys(editActiveCategory).length">
-                <animated-input v-model="editActiveCategory.name" label="Category Name"/>
-                <animated-input v-model="editActiveCategory.slug" label="Category Slug"/>
-                <p class="help has-error" v-if="editError.length" v-html="editError"></p>
+                <text-field v-model="editActiveCategory.name" label="Category Name"/>
+                <text-field v-model="editActiveCategory.slug" label="Category Slug"/>
+                <p class="help has-error" v-if="editError.length" v-html="editError"/>
             </template>
             <template slot="foot">
                 <shapla-button theme="primary" @click="updateCategory">Update</shapla-button>
@@ -69,13 +69,13 @@
     import modal from 'shapla-modal'
     import draggable from 'vuedraggable'
     import {CrudMixin} from "../../mixins/CrudMixin";
-    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
+    import textField from "shapla-text-field";
     import shaplaButton from "shapla-button";
     import Icon from "../../shapla/icon/icon";
 
     export default {
         name: "TicketCategories",
-        components: {Icon, shaplaButton, modal, AnimatedInput, draggable},
+        components: {Icon, shaplaButton, modal, textField, draggable},
         mixins: [CrudMixin],
         data() {
             return {

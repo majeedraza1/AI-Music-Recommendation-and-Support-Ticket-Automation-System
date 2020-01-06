@@ -1,8 +1,8 @@
 <template>
     <div class="stackonet-support-ticket-login">
         <form @submit.prevent="submitForm" class="stackonet-support-ticket-login-form">
-            <div>
-                <animated-input
+            <div style="margin-bottom: 1rem">
+                <text-field
                         label="Email or Username"
                         autocomplete="username"
                         v-model="user_login"
@@ -10,8 +10,8 @@
                         :helptext="errors.user_login?errors.user_login[0]:''"
                 />
             </div>
-            <div>
-                <animated-input
+            <div style="margin-bottom: 1rem">
+                <text-field
                         type="password"
                         label="Password"
                         v-model="password"
@@ -39,11 +39,11 @@
     import spinner from 'shapla-spinner'
     import shaplaButton from "shapla-button";
     import shaplaCheckbox from "shapla-checkbox";
-    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
+    import textField from "shapla-text-field";
 
     export default {
         name: "Login",
-        components: {shaplaCheckbox, shaplaButton, AnimatedInput, spinner},
+        components: {shaplaCheckbox, shaplaButton, textField, spinner},
         data() {
             return {
                 loading: false,

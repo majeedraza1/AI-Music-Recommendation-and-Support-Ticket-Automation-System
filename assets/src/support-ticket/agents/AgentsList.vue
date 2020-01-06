@@ -24,13 +24,13 @@
                             <column :tablet="12">
                                 <label>Agent</label>
                                 <v-select @search="fetchUsers" :filterable="false" :options="users"
-                                          label="name" v-model="addAgentActiveAgent"></v-select>
+                                          label="name" v-model="addAgentActiveAgent"/>
                                 <span class="help has-error" v-if="agentError.length">{{agentError}}</span>
                             </column>
                             <column :tablet="12">
                                 <label>Role</label>
                                 <v-select :filterable="false" :options="roles" label="name"
-                                          v-model="addAgentActiveRole"></v-select>
+                                          v-model="addAgentActiveRole"/>
                             </column>
                         </columns>
                     </div>
@@ -100,16 +100,12 @@
     import shaplaButton from "shapla-button";
     import dataTable from "shapla-data-table";
     import {CrudMixin} from "../../mixins/CrudMixin";
-    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
     import RoleEditor from "./RoleEditor";
 
     export default {
         name: "AgentsList",
         mixins: [CrudMixin],
-        components: {
-            shaplaButton, RoleEditor, AnimatedInput, vSelect,
-            dataTable, tabs, tab, modal, columns, column
-        },
+        components: {shaplaButton, RoleEditor, vSelect, dataTable, tabs, tab, modal, columns, column},
         data() {
             return {
                 showAddAgentModal: false,

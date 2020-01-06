@@ -3,10 +3,10 @@
         <div class="stackonet-role-editor">
             <columns :multiline="true">
                 <column :tablet="12">
-                    <animated-input label="Role" :required="true" v-model="role"/>
+                    <text-field label="Role" :required="true" v-model="role"/>
                 </column>
                 <column :tablet="12">
-                    <animated-input label="Role Name" :required="true" v-model="name"/>
+                    <text-field label="Role Name" :required="true" v-model="name"/>
                 </column>
                 <column :tablet="12" v-for="_setting in caps_settings" :key="_setting.id">
                     <div class="clearfix flex w-full stackonet-role-editor__capabilities">
@@ -31,13 +31,13 @@
 <script>
     import {column, columns} from 'shapla-columns'
     import modal from 'shapla-modal'
-    import AnimatedInput from "../../shapla/shapla-animated-input/AnimatedInput";
+    import textField from "shapla-text-field";
     import shaplaSwitch from "shapla-switch";
     import shaplaButton from "shapla-button";
 
     export default {
         name: "RoleEditor",
-        components: {shaplaButton, shaplaSwitch, AnimatedInput, columns, column, modal},
+        components: {shaplaButton, shaplaSwitch, textField, columns, column, modal},
         props: {
             active: {type: Boolean, required: true},
             title: {type: String, default: 'Add Role'},
