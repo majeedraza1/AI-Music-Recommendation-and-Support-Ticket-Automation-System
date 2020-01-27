@@ -97,19 +97,19 @@ export default new Vuex.Store({
     actions: {
         getTickets({commit, state}) {
             commit('SET_LOADING_STATUS', true);
-            axios.get(StackonetSupportTicket.restRoot + '/tickets',
-                {
-                    params: {
-                        ticket_status: state.status,
-                        ticket_category: state.category,
-                        ticket_priority: state.priority,
-                        agent: state.agent,
-                        page: state.currentPage,
-                        label: state.label,
-                        city: state.city,
-                        search: state.search
-                    }
-                }).then(response => {
+            axios.get(StackonetSupportTicket.restRoot + '/tickets', {
+                params: {
+                    ticket_status: state.status,
+                    ticket_category: state.category,
+                    ticket_priority: state.priority,
+                    agent: state.agent,
+                    page: state.currentPage,
+                    label: state.label,
+                    city: state.city,
+                    search: state.search,
+                    per_page: 50,
+                }
+            }).then(response => {
                 let data = response.data.data,
                     filters = data.filters;
                 commit('SET_LOADING_STATUS', false);

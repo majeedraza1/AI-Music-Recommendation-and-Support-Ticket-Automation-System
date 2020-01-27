@@ -68,6 +68,7 @@
 				{{data.row.priority.name}}
 			</span>
         </data-table>
+        <pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage" @pagination="paginate"/>
     </div>
 </template>
 
@@ -78,11 +79,12 @@
     import shaplaButton from "shapla-button";
     import searchForm from "shapla-search-form";
     import dataTable from "shapla-data-table";
+    import pagination from "shapla-data-table-pagination";
     import Icon from "../../shapla/icon/icon";
 
     export default {
         name: "SupportTicketList",
-        components: {Icon, shaplaButton, dataTable, searchForm, columns, column},
+        components: {Icon, shaplaButton, dataTable, searchForm, columns, column, pagination},
 
         data() {
             return {
@@ -100,7 +102,7 @@
                     {key: 'ticket_category', label: 'Category', numeric: false},
                     {key: 'ticket_priority', label: 'Priority', numeric: false},
                     {key: 'updated_human_time', label: 'Updated', numeric: false},
-                ],
+                ]
             }
         },
         mounted() {

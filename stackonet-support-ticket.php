@@ -119,8 +119,11 @@ class StackonetSupportTicket {
 		$this->container['settings']  = StackonetSupportTicket\Admin\Settings::init();
 		$this->container['post_type'] = StackonetSupportTicket\Admin\PostType::init();
 
+		$this->container['clone_thread'] = new StackonetSupportTicket\Upgrade\CloneThreadBackgroundTask();
+
 		if ( $this->is_request( 'admin' ) ) {
 			$this->container['admin'] = StackonetSupportTicket\Admin\Admin::init();
+			StackonetSupportTicket\Upgrade\Upgrade::init();
 		}
 
 		if ( $this->is_request( 'frontend' ) ) {
@@ -143,6 +146,13 @@ class StackonetSupportTicket {
 		if ( $this->is_request( 'ajax' ) ) {
 			$this->container['ajax'] = StackonetSupportTicket\Ajax::init();
 		}
+	}
+
+	/**
+	 * @return StackonetSupportTicket\Upgrade\CloneThreadBackgroundTask
+	 */
+	public function clone_thread_background_process() {
+		return $this->container['clone_thread'];
 	}
 
 	/**
