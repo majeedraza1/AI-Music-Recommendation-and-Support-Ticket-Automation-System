@@ -63,6 +63,25 @@ class UpgradeThreads extends BackgroundProcess {
 	}
 
 	/**
+	 * Complete.
+	 *
+	 * Override if applicable, but ensure that the below actions are
+	 * performed, or, call parent::complete().
+	 */
+	public function complete() {
+		parent::complete();
+
+		// Upgrade ticket Categories
+		UpgradeCategories::clone_categories();
+
+		// Upgrade ticket Priorities
+		UpgradePriorities::clone_priorities();
+
+		// Upgrade ticket Statuses
+		UpgradeStatus::clone_statuses();
+	}
+
+	/**
 	 * Clone ticket
 	 *
 	 * @param WP_Post $post
