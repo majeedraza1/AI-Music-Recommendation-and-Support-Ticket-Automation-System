@@ -125,11 +125,17 @@ class UpgradeThreads extends BackgroundProcess {
 		global $wpdb;
 
 		// Get all threads ids
-		$ids = $wpdb->get_results( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s", static::$old_post_type_name ), ARRAY_A );
+		$ids = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s ORDER BY ID DESC",
+				static::$old_post_type_name
+			),
+			ARRAY_A
+		);
 		$ids = count( $ids ) ? wp_list_pluck( $ids, 'ID' ) : [];
 		$ids = count( $ids ) ? array_map( 'intval', $ids ) : [];
 
-		$chunks = array_chunk( $ids, 50 );
+		$chunks = array_chunk( $ids, 30 );
 
 		$background_process = stackonet_support_ticket()->clone_thread_background_process();
 		foreach ( $chunks as $chunk_ids ) {
@@ -163,7 +169,7 @@ class UpgradeThreads extends BackgroundProcess {
 		$status = static::get_status();
 
 		if ( $status['items_complete'] < $status['total_items'] ) {
-			return $status['items_complete'] . " items complete out of " . $status['total_items'] . " items";
+			return "Stackonet Support Ticket: " . $status['items_complete'] . " items complete out of " . $status['total_items'] . " items";
 		}
 
 		return '';
