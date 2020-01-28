@@ -163,7 +163,7 @@ class UpgradeThreads extends BackgroundProcess {
 		$status = static::get_status();
 
 		if ( $status['items_complete'] < $status['total_items'] ) {
-			return $status['items_complete'] . " items complete out of " . $status['items_complete'] . " items";
+			return $status['items_complete'] . " items complete out of " . $status['total_items'] . " items";
 		}
 
 		return '';
