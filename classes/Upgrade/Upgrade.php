@@ -21,31 +21,42 @@ class Upgrade {
 			update_option( 'support_ticket_table_upgrade_done', 'yes' );
 		}
 
-		$is_upgraded = get_option( 'support_ticket_thread_upgrade_done' );
-		if ( 'yes' != $is_upgraded ) {
-			static::clone_threads();
-			update_option( 'support_ticket_thread_upgrade_done', 'yes' );
+		if ( 'yes' != get_option( 'support_ticket_thread_upgrade_done' ) ) {
+			CloneThreadBackgroundTask::clone_threads();
+			update_option( 'support_ticket_thread_upgrade_done', 'yes', false );
+		}
+
+		add_action( 'admin_notices', [ new static(), 'add_admin_upgrade_status_notice' ] );
+	}
+
+	/**
+	 * Add upgrade notice
+	 */
+	public function add_admin_upgrade_status_notice() {
+		$thread_status_text = CloneThreadBackgroundTask::get_admin_notice_text();
+		if ( ! empty( $thread_status_text ) ) {
+			echo $this->add_admin_notice( $thread_status_text );
 		}
 	}
 
-
 	/**
+	 * Add admin notice
+	 *
+	 * @param string $content
+	 * @param bool $dismissible
+	 *
+	 * @return string
 	 */
-	protected static function clone_threads() {
-		global $wpdb;
-		$wpdb->query( "DELETE FROM `{$wpdb->posts}` WHERE `post_type` = 'ticket_thread'" );
-
-		$ids = $wpdb->get_results( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'wpsc_ticket_thread'", ARRAY_A );
-		$ids = count( $ids ) ? wp_list_pluck( $ids, 'ID' ) : [];
-		$ids = count( $ids ) ? array_map( 'intval', $ids ) : [];
-
-		$background_process = stackonet_support_ticket()->clone_thread_background_process();
-		foreach ( array_chunk( $ids, 15 ) as $chunk_ids ) {
-			$background_process->push_to_queue( $chunk_ids );
+	public static function add_admin_notice( $content, $dismissible = true ) {
+		$html = '<div id="message" class="notice notice-info is-dismissible">';
+		$html .= '<p>' . esc_html( $content ) . '</p>';
+		if ( $dismissible ) {
+			$html .= '<button type="button" class="notice-dismiss">';
+			$html .= '<span class="screen-reader-text">Dismiss this notice.</span>';
+			$html .= '</button>';
 		}
+		$html .= '</div>';
 
-		add_action( 'shutdown', function () use ( $background_process ) {
-			$background_process->save()->dispatch();
-		}, 100 );
+		return $html;
 	}
 }
