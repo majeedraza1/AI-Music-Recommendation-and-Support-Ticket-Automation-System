@@ -2,7 +2,6 @@
 
 namespace StackonetSupportTicket;
 
-use StackonetSupportTicket\Utilities\Logger;
 use WP_Role;
 
 defined( 'ABSPATH' ) || exit;

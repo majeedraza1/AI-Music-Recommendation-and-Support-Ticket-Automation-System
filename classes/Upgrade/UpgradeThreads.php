@@ -7,7 +7,7 @@ use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
 
-class CloneThreadBackgroundTask extends BackgroundProcess {
+class UpgradeThreads extends BackgroundProcess {
 
 	/**
 	 * Action

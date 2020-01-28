@@ -22,9 +22,18 @@ class Upgrade {
 		}
 
 		if ( 'yes' != get_option( 'support_ticket_thread_upgrade_done' ) ) {
-			CloneThreadBackgroundTask::clone_threads();
+			UpgradeThreads::clone_threads();
 			update_option( 'support_ticket_thread_upgrade_done', 'yes', false );
 		}
+
+		// Upgrade ticket Categories
+		if ( 'yes' != get_option( 'support_ticket_category_upgrade_done' ) ) {
+			UpgradeCategories::clone_categories();
+			update_option( 'support_ticket_category_upgrade_done', 'yes', false );
+		}
+
+		// Upgrade ticket Priorities
+		// Upgrade ticket Statuses
 
 		add_action( 'admin_notices', [ new static(), 'add_admin_upgrade_status_notice' ] );
 	}
@@ -33,7 +42,7 @@ class Upgrade {
 	 * Add upgrade notice
 	 */
 	public function add_admin_upgrade_status_notice() {
-		$thread_status_text = CloneThreadBackgroundTask::get_admin_notice_text();
+		$thread_status_text = UpgradeThreads::get_admin_notice_text();
 		if ( ! empty( $thread_status_text ) ) {
 			echo $this->add_admin_notice( $thread_status_text );
 		}
