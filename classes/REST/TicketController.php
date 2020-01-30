@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\REST;
 
+use ArrayObject;
 use Exception;
 use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\SupportTicket;
@@ -747,38 +748,47 @@ class TicketController extends ApiController {
 			];
 		}
 
-		$cities = ( new SupportTicket() )->find_all_cities();
+		$_cities = ( new SupportTicket() )->find_all_cities();
+		$cities  = [];
+		foreach ( $_cities as $_city ) {
+			$cities[] = [
+				'value'  => 0,
+				'label'  => $_city,
+				'count'  => 0,
+				'active' => false
+			];
+		}
 
 		return [
 			[
 				'id'            => 'status',
 				'name'          => __( 'Statuses', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'Status', 'stackonet-support-ticket' ),
-				'options'       => $statuses,
+				'options'       => count( $statuses ) ? $statuses : new ArrayObject(),
 			],
 			[
 				'id'            => 'priority',
 				'name'          => __( 'Priorities', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'Priority', 'stackonet-support-ticket' ),
-				'options'       => $priorities
+				'options'       => count( $priorities ) ? $priorities : new ArrayObject()
 			],
 			[
 				'id'            => 'agent',
 				'name'          => __( 'Agents', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'Agent', 'stackonet-support-ticket' ),
-				'options'       => $agents
+				'options'       => count( $agents ) ? $agents : new ArrayObject()
 			],
 			[
 				'id'            => 'category',
 				'name'          => __( 'Categories', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'Category', 'stackonet-support-ticket' ),
-				'options'       => $categories
+				'options'       => count( $categories ) ? $categories : new ArrayObject(),
 			],
 			[
 				'id'            => 'city',
 				'name'          => __( 'Cities', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'City', 'stackonet-support-ticket' ),
-				'options'       => $cities
+				'options'       => count( $cities ) ? $cities : new ArrayObject(),
 			],
 		];
 	}

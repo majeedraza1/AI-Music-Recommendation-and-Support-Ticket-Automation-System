@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\Models;
 
+use ArrayObject;
 use DateTime;
 use Exception;
 use StackonetSupportTicket\Abstracts\DatabaseModel;
@@ -312,7 +313,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Get ticket status
 	 *
-	 * @return array
+	 * @return array|ArrayObject
 	 */
 	public function get_ticket_status() {
 		$ticket_status = $this->get( 'ticket_status' );
@@ -322,13 +323,13 @@ class SupportTicket extends DatabaseModel {
 			return $terms->to_array();
 		}
 
-		return [];
+		return new ArrayObject();
 	}
 
 	/**
 	 * Get ticket category
 	 *
-	 * @return array
+	 * @return array|ArrayObject
 	 */
 	public function get_ticket_category() {
 		$ticket_status = $this->get( 'ticket_category' );
@@ -337,13 +338,13 @@ class SupportTicket extends DatabaseModel {
 			return $terms->to_array();
 		}
 
-		return [];
+		return new ArrayObject();
 	}
 
 	/**
 	 * Get ticket priority
 	 *
-	 * @return array
+	 * @return array|ArrayObject
 	 */
 	public function get_ticket_priority() {
 		$ticket_status = $this->get( 'ticket_priority' );
@@ -353,7 +354,7 @@ class SupportTicket extends DatabaseModel {
 			return $terms->to_array();
 		}
 
-		return [];
+		return new ArrayObject;
 	}
 
 	/**
