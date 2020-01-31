@@ -164,7 +164,7 @@ class TicketController extends ApiController {
 		$city            = $request->get_param( 'city' );
 		$agent           = $request->get_param( 'agent' );
 		$label           = $request->get_param( 'label' );
-		$active          = 'trash' != $label;
+		$label           = in_array( $label, [ 'active', 'trash' ] ) ? $label : 'active';
 
 		$ticket_status   = ! empty( $ticket_status ) ? $ticket_status : 'all';
 		$ticket_category = ! empty( $ticket_category ) ? $ticket_category : 'all';
@@ -188,16 +188,18 @@ class TicketController extends ApiController {
 				'ticket_category' => $ticket_category,
 				'ticket_priority' => $ticket_priority,
 				'city'            => $city,
-				'active'          => $active,
+				'active'          => 'trash' != $label,
 				'agent'           => $agent,
 			] );
 		}
 
-		$statuses = $supportTicket->get_ticket_statuses_terms();
-		$counts   = SupportTicket::tickets_count_by_terms( $statuses, 'ticket_status' );
+		$counts = [
+			'active' => $supportTicket->count_active_records(),
+			'trash'  => $supportTicket->count_inactive_records(),
+		];
 
 		$pagination = $this->getPaginationMetadata( [
-			'totalCount'  => $counts[ $ticket_status ],
+			'totalCount'  => $counts[ $label ],
 			'limit'       => $per_page,
 			'currentPage' => $paged,
 		] );
@@ -219,22 +221,31 @@ class TicketController extends ApiController {
 		}
 
 		if ( 'trash' == $label ) {
-			$actions     = [
+			$actions = $bulkActions = [
 				[ 'key' => 'restore', 'label' => 'Restore' ],
 				[ 'key' => 'delete', 'label' => 'Delete Permanently' ],
 			];
-			$bulkActions = $actions;
 		} else {
-			$actions     = [
-				[ 'key' => 'view', 'label' => 'View' ],
-				[ 'key' => 'trash', 'label' => 'Trash' ],
-			];
-			$bulkActions = [
-				[ 'key' => 'trash', 'label' => 'Move to Trash' ],
-			];
+			$actions     = [ [ 'key' => 'view', 'label' => 'View' ], [ 'key' => 'trash', 'label' => 'Trash' ], ];
+			$bulkActions = [ [ 'key' => 'trash', 'label' => 'Move to Trash' ], ];
 		}
 
 		$response['meta_data'] = [ 'actions' => $actions, 'bulkActions' => $bulkActions ];
+
+		$response['statuses'] = [
+			[
+				'key'    => 'active',
+				'label'  => __( 'Active', 'stackonet-support-ticket' ),
+				'count'  => $counts['active'],
+				'active' => $label != 'trash'
+			],
+			[
+				'key'    => 'trash',
+				'label'  => __( 'Trash', 'stackonet-support-ticket' ),
+				'count'  => $counts['trash'],
+				'active' => $label == 'trash'
+			],
+		];
 
 		return $this->respondOK( $response );
 	}

@@ -1011,6 +1011,20 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Cont trash records
+	 *
+	 * @return int
+	 */
+	public function count_active_records() {
+		global $wpdb;
+		$table   = $wpdb->prefix . $this->table;
+		$query   = "SELECT COUNT( * ) AS num_entries FROM {$table} WHERE active = 1";
+		$results = $wpdb->get_row( $query, ARRAY_A );
+
+		return intval( $results['num_entries'] );
+	}
+
+	/**
 	 * Count number of tickets by status
 	 *
 	 * @param WP_Term[] $terms

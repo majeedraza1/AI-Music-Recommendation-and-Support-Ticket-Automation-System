@@ -1,7 +1,9 @@
 <template>
     <div class="Support-ticket-wrapper">
 
-        <support-ticket-side-nav/>
+        <side-navigation :active="showSideNav" @close="hideSideNav" nav-width="320px">
+            <support-ticket-side-nav/>
+        </side-navigation>
 
         <div class="admin-support-tickets-container">
             <router-view/>
@@ -18,15 +20,22 @@
     import notification from 'shapla-notifications';
     import spinner from "shapla-spinner";
     import {ConfirmDialog} from 'shapla-confirm-dialog';
+    import sideNavigation from "shapla-side-navigation";
     import SupportTicketSideNav from "./SupportTicketSideNav";
 
     export default {
         name: "SupportTicket",
-        components: {SupportTicketSideNav, notification, spinner, ConfirmDialog},
+        components: {SupportTicketSideNav, notification, spinner, ConfirmDialog, sideNavigation},
 
         computed: {
-            ...mapState(['snackbar', 'loading']),
+            ...mapState(['snackbar', 'loading', 'showSideNav']),
         },
+
+        methods: {
+            hideSideNav() {
+                this.$store.commit('SET_SHOW_SIDE_NAVE', false);
+            }
+        }
     }
 </script>
 
@@ -39,6 +48,18 @@
         svg {
             color: var(--stackonet-ticket-text-icon, rgba(0, 0, 0, 0.38));
             fill: var(--stackonet-ticket-text-icon, rgba(0, 0, 0, 0.38));
+        }
+
+        .shapla-sidenav__background,
+        .shapla-sidenav__body {
+            position: fixed;
+            z-index: 9999;
+            height: 100vh;
+
+            .admin-bar & {
+                top: 32px;
+                height: calc(100vh - 32px);
+            }
         }
     }
 

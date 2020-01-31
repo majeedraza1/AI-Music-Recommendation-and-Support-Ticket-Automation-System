@@ -7,8 +7,16 @@
         <div class="stackonet-support-ticket-icon-search">
             <columns>
                 <column>
-                    <h2 v-if="status === 'trash'">Trash</h2>
-                    <h2 v-else>Tickets</h2>
+                    <div class="shapla-icon is-medium" @click="openSideNav">
+                        <svg xmlns="http://www.w3.org/2000/svg">
+                            <title>Toggle Side Navigation</title>
+                            <use xlink:href="#icon-menu"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 v-if="status === 'trash'">Trash</h2>
+                        <h2 v-else>Tickets</h2>
+                    </div>
                 </column>
                 <column>
                     <div class="flex justify-center">
@@ -54,6 +62,7 @@
                 @pagination="paginate"
                 :show-search="false"
                 @checkedItems="updateSelectedItems"
+                :mobile-width="1000"
         >
             <template slot="created_by" slot-scope="data" class="button--status">
                 <span v-html="getAssignedAgents(data.row.assigned_agents)"></span>
@@ -68,7 +77,8 @@
 				{{data.row.priority.name}}
 			</span>
         </data-table>
-        <pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage" @pagination="paginate"/>
+        <pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage"
+                    @pagination="paginate"/>
     </div>
 </template>
 
@@ -107,7 +117,6 @@
         },
         mounted() {
             this.$store.commit('SET_LOADING_STATUS', false);
-            this.$store.commit('SET_SHOW_SIDE_NAVE', true);
             if (!this.tickets.length) {
                 this.getItems();
             }
@@ -123,6 +132,9 @@
             },
         },
         methods: {
+            openSideNav() {
+                this.$store.commit('SET_SHOW_SIDE_NAVE', true);
+            },
             getItems() {
                 this.$store.dispatch('getTickets');
             },

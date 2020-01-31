@@ -6,7 +6,21 @@
         </div>
 
         <template v-if="showSideNav">
-            <toggles :boxed-mode="false" :show-divider="false">
+
+            <columns>
+                <column>
+                    <shapla-button :theme="!trashedTickets.active?'primary':'default'" fullwidth
+                                   @click="getActiveItems"> Active
+                    </shapla-button>
+                </column>
+                <column>
+                    <shapla-button :theme="trashedTickets.active?'primary':'default'" fullwidth
+                                   @click="getTrashedItems"> Trash
+                    </shapla-button>
+                </column>
+            </columns>
+
+            <toggles :boxed-mode="false" :show-divider="false" v-if="!trashedTickets.active">
                 <toggle :name="filter.name" :selected="index === 0" :key="filter.name"
                         v-if="filter.options.length" v-for="(filter, index) in filters">
                     <span class="support-tickets-side-nav__text" v-for="_option in filter.options"
@@ -17,21 +31,6 @@
 
                 </toggle>
             </toggles>
-
-            <div class="support-tickets-side-nav__item">
-                <div class="support-tickets-side-nav__title">
-                    <span class="support-tickets-side-nav__icon">
-                        <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-delete_outline"/>
-                        </svg>
-                    </span>
-                    <span class="support-tickets-side-nav__text" :class="{'is-active':trashedTickets.active}"
-                          @click="getTrashedItems">
-                        <span class="support-tickets-side-nav__label">{{trashedTickets.name}}</span>
-                        <span class="support-tickets-side-nav__count">{{trashedTickets.count}}</span>
-                    </span>
-                </div>
-            </div>
 
             <div class="support-tickets-side-nav__item">
                 <div class="support-tickets-side-nav__title">
@@ -54,10 +53,12 @@
     import {mapState} from 'vuex';
     import shaplaButton from "shapla-button";
     import {toggles, toggle} from "shapla-toggles";
+    import radioButton from "shapla-radio-button";
+    import {columns, column} from 'shapla-columns'
 
     export default {
         name: "SupportTicketSideNav",
-        components: {toggles, toggle, shaplaButton},
+        components: {toggles, toggle, shaplaButton, radioButton, columns, column},
         data() {
             return {
                 isSelected: false,
@@ -68,12 +69,23 @@
                 'currentPage', 'city', 'search']),
         },
         methods: {
+            getActiveItems() {
+                this.$store.commit('SET_STATUS', 0);
+                this.$store.commit('SET_CATEGORY', 0);
+                this.$store.commit('SET_PRIORITY', 0);
+                this.$store.commit('SET_AGENT', 0);
+                this.$store.commit('SET_LABEL', 'active');
+                this.$store.commit('SET_SHOW_SIDE_NAVE', false);
+
+                this.$store.dispatch('getTickets');
+            },
             getTrashedItems() {
                 this.$store.commit('SET_STATUS', 0);
                 this.$store.commit('SET_CATEGORY', 0);
                 this.$store.commit('SET_PRIORITY', 0);
                 this.$store.commit('SET_AGENT', 0);
                 this.$store.commit('SET_LABEL', 'trash');
+                this.$store.commit('SET_SHOW_SIDE_NAVE', false);
 
                 this.$store.dispatch('getTickets');
             },

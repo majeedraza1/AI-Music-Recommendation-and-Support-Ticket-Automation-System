@@ -1,5 +1,6 @@
 <template>
     <div class="stackonet-support-ticket-settings">
+        <shapla-button theme="primary" @click="backToTicketList">Back to Ticket</shapla-button>
         <tabs>
             <tab v-for="(panel,index) in panels" :key="panel.id" :name="panel.title" :selected="index === 0">
                 <template v-for="section in sections" v-if="panel.id === section.panel">
