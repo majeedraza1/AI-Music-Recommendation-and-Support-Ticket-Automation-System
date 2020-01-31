@@ -21,7 +21,7 @@
             </columns>
         </div>
         <template slot="foot">
-            <shapla-button class="stackonet-primary" theme="primary" @click="submit">
+            <shapla-button theme="primary" @click="submit">
                 {{btnSave}}
             </shapla-button>
         </template>

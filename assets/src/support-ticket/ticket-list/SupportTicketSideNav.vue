@@ -1,27 +1,33 @@
 <template>
     <div class="support-tickets-side-nav">
-        <toggles :boxed-mode="false" :show-divider="false" v-if="!trashedTickets.active">
-            <toggle :name="filter.name" :selected="index === 0" :key="filter.name"
-                    v-if="filter.options.length" v-for="(filter, index) in filters">
-                    <span class="support-tickets-side-nav__text" v-for="_option in filter.options"
-                          :class="{'is-active':_option.active}" @click="changeFilter(_option.value,filter.id)">
-                        <span class="support-tickets-side-nav__label">{{_option.label}}</span>
-                        <span class="support-tickets-side-nav__count">{{_option.count}}</span>
-                    </span>
-            </toggle>
-        </toggles>
+        <div class="support-tickets-side-nav__filters">
+            <toggles :boxed-mode="false" :show-divider="false" v-if="!trashedTickets.active">
+                <toggle :name="filter.name" :selected="index === 0" :key="filter.name" v-if="filter.options.length"
+                        v-for="(filter, index) in filters">
+                    <ul class="shapla-status-list shapla-status-list--vertical">
+                        <li v-for="_option in filter.options" :key="_option.id" class="shapla-status-list__item"
+                            :class="{'is-active':_option.active}">
+                            <a href="#" @click.prevent="changeFilter(_option.value,filter.id)"
+                               class="shapla-status-list__item-link">
+                                <span class="shapla-status-list__item-label">{{_option.label}}</span>
+                                <span class="shapla-status-list__item-count">{{_option.count}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </toggle>
+            </toggles>
+        </div>
 
-        <div class="support-tickets-side-nav__item">
-            <div class="support-tickets-side-nav__title">
-                    <span class="support-tickets-side-nav__icon">
-                        <svg xmlns="http://www.w3.org/2000/svg">
-                            <use xlink:href="#icon-settings"/>
-                        </svg>
-                    </span>
-                <span class="support-tickets-side-nav__text" @click="gotToSettings">
-                    <span class="support-tickets-side-nav__label">Setting</span>
+
+        <div class="support-tickets-side-nav__settings">
+            <a href="#" @click.prevent="gotToSettings">
+                <span class="support-tickets-side-nav__settings--icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                        <use xlink:href="#icon-settings"/>
+                    </svg>
                 </span>
-            </div>
+                <span class="support-tickets-side-nav__settings--label">Setting</span>
+            </a>
         </div>
     </div>
 </template>
@@ -29,10 +35,11 @@
 <script>
     import {mapState} from 'vuex';
     import {toggles, toggle} from "shapla-toggles";
+    import statusList from "shapla-data-table-status";
 
     export default {
         name: "SupportTicketSideNav",
-        components: {toggles, toggle},
+        components: {toggles, toggle, statusList},
         data() {
             return {
                 isSelected: false,
@@ -68,7 +75,57 @@
 </script>
 
 <style lang="scss">
-    .support-tickets-side-nav {
+    @import "~shapla-color-system/src/variables";
 
+    .support-tickets-side-nav {
+        padding: 20px;
+
+        .shapla-toggle-panel__heading,
+        .shapla-toggle-panel__content {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .shapla-status-list.shapla-status-list--vertical {
+            width: 100%;
+        }
+
+        &__filters {
+            margin-bottom: 48px;
+        }
+
+        &__settings {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            height: 48px;
+
+            a {
+                align-items: center;
+                background: #f5f5f5;
+                display: flex;
+                padding: 10px;
+                width: 100%;
+                line-height: 24px;
+                font-size: 20px;
+                text-decoration: none;
+                color: $primary;
+
+                svg {
+                    fill: currentColor;
+                }
+
+                &:hover {
+                    background: #f1f1f1;
+                }
+            }
+
+            &--icon {
+                margin-right: 8px;
+            }
+        }
     }
 </style>

@@ -37,7 +37,8 @@
                 </column>
                 <column :tablet="4">
                     <div class="flex justify-center">
-                        <div @click="exportExcel">
+                        <div v-if="label !=='trash'" @click="exportExcel" class="button-export"
+                             :class="{'is-active':selectedItems.length}">
                             <svg xmlns="http://www.w3.org/2000/svg">
                                 <title>Import Export</title>
                                 <use xlink:href="#icon-import_export"/>
@@ -79,7 +80,7 @@
                         @bulk:apply="onBulkAction"
                         @pagination="paginate"
                         :show-search="false"
-                        @checkedItems="updateSelectedItems"
+                        @item:select="updateSelectedItems"
                         :mobile-width="1000"
                 >
                     <template slot="created_by" slot-scope="data" class="button--status">
@@ -301,8 +302,15 @@
 </script>
 
 <style lang="scss">
+    @import "~shapla-color-system/src/variables";
+
     .stackont-support-ticket-container {
         padding-top: 2rem;
+
+        .shapla-data-table td.shapla-data-table__cell--non-numeric,
+        .shapla-data-table th.shapla-data-table__cell--non-numeric {
+            word-break: break-word;
+        }
     }
 
     .shapla-status-list__item-count {
@@ -310,10 +318,15 @@
     }
 
     .button-restore,
-    .button-trash {
+    .button-trash,
+    .button-export {
         &:not(.is-active) {
             cursor: not-allowed;
             opacity: .5;
+        }
+
+        &.is-active svg {
+            fill: $text-primary;
         }
     }
 

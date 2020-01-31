@@ -1,5 +1,8 @@
 <template>
     <div class="stackont-single-support-ticket-container">
+        <p>
+            <shapla-button theme="primary" @click="backToTicketList">Back to Ticket</shapla-button>
+        </p>
 
         <columns>
             <column :desktop="8">
@@ -96,7 +99,7 @@
             <column :desktop="4">
 
                 <div class="shapla-box shapla-widget-box no-padding">
-                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
+                    <div class="shapla-widget-box__heading">
                         <h5 class="shapla-widget-box__title">Status</h5>
                         <icon>
                             <span @click="openStatusModal" class="dashicons dashicons-edit"></span>
@@ -110,7 +113,7 @@
                 </div>
 
                 <div class="shapla-box shapla-widget-box no-padding">
-                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
+                    <div class="shapla-widget-box__heading">
                         <h5 class="shapla-widget-box__title">Assign Agent(s)</h5>
                         <icon>
                             <span @click="openAssignAgentModal" class="dashicons dashicons-edit"></span>
@@ -129,7 +132,7 @@
                 </div>
 
                 <div class="shapla-box shapla-widget-box no-padding">
-                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
+                    <div class="shapla-widget-box__heading">
                         <h5 class="shapla-widget-box__title">Raised By</h5>
                     </div>
                     <div class="shapla-widget-box__content padding-15">
@@ -145,7 +148,7 @@
                 </div>
 
                 <div class="shapla-box shapla-widget-box no-padding">
-                    <div class="shapla-widget-box__heading stackonet-primary padding-15">
+                    <div class="shapla-widget-box__heading">
                         <h5 class="shapla-widget-box__title">SMS Messages</h5>
                     </div>
                     <div class="shapla-widget-box__content padding-15">
@@ -356,6 +359,9 @@
             }
         },
         methods: {
+            backToTicketList() {
+                this.$router.push({name: 'SupportTicketList'})
+            },
             sendSms() {
                 if (this.ticket_twilio_sms_content.length < 5) {
                     alert('Please add some content first.');

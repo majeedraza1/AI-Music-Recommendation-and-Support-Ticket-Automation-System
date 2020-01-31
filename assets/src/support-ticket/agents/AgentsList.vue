@@ -35,7 +35,7 @@
                         </columns>
                     </div>
                     <template slot="foot">
-                        <shapla-button class="stackonet-primary" theme="primary" :disabled="!canCreateAgent"
+                        <shapla-button theme="primary" :disabled="!canCreateAgent"
                                        @click="createNewAgent"> Create
                         </shapla-button>
                     </template>
@@ -48,7 +48,7 @@
                         </select>
                     </div>
                     <template slot="foot">
-                        <shapla-button class="stackonet-primary" theme="primary" @click="updateAgentRole">
+                        <shapla-button theme="primary" @click="updateAgentRole">
                             Create
                         </shapla-button>
                     </template>

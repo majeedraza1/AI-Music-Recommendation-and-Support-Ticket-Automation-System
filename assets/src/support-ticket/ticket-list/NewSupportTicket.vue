@@ -1,5 +1,8 @@
 <template>
     <div class="stackont-support-ticket-container stackont-support-ticket-container--new">
+        <p>
+            <shapla-button theme="primary" @click="backToTicketList">Back to Ticket</shapla-button>
+        </p>
 
         <columns multiline>
 
@@ -119,6 +122,9 @@
             }
         },
         methods: {
+            backToTicketList() {
+                this.$router.push({name: 'SupportTicketList'})
+            },
             validateEmail(email) {
                 let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(String(email).toLowerCase());
