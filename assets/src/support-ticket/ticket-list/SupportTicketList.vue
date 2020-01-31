@@ -1,5 +1,11 @@
 <template>
     <div class="stackont-support-ticket-container">
+        <div class="flex items-center">
+            <div>
+                <h2 v-if="label === 'trash'">Trashed Tickets</h2>
+                <h2 v-else>Tickets</h2>
+            </div>
+        </div>
         <div class="button--new-ticket-container">
             <shapla-button theme="primary" :fab="true" size="medium" @click="openNewTicket">+</shapla-button>
         </div>
@@ -7,18 +13,29 @@
         <div class="stackonet-support-ticket-icon-search">
             <columns>
                 <column>
-                    <div class="shapla-icon is-medium" @click="openSideNav">
+                    <status-list :statuses="labels" @change="changeLabel"/>
+                </column>
+                <column>
+                </column>
+                <column>
+                    <div class="search-box">
+                        <search-form @search="searchTicket" @clear="searchTicket"/>
+                    </div>
+                </column>
+            </columns>
+            <columns>
+                <column :tablet="4">
+                    <div class="flex items-center">
+                        <span class="" @click="openSideNav">
                         <svg xmlns="http://www.w3.org/2000/svg">
                             <title>Toggle Side Navigation</title>
                             <use xlink:href="#icon-menu"/>
                         </svg>
-                    </div>
-                    <div>
-                        <h2 v-if="status === 'trash'">Trash</h2>
-                        <h2 v-else>Tickets</h2>
+                    </span>
+                        <span>Filter Tickets</span>
                     </div>
                 </column>
-                <column>
+                <column :tablet="4">
                     <div class="flex justify-center">
                         <div @click="exportExcel">
                             <svg xmlns="http://www.w3.org/2000/svg">
@@ -41,44 +58,52 @@
                         </div>
                     </div>
                 </column>
-                <column>
-                    <div class="search-box">
-                        <search-form @search="searchTicket" @clear="searchTicket"/>
-                    </div>
+                <column :tablet="4">
+                    <pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage"
+                                @pagination="paginate"/>
                 </column>
             </columns>
         </div>
-        <data-table
-                action-column="ticket_subject"
-                :columns="columns"
-                :items="tickets"
-                :total-items="pagination.totalCount"
-                :total-pages="pagination.pageCount"
-                :per-page="pagination.limit"
-                :current-page="pagination.currentPage"
-                :actions="actions"
-                @action:click="onActionClick"
-                @bulk:apply="onBulkAction"
-                @pagination="paginate"
-                :show-search="false"
-                @checkedItems="updateSelectedItems"
-                :mobile-width="1000"
-        >
-            <template slot="created_by" slot-scope="data" class="button--status">
-                <span v-html="getAssignedAgents(data.row.assigned_agents)"></span>
-            </template>
-            <span slot="ticket_status" slot-scope="data" class="button--status" :class="data.row.status.slug">
+        <columns multiline>
+            <column :tablet="12">
+                <data-table
+                        action-column="ticket_subject"
+                        :columns="columns"
+                        :items="tickets"
+                        :total-items="pagination.totalCount"
+                        :total-pages="pagination.pageCount"
+                        :per-page="pagination.limit"
+                        :current-page="pagination.currentPage"
+                        :actions="actions"
+                        @action:click="onActionClick"
+                        @bulk:apply="onBulkAction"
+                        @pagination="paginate"
+                        :show-search="false"
+                        @checkedItems="updateSelectedItems"
+                        :mobile-width="1000"
+                >
+                    <template slot="created_by" slot-scope="data" class="button--status">
+                        <span v-html="getAssignedAgents(data.row.assigned_agents)"></span>
+                    </template>
+                    <span slot="ticket_status" slot-scope="data" class="button--status" :class="data.row.status.slug">
 				{{data.row.status.name}}
 			</span>
-            <span slot="ticket_category" slot-scope="data" class="button--category" :class="data.row.category.slug">
+                    <span slot="ticket_category" slot-scope="data" class="button--category"
+                          :class="data.row.category.slug">
 				{{data.row.category.name}}
 			</span>
-            <span slot="ticket_priority" slot-scope="data" class="button--priority" :class="data.row.priority.slug">
+                    <span slot="ticket_priority" slot-scope="data" class="button--priority"
+                          :class="data.row.priority.slug">
 				{{data.row.priority.name}}
 			</span>
-        </data-table>
-        <pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage"
-                    @pagination="paginate"/>
+                </data-table>
+            </column>
+            <column :tablet="12">
+                <pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage"
+                            @pagination="paginate"/>
+            </column>
+        </columns>
+
     </div>
 </template>
 
@@ -91,10 +116,11 @@
     import dataTable from "shapla-data-table";
     import pagination from "shapla-data-table-pagination";
     import Icon from "../../shapla/icon/icon";
+    import statusList from "shapla-data-table-status";
 
     export default {
         name: "SupportTicketList",
-        components: {Icon, shaplaButton, dataTable, searchForm, columns, column, pagination},
+        components: {Icon, shaplaButton, dataTable, searchForm, columns, column, pagination, statusList},
 
         data() {
             return {
@@ -123,7 +149,7 @@
         },
         computed: {
             ...mapState(['pagination', 'tickets', 'filters', 'meta_data', 'label',
-                'status', 'category', 'priority', 'currentPage', 'city', 'search']),
+                'status', 'category', 'priority', 'currentPage', 'city', 'search', 'labels']),
             actions() {
                 return this.meta_data.actions;
             },
@@ -132,6 +158,33 @@
             },
         },
         methods: {
+            changeLabel(label) {
+                if ('trash' === label.key) {
+                    this.getTrashedItems();
+                } else {
+                    this.getActiveItems();
+                }
+            },
+            getActiveItems() {
+                this.$store.commit('SET_STATUS', 0);
+                this.$store.commit('SET_CATEGORY', 0);
+                this.$store.commit('SET_PRIORITY', 0);
+                this.$store.commit('SET_AGENT', 0);
+                this.$store.commit('SET_LABEL', 'active');
+                this.$store.commit('SET_SHOW_SIDE_NAVE', false);
+
+                this.$store.dispatch('getTickets');
+            },
+            getTrashedItems() {
+                this.$store.commit('SET_STATUS', 0);
+                this.$store.commit('SET_CATEGORY', 0);
+                this.$store.commit('SET_PRIORITY', 0);
+                this.$store.commit('SET_AGENT', 0);
+                this.$store.commit('SET_LABEL', 'trash');
+                this.$store.commit('SET_SHOW_SIDE_NAVE', false);
+
+                this.$store.dispatch('getTickets');
+            },
             openSideNav() {
                 this.$store.commit('SET_SHOW_SIDE_NAVE', true);
             },
@@ -235,7 +288,6 @@
                 this.$store.commit('SET_LOADING_STATUS', true);
                 let data = {};
                 data[action] = ids;
-                console.log(data);
                 axios.post(StackonetSupportTicket.restRoot + '/tickets/batch', data).then(() => {
                     this.getItems();
                     this.$store.commit('SET_LOADING_STATUS', false);
@@ -251,6 +303,10 @@
 <style lang="scss">
     .stackont-support-ticket-container {
         padding-top: 2rem;
+    }
+
+    .shapla-status-list__item-count {
+        padding: 0 5px;
     }
 
     .button-restore,

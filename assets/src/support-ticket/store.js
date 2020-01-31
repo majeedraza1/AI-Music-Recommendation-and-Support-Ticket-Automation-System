@@ -27,6 +27,7 @@ export default new Vuex.Store({
         city: '',
         search: '',
         currentPage: 1,
+        labels: [],
     },
 
     // Commit + track state changes
@@ -91,6 +92,9 @@ export default new Vuex.Store({
         SET_SHOW_SIDE_NAVE(state, showSideNav) {
             state.showSideNav = showSideNav;
         },
+        SET_TICKETS_LABELS(state, labels) {
+            state.labels = labels;
+        },
     },
 
     // Same as Vue methods
@@ -117,6 +121,7 @@ export default new Vuex.Store({
                 commit('SET_PAGINATION', data.pagination);
                 commit('SET_META_DATA', data.meta_data);
                 commit('SET_TRASHED_TICKETS', data.trash);
+                commit('SET_TICKETS_LABELS', data.statuses);
                 commit('SET_FILTERS', filters);
             }).catch(error => {
                 console.log(error);
