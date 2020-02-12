@@ -307,9 +307,8 @@
     .stackont-support-ticket-container {
         padding-top: 2rem;
 
-        .shapla-data-table td.shapla-data-table__cell--non-numeric,
-        .shapla-data-table th.shapla-data-table__cell--non-numeric {
-            word-break: break-word;
+        .shapla-data-table__table {
+            white-space: normal;
         }
     }
 

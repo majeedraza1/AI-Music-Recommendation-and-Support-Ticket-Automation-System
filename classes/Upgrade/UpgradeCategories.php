@@ -4,7 +4,7 @@ namespace StackonetSupportTicket\Upgrade;
 
 defined( 'ABSPATH' ) || exit;
 
-class UpgradeCategories {
+class UpgradeCategories extends UpgradeTerm {
 
 	/**
 	 * @var string
@@ -27,41 +27,37 @@ class UpgradeCategories {
 	protected static $new_meta_name = 'support_ticket_category_menu_order';
 
 	/**
+	 * @var string
+	 */
+	protected static $map_option_name = 'support_ticket_categories_old_new';
+
+	/**
 	 * Clone categories
 	 */
 	public static function clone_categories() {
-		/** @var \WP_Term[] $categories */
-		$categories = get_terms( [
-			'taxonomy'   => static::$old_term_name,
-			'hide_empty' => false,
-		] );
-
-		foreach ( $categories as $category ) {
-			self::clone_category( $category );
+		$data = [];
+		foreach ( self::get_old_terms() as $category ) {
+			$data[ $category->term_id ] = self::clone_category( $category );
 		}
+
+		update_option( static::$map_option_name, $data, false );
 	}
 
 	/**
 	 * @param \WP_Term $category
+	 *
+	 * @return int
 	 */
 	protected static function clone_category( \WP_Term $category ) {
-		$data = wp_insert_term( $category->name, self::$new_term_name, [
-			'description' => $category->description,
-			'slug'        => $category->slug . '-1',
-			'parent'      => $category->parent
-		] );
-
-		if ( ! is_wp_error( $data ) ) {
-			$menu_order = get_term_meta( $category->term_id, static::$old_meta_name, true );
-			$term_id    = isset( $data['term_id'] ) ? $data['term_id'] : 0;
-
-			update_term_meta( $term_id, static::$new_meta_name, $menu_order );
-
+		$term_id = parent::clone_term( $category );
+		if ( $term_id ) {
 			global $wpdb;
 			$wpdb->update( $wpdb->prefix . 'support_ticket',
 				[ 'ticket_category' => $term_id ],
 				[ 'ticket_category' => $category->term_id ]
 			);
 		}
+
+		return $term_id;
 	}
 }

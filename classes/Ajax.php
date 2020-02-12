@@ -8,6 +8,9 @@ use StackonetSupportTicket\Models\TicketCategory;
 use StackonetSupportTicket\Models\TicketPriority;
 use StackonetSupportTicket\Models\TicketStatus;
 use StackonetSupportTicket\Supports\Utils;
+use StackonetSupportTicket\Upgrade\UpgradeCategories;
+use StackonetSupportTicket\Upgrade\UpgradePriorities;
+use StackonetSupportTicket\Upgrade\UpgradeStatus;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -39,8 +42,9 @@ class Ajax {
 	}
 
 	public function test() {
-		$role = SupportTicket::count_tickets_by_agents();
-		var_dump( $role );
+		UpgradeCategories::map_terms();
+		UpgradePriorities::map_terms();
+		UpgradeStatus::map_terms();
 		die();
 	}
 

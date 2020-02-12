@@ -19,7 +19,7 @@
                                                   v-model="options[field.id]"></textarea>
                                     </template>
                                     <template v-else-if="field.type === 'select'">
-                                        <select class="regular-text" v-model="options[field.id]">
+                                        <select class="regular-text" v-model="options[field.id]" :multiple="field.multiple">
                                             <option value="">-- Choose --</option>
                                             <option v-for="(label, value) in field.options" :value="value"
                                                     v-text="label"></option>

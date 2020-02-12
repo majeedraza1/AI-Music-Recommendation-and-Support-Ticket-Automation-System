@@ -177,7 +177,7 @@ class Settings {
 			),
 		);
 
-		$option_page->add_fields( $fields );
+		$option_page->add_fields( apply_filters( 'stackonet_support_ticket/settings/fields', $fields ) );
 	}
 
 	public static function get_pages_for_options() {

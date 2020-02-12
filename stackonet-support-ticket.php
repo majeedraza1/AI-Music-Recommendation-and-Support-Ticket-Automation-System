@@ -121,6 +121,11 @@ class StackonetSupportTicket {
 
 		$this->container['clone_thread'] = new StackonetSupportTicket\Upgrade\UpgradeThreads();
 
+		// Sync tickets
+		$this->container['sync_old'] = StackonetSupportTicket\Sync\ToNewTicket::init();
+		$this->container['sync_new'] = StackonetSupportTicket\Sync\ToOldTicket::init();
+
+
 		if ( $this->is_request( 'admin' ) ) {
 			$this->container['admin'] = StackonetSupportTicket\Admin\Admin::init();
 

@@ -33,6 +33,30 @@ class UpgradeThreads extends BackgroundProcess {
 	protected static $status_option_name = 'clone_thread_background_process_status';
 
 	/**
+	 * @param int $old_post_id
+	 * @param int $new_post_id
+	 */
+	public static function clone_metadata( $old_post_id, $new_post_id ) {
+		$post_meta_data = get_post_meta( $old_post_id );
+		// Loop over returned metadata, and re-assign them to the new post_type
+		if ( $post_meta_data ) {
+			foreach ( $post_meta_data as $meta_key => $value ) {
+				if ( is_array( $value ) ) {
+					foreach ( $value as $meta_value => $meta_text ) {
+						if ( is_serialized( $meta_text ) ) {
+							update_post_meta( $new_post_id, $meta_key, unserialize( $meta_text ) );
+						} else {
+							update_post_meta( $new_post_id, $meta_key, $meta_text );
+						}
+					}
+				} else {
+					update_post_meta( $new_post_id, $meta_key, $value );
+				}
+			}
+		}
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	protected function task( $item ) {
@@ -85,37 +109,32 @@ class UpgradeThreads extends BackgroundProcess {
 	 * Clone ticket
 	 *
 	 * @param WP_Post $post
+	 * @param string|null $new_post_type
+	 *
+	 * @return int|\WP_Error
 	 */
-	public static function clone_thread( WP_Post $post ) {
+	public static function clone_thread( WP_Post $post, $new_post_type = null ) {
+		if ( empty( $new_post_type ) ) {
+			$new_post_type = static::$new_post_type_name;
+		}
 		// Create post object
 		$my_post = array(
 			'post_title'   => $post->post_type,
 			'post_content' => $post->post_content,
 			'post_status'  => $post->post_status,
 			'post_author'  => $post->post_author,
-			'post_type'    => static::$new_post_type_name,
+			'post_type'    => $new_post_type,
 		);
 
 		// Insert the post into the database
-		$new_post = wp_insert_post( $my_post );
-
-		$post_meta_data = get_post_meta( $post->ID );
-		// Loop over returned metadata, and re-assign them to the new post_type
-		if ( $post_meta_data ) {
-			foreach ( $post_meta_data as $meta_key => $value ) {
-				if ( is_array( $value ) ) {
-					foreach ( $value as $meta_value => $meta_text ) {
-						if ( is_serialized( $meta_text ) ) {
-							update_post_meta( $new_post, $meta_key, unserialize( $meta_text ) );
-						} else {
-							update_post_meta( $new_post, $meta_key, $meta_text );
-						}
-					}
-				} else {
-					update_post_meta( $new_post, $meta_key, $value );
-				}
-			}
+		$new_post_id = wp_insert_post( $my_post );
+		if ( is_wp_error( $new_post_id ) ) {
+			return 0;
 		}
+
+		self::clone_metadata( $post->ID, $new_post_id );
+
+		return $new_post_id;
 	}
 
 	/**
