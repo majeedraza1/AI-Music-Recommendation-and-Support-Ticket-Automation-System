@@ -2,7 +2,7 @@
 
 namespace StackonetSupportTicket\Sync;
 
-use StackonetSupportTicket\Utilities\Logger;
+defined( 'ABSPATH' ) || exit;
 
 class SyncTicket {
 
@@ -34,13 +34,6 @@ class SyncTicket {
 	 * @var array
 	 */
 	protected static $map_old_new = [
-		'table'      => [
-			'wpsc_ticket'     => 'support_ticket',
-			'wpsc_ticketmeta' => 'support_ticketmeta'
-		],
-		'post_type'  => [
-			'wpsc_ticket_thread' => 'ticket_thread',
-		],
 		'terms'      => [
 			'wpsc_categories' => 'ticket_category',
 			'wpsc_priorities' => 'ticket_priority',

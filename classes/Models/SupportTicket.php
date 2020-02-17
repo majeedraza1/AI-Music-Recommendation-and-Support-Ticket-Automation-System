@@ -1207,8 +1207,12 @@ class SupportTicket extends DatabaseModel {
 		/* If editing, deleting, or reading a movie, get the post and post type object. */
 		if ( 'edit_ticket' == $cap || 'delete_ticket' == $cap || 'read_ticket' == $cap ) {
 
-			$object_id    = isset( $args[0] ) ? $args[0] : 0;
-			$ticket       = ( new static )->find_by_id( $object_id );
+			$object_id = isset( $args[0] ) ? $args[0] : 0;
+			$ticket    = ( new static )->find_by_id( $object_id );
+			if ( ! $ticket instanceof static ) {
+				return $caps;
+			}
+
 			$is_same_user = false;
 			if ( $user_id == $ticket->get( 'agent_created' ) || in_array( $user_id, $ticket->get_assigned_agents_ids() ) ) {
 				$is_same_user = true;

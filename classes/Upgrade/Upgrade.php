@@ -106,4 +106,19 @@ class Upgrade {
 
 		return $html;
 	}
+
+	/**
+	 * Delete all data
+	 */
+	public static function delete_all_data() {
+		// Delete ticket meta data
+		// Delete ticket thread metadata
+		// Delete ticket thread
+		// Delete ticket data
+		// Delete ticket category
+		// Delete ticket Priority
+		// Delete ticket status
+		// Delete ticket agent
+		// Delete ticket options
+	}
 }
