@@ -692,6 +692,7 @@ class SupportTicket extends DatabaseModel {
 		$cache_key = sprintf( 'support_ticket_search_%s', md5( json_encode( $args ) ) );
 		$tickets   = wp_cache_get( $cache_key, $this->cache_group );
 		if ( false === $tickets ) {
+			$tickets = [];
 
 			$terms_ids = $this->search_terms( $string );
 
