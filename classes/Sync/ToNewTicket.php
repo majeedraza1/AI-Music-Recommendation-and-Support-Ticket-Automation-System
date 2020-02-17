@@ -133,7 +133,7 @@ class ToNewTicket extends SyncTicket {
 	/**
 	 * Delete ticket
 	 *
-	 * @param $old_ticket_id
+	 * @param int $old_ticket_id
 	 * @param string $action
 	 */
 	public function ticket_deleted( $old_ticket_id, $action ) {
@@ -157,12 +157,12 @@ class ToNewTicket extends SyncTicket {
 	/**
 	 * Clone thread
 	 *
-	 * @param int $ticket_id
+	 * @param int $old_ticket_id
 	 * @param int $thread_id
 	 */
-	public function thread_created( $ticket_id, $thread_id ) {
+	public function thread_created( $old_ticket_id, $thread_id ) {
 		$post_type     = static::$post_type['new'];
-		$new_ticket_id = static::get_new_ticket_id( $ticket_id );
+		$new_ticket_id = static::get_new_ticket_id( $old_ticket_id );
 		$thread        = get_post( $thread_id );
 		$new_thread_id = UpgradeThreads::clone_thread( $thread, $post_type, $new_ticket_id );
 		if ( $new_thread_id ) {

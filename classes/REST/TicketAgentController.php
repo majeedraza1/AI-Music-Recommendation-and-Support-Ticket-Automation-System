@@ -80,6 +80,8 @@ class TicketAgentController extends ApiController {
 
 		$support_ticket->update_agent( $agent );
 
+		do_action( 'stackonet_support_ticket/v3/update_ticket_agent', $id, $agent );
+
 		return $this->respondOK();
 	}
 }

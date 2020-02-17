@@ -455,6 +455,8 @@ class SupportTicket extends DatabaseModel {
 	 * @param int $ticket_id
 	 * @param array $data
 	 * @param array $attachments
+	 *
+	 * @return int
 	 */
 	public function add_ticket_info( $ticket_id, array $data, $attachments = [] ) {
 		$data = wp_parse_args( $data, [
@@ -474,13 +476,17 @@ class SupportTicket extends DatabaseModel {
 			'post_content'   => $data['post_content'],
 		] );
 
-		if ( $post_id ) {
+		if ( ! is_wp_error( $post_id ) ) {
 			update_post_meta( $post_id, 'ticket_id', $ticket_id );
 			update_post_meta( $post_id, 'thread_type', $data['thread_type'] );
 			update_post_meta( $post_id, 'customer_name', $data['customer_name'] );
 			update_post_meta( $post_id, 'customer_email', $data['customer_email'] );
 			update_post_meta( $post_id, 'attachments', $attachments );
+
+			return $post_id;
 		}
+
+		return 0;
 	}
 
 	/**

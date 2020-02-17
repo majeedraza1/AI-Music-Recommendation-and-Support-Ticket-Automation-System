@@ -379,6 +379,9 @@ class TicketController extends ApiController {
 		$data = $request->get_params();
 
 		if ( ( new SupportTicket() )->update( $data ) ) {
+
+			do_action( 'stackonet_support_ticket/v3/ticket_updated', $id, $data );
+
 			return $this->respondOK();
 		}
 
@@ -410,6 +413,8 @@ class TicketController extends ApiController {
 
 		$message = "#{$id} Support ticket has been trashed";
 
+		do_action( 'stackonet_support_ticket/v3/ticket_deleted', $id, $action );
+
 		if ( 'trash' == $action ) {
 			$class->trash( $id );
 		}
@@ -438,6 +443,8 @@ class TicketController extends ApiController {
 		if ( count( $trash_ids ) ) {
 			foreach ( $trash_ids as $id ) {
 				if ( current_user_can( 'delete_ticket', $id ) ) {
+					do_action( 'stackonet_support_ticket/v3/ticket_deleted', $id, 'trash' );
+
 					( new SupportTicket )->trash( $id );
 				}
 			}
@@ -450,6 +457,8 @@ class TicketController extends ApiController {
 		if ( count( $restore_ids ) ) {
 			foreach ( $restore_ids as $id ) {
 				if ( current_user_can( 'delete_ticket', $id ) ) {
+					do_action( 'stackonet_support_ticket/v3/ticket_deleted', $id, 'restore' );
+
 					( new SupportTicket )->restore( $id );
 				}
 			}
@@ -462,6 +471,8 @@ class TicketController extends ApiController {
 		if ( count( $delete_ids ) ) {
 			foreach ( $delete_ids as $id ) {
 				if ( current_user_can( 'delete_ticket', $id ) ) {
+					do_action( 'stackonet_support_ticket/v3/ticket_deleted', $id, 'delete' );
+
 					( new SupportTicket )->delete( $id );
 				}
 			}

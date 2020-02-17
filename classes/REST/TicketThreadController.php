@@ -105,13 +105,15 @@ class TicketThreadController extends ApiController {
 
 		$user = wp_get_current_user();
 
-		$support_ticket->add_ticket_info( $id, [
+		$thread_id = $support_ticket->add_ticket_info( $id, [
 			'thread_type'    => $thread_type,
 			'customer_name'  => $user->display_name,
 			'customer_email' => $user->user_email,
 			'post_content'   => $thread_content,
 			'agent_created'  => $user->ID,
 		], $attachments );
+
+		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id );
 
 		return $this->respondCreated();
 	}
@@ -154,6 +156,9 @@ class TicketThreadController extends ApiController {
 		] );
 
 		if ( ! $response instanceof WP_Error ) {
+
+			do_action( 'stackonet_support_ticket/v3/thread_updated', $id, $thread_id, $post_content );
+
 			return $this->respondOK( $post_content );
 		}
 
@@ -180,6 +185,8 @@ class TicketThreadController extends ApiController {
 		if ( ! current_user_can( 'delete_ticket', $id ) ) {
 			return $this->respondUnauthorized();
 		}
+
+		do_action( 'stackonet_support_ticket/v3/delete_thread', $id, $thread_id );
 
 		if ( $support_ticket->delete_thread( $thread_id ) ) {
 			return $this->respondOK( [ $id, $thread_id ] );
