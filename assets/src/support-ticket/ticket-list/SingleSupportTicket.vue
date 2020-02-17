@@ -56,6 +56,8 @@
                                                             </template>
                                                             <template v-else-if="thread.thread_type === 'reply'">replied
                                                             </template>
+                                                            <template v-else-if="thread.thread_type === 'sms'">sent sms
+                                                            </template>
                                                             <template v-else>reported</template>
                                                             {{thread.human_time}} ago
                                                         </small>
@@ -155,14 +157,15 @@
                         <div class="shapla-widget-box__customer-phone">
 
                             <shapla-checkbox id="ticket_twilio_sms_customer_phone"
-                                          v-model="ticket_twilio_sms_customer_phone"><strong>Customer Phone: </strong>
+                                             v-model="ticket_twilio_sms_customer_phone"><strong>Customer
+                                Phone: </strong>
                                 {{item.customer_phone}}
                             </shapla-checkbox>
                         </div>
                         <div class="shapla-widget-box__customer-phone">
 
                             <shapla-checkbox id="users_can_register"
-                                          v-model="ticket_twilio_sms_enable_custom_phone"><strong>Custom
+                                             v-model="ticket_twilio_sms_enable_custom_phone"><strong>Custom
                                 Phone: </strong>
                             </shapla-checkbox>
                             <input type="text" v-model="ticket_twilio_sms_custom_phone"/>
@@ -701,6 +704,11 @@
             background-color: #f5fffd;
         }
 
+        &--sms {
+            background-color: rgba(255, 56, 96, 0.1);
+        }
+
+        &--sms,
         &--report,
         &--note,
         &--reply {

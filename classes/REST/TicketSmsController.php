@@ -134,19 +134,14 @@ class TicketSmsController extends ApiController {
 			'agent_created'  => $user->ID,
 		] );
 
-		$data = [
-			'numbers' => $phones,
-			'message' => $content
-		];
-
 		/**
 		 * Send support ticket SMS
 		 *
 		 * @param array $data Array containing numbers and message parameters
 		 */
-		do_action( 'send_support_ticket_sms', $data );
+		do_action( 'stackonet_support_ticket/v3/send_short_message', $content, $phones );
 
-		return $this->respondOK( $data );
+		return $this->respondOK( [ 'numbers' => $phones, 'message' => $content ] );
 	}
 
 	/**

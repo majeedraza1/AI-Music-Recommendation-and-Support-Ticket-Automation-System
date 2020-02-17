@@ -347,6 +347,8 @@ class TicketController extends ApiController {
 
 			$thread_id = ( new TicketThread )->create( $thread_data );
 
+			do_action( 'stackonet_support_ticket/v3/ticket_created', $ticket_id );
+
 			return $this->respondCreated( [ 'ticket_id' => $ticket_id, 'thread_id' => $thread_id ] );
 		}
 

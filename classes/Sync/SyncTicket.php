@@ -72,6 +72,29 @@ class SyncTicket {
 	];
 
 	/**
+	 * Record ticket id on both table
+	 * On v3, v1 ticket id should be recorded
+	 * On v1, v3 ticket id should be recorded
+	 *
+	 * @param int $new_ticket_id
+	 * @param int $old_ticket_id
+	 */
+	public static function record_ticket_id_on_both_table( $new_ticket_id, $old_ticket_id ) {
+		/** @var wpdb $wpdb */
+		global $wpdb;
+
+		$data_1 = [ 'ticket_id' => $new_ticket_id, 'meta_key' => '_old_ticket_id', 'meta_value' => $old_ticket_id ];
+
+		$new_meta_table = $wpdb->prefix . static::$ticket_meta_table['new'];
+		$wpdb->insert( $new_meta_table, $data_1 );
+
+		$data_2 = [ 'ticket_id' => $old_ticket_id, 'meta_key' => '_new_ticket_id', 'meta_value' => $new_ticket_id ];
+
+		$old_meta_table = $wpdb->prefix . static::$ticket_meta_table['old'];
+		$wpdb->insert( $old_meta_table, $data_2 );
+	}
+
+	/**
 	 * @param int $ticket_id
 	 * @param string $mode
 	 *

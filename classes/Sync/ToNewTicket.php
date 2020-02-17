@@ -68,10 +68,10 @@ class ToNewTicket extends SyncTicket {
 	/**
 	 * Clone ticket
 	 *
-	 * @param int $ticket_id
+	 * @param int $old_ticket_id
 	 */
-	public function ticket_created( $ticket_id ) {
-		$old_data = static::get_ticket_data( $ticket_id, 'old' );
+	public function ticket_created( $old_ticket_id ) {
+		$old_data = static::get_ticket_data( $old_ticket_id, 'old' );
 
 		$ticket                    = $old_data['ticket'];
 		$ticket['ticket_category'] = UpgradeCategories::get_new_term_id( $ticket['ticket_category'] );
@@ -102,11 +102,7 @@ class ToNewTicket extends SyncTicket {
 				] );
 			}
 
-			$wpdb->insert( $meta_table, [
-				'ticket_id'  => $id,
-				'meta_key'   => '_old_ticket_id',
-				'meta_value' => $ticket_id
-			] );
+			static::record_ticket_id_on_both_table( $id, $old_ticket_id );
 
 			foreach ( $threads as $thread ) {
 				$new_thread_id = UpgradeThreads::clone_thread( $thread, $post_type );

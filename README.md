@@ -387,7 +387,6 @@ Params:
 </details>
 
 
-
 ### Get collection of priorities
 
 <details>
@@ -654,3 +653,27 @@ Endpoint
 Replace `{id}` with actual attachment id.
 
 </details>
+
+### Send sms
+
+<details>
+<summary>View contents</summary>
+
+
+Endpoint
+
+`[POST /wp-json/stackonet-support-ticket/v1/tickets/:id/sms]`
+
+Replace `{id}` with actual ticket id.
+
+Params:
+
+| Property       | Type     | Required | Default | Description
+|----------------|----------|----------|---------|-------------------------------------------------
+| `content`      | array    | **yes**  | `[]`    | Sms Content. If sms content is more than 160 characters, then multiple SMS will be sent
+| `sms_for`      | string   | **yes**  | ``      | Value can be `customer` or `custom` or `agents`
+| `custom_phone` | string   | **no**   | ``      | Custom phone number. Required if `sms_for` is set as `custom`
+| `agents_ids`   | array    | **no**   | `[]`    | Array of agents ids. Required if `sms_for` is set as `agents`
+
+</details>
+
