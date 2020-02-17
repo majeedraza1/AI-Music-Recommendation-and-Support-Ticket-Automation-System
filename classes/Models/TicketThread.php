@@ -94,6 +94,15 @@ class TicketThread extends PostTypeModel {
 	}
 
 	/**
+	 * thread id
+	 *
+	 * @return int
+	 */
+	public function get_id() {
+		return intval( $this->get( 'id' ) );
+	}
+
+	/**
 	 * Get customer avatar url
 	 *
 	 * @return string

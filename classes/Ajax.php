@@ -8,6 +8,7 @@ use StackonetSupportTicket\Models\TicketCategory;
 use StackonetSupportTicket\Models\TicketPriority;
 use StackonetSupportTicket\Models\TicketStatus;
 use StackonetSupportTicket\Supports\Utils;
+use StackonetSupportTicket\Sync\ToNewTicket;
 use StackonetSupportTicket\Upgrade\UpgradeCategories;
 use StackonetSupportTicket\Upgrade\UpgradePriorities;
 use StackonetSupportTicket\Upgrade\UpgradeStatus;
@@ -42,9 +43,8 @@ class Ajax {
 	}
 
 	public function test() {
-		UpgradeCategories::map_terms();
-		UpgradePriorities::map_terms();
-		UpgradeStatus::map_terms();
+		$new_ticket_id = ToNewTicket::get_new_ticket_id( 2121 );
+		var_dump( $new_ticket_id );
 		die();
 	}
 

@@ -110,10 +110,11 @@ class UpgradeThreads extends BackgroundProcess {
 	 *
 	 * @param WP_Post $post
 	 * @param string|null $new_post_type
+	 * @param int $new_ticket_id
 	 *
 	 * @return int|\WP_Error
 	 */
-	public static function clone_thread( WP_Post $post, $new_post_type = null ) {
+	public static function clone_thread( WP_Post $post, $new_post_type = null, $new_ticket_id = 0 ) {
 		if ( empty( $new_post_type ) ) {
 			$new_post_type = static::$new_post_type_name;
 		}
@@ -133,6 +134,10 @@ class UpgradeThreads extends BackgroundProcess {
 		}
 
 		self::clone_metadata( $post->ID, $new_post_id );
+
+		if ( $new_ticket_id ) {
+			update_post_meta( $new_post_id, 'ticket_id', $new_ticket_id );
+		}
 
 		return $new_post_id;
 	}

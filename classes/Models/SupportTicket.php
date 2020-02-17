@@ -941,6 +941,32 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Delete data
+	 *
+	 * @param int $id
+	 *
+	 * @return bool
+	 */
+	public function delete( $id = 0 ) {
+		global $wpdb;
+		$table = $wpdb->prefix . $this->table;
+
+		$item = $this->find_by_id( $id );
+		if ( ! $item instanceof self ) {
+			return false;
+		}
+
+		// Delete all threads first
+		/** @var TicketThread[] $threads */
+		$threads = $item->get_ticket_threads();
+		foreach ( $threads as $thread ) {
+			wp_delete_post( $thread->get_id(), true );
+		}
+
+		return ( false !== $wpdb->delete( $table, [ $this->primaryKey => $id ], $this->primaryKeyType ) );
+	}
+
+	/**
 	 * Get ticket statuses term
 	 *
 	 * @return WP_Term[]
