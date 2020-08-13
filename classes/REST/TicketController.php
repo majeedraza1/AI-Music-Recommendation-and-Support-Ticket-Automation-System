@@ -130,7 +130,6 @@ class TicketController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::EDITABLE,
 				'callback' => [ $this, 'update_item' ],
-				'args'     => $this->get_create_item_params(),
 			],
 			[
 				'methods'  => WP_REST_Server::DELETABLE,
@@ -692,20 +691,20 @@ class TicketController extends ApiController {
 	 */
 	public function get_ticket_content( $name, $phone, $content ) {
 		ob_start(); ?>
-        <table class="table--support-ticket">
-            <tr>
-                <td>Name:</td>
-                <td><strong><?php echo $name ?></strong></td>
-            </tr>
-            <tr>
-                <td>Phone:</td>
-                <td><strong><?php echo $phone ?></strong></td>
-            </tr>
-            <tr>
-                <td>Content:</td>
-                <td><strong><?php echo $content; ?></strong></td>
-            </tr>
-        </table>
+		<table class="table--support-ticket">
+			<tr>
+				<td>Name:</td>
+				<td><strong><?php echo $name ?></strong></td>
+			</tr>
+			<tr>
+				<td>Phone:</td>
+				<td><strong><?php echo $phone ?></strong></td>
+			</tr>
+			<tr>
+				<td>Content:</td>
+				<td><strong><?php echo $content; ?></strong></td>
+			</tr>
+		</table>
 		<?php
 		$html = ob_get_clean();
 

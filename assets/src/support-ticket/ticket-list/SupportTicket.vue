@@ -1,5 +1,5 @@
 <template>
-    <div class="Support-ticket-wrapper">
+    <div class="wrap Support-ticket-wrapper">
 
         <side-navigation :active="showSideNav" @close="hideSideNav" nav-width="320px">
             <support-ticket-side-nav/>
