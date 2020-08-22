@@ -75,9 +75,25 @@ class TicketThread extends PostTypeModel {
 	/**
 	 * Array representation of the class
 	 *
+	 * @param string $context
+	 *
 	 * @return array
 	 */
-	public function to_array() {
+	public function to_array( $context = 'view' ) {
+		if ( $context == 'view' ) {
+			return [
+				'id'          => $this->get( 'id' ),
+				'content'     => $this->get( 'content' ),
+				'creator'     => [
+					'name'   => $this->get( 'customer_name' ),
+					'email'  => $this->get( 'customer_email' ),
+					'avatar' => $this->get_avatar_url(),
+				],
+				'created'     => mysql_to_rfc3339( $this->get( 'created' ) ),
+				'thread_type' => $this->get_type(),
+				'attachments' => $this->attachments,
+			];
+		}
 		$human_time = human_time_diff( strtotime( $this->get( 'created' ) ) );
 
 		return [
@@ -188,7 +204,7 @@ class TicketThread extends PostTypeModel {
 	/**
 	 * Write metadata
 	 *
-	 * @param int $post_id
+	 * @param int   $post_id
 	 * @param array $data
 	 */
 	private function write_metadata( $post_id, array $data ) {

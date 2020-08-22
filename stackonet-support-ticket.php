@@ -53,7 +53,10 @@ class StackonetSupportTicket {
 			self::$instance = new self();
 
 			self::$instance->define_constants();
-			self::$instance->include_classes();
+
+			if ( file_exists( STACKONET_SUPPORT_TICKET_PATH . '/vendor/autoload.php' ) ) {
+				include STACKONET_SUPPORT_TICKET_PATH . '/vendor/autoload.php';
+			}
 
 			// initialize the classes
 			add_action( 'plugins_loaded', [ self::$instance, 'init_classes' ] );
@@ -78,37 +81,6 @@ class StackonetSupportTicket {
 		define( 'STACKONET_SUPPORT_TICKET_INCLUDES', STACKONET_SUPPORT_TICKET_PATH . '/classes' );
 		define( 'STACKONET_SUPPORT_TICKET_URL', plugins_url( '', STACKONET_SUPPORT_TICKET_FILE ) );
 		define( 'STACKONET_SUPPORT_TICKET_ASSETS', STACKONET_SUPPORT_TICKET_URL . '/assets' );
-	}
-
-	/**
-	 * Include classes
-	 */
-	public function include_classes() {
-		spl_autoload_register( function ( $className ) {
-			if ( class_exists( $className ) ) {
-				return;
-			}
-			// project-specific namespace prefix
-			$prefix = 'StackonetSupportTicket\\';
-			// base directory for the namespace prefix
-			$base_dir = STACKONET_SUPPORT_TICKET_INCLUDES . DIRECTORY_SEPARATOR;
-			// does the class use the namespace prefix?
-			$len = strlen( $prefix );
-			if ( strncmp( $prefix, $className, $len ) !== 0 ) {
-				// no, move to the next registered autoloader
-				return;
-			}
-			// get the relative class name
-			$relative_class = substr( $className, $len );
-			// replace the namespace prefix with the base directory, replace namespace
-			// separators with directory separators in the relative class name, append
-			// with .php
-			$file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
-			// if the file exists, require it
-			if ( file_exists( $file ) ) {
-				require_once $file;
-			}
-		} );
 	}
 
 	/**

@@ -197,11 +197,7 @@ class TicketController extends ApiController {
 			'trash'  => $supportTicket->count_inactive_records(),
 		];
 
-		$pagination = $this->getPaginationMetadata( [
-			'totalCount'  => $counts[ $label ],
-			'limit'       => $per_page,
-			'currentPage' => $paged,
-		] );
+		$pagination = static::get_pagination_data( $counts[ $label ], $per_page, $paged );
 
 		$response = [ 'items' => $items, 'pagination' => $pagination, 'filters' => [] ];
 
@@ -297,11 +293,42 @@ class TicketController extends ApiController {
 	 * @throws Exception
 	 */
 	public function create_item( $request ) {
+		$current_user = wp_get_current_user();
+
 		$name           = $request->get_param( 'name' );
 		$email          = $request->get_param( 'email' );
 		$subject        = $request->get_param( 'subject' );
 		$ticket_content = $request->get_param( 'content' );
 		$phone_number   = $request->get_param( 'phone_number' );
+
+		if ( $current_user->exists() ) {
+			if ( empty( $email ) ) {
+				$email = $current_user->user_email;
+				$request->set_param( 'email', $email );
+			}
+
+			if ( empty( $name ) ) {
+				$name = $current_user->display_name;
+				$request->set_param( 'name', $name );
+			}
+		}
+
+		$required_params = [ 'subject', 'content', 'email', 'name' ];
+
+		$errors = [];
+		foreach ( $required_params as $param ) {
+			$value = $request->get_param( $param );
+			if ( empty( $value ) ) {
+				$errors[ $param ] = ucfirst( $param ) . ' is required.';
+			}
+		}
+
+		if ( count( $errors ) ) {
+			$message = "Missing parameter(s): " . implode( ', ', array_keys( $errors ) );
+
+			return $this->respondUnprocessableEntity( 'missing_required_param', $message, $errors );
+		}
+
 
 		$ticket_category = $request->get_param( 'category' );
 		$ticket_status   = $request->get_param( 'status' );
@@ -348,7 +375,17 @@ class TicketController extends ApiController {
 
 			do_action( 'stackonet_support_ticket/v3/ticket_created', $ticket_id );
 
-			return $this->respondCreated( [ 'ticket_id' => $ticket_id, 'thread_id' => $thread_id ] );
+			$supportTicket = ( new SupportTicket )->find_by_id( $ticket_id );
+			if ( ! $supportTicket instanceof SupportTicket ) {
+				return $this->respondNotFound();
+			}
+
+			$ticket  = $supportTicket->to_array();
+			$threads = $supportTicket->get_ticket_threads();
+
+			$response = [ 'ticket' => $ticket, 'threads' => $threads ];
+
+			return $this->respondCreated( $response );
 		}
 
 		return $this->respondInternalServerError();
@@ -567,14 +604,12 @@ class TicketController extends ApiController {
 			'name'         => array(
 				'description'       => __( 'User full name.', 'stackonet-support-ticker' ),
 				'type'              => 'string',
-				'required'          => true,
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 			'email'        => array(
 				'description'       => __( 'User email address.', 'stackonet-support-ticker' ),
 				'type'              => 'string',
-				'required'          => true,
 				'sanitize_callback' => 'sanitize_email',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
@@ -588,14 +623,12 @@ class TicketController extends ApiController {
 			'subject'      => array(
 				'description'       => __( 'Ticket subject.', 'stackonet-support-ticker' ),
 				'type'              => 'string',
-				'required'          => true,
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 			'content'      => array(
 				'description'       => __( 'Ticket content.', 'stackonet-support-ticker' ),
 				'type'              => 'string',
-				'required'          => true,
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 			'category'     => array(
@@ -712,7 +745,6 @@ class TicketController extends ApiController {
 	}
 
 	/**
-	 *
 	 * Get filter data
 	 *
 	 * @param int $status

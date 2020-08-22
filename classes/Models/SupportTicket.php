@@ -155,15 +155,35 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Array representation of the class
 	 *
+	 * @param string $context view or edit
+	 *
 	 * @return array
 	 * @throws Exception
 	 */
-	public function to_array() {
+	public function to_array( $context = 'view' ) {
+		if ( $context == 'view' ) {
+			return [
+				'id'       => intval( $this->get( 'id' ) ),
+				'subject'  => $this->get( 'ticket_subject' ),
+				'created'  => mysql_to_rfc3339( $this->get( 'date_created' ) ),
+				'updated'  => mysql_to_rfc3339( $this->get( 'date_updated' ) ),
+				'status'   => $this->get_ticket_status(),
+				'category' => $this->get_ticket_category(),
+				'priority' => $this->get_ticket_priority(),
+				'creator'  => [
+					'id'     => intval( $this->get( 'agent_created' ) ),
+					'name'   => $this->get( 'customer_name' ),
+					'email'  => $this->get( 'customer_email' ),
+					'avatar' => get_avatar_url( $this->get( 'customer_email' ) ),
+					'phone'  => $this->get( 'customer_phone' ),
+					'city'   => $this->get( 'city' ),
+					'type'   => $this->get( 'user_type' ),
+				],
+			];
+		}
 		$data                       = parent::to_array();
+		$data['id']                 = intval( $this->get( 'id' ) );
 		$data['customer_url']       = get_avatar_url( $this->get( 'customer_email' ) );
-		$data['status']             = $this->get_ticket_status();
-		$data['category']           = $this->get_ticket_category();
-		$data['priority']           = $this->get_ticket_priority();
 		$data['created_by']         = $this->get_agent_created();
 		$data['assigned_agents']    = $this->get_assigned_agents();
 		$data['updated']            = $this->update_at();
@@ -320,7 +340,7 @@ class SupportTicket extends DatabaseModel {
 		$terms         = get_term_by( 'id', $ticket_status, 'ticket_status' );
 
 		if ( $terms instanceof WP_Term ) {
-			return $terms->to_array();
+			return static::format_term_for_response( $terms );
 		}
 
 		return new ArrayObject();
@@ -335,7 +355,7 @@ class SupportTicket extends DatabaseModel {
 		$ticket_status = $this->get( 'ticket_category' );
 		$terms         = get_term_by( 'id', $ticket_status, 'ticket_category' );
 		if ( $terms instanceof WP_Term ) {
-			return $terms->to_array();
+			return static::format_term_for_response( $terms );
 		}
 
 		return new ArrayObject();
@@ -351,10 +371,23 @@ class SupportTicket extends DatabaseModel {
 		$terms         = get_term_by( 'id', $ticket_status, 'ticket_priority' );
 
 		if ( $terms instanceof WP_Term ) {
-			return $terms->to_array();
+			return static::format_term_for_response( $terms );
 		}
 
 		return new ArrayObject;
+	}
+
+	/**
+	 * @param WP_Term $term
+	 *
+	 * @return array
+	 */
+	public static function format_term_for_response( WP_Term $term ) {
+		return [
+			'id'   => $term->term_id,
+			'name' => $term->name,
+			'slug' => $term->slug,
+		];
 	}
 
 	/**
@@ -414,7 +447,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Create support ticket
 	 *
-	 * @param array $data
+	 * @param array  $data
 	 * @param string $content
 	 * @param string $thread_type
 	 *
@@ -452,7 +485,7 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
-	 * @param int $ticket_id
+	 * @param int   $ticket_id
 	 * @param array $data
 	 * @param array $attachments
 	 *
@@ -492,7 +525,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Add support ticket note
 	 *
-	 * @param int $ticket_id
+	 * @param int    $ticket_id
 	 * @param string $note
 	 * @param string $type
 	 */
@@ -510,7 +543,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Get ticket meta
 	 *
-	 * @param int $ticket_id
+	 * @param int    $ticket_id
 	 * @param string $meta_key
 	 *
 	 * @return array
@@ -534,10 +567,10 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Update ticket metadata
 	 *
-	 * @param int $ticket_id
+	 * @param int    $ticket_id
 	 * @param string $meta_key
-	 * @param mixed $meta_value
-	 * @param int $meta_id
+	 * @param mixed  $meta_value
+	 * @param int    $meta_id
 	 *
 	 * @return int
 	 */
@@ -766,7 +799,7 @@ class SupportTicket extends DatabaseModel {
 
 	/**
 	 * @param string $query
-	 * @param bool $object
+	 * @param bool   $object
 	 *
 	 * @return array|WP_Term[]
 	 */
@@ -900,7 +933,7 @@ class SupportTicket extends DatabaseModel {
 		}
 
 		/**
-		 * @param SupportTicket $this
+		 * @param SupportTicket  $this
 		 * @param SupportAgent[] $agents
 		 */
 		do_action( 'save_support_ticket_agent', $this, $agents );
@@ -1061,7 +1094,7 @@ class SupportTicket extends DatabaseModel {
 	 * Count number of tickets by status
 	 *
 	 * @param WP_Term[] $terms
-	 * @param string $column_name
+	 * @param string    $column_name
 	 *
 	 * @return array
 	 */
@@ -1196,10 +1229,10 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Map meta capability for support ticket
 	 *
-	 * @param array $caps
+	 * @param array  $caps
 	 * @param string $cap
-	 * @param int $user_id
-	 * @param array $args
+	 * @param int    $user_id
+	 * @param array  $args
 	 *
 	 * @return array
 	 */

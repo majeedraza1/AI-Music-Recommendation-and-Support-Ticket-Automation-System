@@ -1,0 +1,22 @@
+{
+  "name": "stackonet/stackonet-support-ticket",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Stackonet Services (Pvt.) Ltd.",
+      "email": "info@stackonet.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.2",
+    "ext-json": "*",
+    "stackonet/wp-helpers": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "StackonetSupportTicket\\": "classes"
+    }
+  }
+}
