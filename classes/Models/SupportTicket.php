@@ -363,10 +363,13 @@ class SupportTicket extends DatabaseModel {
 	 * @return array
 	 */
 	public static function format_term_for_response( WP_Term $term ) {
+		$color = get_term_meta( $term->term_id, '_color', true );
+
 		return [
-			'id'   => $term->term_id,
-			'name' => $term->name,
-			'slug' => $term->slug,
+			'id'    => $term->term_id,
+			'name'  => $term->name,
+			'slug'  => $term->slug,
+			'color' => ! empty( $color ) ? $color : '',
 		];
 	}
 
@@ -698,7 +701,7 @@ class SupportTicket extends DatabaseModel {
 
 		foreach ( [ 'ticket_category', 'ticket_priority', 'ticket_status' ] as $columnName ) {
 			if ( $args[ $columnName ] ) {
-				$query .= $wpdb->prepare( " AND `{$columnName}` = %d", intval( $args['agent_created'] ) );
+				$query .= $wpdb->prepare( " AND `{$columnName}` = %d", intval( $args[ $columnName ] ) );
 			}
 		}
 
