@@ -125,6 +125,15 @@ class TicketThread extends Data {
 	}
 
 	/**
+	 * Get thread type
+	 *
+	 * @return string
+	 */
+	public function get_user_type() {
+		return $this->get( 'user_type', 'user' );
+	}
+
+	/**
 	 * Get created at
 	 *
 	 * @return string
@@ -196,6 +205,7 @@ class TicketThread extends Data {
 		$customer_name  = isset( $data['customer_name'] ) ? $data['customer_name'] : '';
 		$customer_email = isset( $data['customer_email'] ) ? $data['customer_email'] : '';
 		$thread_type    = isset( $data['thread_type'] ) ? $data['thread_type'] : '';
+		$user_type      = isset( $data['user_type'] ) ? $data['user_type'] : 'user';
 		$thread_type    = in_array( $thread_type, static::$valid_thread_types ) ? $thread_type : '';
 		$attachments    = isset( $data['attachments'] ) && is_array( $data['attachments'] ) ? $data['attachments'] : [];
 
@@ -203,6 +213,7 @@ class TicketThread extends Data {
 		update_post_meta( $post_id, 'thread_type', $thread_type );
 		update_post_meta( $post_id, 'customer_name', $customer_name );
 		update_post_meta( $post_id, 'customer_email', $customer_email );
+		update_post_meta( $post_id, 'user_type', $user_type );
 		update_post_meta( $post_id, 'attachments', $attachments );
 	}
 
@@ -215,6 +226,7 @@ class TicketThread extends Data {
 		$this->data['type']           = get_post_meta( $thread_id, 'thread_type', true );
 		$this->data['customer_name']  = get_post_meta( $thread_id, 'customer_name', true );
 		$this->data['customer_email'] = get_post_meta( $thread_id, 'customer_email', true );
+		$this->data['user_type']      = get_post_meta( $thread_id, 'user_type', true );
 	}
 
 	/**

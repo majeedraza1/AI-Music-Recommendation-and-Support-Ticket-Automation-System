@@ -199,6 +199,7 @@ class UserTicketController extends ApiController {
 			'customer_email' => $user->user_email,
 			'post_content'   => $thread_content,
 			'agent_created'  => $user->ID,
+			'user_type'      => $user->ID == intval( $support_ticket->get( 'agent_created' ) ) ? 'user' : 'agent',
 		], $attachments );
 
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id );
@@ -282,6 +283,7 @@ class UserTicketController extends ApiController {
 				'name'   => $thread->get( 'customer_name' ),
 				'email'  => $thread->get( 'customer_email' ),
 				'avatar' => $thread->get_avatar_url(),
+				'type'   => $thread->get_user_type(),
 			],
 			'created'     => mysql_to_rfc3339( $thread->get( 'created' ) ),
 			'thread_type' => $thread->get_type(),

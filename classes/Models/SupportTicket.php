@@ -481,6 +481,7 @@ class SupportTicket extends DatabaseModel {
 			'customer_email' => '',
 			'post_content'   => '',
 			'agent_created'  => 0,
+			'user_type'      => 'user',
 		] );
 
 		$post_id = wp_insert_post( [
@@ -497,6 +498,7 @@ class SupportTicket extends DatabaseModel {
 			update_post_meta( $post_id, 'thread_type', $data['thread_type'] );
 			update_post_meta( $post_id, 'customer_name', $data['customer_name'] );
 			update_post_meta( $post_id, 'customer_email', $data['customer_email'] );
+			update_post_meta( $post_id, 'user_type', $data['user_type'] );
 			update_post_meta( $post_id, 'attachments', $attachments );
 
 			return $post_id;
