@@ -3,8 +3,8 @@
 namespace StackonetSupportTicket\REST;
 
 use Exception;
-use StackonetSupportTicket\Supports\Attachment;
-use StackonetSupportTicket\Supports\UploadedFile;
+use Stackonet\WP\Framework\Media\UploadedFile;
+use Stackonet\WP\Framework\Media\Uploader;
 use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -105,7 +105,7 @@ class AttachmentController extends ApiController {
 			return $this->respondForbidden();
 		}
 
-		$attachments = Attachment::upload( $files['file'] );
+		$attachments = Uploader::upload( $files['file'] );
 		$ids         = wp_list_pluck( $attachments, 'attachment_id' );
 		$files_paths = wp_list_pluck( $attachments, 'attachment_path' );
 

@@ -96,6 +96,10 @@ class StatusController extends ApiController {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
+		if ( ! current_user_can( 'edit_pages' ) ) {
+			return $this->respondUnauthorized();
+		}
+
 		$name        = $request->get_param( 'name' );
 		$slug        = $request->get_param( 'slug' );
 		$description = $request->get_param( 'description' );
@@ -133,6 +137,10 @@ class StatusController extends ApiController {
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
+		if ( ! current_user_can( 'edit_pages' ) ) {
+			return $this->respondUnauthorized();
+		}
+
 		$id   = (int) $request->get_param( 'id' );
 		$name = $request->get_param( 'name' );
 		$slug = $request->get_param( 'slug' );
@@ -158,6 +166,10 @@ class StatusController extends ApiController {
 	 * @return WP_REST_Response
 	 */
 	public function update_batch_items( $request ) {
+		if ( ! current_user_can( 'edit_pages' ) ) {
+			return $this->respondUnauthorized();
+		}
+
 		$menu_orders = $request->get_param( 'menu_orders' );
 		if ( count( $menu_orders ) > 0 ) {
 			TicketStatus::update_menu_orders( $menu_orders );
@@ -175,6 +187,10 @@ class StatusController extends ApiController {
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
+		if ( ! current_user_can( 'edit_pages' ) ) {
+			return $this->respondUnauthorized();
+		}
+
 		$id = (int) $request->get_param( 'id' );
 
 		if ( TicketStatus::delete( $id ) ) {

@@ -2,11 +2,11 @@
 
 namespace StackonetSupportTicket\Models;
 
-use StackonetSupportTicket\Abstracts\AbstractModel;
+use Stackonet\WP\Framework\Abstracts\Data;
 use WP_Error;
 use WP_Term;
 
-class TicketPriority extends AbstractModel {
+class TicketPriority extends Data {
 
 	/**
 	 * Taxonomy name

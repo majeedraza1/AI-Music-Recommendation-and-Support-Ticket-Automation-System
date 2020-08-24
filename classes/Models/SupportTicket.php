@@ -5,7 +5,7 @@ namespace StackonetSupportTicket\Models;
 use ArrayObject;
 use DateTime;
 use Exception;
-use StackonetSupportTicket\Abstracts\DatabaseModel;
+use Stackonet\WP\Framework\Abstracts\DatabaseModel;
 use WP_Post;
 use WP_Term;
 use WP_Term_Query;
@@ -155,35 +155,15 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Array representation of the class
 	 *
-	 * @param string $context view or edit
-	 *
 	 * @return array
 	 * @throws Exception
 	 */
-	public function to_array( $context = 'view' ) {
-		if ( $context == 'view' ) {
-			return [
-				'id'       => intval( $this->get( 'id' ) ),
-				'subject'  => $this->get( 'ticket_subject' ),
-				'created'  => mysql_to_rfc3339( $this->get( 'date_created' ) ),
-				'updated'  => mysql_to_rfc3339( $this->get( 'date_updated' ) ),
-				'status'   => $this->get_ticket_status(),
-				'category' => $this->get_ticket_category(),
-				'priority' => $this->get_ticket_priority(),
-				'creator'  => [
-					'id'     => intval( $this->get( 'agent_created' ) ),
-					'name'   => $this->get( 'customer_name' ),
-					'email'  => $this->get( 'customer_email' ),
-					'avatar' => get_avatar_url( $this->get( 'customer_email' ) ),
-					'phone'  => $this->get( 'customer_phone' ),
-					'city'   => $this->get( 'city' ),
-					'type'   => $this->get( 'user_type' ),
-				],
-			];
-		}
+	public function to_array() {
 		$data                       = parent::to_array();
-		$data['id']                 = intval( $this->get( 'id' ) );
 		$data['customer_url']       = get_avatar_url( $this->get( 'customer_email' ) );
+		$data['status']             = $this->get_ticket_status();
+		$data['category']           = $this->get_ticket_category();
+		$data['priority']           = $this->get_ticket_priority();
 		$data['created_by']         = $this->get_agent_created();
 		$data['assigned_agents']    = $this->get_assigned_agents();
 		$data['updated']            = $this->update_at();
@@ -698,6 +678,78 @@ class SupportTicket extends DatabaseModel {
 		}
 
 		return $data;
+	}
+
+	public static function _find_for_user_sql( array $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'search'          => '',
+			'ticket_status'   => 0,
+			'ticket_category' => 0,
+			'ticket_priority' => 0,
+			'agent_created'   => 0,
+		] );
+
+		$self = new static;
+		global $wpdb;
+		$table = $self->get_table_name();
+
+		$query = "SELECT * FROM {$table} WHERE 1=1";
+		$query .= $wpdb->prepare( " AND `agent_created` = %d", intval( $args['agent_created'] ) );
+
+		foreach ( [ 'ticket_category', 'ticket_priority', 'ticket_status' ] as $columnName ) {
+			if ( $args[ $columnName ] ) {
+				$query .= $wpdb->prepare( " AND `{$columnName}` = %d", intval( $args['agent_created'] ) );
+			}
+		}
+
+		if ( ! empty( $args['search'] ) ) {
+			$query .= " AND `ticket_subject` LIKE %" . esc_sql( $args['search'] ) . "%";
+		}
+
+
+		return $query;
+	}
+
+	public static function find_for_user( array $args = [] ) {
+		$self = new static;
+		global $wpdb;
+		$cache_key = $self->get_cache_key_for_collection( $args );
+		$items     = $self->get_cache( $cache_key );
+		if ( false === $items ) {
+			list( $per_page, $offset ) = $self->get_pagination_and_order_data( $args );
+			$order_by = $self->get_order_by( $args );
+
+			$query = static::_find_for_user_sql( $args );
+			$query .= " ORDER BY {$order_by}";
+
+			if ( $per_page > 0 ) {
+				$query .= $wpdb->prepare( " LIMIT %d", $per_page );
+			}
+			if ( $offset >= 0 ) {
+				$query .= $wpdb->prepare( " OFFSET %d", $offset );
+			}
+			$items = $wpdb->get_results( $query, ARRAY_A );
+
+			// Set cache for one day
+			$self->set_cache( $cache_key, $items, DAY_IN_SECONDS );
+		}
+
+		$data = [];
+		foreach ( $items as $result ) {
+			$data[] = new self( $result );
+		}
+
+		return $data;
+	}
+
+	public static function count_for_user( array $args = [] ) {
+		global $wpdb;
+		$query = static::_find_for_user_sql( $args );
+		$query = str_replace( "SELECT *", "SELECT COUNT( * ) AS num_entries", $query );
+
+		$count = $wpdb->get_row( $query, ARRAY_A );
+
+		return isset( $count['num_entries'] ) ? intval( $count['num_entries'] ) : 0;
 	}
 
 	/**

@@ -46,7 +46,7 @@ class AgentRole implements JsonSerializable {
 	 * AgentRole constructor.
 	 *
 	 * @param string $role
-	 * @param array $data
+	 * @param array  $data
 	 */
 	public function __construct( $role, $data = [] ) {
 		$this->role = $role;
@@ -148,9 +148,9 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * Add role, if it does not exist.
 	 *
-	 * @param string $role Role name.
+	 * @param string $role         Role name.
 	 * @param string $display_name Display name for role.
-	 * @param array $capabilities List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
+	 * @param array  $capabilities List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
 	 *
 	 * @return self|WP_Error
 	 */
@@ -180,13 +180,13 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * Update role, if it exist.
 	 *
-	 * @param string $role Role name.
+	 * @param string $role         Role name.
+	 * @param array  $capabilities List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
 	 * @param string $display_name Display name for role.
-	 * @param array $capabilities List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
 	 *
 	 * @return self|null
 	 */
-	public static function update_role( $role, $capabilities = [], $display_name = null ) {
+	public static function update_role( $role, $capabilities = [], $display_name = '' ) {
 		$agent_roles = get_option( self::$option_name );
 		if ( ! isset( $agent_roles[ $role ] ) ) {
 			return null;
@@ -287,7 +287,7 @@ class AgentRole implements JsonSerializable {
 	 * @return array
 	 */
 	public static function form_settings() {
-		$capabilities = [
+		return [
 			[
 				'id'          => 'view_unassigned',
 				'label'       => __( 'View unassigned', 'stackonet-support-ticket' ),
@@ -416,7 +416,5 @@ class AgentRole implements JsonSerializable {
 				'description' => __( 'Ticket assigned to all other agents change Raised By capability..', 'stackonet-support-ticket' ),
 			],
 		];
-
-		return $capabilities;
 	}
 }

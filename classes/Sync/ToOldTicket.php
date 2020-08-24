@@ -2,7 +2,6 @@
 
 namespace StackonetSupportTicket\Sync;
 
-use Stackonet\Modules\SupportTicket\SupportTicket;
 use StackonetSupportTicket\Upgrade\UpgradeCategories;
 use StackonetSupportTicket\Upgrade\UpgradePriorities;
 use StackonetSupportTicket\Upgrade\UpgradeStatus;

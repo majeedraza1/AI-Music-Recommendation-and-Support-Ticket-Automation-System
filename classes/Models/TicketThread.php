@@ -2,12 +2,12 @@
 
 namespace StackonetSupportTicket\Models;
 
-use StackonetSupportTicket\Abstracts\PostTypeModel;
+use Stackonet\WP\Framework\Abstracts\Data;
 use WP_Post;
 
 defined( 'ABSPATH' ) or exit;
 
-class TicketThread extends PostTypeModel {
+class TicketThread extends Data {
 
 	/**
 	 * Post type name
@@ -75,25 +75,9 @@ class TicketThread extends PostTypeModel {
 	/**
 	 * Array representation of the class
 	 *
-	 * @param string $context
-	 *
 	 * @return array
 	 */
-	public function to_array( $context = 'view' ) {
-		if ( $context == 'view' ) {
-			return [
-				'id'          => $this->get( 'id' ),
-				'content'     => $this->get( 'content' ),
-				'creator'     => [
-					'name'   => $this->get( 'customer_name' ),
-					'email'  => $this->get( 'customer_email' ),
-					'avatar' => $this->get_avatar_url(),
-				],
-				'created'     => mysql_to_rfc3339( $this->get( 'created' ) ),
-				'thread_type' => $this->get_type(),
-				'attachments' => $this->attachments,
-			];
-		}
+	public function to_array() {
 		$human_time = human_time_diff( strtotime( $this->get( 'created' ) ) );
 
 		return [
@@ -255,6 +239,13 @@ class TicketThread extends PostTypeModel {
 		}
 
 		$this->attachments = $attachments;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_attachments() {
+		return $this->attachments;
 	}
 
 	/**

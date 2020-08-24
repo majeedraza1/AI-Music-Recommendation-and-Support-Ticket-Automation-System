@@ -2,13 +2,13 @@
 
 namespace StackonetSupportTicket\Models;
 
-use StackonetSupportTicket\Abstracts\AbstractModel;
+use Stackonet\WP\Framework\Abstracts\Data;
 use WP_Error;
 use WP_Term;
 
 defined( 'ABSPATH' ) or exit;
 
-class TicketCategory extends AbstractModel {
+class TicketCategory extends Data {
 
 	/**
 	 * Taxonomy name

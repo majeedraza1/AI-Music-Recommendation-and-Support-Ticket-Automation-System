@@ -155,7 +155,7 @@ class Assets {
 			'lostPasswordUrl' => wp_lostpassword_url(),
 			'isUserLoggedIn'  => $current_user->exists(),
 			'wpRestRoot'      => esc_url_raw( rest_url( 'wp/v2' ) ),
-			'restRoot'        => esc_url_raw( rest_url( 'stackonet-support-ticket/v1' ) ),
+			'restRoot'        => esc_url_raw( rest_url( 'muslim-zone/v1/support-ticket' ) ),
 		];
 
 		if ( $current_user->exists() ) {

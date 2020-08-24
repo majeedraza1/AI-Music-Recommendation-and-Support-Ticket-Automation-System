@@ -360,11 +360,9 @@ class TicketController extends ApiController {
 		$ticket_id = ( new SupportTicket )->create( $data );
 
 		if ( ! empty( $ticket_id ) ) {
-			$html = $this->get_ticket_content( $name, $phone_number, $ticket_content );
-
-			$thread_data = [
+			$thread_data    = [
 				'ticket_id'      => $ticket_id,
-				'post_content'   => $html,
+				'post_content'   => wp_filter_post_kses( nl2br( $ticket_content, false ) ),
 				'customer_name'  => $name,
 				'customer_email' => $email,
 				'thread_type'    => 'report',
@@ -383,7 +381,12 @@ class TicketController extends ApiController {
 			$ticket  = $supportTicket->to_array();
 			$threads = $supportTicket->get_ticket_threads();
 
-			$response = [ 'ticket' => $ticket, 'threads' => $threads ];
+			$response = [
+				'ticket'    => $ticket,
+				'threads'   => $threads,
+				'ticket_id' => $ticket_id,
+				'thread_id' => $thread_id,
+			];
 
 			return $this->respondCreated( $response );
 		}

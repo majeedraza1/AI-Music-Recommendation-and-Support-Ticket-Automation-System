@@ -73,7 +73,7 @@ class SyncTicket {
 	 * @param int $old_ticket_id
 	 */
 	public static function record_ticket_id_on_both_table( $new_ticket_id, $old_ticket_id ) {
-		/** @var wpdb $wpdb */
+		/** @var \wpdb $wpdb */
 		global $wpdb;
 
 		$data_1 = [ 'ticket_id' => $new_ticket_id, 'meta_key' => '_old_ticket_id', 'meta_value' => $old_ticket_id ];

@@ -2,7 +2,7 @@
 
 namespace StackonetSupportTicket\Upgrade;
 
-use StackonetSupportTicket\Abstracts\BackgroundProcess;
+use Stackonet\WP\Framework\Abstracts\BackgroundProcess;
 use WP_Post;
 
 defined( 'ABSPATH' ) || exit;

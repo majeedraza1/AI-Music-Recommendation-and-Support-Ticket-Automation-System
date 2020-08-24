@@ -2,14 +2,14 @@
 
 namespace StackonetSupportTicket\Models;
 
-use StackonetSupportTicket\Abstracts\AbstractModel;
+use Stackonet\WP\Framework\Abstracts\Data;
 use WP_Error;
 use WP_Term;
 use WP_User;
 
 defined( 'ABSPATH' ) or exit;
 
-class SupportAgent extends AbstractModel {
+class SupportAgent extends Data {
 
 	/**
 	 * Taxonomy name
@@ -224,7 +224,7 @@ class SupportAgent extends AbstractModel {
 	/**
 	 * Update support agent role
 	 *
-	 * @param int $id
+	 * @param int    $id
 	 * @param string $role_id
 	 */
 	public static function update_role( $id, $role_id ) {
