@@ -104,6 +104,7 @@ class StatusController extends ApiController {
 		$slug        = $request->get_param( 'slug' );
 		$description = $request->get_param( 'description' );
 		$parent      = $request->get_param( 'parent' );
+		$color       = $request->get_param( 'color' );
 
 		$args = [];
 		if ( ! empty( $slug ) ) {
@@ -114,6 +115,9 @@ class StatusController extends ApiController {
 		}
 		if ( ! empty( $parent ) ) {
 			$args['parent'] = $parent;
+		}
+		if ( ! empty( $color ) ) {
+			$args['color'] = $color;
 		}
 
 		$status_id = TicketStatus::create( $name, $args );
@@ -141,16 +145,17 @@ class StatusController extends ApiController {
 			return $this->respondUnauthorized();
 		}
 
-		$id   = (int) $request->get_param( 'id' );
-		$name = $request->get_param( 'name' );
-		$slug = $request->get_param( 'slug' );
+		$id    = (int) $request->get_param( 'id' );
+		$name  = $request->get_param( 'name' );
+		$slug  = $request->get_param( 'slug' );
+		$color = $request->get_param( 'color' );
 
 		$category = TicketStatus::find_by_id( $id );
 		if ( ! $category instanceof TicketStatus ) {
 			return $this->respondNotFound( null, 'No ticket status found with this id.' );
 		}
 
-		$response = TicketStatus::update( $id, $name, $slug );
+		$response = TicketStatus::update( $id, $name, $slug, $color );
 		if ( is_wp_error( $response ) ) {
 			return $this->respondUnprocessableEntity( $response->get_error_code(), $response->get_error_message() );
 		}

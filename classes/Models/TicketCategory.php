@@ -47,6 +47,17 @@ class TicketCategory extends Data {
 	}
 
 	/**
+	 * Color
+	 *
+	 * @return string
+	 */
+	public function get_color() {
+		$color = get_term_meta( $this->term->term_id, '_color', true );
+
+		return ! empty( $color ) ? $color : '';
+	}
+
+	/**
 	 * Get reserve categories
 	 *
 	 * @return array
@@ -65,6 +76,7 @@ class TicketCategory extends Data {
 			'term_id' => $this->get( 'term_id' ),
 			'slug'    => $this->get( 'slug' ),
 			'name'    => $this->get( 'name' ),
+			'color'   => $this->get_color(),
 		];
 	}
 
@@ -103,7 +115,7 @@ class TicketCategory extends Data {
 	 * Crate a new term
 	 *
 	 * @param string $term term to add
-	 * @param array $args
+	 * @param array  $args
 	 *
 	 * @return int|WP_Error
 	 */
@@ -129,7 +141,7 @@ class TicketCategory extends Data {
 	/**
 	 * Update category
 	 *
-	 * @param int $term_id
+	 * @param int    $term_id
 	 * @param string $name
 	 * @param string $slug
 	 *

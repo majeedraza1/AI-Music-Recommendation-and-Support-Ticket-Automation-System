@@ -40,6 +40,17 @@ class TicketPriority extends Data {
 	}
 
 	/**
+	 * Color
+	 *
+	 * @return string
+	 */
+	public function get_color() {
+		$color = get_term_meta( $this->term->term_id, '_color', true );
+
+		return ! empty( $color ) ? $color : '';
+	}
+
+	/**
 	 * Array representation of the class
 	 *
 	 * @return array
@@ -49,6 +60,7 @@ class TicketPriority extends Data {
 			'term_id' => $this->get( 'term_id' ),
 			'slug'    => $this->get( 'slug' ),
 			'name'    => $this->get( 'name' ),
+			'color'   => $this->get_color(),
 		];
 	}
 
@@ -87,7 +99,7 @@ class TicketPriority extends Data {
 	 * Crate a new term
 	 *
 	 * @param string $term term to add
-	 * @param array $args
+	 * @param array  $args
 	 *
 	 * @return int|WP_Error
 	 */
@@ -117,7 +129,7 @@ class TicketPriority extends Data {
 	/**
 	 * Update category
 	 *
-	 * @param int $term_id
+	 * @param int    $term_id
 	 * @param string $name
 	 * @param string $slug
 	 *
