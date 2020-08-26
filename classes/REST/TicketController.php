@@ -313,7 +313,11 @@ class TicketController extends ApiController {
 			}
 		}
 
-		$required_params = [ 'subject', 'content', 'email', 'name' ];
+		$required_params = [ 'subject', 'content', 'name' ];
+
+		if ( ! $current_user->exists() ) {
+			$required_params[] = 'email';
+		}
 
 		$errors = [];
 		foreach ( $required_params as $param ) {
@@ -347,6 +351,7 @@ class TicketController extends ApiController {
 			'ticket_subject'   => $subject,
 			'customer_name'    => $name,
 			'customer_email'   => $email,
+			'customer_phone'   => $phone_number,
 			'user_type'        => get_current_user_id() ? 'user' : 'guest',
 			'ticket_category'  => ! empty( $ticket_category ) ? $ticket_category : $default_category,
 			'ticket_status'    => ! empty( $ticket_status ) ? $ticket_status : $default_status,
@@ -360,7 +365,7 @@ class TicketController extends ApiController {
 		$ticket_id = ( new SupportTicket )->create( $data );
 
 		if ( ! empty( $ticket_id ) ) {
-			$thread_data    = [
+			$thread_data = [
 				'ticket_id'      => $ticket_id,
 				'post_content'   => wp_filter_post_kses( nl2br( $ticket_content, false ) ),
 				'customer_name'  => $name,
