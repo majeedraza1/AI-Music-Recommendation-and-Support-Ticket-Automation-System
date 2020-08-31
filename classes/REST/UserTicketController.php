@@ -199,7 +199,7 @@ class UserTicketController extends ApiController {
 			'customer_email' => $user->user_email,
 			'post_content'   => $thread_content,
 			'agent_created'  => $user->ID,
-			'user_type'      => $user->ID == intval( $support_ticket->get( 'agent_created' ) ) ? 'user' : 'agent',
+			'user_type'      => 'user',
 		], $attachments );
 
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id );

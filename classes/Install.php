@@ -83,20 +83,29 @@ class Install {
 	 */
 	private static function create_meta_table() {
 		global $wpdb;
+		$fk_table = $wpdb->prefix . 'support_ticket';
+
 		$table_name = $wpdb->prefix . 'support_ticketmeta';
 		$collate    = $wpdb->get_charset_collate();
 
 		$tables = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			id bigint(20) NOT NULL AUTO_INCREMENT,
-			ticket_id bigint(20),
-			meta_key LONGTEXT NULL DEFAULT NULL,
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			ticket_id BIGINT(20) UNSIGNED NOT NULL,
+			meta_key varchar(255) NULL DEFAULT NULL,
 			meta_value LONGTEXT NULL DEFAULT NULL,
-			PRIMARY KEY  (id),
-			KEY ticket_id (ticket_id)
+			PRIMARY KEY  (id)
 		) $collate;";
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $tables );
+
+		$version = get_option( $table_name . '-version' );
+		if ( false === $version ) {
+			$sql = "ALTER TABLE `{$table_name}` ADD CONSTRAINT `fk_{$fk_table}_{$table_name}` FOREIGN KEY (`ticket_id`)";
+			$sql .= " REFERENCES `{$fk_table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
+			$wpdb->query( $sql );
+			update_option( $table_name . '-version', '1.0.0', false );
+		}
 	}
 
 	/**

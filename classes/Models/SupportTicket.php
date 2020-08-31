@@ -280,7 +280,7 @@ class SupportTicket extends DatabaseModel {
 		$date_updated = $this->get( 'date_updated' );
 		$dateTime     = new DateTime( $date_updated );
 
-		return $dateTime->format( get_option( 'date_format' ) );
+		return $dateTime->format( 'Y-m-d\TH:i:s' );
 	}
 
 	/**
@@ -291,7 +291,7 @@ class SupportTicket extends DatabaseModel {
 		$date_updated = $this->get( 'date_updated' );
 		$dateTime     = new DateTime( $date_updated );
 
-		return human_time_diff( $dateTime->getTimestamp() ) . ' ago';
+		return human_time_diff( $dateTime->getTimestamp(), current_time( 'timestamp' ) ) . ' ago';
 	}
 
 	/**
@@ -500,6 +500,8 @@ class SupportTicket extends DatabaseModel {
 			update_post_meta( $post_id, 'customer_email', $data['customer_email'] );
 			update_post_meta( $post_id, 'user_type', $data['user_type'] );
 			update_post_meta( $post_id, 'attachments', $attachments );
+
+			( new static )->update( [ 'id' => $ticket_id, 'date_updated' => current_time( 'mysql' ) ] );
 
 			return $post_id;
 		}
@@ -1244,42 +1246,35 @@ class SupportTicket extends DatabaseModel {
 		$collate    = $wpdb->get_charset_collate();
 
 		$tables = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			id bigint(20) NOT NULL AUTO_INCREMENT,
-			ticket_status integer,
-			customer_name TINYTEXT NULL DEFAULT NULL,
-			customer_email TINYTEXT NULL DEFAULT NULL,
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			customer_name varchar(100) NULL DEFAULT NULL,
+			customer_email varchar(100) NULL DEFAULT NULL,
 			customer_phone varchar(20) NULL DEFAULT NULL,
-			ticket_subject varchar(200) NULL DEFAULT NULL,
+			ticket_subject TEXT NULL DEFAULT NULL,
 			city varchar(100) NULL DEFAULT NULL,
 			user_type varchar(30) NULL DEFAULT NULL,
-			ticket_category integer,
-			ticket_priority integer,
-			date_created datetime,
-			date_updated datetime,
+			ticket_category BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			ticket_priority BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			ticket_status BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			active tinyint(1) NOT NULL DEFAULT 1,
 			ip_address VARCHAR(30) NULL DEFAULT NULL,
-			agent_created INT NULL DEFAULT '0',
-			ticket_auth_code LONGTEXT NULL DEFAULT NULL,
-			active int(11) DEFAULT 1,
-			PRIMARY KEY  (id)
+			ticket_auth_code varchar(255) NULL DEFAULT NULL,
+			agent_created BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			date_created datetime NULL DEFAULT NULL,
+			date_updated datetime NULL DEFAULT NULL,
+			PRIMARY KEY (id)
 		) $collate;";
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $tables );
-	}
 
-	/**
-	 * Add new columns to table
-	 */
-	public function add_table_columns() {
-		global $wpdb;
-		$table_name = $wpdb->prefix . $this->table;
-		$version    = get_option( 'stackonet_support_ticket_table_version' );
-		$version    = ! empty( $version ) ? $version : '1.0.0';
-
-		if ( version_compare( $version, '1.0.1', '<' ) ) {
-			$row = $wpdb->get_row( "SELECT * FROM {$table_name}", ARRAY_A );
-
-			update_option( 'stackonet_support_ticket_table_version', '1.0.1' );
+		$version = get_option( $table_name . '-version' );
+		if ( false === $version ) {
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_category` (`ticket_category`);" );
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_priority` (`ticket_priority`);" );
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_status` (`ticket_status`);" );
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `agent_created` (`agent_created`);" );
+			update_option( $table_name . '-version', '1.0.0', false );
 		}
 	}
 

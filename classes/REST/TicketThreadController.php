@@ -111,6 +111,7 @@ class TicketThreadController extends ApiController {
 			'customer_email' => $user->user_email,
 			'post_content'   => $thread_content,
 			'agent_created'  => $user->ID,
+			'user_type'      => 'agent',
 		], $attachments );
 
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id );
