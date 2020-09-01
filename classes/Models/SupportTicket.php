@@ -759,6 +759,8 @@ class SupportTicket extends DatabaseModel {
 	 * Metadata for user
 	 *
 	 * @param array $args
+	 *
+	 * @return array
 	 */
 	public static function metadata_for_user( array $args ) {
 		$self  = new static;

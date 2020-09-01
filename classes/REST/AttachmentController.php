@@ -105,13 +105,8 @@ class AttachmentController extends ApiController {
 			return $this->respondForbidden();
 		}
 
-		$attachments = Uploader::upload( $files['file'] );
-		$ids         = wp_list_pluck( $attachments, 'attachment_id' );
-		$files_paths = wp_list_pluck( $attachments, 'attachment_path' );
-
-		$image_id = $ids[0];
-
-		$token = wp_generate_password( 20, false, false );
+		$image_id = Uploader::uploadSingleFile( $files['file'] );
+		$token    = wp_generate_password( 20, false, false );
 		update_post_meta( $image_id, '_delete_token', $token );
 
 		$response = $this->prepare_item_for_response( $image_id, $request );
@@ -122,20 +117,19 @@ class AttachmentController extends ApiController {
 	/**
 	 * Prepares the item for the REST response.
 	 *
-	 * @param mixed $item WordPress representation of the item.
-	 * @param WP_REST_Request $request Request object.
+	 * @param int             $image_id WordPress representation of the item.
+	 * @param WP_REST_Request $request  Request object.
 	 *
 	 * @return array
 	 */
-	public function prepare_item_for_response( $item, $request ) {
-		$image_id       = $item;
+	public function prepare_item_for_response( $image_id, $request ) {
 		$title          = get_the_title( $image_id );
 		$token          = get_post_meta( $image_id, '_delete_token', true );
 		$attachment_url = wp_get_attachment_url( $image_id );
 		$image          = wp_get_attachment_image_src( $image_id, 'thumbnail' );
 		$full_image     = wp_get_attachment_image_src( $image_id, 'full' );
 
-		$response = [
+		return [
 			'image_id'       => $image_id,
 			'title'          => $title,
 			'token'          => $token,
@@ -143,8 +137,6 @@ class AttachmentController extends ApiController {
 			'thumbnail'      => [ 'src' => $image[0], 'width' => $image[1], 'height' => $image[2], ],
 			'full'           => [ 'src' => $full_image[0], 'width' => $full_image[1], 'height' => $full_image[2], ],
 		];
-
-		return $response;
 	}
 
 	/**
@@ -175,7 +167,7 @@ class AttachmentController extends ApiController {
 	 * If current user can delete media
 	 *
 	 * @param WP_Post $post
-	 * @param string $token
+	 * @param string  $token
 	 *
 	 * @return bool
 	 */

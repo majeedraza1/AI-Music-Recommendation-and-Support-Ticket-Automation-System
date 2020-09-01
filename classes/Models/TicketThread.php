@@ -52,7 +52,7 @@ class TicketThread extends DatabaseModel {
 	 * @return array
 	 */
 	public function to_array() {
-		$human_time = human_time_diff( strtotime( $this->get( 'created' ) ) );
+		$human_time = human_time_diff( strtotime( $this->get_created_at() ), current_time( 'timestamp' ) );
 
 		return [
 			'thread_id'           => $this->get_id(),
@@ -165,6 +165,7 @@ class TicketThread extends DatabaseModel {
 		$table = $this->get_table_name();
 
 		$sql      = $wpdb->prepare( "SELECT * FROM {$table} WHERE ticket_id = %d", $ticket_id );
+		$sql      .= " ORDER BY id DESC";
 		$_threads = $wpdb->get_results( $sql, ARRAY_A );
 
 		$threads = [];
