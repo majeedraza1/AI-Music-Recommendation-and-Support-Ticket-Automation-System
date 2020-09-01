@@ -756,6 +756,37 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Metadata for user
+	 *
+	 * @param array $args
+	 */
+	public static function metadata_for_user( array $args ) {
+		$self  = new static;
+		$table = $self->get_table_name();
+		global $wpdb;
+		$columns = [ 'ticket_category', 'ticket_priority', 'ticket_status' ];
+		$queries = [];
+
+		foreach ( $columns as $column ) {
+			$queries[] = $wpdb->prepare(
+				"(SELECT `{$column}` AS term_id FROM {$table} WHERE `agent_created` = %d GROUP BY `{$column}`)",
+				intval( $args['agent_created'] )
+			);
+		}
+
+		$sql      = implode( ' UNION ', $queries );
+		$results  = $wpdb->get_results( $sql, ARRAY_A );
+		$term_ids = array_unique( array_map( 'intval', wp_list_pluck( $results, 'term_id' ) ) );
+
+		$data               = [];
+		$data['categories'] = TicketCategory::get_all( [ 'include' => $term_ids ] );
+		$data['priorities'] = TicketPriority::get_all( [ 'include' => $term_ids ] );
+		$data['statuses']   = TicketStatus::get_all( [ 'include' => $term_ids ] );
+
+		return $data;
+	}
+
+	/**
 	 * Search phone
 	 *
 	 * @param array $args

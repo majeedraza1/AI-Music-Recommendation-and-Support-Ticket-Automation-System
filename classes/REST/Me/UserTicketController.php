@@ -112,6 +112,7 @@ class UserTicketController extends ApiController {
 
 		$results    = SupportTicket::find_for_user( $args );
 		$pagination = SupportTicket::count_for_user( $args );
+		$metadata   = SupportTicket::metadata_for_user( $args );
 
 		$items = [];
 		foreach ( $results as $result ) {
@@ -120,7 +121,8 @@ class UserTicketController extends ApiController {
 
 		$response = [
 			'items'      => $items,
-			'pagination' => static::get_pagination_data( $pagination, $per_page, $paged )
+			'pagination' => static::get_pagination_data( $pagination, $per_page, $paged ),
+			'metadata'   => $metadata,
 		];
 
 		return $this->respondOK( $response );
