@@ -126,11 +126,11 @@ class AttachmentController extends ApiController {
 		$title          = get_the_title( $image_id );
 		$token          = get_post_meta( $image_id, '_delete_token', true );
 		$attachment_url = wp_get_attachment_url( $image_id );
-		$image          = wp_get_attachment_image_src( $image_id, 'thumbnail' );
+		$image          = wp_get_attachment_image_src( $image_id, 'thumbnail', true );
 		$full_image     = wp_get_attachment_image_src( $image_id, 'full' );
 
 		return [
-			'image_id'       => $image_id,
+			'id'             => $image_id,
 			'title'          => $title,
 			'token'          => $token,
 			'attachment_url' => $attachment_url,
