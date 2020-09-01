@@ -6,7 +6,6 @@ use ArrayObject;
 use Exception;
 use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\SupportTicket;
-use StackonetSupportTicket\Models\TicketThread;
 use WC_Order;
 use WP_Error;
 use WP_REST_Request;
@@ -366,15 +365,14 @@ class TicketController extends ApiController {
 
 		if ( ! empty( $ticket_id ) ) {
 			$thread_data = [
-				'ticket_id'      => $ticket_id,
-				'post_content'   => wp_filter_post_kses( nl2br( $ticket_content, false ) ),
+				'post_content'   => $ticket_content,
 				'customer_name'  => $name,
 				'customer_email' => $email,
 				'thread_type'    => 'report',
-				'attachments'    => $attachments,
+				'agent_created'  => get_current_user_id(),
 			];
 
-			$thread_id = ( new TicketThread )->create( $thread_data );
+			$thread_id = SupportTicket::add_thread( $ticket_id, $thread_data, $attachments );
 
 			do_action( 'stackonet_support_ticket/v3/ticket_created', $ticket_id );
 

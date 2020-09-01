@@ -2,19 +2,16 @@
 
 namespace StackonetSupportTicket\Models;
 
-use Stackonet\WP\Framework\Abstracts\Data;
-use WP_Post;
+use Stackonet\WP\Framework\Abstracts\DatabaseModel;
 
 defined( 'ABSPATH' ) or exit;
 
-class TicketThread extends Data {
+class TicketThread extends DatabaseModel {
 
 	/**
-	 * Post type name
-	 *
-	 * @var string
+	 * @inheridoc
 	 */
-	protected $post_type = 'ticket_thread';
+	protected $table = 'support_ticket_thread';
 
 	/**
 	 * Available thread types
@@ -24,13 +21,6 @@ class TicketThread extends Data {
 	protected static $valid_thread_types = [ 'report', 'log', 'reply', 'note', 'sms', 'email' ];
 
 	/**
-	 * WP_Post class
-	 *
-	 * @var WP_Post|null
-	 */
-	private $post;
-
-	/**
 	 * Thread attachments
 	 *
 	 * @var array
@@ -38,32 +28,16 @@ class TicketThread extends Data {
 	private $attachments = [];
 
 	/**
+	 * @var bool
+	 */
+	protected $attachments_read = false;
+
+	/**
 	 * Avatar URL
 	 *
 	 * @var string
 	 */
 	protected $avatar_url = '';
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param null|WP_Post $thread
-	 */
-	public function __construct( $thread = null ) {
-		if ( $thread instanceof WP_Post ) {
-			$this->post = $thread;
-
-			$this->data = [
-				'id'      => $thread->ID,
-				'content' => $thread->post_content,
-				'created' => $thread->post_date_gmt,
-				'updated' => $thread->post_modified_gmt,
-			];
-
-			$this->read_metadata();
-			$this->read_attachments_data();
-		}
-	}
 
 	/**
 	 * @return array
@@ -81,15 +55,15 @@ class TicketThread extends Data {
 		$human_time = human_time_diff( strtotime( $this->get( 'created' ) ) );
 
 		return [
-			'thread_id'           => $this->get( 'id' ),
-			'thread_content'      => $this->get( 'content' ),
-			'thread_date'         => $this->get( 'created' ),
+			'thread_id'           => $this->get_id(),
+			'thread_content'      => $this->get_thread_content(),
+			'thread_date'         => $this->get_created_at(),
 			'human_time'          => $human_time,
-			'thread_type'         => $this->get_type(),
-			'customer_name'       => $this->get( 'customer_name' ),
-			'customer_email'      => $this->get( 'customer_email' ),
+			'thread_type'         => $this->get_thread_type(),
+			'customer_name'       => $this->get( 'user_name' ),
+			'customer_email'      => $this->get( 'user_email' ),
 			'customer_avatar_url' => $this->get_avatar_url(),
-			'attachments'         => $this->attachments,
+			'attachments'         => $this->get_attachments(),
 		];
 	}
 
@@ -100,6 +74,15 @@ class TicketThread extends Data {
 	 */
 	public function get_id() {
 		return intval( $this->get( 'id' ) );
+	}
+
+	/**
+	 * Get content
+	 *
+	 * @return string
+	 */
+	public function get_thread_content() {
+		return $this->get( 'thread_content', '' );
 	}
 
 	/**
@@ -120,8 +103,8 @@ class TicketThread extends Data {
 	 *
 	 * @return string
 	 */
-	public function get_type() {
-		return $this->get( 'type' );
+	public function get_thread_type() {
+		return $this->get( 'thread_type' );
 	}
 
 	/**
@@ -138,8 +121,36 @@ class TicketThread extends Data {
 	 *
 	 * @return string
 	 */
-	public function get_created() {
-		return $this->get( 'created' );
+	public function get_created_at() {
+		return $this->get( 'created_at' );
+	}
+
+	/**
+	 * Get attachments
+	 *
+	 * @return array
+	 */
+	public function get_attachments_ids() {
+		return $this->get( 'attachments', [] );
+	}
+
+	/**
+	 * Get attachment data
+	 */
+	public function get_attachments() {
+		if ( $this->attachments_read ) {
+			return $this->attachments;
+		}
+
+		foreach ( $this->get_attachments_ids() as $id ) {
+			$this->attachments[] = [
+				'title'        => get_the_title( $id ),
+				'download_url' => wp_get_attachment_url( $id ),
+			];
+		}
+		$this->attachments_read = true;
+
+		return $this->attachments;
 	}
 
 	/**
@@ -149,146 +160,77 @@ class TicketThread extends Data {
 	 *
 	 * @return array
 	 */
-	public function find_by_ticket_id( $ticket_id ) {
-		$args = array(
-			'post_type'      => $this->post_type,
-			'post_status'    => 'publish',
-			'orderby'        => 'date',
-			'order'          => 'DESC',
-			'posts_per_page' => - 1,
-			'meta_query'     => [
-				'relation' => 'AND',
-				[ 'key' => 'ticket_id', 'value' => $ticket_id, 'compare' => '=' ],
-			]
-		);
+	public function find_by_ticket_id( int $ticket_id ) {
+		global $wpdb;
+		$table = $this->get_table_name();
 
-		$_threads = get_posts( $args );
+		$sql      = $wpdb->prepare( "SELECT * FROM {$table} WHERE ticket_id = %d", $ticket_id );
+		$_threads = $wpdb->get_results( $sql, ARRAY_A );
 
 		$threads = [];
 		foreach ( $_threads as $thread ) {
-			$threads[] = new self( $thread );
+			$threads[] = new static( $thread );
 		}
 
 		return $threads;
 	}
 
 	/**
-	 * Method to create a new record
-	 *
-	 * @param array $data
-	 *
-	 * @return mixed
+	 * Create table
 	 */
-	public function create( array $data ) {
-		$data['post_type']      = $this->post_type;
-		$data['post_status']    = 'publish';
-		$data['comment_status'] = 'closed';
-		$data['ping_status']    = 'closed';
+	public static function create_table() {
+		global $wpdb;
+		$table      = $wpdb->prefix . 'support_ticket_thread';
+		$meta_table = $wpdb->prefix . 'support_ticket_threadmeta';
+		$fk_table   = $wpdb->prefix . 'support_ticket';
+		$collate    = $wpdb->get_charset_collate();
 
-		$post_id = wp_insert_post( $data );
+		$tables = "CREATE TABLE IF NOT EXISTS {$table} (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			ticket_id BIGINT(20) UNSIGNED NOT NULL,
+			thread_type VARCHAR(30) NULL DEFAULT NULL,
+			thread_content LONGTEXT NULL DEFAULT NULL,
+			attachments TEXT NULL DEFAULT NULL,
+			user_type VARCHAR(30) NULL DEFAULT NULL COMMENT 'agent or user',
+			user_name VARCHAR(100) NULL DEFAULT NULL,
+			user_email VARCHAR(100) NULL DEFAULT NULL,
+			user_phone VARCHAR(20) NULL DEFAULT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			created_at DATETIME NULL DEFAULT NULL,
+			updated_at DATETIME NULL DEFAULT NULL,
+			PRIMARY KEY (id)
+		) $collate;";
 
-		if ( $post_id ) {
-			$this->write_metadata( $post_id, $data );
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $tables );
+
+		$meta_table_schema = "CREATE TABLE IF NOT EXISTS {$meta_table} (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			thread_id BIGINT(20) UNSIGNED NOT NULL,
+			meta_key varchar(255) NULL DEFAULT NULL,
+			meta_value LONGTEXT NULL DEFAULT NULL,
+			PRIMARY KEY  (id)
+		) $collate;";
+		dbDelta( $meta_table_schema );
+
+		$version = get_option( $table . '-version' );
+		if ( false === $version ) {
+			$sql = "ALTER TABLE `{$table}` ADD CONSTRAINT `fk_{$fk_table}_{$table}` FOREIGN KEY (`ticket_id`)";
+			$sql .= " REFERENCES `{$fk_table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
+			$wpdb->query( $sql );
+
+			$sql = "ALTER TABLE `{$meta_table}` ADD CONSTRAINT `fk_{$table}_{$meta_table}` FOREIGN KEY (`thread_id`)";
+			$sql .= " REFERENCES `{$table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
+			$wpdb->query( $sql );
+
+			update_option( $table . '-version', '1.0.0', false );
 		}
-
-		return $post_id;
 	}
 
 	/**
-	 * Write metadata
-	 *
-	 * @param int   $post_id
-	 * @param array $data
+	 * @inheritDoc
 	 */
-	private function write_metadata( $post_id, array $data ) {
-		$ticket_id      = isset( $data['ticket_id'] ) ? $data['ticket_id'] : 0;
-		$customer_name  = isset( $data['customer_name'] ) ? $data['customer_name'] : '';
-		$customer_email = isset( $data['customer_email'] ) ? $data['customer_email'] : '';
-		$thread_type    = isset( $data['thread_type'] ) ? $data['thread_type'] : '';
-		$user_type      = isset( $data['user_type'] ) ? $data['user_type'] : 'user';
-		$thread_type    = in_array( $thread_type, static::$valid_thread_types ) ? $thread_type : '';
-		$attachments    = isset( $data['attachments'] ) && is_array( $data['attachments'] ) ? $data['attachments'] : [];
-
-		update_post_meta( $post_id, 'ticket_id', $ticket_id );
-		update_post_meta( $post_id, 'thread_type', $thread_type );
-		update_post_meta( $post_id, 'customer_name', $customer_name );
-		update_post_meta( $post_id, 'customer_email', $customer_email );
-		update_post_meta( $post_id, 'user_type', $user_type );
-		update_post_meta( $post_id, 'attachments', $attachments );
-	}
-
-	/**
-	 * Read metadata
-	 */
-	private function read_metadata() {
-		$thread_id                    = $this->get( 'id' );
-		$this->data['ticket_id']      = (int) get_post_meta( $thread_id, 'ticket_id', true );
-		$this->data['type']           = get_post_meta( $thread_id, 'thread_type', true );
-		$this->data['customer_name']  = get_post_meta( $thread_id, 'customer_name', true );
-		$this->data['customer_email'] = get_post_meta( $thread_id, 'customer_email', true );
-		$this->data['user_type']      = get_post_meta( $thread_id, 'user_type', true );
-	}
-
-	/**
-	 * Read attachment data
-	 */
-	private function read_attachments_data() {
-		$ticket_id    = $this->get( 'id' );
-		$_attachments = get_post_meta( $ticket_id, 'attachments', true );
-
-		$attachments = [];
-		if ( is_array( $_attachments ) && count( $_attachments ) ) {
-			foreach ( $_attachments as $attachment_id ) {
-				$attachments[] = [
-					'filename'       => get_the_title( $attachment_id ),
-					'active'         => true,
-					'is_image'       => true,
-					'save_file_name' => get_the_title( $attachment_id ),
-					'time_uploaded'  => get_term_meta( $attachment_id, 'time_uploaded', true ),
-					'download_url'   => wp_get_attachment_url( $attachment_id ),
-				];
-			}
-		}
-
-		$this->attachments = $attachments;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function get_attachments() {
-		return $this->attachments;
-	}
-
-	/**
-	 * Read attachment data
-	 */
-	private function _read_attachments_data() {
-		$ticket_id    = $this->get( 'id' );
-		$_attachments = get_post_meta( $ticket_id, 'attachments', true );
-
-		$attachments = [];
-		if ( is_array( $_attachments ) && count( $_attachments ) ) {
-			foreach ( $_attachments as $attachment_id ) {
-
-				$save_file_name = get_term_meta( $attachment_id, 'save_file_name', true );
-				$is_image       = (bool) get_term_meta( $attachment_id, 'is_image', true );
-
-				$upload_dir   = wp_upload_dir();
-				$file_url     = $upload_dir['baseurl'] . '/wpsc/' . $save_file_name;
-				$download_url = $is_image ? $file_url : site_url( '/' ) . '?support_ticket_attachment=' . $attachment_id . '&tid=' . $ticket_id . '&tac=' . 0;
-
-				$attachments[] = [
-					'filename'       => get_term_meta( $attachment_id, 'filename', true ),
-					'active'         => (bool) get_term_meta( $attachment_id, 'active', true ),
-					'is_image'       => $is_image,
-					'save_file_name' => $save_file_name,
-					'time_uploaded'  => get_term_meta( $attachment_id, 'time_uploaded', true ),
-					'download_url'   => $download_url,
-				];
-			}
-		}
-
-		$this->attachments = $attachments;
+	public function count_records() {
+		return [];
 	}
 }

@@ -117,7 +117,7 @@ class SupportTicketController extends ApiController {
 		$order->save();
 
 
-		( new SupportTicket() )->add_ticket_info( $id, [
+		( new SupportTicket() )->add_thread( $id, [
 			'thread_type'    => 'note',
 			'customer_name'  => $user->display_name,
 			'customer_email' => $user->user_email,

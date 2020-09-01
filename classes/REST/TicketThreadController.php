@@ -105,7 +105,7 @@ class TicketThreadController extends ApiController {
 
 		$user = wp_get_current_user();
 
-		$thread_id = $support_ticket->add_ticket_info( $id, [
+		$thread_id = SupportTicket::add_thread( $id, [
 			'thread_type'    => $thread_type,
 			'customer_name'  => $user->display_name,
 			'customer_email' => $user->user_email,

@@ -126,7 +126,7 @@ class TicketSmsController extends ApiController {
 		$html = ob_get_clean();
 
 		$user = wp_get_current_user();
-		$supportTicket->add_ticket_info( $id, [
+		SupportTicket::add_thread( $id, [
 			'thread_type'    => 'sms',
 			'customer_name'  => $user->display_name,
 			'customer_email' => $user->user_email,

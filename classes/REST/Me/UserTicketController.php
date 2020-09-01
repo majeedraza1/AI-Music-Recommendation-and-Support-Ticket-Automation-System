@@ -1,9 +1,11 @@
 <?php
 
-namespace StackonetSupportTicket\REST;
+namespace StackonetSupportTicket\REST\Me;
 
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
+use StackonetSupportTicket\REST\ApiController;
+use StackonetSupportTicket\REST\TicketController;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -46,7 +48,6 @@ class UserTicketController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => [ $this, 'create_item' ],
-				'args'     => $this->get_collection_params(),
 			],
 		] );
 
@@ -193,7 +194,7 @@ class UserTicketController extends ApiController {
 			return $this->respondUnprocessableEntity( null, 'Only note and reply are supported.' );
 		}
 
-		$thread_id = $support_ticket->add_ticket_info( $id, [
+		$thread_id = SupportTicket::add_thread( $id, [
 			'thread_type'    => $thread_type,
 			'customer_name'  => $user->display_name,
 			'customer_email' => $user->user_email,
@@ -277,16 +278,16 @@ class UserTicketController extends ApiController {
 	 */
 	public static function format_thread_for_response( TicketThread $thread ) {
 		return [
-			'id'          => $thread->get( 'id' ),
-			'content'     => $thread->get( 'content' ),
+			'id'          => $thread->get_id(),
+			'content'     => $thread->get_thread_content(),
 			'creator'     => [
-				'name'   => $thread->get( 'customer_name' ),
-				'email'  => $thread->get( 'customer_email' ),
+				'name'   => $thread->get( 'user_name' ),
+				'email'  => $thread->get( 'user_email' ),
 				'avatar' => $thread->get_avatar_url(),
 				'type'   => $thread->get_user_type(),
 			],
-			'created'     => mysql_to_rfc3339( $thread->get( 'created' ) ),
-			'thread_type' => $thread->get_type(),
+			'created'     => mysql_to_rfc3339( $thread->get_created_at() ),
+			'thread_type' => $thread->get_thread_type(),
 			'attachments' => $thread->get_attachments(),
 		];
 	}

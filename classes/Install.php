@@ -9,6 +9,7 @@ use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketCategory;
 use StackonetSupportTicket\Models\TicketPriority;
 use StackonetSupportTicket\Models\TicketStatus;
+use StackonetSupportTicket\Models\TicketThread;
 use WP_User;
 
 defined( 'ABSPATH' ) || exit;
@@ -37,6 +38,7 @@ class Install {
 
 			( new  SupportTicket )->create_table();
 			self::create_meta_table();
+			TicketThread::create_table();
 
 			self::add_default_roles();
 			self::add_support_ticket_agents();

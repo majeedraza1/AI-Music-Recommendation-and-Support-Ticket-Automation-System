@@ -119,7 +119,7 @@ class StackonetSupportTicket {
 			$this->container['rest-agent']        = StackonetSupportTicket\REST\AgentController::init();
 			$this->container['rest-role']         = StackonetSupportTicket\REST\AgentRoleController::init();
 			$this->container['rest-settings']     = StackonetSupportTicket\REST\SettingController::init();
-			$this->container['rest-user_ticket']  = StackonetSupportTicket\REST\UserTicketController::init();
+			$this->container['rest-user_ticket']  = \StackonetSupportTicket\REST\Me\UserTicketController::init();
 		}
 
 		if ( $this->is_request( 'ajax' ) ) {

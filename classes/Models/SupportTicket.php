@@ -238,7 +238,7 @@ class SupportTicket extends DatabaseModel {
 		$_threads = $this->get_ticket_threads();
 		$threads  = [];
 		foreach ( $_threads as $thread ) {
-			if ( 'note' == $thread->get_type() ) {
+			if ( 'note' == $thread->get_thread_type() ) {
 				$threads[] = $thread;
 			}
 		}
@@ -263,7 +263,7 @@ class SupportTicket extends DatabaseModel {
 	public function get_last_note_diff() {
 		$note = $this->get_last_ticket_note();
 		if ( $note instanceof TicketThread ) {
-			$dateCreated = new DateTime( $note->get_created() );
+			$dateCreated = new DateTime( $note->get_created_at() );
 			$now         = new DateTime( 'now' );
 			$diff        = $now->diff( $dateCreated );
 
@@ -456,7 +456,7 @@ class SupportTicket extends DatabaseModel {
 
 		$this->update_metadata( $ticket_id, 'assigned_agent', '0' );
 
-		$this->add_ticket_info( $ticket_id, [
+		SupportTicket::add_thread( $ticket_id, [
 			'thread_type'    => $thread_type,
 			'customer_name'  => $data['customer_name'],
 			'customer_email' => $data['customer_email'],
@@ -474,7 +474,7 @@ class SupportTicket extends DatabaseModel {
 	 *
 	 * @return int
 	 */
-	public function add_ticket_info( $ticket_id, array $data, $attachments = [] ) {
+	public static function add_thread( int $ticket_id, array $data, $attachments = [] ) {
 		$data = wp_parse_args( $data, [
 			'thread_type'    => 'report',
 			'customer_name'  => '',
@@ -484,29 +484,26 @@ class SupportTicket extends DatabaseModel {
 			'user_type'      => 'user',
 		] );
 
-		$post_id = wp_insert_post( [
-			'post_type'      => $this->post_type,
-			'post_status'    => 'publish',
-			'comment_status' => 'closed',
-			'ping_status'    => 'closed',
-			'post_author'    => $data['agent_created'],
-			'post_content'   => $data['post_content'],
-		] );
+		$_data = [
+			'ticket_id'      => $ticket_id,
+			'thread_type'    => $data['thread_type'],
+			'thread_content' => wp_filter_post_kses( nl2br( $data['post_content'], false ) ),
+			'user_type'      => $data['user_type'],
+			'user_name'      => $data['customer_name'],
+			'user_email'     => $data['customer_email'],
+			'created_by'     => $data['agent_created'],
+			'attachments'    => $attachments,
+		];
 
-		if ( ! is_wp_error( $post_id ) ) {
-			update_post_meta( $post_id, 'ticket_id', $ticket_id );
-			update_post_meta( $post_id, 'thread_type', $data['thread_type'] );
-			update_post_meta( $post_id, 'customer_name', $data['customer_name'] );
-			update_post_meta( $post_id, 'customer_email', $data['customer_email'] );
-			update_post_meta( $post_id, 'user_type', $data['user_type'] );
-			update_post_meta( $post_id, 'attachments', $attachments );
+		$thread_id = ( new TicketThread() )->create( $_data );
 
-			( new static )->update( [ 'id' => $ticket_id, 'date_updated' => current_time( 'mysql' ) ] );
-
-			return $post_id;
+		if ( is_wp_error( $thread_id ) ) {
+			return 0;
 		}
 
-		return 0;
+		( new static )->update( [ 'id' => $ticket_id, 'date_updated' => current_time( 'mysql' ) ] );
+
+		return $thread_id;
 	}
 
 	/**
@@ -518,7 +515,7 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function add_note( $ticket_id, $note, $type = 'note' ) {
 		$user = wp_get_current_user();
-		$this->add_ticket_info( $ticket_id, [
+		SupportTicket::add_thread( $ticket_id, [
 			'thread_type'    => $type,
 			'customer_name'  => $user->display_name,
 			'customer_email' => $user->user_email,
@@ -710,9 +707,8 @@ class SupportTicket extends DatabaseModel {
 		}
 
 		if ( ! empty( $args['search'] ) ) {
-			$query .= " AND `ticket_subject` LIKE %" . esc_sql( $args['search'] ) . "%";
+			$query .= $wpdb->prepare( " AND `ticket_subject` LIKE %s", '%' . $args['search'] . '%' );
 		}
-
 
 		return $query;
 	}
