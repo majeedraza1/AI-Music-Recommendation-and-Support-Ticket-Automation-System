@@ -1,8 +1,9 @@
 <?php
 
-namespace StackonetSupportTicket\REST;
+namespace StackonetSupportTicket\REST\Admin;
 
 use StackonetSupportTicket\Models\SupportTicket;
+use StackonetSupportTicket\REST\ApiController;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

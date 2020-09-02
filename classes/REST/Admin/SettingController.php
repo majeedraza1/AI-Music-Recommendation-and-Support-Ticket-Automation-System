@@ -1,7 +1,8 @@
 <?php
 
-namespace StackonetSupportTicket\REST;
+namespace StackonetSupportTicket\REST\Admin;
 
+use StackonetSupportTicket\REST\ApiController;
 use StackonetSupportTicket\Supports\SettingHandler;
 use WP_REST_Request;
 use WP_REST_Response;

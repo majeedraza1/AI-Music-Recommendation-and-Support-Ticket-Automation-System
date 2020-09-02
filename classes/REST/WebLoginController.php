@@ -8,7 +8,7 @@ use WP_REST_Server;
 
 defined( 'ABSPATH' ) or exit;
 
-class LoginController extends ApiController {
+class WebLoginController extends ApiController {
 	/**
 	 * The instance of the class
 	 *
@@ -49,7 +49,7 @@ class LoginController extends ApiController {
 	 *
 	 * @return WP_REST_Response
 	 */
-	public function login( $request ) {
+	public function login( WP_REST_Request $request ) {
 		if ( is_user_logged_in() ) {
 			return $this->respondUnauthorized( 'already_logged_in', 'Sorry, Your are already logged in.' );
 		}

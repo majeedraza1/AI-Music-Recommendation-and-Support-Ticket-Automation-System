@@ -183,16 +183,13 @@ class UserTicketController extends ApiController {
 			return $this->respondUnauthorized();
 		}
 
-		$thread_type        = $request->get_param( 'thread_type' );
-		$thread_content     = $request->get_param( 'thread_content' );
-		$attachments = $request->get_param( 'attachments' );
+		$thread_type    = $request->get_param( 'thread_type' );
+		$thread_content = $request->get_param( 'thread_content' );
+		$attachments    = $request->get_param( 'attachments' );
 		if ( is_string( $attachments ) ) {
-			$attachments = str_replace( '[', '', $attachments );
-			$attachments = str_replace( ']', '', $attachments );
-			$attachments = str_replace( '"', '', $attachments );
-			$attachments = explode( ',', $attachments );
+			$attachments = static::string_to_array( $attachments );
 		}
-		$attachments        = is_array( $attachments ) ? $attachments : [];
+		$attachments = is_array( $attachments ) ? $attachments : [];
 
 		if ( empty( $id ) || empty( $thread_type ) || empty( $thread_content ) ) {
 			return $this->respondUnprocessableEntity( null, 'Ticket ID, thread type and thread content is required.' );
@@ -368,5 +365,22 @@ class UserTicketController extends ApiController {
 				'default'           => 0,
 			],
 		];
+	}
+
+	/**
+	 * Convert string to array
+	 *
+	 * @param string $attachments
+	 * @param string $delimiter
+	 *
+	 * @return string[]
+	 */
+	public static function string_to_array( string $attachments, string $delimiter = ',' ) {
+		$attachments = str_replace( '[', '', $attachments );
+		$attachments = str_replace( ']', '', $attachments );
+		$attachments = str_replace( '"', '', $attachments );
+		$attachments = explode( $delimiter, $attachments );
+
+		return is_array( $attachments ) ? $attachments : [];
 	}
 }
