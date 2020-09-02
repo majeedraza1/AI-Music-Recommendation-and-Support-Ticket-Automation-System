@@ -6,6 +6,7 @@ use ArrayObject;
 use DateTime;
 use Exception;
 use Stackonet\WP\Framework\Abstracts\DatabaseModel;
+use StackonetSupportTicket\Supports\Utils;
 use WP_Post;
 use WP_Term;
 use WP_Term_Query;
@@ -129,6 +130,11 @@ class SupportTicket extends DatabaseModel {
 	 * @var array
 	 */
 	private $ticket_threads = [];
+	
+	/**
+	 * @var false|mixed|string
+	 */
+	protected $avatar_url;
 
 	/**
 	 * Model constructor.
@@ -355,6 +361,21 @@ class SupportTicket extends DatabaseModel {
 		}
 
 		return new ArrayObject;
+	}
+
+	/**
+	 * Get customer avatar url
+	 *
+	 * @return string
+	 */
+	public function get_avatar_url() {
+		if ( empty( $this->avatar_url ) ) {
+			$created_by       = (int) $this->get( 'agent_created' );
+			$id_or_email      = $created_by ? $created_by : $this->get( 'customer_email' );
+			$this->avatar_url = Utils::get_avatar_url( $id_or_email );
+		}
+
+		return $this->avatar_url;
 	}
 
 	/**

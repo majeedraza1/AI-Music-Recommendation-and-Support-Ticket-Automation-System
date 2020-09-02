@@ -185,8 +185,14 @@ class UserTicketController extends ApiController {
 
 		$thread_type        = $request->get_param( 'thread_type' );
 		$thread_content     = $request->get_param( 'thread_content' );
-		$ticket_attachments = $request->get_param( 'thread_attachments' );
-		$attachments        = is_array( $ticket_attachments ) ? $ticket_attachments : [];
+		$attachments = $request->get_param( 'attachments' );
+		if ( is_string( $attachments ) ) {
+			$attachments = str_replace( '[', '', $attachments );
+			$attachments = str_replace( ']', '', $attachments );
+			$attachments = str_replace( '"', '', $attachments );
+			$attachments = explode( ',', $attachments );
+		}
+		$attachments        = is_array( $attachments ) ? $attachments : [];
 
 		if ( empty( $id ) || empty( $thread_type ) || empty( $thread_content ) ) {
 			return $this->respondUnprocessableEntity( null, 'Ticket ID, thread type and thread content is required.' );

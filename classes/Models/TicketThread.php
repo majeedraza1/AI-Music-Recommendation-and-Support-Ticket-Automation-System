@@ -3,6 +3,7 @@
 namespace StackonetSupportTicket\Models;
 
 use Stackonet\WP\Framework\Abstracts\DatabaseModel;
+use StackonetSupportTicket\Supports\Utils;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -86,13 +87,23 @@ class TicketThread extends DatabaseModel {
 	}
 
 	/**
+	 * Get created by id
+	 *
+	 * @return int
+	 */
+	public function get_created_by() {
+		return (int) $this->get( 'created_by' );
+	}
+
+	/**
 	 * Get customer avatar url
 	 *
 	 * @return string
 	 */
 	public function get_avatar_url() {
 		if ( empty( $this->avatar_url ) ) {
-			$this->avatar_url = get_avatar_url( $this->get( 'customer_email' ) );
+			$id_or_email      = $this->get_created_by() ? $this->get_created_by() : $this->get( 'customer_email' );
+			$this->avatar_url = Utils::get_avatar_url( $id_or_email );
 		}
 
 		return $this->avatar_url;

@@ -339,6 +339,13 @@ class TicketController extends ApiController {
 
 		$attachments = $request->get_param( 'attachments' );
 		if ( ! empty( $attachments ) ) {
+			if ( is_string( $attachments ) ) {
+				$attachments = str_replace( '[', '', $attachments );
+				$attachments = str_replace( ']', '', $attachments );
+				$attachments = str_replace( '"', '', $attachments );
+				$attachments = explode( ',', $attachments );
+			}
+
 			$attachments = is_array( $attachments ) ? array_map( 'intval', $attachments ) : [];
 		}
 
@@ -661,7 +668,7 @@ class TicketController extends ApiController {
 			'attachments'  => array(
 				'description'       => __( 'Array of WordPress media ID.', 'stackonet-support-ticker' ),
 				'type'              => 'array',
-				'required'          => false,
+				'required'          => true,
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 		);
