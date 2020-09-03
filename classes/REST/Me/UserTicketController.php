@@ -3,7 +3,6 @@
 namespace StackonetSupportTicket\REST\Me;
 
 use StackonetSupportTicket\Models\SupportTicket;
-use StackonetSupportTicket\Models\TicketThread;
 use StackonetSupportTicket\REST\ApiController;
 use StackonetSupportTicket\REST\TicketController;
 use WP_Error;
@@ -61,13 +60,6 @@ class UserTicketController extends ApiController {
 			[
 				'methods'  => WP_REST_Server::READABLE,
 				'callback' => [ $this, 'get_item' ]
-			],
-		] );
-
-		register_rest_route( $this->namespace, '/tickets/me/(?P<id>\d+)/thread', [
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_thread' ],
 			],
 		] );
 	}
@@ -160,65 +152,6 @@ class UserTicketController extends ApiController {
 	}
 
 	/**
-	 * Creates one item from the collection.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 *
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
-	 */
-	public function create_thread( $request ) {
-		$user = wp_get_current_user();
-		if ( ! $user->exists() ) {
-			return $this->respondUnauthorized();
-		}
-
-		$id             = (int) $request->get_param( 'id' );
-		$support_ticket = ( new SupportTicket )->find_by_id( $id );
-
-		if ( ! $support_ticket instanceof SupportTicket ) {
-			return $this->respondNotFound();
-		}
-
-		if ( $support_ticket->get( 'agent_created' ) != $user->ID ) {
-			return $this->respondUnauthorized();
-		}
-
-		$thread_type    = $request->get_param( 'thread_type' );
-		$thread_content = $request->get_param( 'thread_content' );
-		$attachments    = $request->get_param( 'attachments' );
-		if ( is_string( $attachments ) ) {
-			$attachments = static::string_to_array( $attachments );
-		}
-		$attachments = is_array( $attachments ) ? $attachments : [];
-
-		if ( empty( $id ) || empty( $thread_type ) || empty( $thread_content ) ) {
-			return $this->respondUnprocessableEntity( null, 'Ticket ID, thread type and thread content is required.' );
-		}
-
-		if ( ! in_array( $thread_type, TicketThread::get_thread_types() ) ) {
-			return $this->respondUnprocessableEntity( null, 'Only note and reply are supported.' );
-		}
-
-		$thread_id = SupportTicket::add_thread( $id, [
-			'thread_type'    => $thread_type,
-			'customer_name'  => $user->display_name,
-			'customer_email' => $user->user_email,
-			'post_content'   => $thread_content,
-			'agent_created'  => $user->ID,
-			'user_type'      => 'user',
-		], $attachments );
-
-		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id );
-
-		$response = [
-			'ticket'  => static::format_item_for_response( $support_ticket ),
-			'threads' => static::format_thread_collections( $support_ticket->get_ticket_threads() ),
-		];
-
-		return $this->respondCreated( $response );
-	}
-
-	/**
 	 * Retrieves one item from the collection.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -248,69 +181,6 @@ class UserTicketController extends ApiController {
 		];
 
 		return $this->respondOK( $response );
-	}
-
-	/**
-	 * @param SupportTicket $ticket
-	 *
-	 * @return array
-	 */
-	public static function format_item_for_response( SupportTicket $ticket ) {
-		return [
-			'id'       => intval( $ticket->get( 'id' ) ),
-			'subject'  => $ticket->get( 'ticket_subject' ),
-			'created'  => mysql_to_rfc3339( $ticket->get( 'date_created' ) ),
-			'updated'  => mysql_to_rfc3339( $ticket->get( 'date_updated' ) ),
-			'status'   => $ticket->get_ticket_status(),
-			'category' => $ticket->get_ticket_category(),
-			'priority' => $ticket->get_ticket_priority(),
-			'creator'  => [
-				'id'     => intval( $ticket->get( 'agent_created' ) ),
-				'name'   => $ticket->get( 'customer_name' ),
-				'email'  => $ticket->get( 'customer_email' ),
-				'avatar' => get_avatar_url( $ticket->get( 'customer_email' ) ),
-				'phone'  => $ticket->get( 'customer_phone' ),
-				'city'   => $ticket->get( 'city' ),
-				'type'   => $ticket->get( 'user_type' ),
-			],
-		];
-	}
-
-	/**
-	 * @param TicketThread $thread
-	 *
-	 * @return array
-	 */
-	public static function format_thread_for_response( TicketThread $thread ) {
-		return [
-			'id'          => $thread->get_id(),
-			'content'     => $thread->get_thread_content(),
-			'creator'     => [
-				'name'   => $thread->get( 'user_name' ),
-				'email'  => $thread->get( 'user_email' ),
-				'avatar' => $thread->get_avatar_url(),
-				'type'   => $thread->get_user_type(),
-			],
-			'created'     => mysql_to_rfc3339( $thread->get_created_at() ),
-			'thread_type' => $thread->get_thread_type(),
-			'attachments' => $thread->get_attachments(),
-		];
-	}
-
-	/**
-	 * @param array $threads
-	 *
-	 * @return array
-	 */
-	public static function format_thread_collections( array $threads ) {
-		$data = [];
-		foreach ( $threads as $thread ) {
-			if ( $thread instanceof TicketThread ) {
-				$data[] = static::format_thread_for_response( $thread );
-			}
-		}
-
-		return $data;
 	}
 
 	/**
@@ -365,22 +235,5 @@ class UserTicketController extends ApiController {
 				'default'           => 0,
 			],
 		];
-	}
-
-	/**
-	 * Convert string to array
-	 *
-	 * @param string $attachments
-	 * @param string $delimiter
-	 *
-	 * @return string[]
-	 */
-	public static function string_to_array( string $attachments, string $delimiter = ',' ) {
-		$attachments = str_replace( '[', '', $attachments );
-		$attachments = str_replace( ']', '', $attachments );
-		$attachments = str_replace( '"', '', $attachments );
-		$attachments = explode( $delimiter, $attachments );
-
-		return is_array( $attachments ) ? $attachments : [];
 	}
 }

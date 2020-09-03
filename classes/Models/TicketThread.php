@@ -63,6 +63,7 @@ class TicketThread extends DatabaseModel {
 			'thread_type'         => $this->get_thread_type(),
 			'customer_name'       => $this->get( 'user_name' ),
 			'customer_email'      => $this->get( 'user_email' ),
+			'user_type'           => $this->get_user_type(),
 			'customer_avatar_url' => $this->get_avatar_url(),
 			'attachments'         => $this->get_attachments(),
 		];

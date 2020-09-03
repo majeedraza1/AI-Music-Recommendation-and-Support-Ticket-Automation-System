@@ -337,17 +337,11 @@ class TicketController extends ApiController {
 		$ticket_status   = $request->get_param( 'status' );
 		$ticket_priority = $request->get_param( 'priority' );
 
-		$attachments = $request->get_param( 'attachments' );
-		if ( ! empty( $attachments ) ) {
-			if ( is_string( $attachments ) ) {
-				$attachments = str_replace( '[', '', $attachments );
-				$attachments = str_replace( ']', '', $attachments );
-				$attachments = str_replace( '"', '', $attachments );
-				$attachments = explode( ',', $attachments );
-			}
-
-			$attachments = is_array( $attachments ) ? array_map( 'intval', $attachments ) : [];
+		$files = static::handle_file_upload();
+		if ( is_wp_error( $files ) ) {
+			return $this->respondUnprocessableEntity( $files->get_error_code(), $files->get_error_message() );
 		}
+		$attachments = is_array( $files ) && count( $files ) ? $files : [];
 
 		$default_category = (int) get_option( 'support_ticket_default_category' );
 		$default_status   = (int) get_option( 'support_ticket_default_status' );

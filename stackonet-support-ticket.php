@@ -120,6 +120,7 @@ class StackonetSupportTicket {
 			$this->container['rest-role']         = \StackonetSupportTicket\REST\Admin\AgentRoleController::init();
 			$this->container['rest-settings']     = \StackonetSupportTicket\REST\Admin\SettingController::init();
 			$this->container['rest-user_ticket']  = \StackonetSupportTicket\REST\Me\UserTicketController::init();
+			$this->container['rest-user_thread']  = \StackonetSupportTicket\REST\Me\UserTicketThreadController::init();
 		}
 
 		if ( $this->is_request( 'ajax' ) ) {
