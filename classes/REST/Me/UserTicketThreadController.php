@@ -75,11 +75,10 @@ class UserTicketThreadController extends ApiController {
 			return $this->respondUnprocessableEntity( null, 'Ticket ID, thread type and thread content is required.' );
 		}
 
-		$files = static::handle_file_upload();
-		if ( is_wp_error( $files ) ) {
-			return $this->respondUnprocessableEntity( $files->get_error_code(), $files->get_error_message() );
+		$attachments = $this->get_attachments_ids( $request );
+		if ( is_wp_error( $attachments ) ) {
+			return $this->respondUnprocessableEntity( $attachments->get_error_code(), $attachments->get_error_message() );
 		}
-		$attachments = is_array( $files ) && count( $files ) ? $files : [];
 
 		$thread_id = SupportTicket::add_thread( $id, [
 			'thread_type'    => $thread_type,

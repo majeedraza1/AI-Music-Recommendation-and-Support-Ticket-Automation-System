@@ -7,6 +7,7 @@ use Stackonet\WP\Framework\Media\Uploader;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
 use WP_Error;
+use WP_REST_Request;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,17 +21,36 @@ class ApiController extends \Stackonet\WP\Framework\REST\ApiController {
 	protected $namespace = 'muslim-zone/v1/support-ticket';
 
 	/**
+	 * @param WP_REST_Request $request
+	 *
+	 * @return int[]|WP_Error
+	 */
+	protected function get_attachments_ids( WP_REST_Request $request ) {
+		$files = ApiController::handle_file_upload();
+		if ( is_wp_error( $files ) ) {
+			return $files;
+		}
+		$attachments     = is_array( $files ) && count( $files ) ? $files : [];
+		$attachments_ids = $request->get_param( 'attachments' );
+		if ( is_array( $attachments_ids ) ) {
+			$attachments = array_merge( $attachments, $attachments_ids );
+		}
+
+		return $attachments;
+	}
+
+	/**
 	 * Handle attachment upload
 	 *
 	 * @return array|WP_Error
 	 */
 	protected static function handle_file_upload() {
 		$files = UploadedFile::getUploadedFiles();
-		if ( ! isset( $files['attachments'] ) ) {
+		if ( ! isset( $files['files'] ) ) {
 			return [];
 		}
 
-		$attachments = $files['attachments'] instanceof UploadedFile ? [ $files['attachments'] ] : $files['attachments'];
+		$attachments = $files['files'] instanceof UploadedFile ? [ $files['files'] ] : $files['files'];
 
 		$error = new WP_Error();
 		$ids   = [];

@@ -79,11 +79,9 @@ class TicketThreadController extends ApiController {
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
-		$id                 = (int) $request->get_param( 'id' );
-		$thread_type        = $request->get_param( 'thread_type' );
-		$thread_content     = $request->get_param( 'thread_content' );
-		$ticket_attachments = $request->get_param( 'thread_attachments' );
-		$attachments        = is_array( $ticket_attachments ) ? $ticket_attachments : [];
+		$id             = (int) $request->get_param( 'id' );
+		$thread_type    = $request->get_param( 'thread_type' );
+		$thread_content = $request->get_param( 'thread_content' );
 
 		if ( empty( $id ) || empty( $thread_type ) || empty( $thread_content ) ) {
 			return $this->respondUnprocessableEntity( null, 'Ticket ID, thread type and thread content is required.' );
@@ -101,6 +99,11 @@ class TicketThreadController extends ApiController {
 
 		if ( ! current_user_can( 'edit_ticket', $id ) ) {
 			return $this->respondUnauthorized();
+		}
+
+		$attachments = $this->get_attachments_ids( $request );
+		if ( is_wp_error( $attachments ) ) {
+			return $this->respondUnprocessableEntity( $attachments->get_error_code(), $attachments->get_error_message() );
 		}
 
 		$user = wp_get_current_user();
