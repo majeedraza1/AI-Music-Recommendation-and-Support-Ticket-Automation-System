@@ -62,6 +62,10 @@
 				<widget-box title="Raised By">
 					<shapla-chip :image_src="item.customer_url">{{ item.customer_name }}</shapla-chip>
 				</widget-box>
+				<sms-widget-box
+					:agents="agents"
+					@edit:agnet="openTwilioAssignAgentModal"
+				/>
 				<widget-box title="SMS Messages">
 					<div class="shapla-widget-box__customer-phone">
 
@@ -207,10 +211,12 @@ import shaplaCheckbox from "shapla-checkbox";
 import TicketThread from "../components/TicketThread";
 import WidgetBox from "../components/WidgetBox";
 import shaplaChip from 'shapla-chip';
+import SmsWidgetBox from "../components/SmsWidgetBox";
 
 export default {
 	name: "SingleSupportTicket",
 	components: {
+		SmsWidgetBox,
 		WidgetBox, shaplaChip, TicketThread,
 		shaplaCheckbox, Icon, ImageContainer, shaplaButton, columns, column, ListItem, Editor, modal
 	},
