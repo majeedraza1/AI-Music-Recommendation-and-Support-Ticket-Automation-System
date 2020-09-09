@@ -64,7 +64,7 @@
 				</widget-box>
 				<sms-widget-box
 					:agents="agents"
-					@edit:agnet="openTwilioAssignAgentModal"
+					@edit:agent="openTwilioAssignAgentModal"
 				/>
 				<widget-box title="SMS Messages">
 					<div class="shapla-widget-box__customer-phone">
@@ -176,7 +176,7 @@
 					     :class="{'is-active':twilio_support_agents_ids.indexOf(_agent.id) !== -1}">
 						<div class="shapla-chip__contact">
 							<image-container>
-								<img :src="_agent.avatar_url" width="32" height="32">
+								<img :src="_agent.avatar_url" alt="" width="32" height="32">
 							</image-container>
 						</div>
 						<span class="shapla-chip__text">{{ _agent.display_name }} - {{ _agent.role_label }}</span>

@@ -73,7 +73,9 @@ module.exports = (env, argv) => {
               loader: "postcss-loader",
               options: {
                 sourceMap: isDev,
-                plugins: () => [autoprefixer()],
+                postcssOptions: {
+                  plugins: () => [autoprefixer()],
+                },
               },
             },
             {
