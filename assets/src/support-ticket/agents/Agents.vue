@@ -41,16 +41,27 @@
 			</template>
 		</modal>
 		<modal :active="showEditAgentModal" @close="showEditAgentModal = false" title="Edit Agent Role">
-			<div style="min-height: 200px">
-				<label>Role</label>
-				<select v-model="editAgentActiveAgent.role_id" style="width: 100%">
-					<option v-for="_role in roles" :value="_role.role" v-html="_role.name"></option>
-				</select>
+			<select-field
+				label="Role"
+				:options="roles"
+				v-model="editAgentActiveAgent.role_id"
+				label-key="name"
+				value-key="role"
+			/>
+			<div>
+				<text-field
+					label="Email"
+					v-model="editAgentActiveAgent.email"
+				/>
+			</div>
+			<div>
+				<text-field
+					label="Phone Number"
+					v-model="editAgentActiveAgent.phone"
+				/>
 			</div>
 			<template slot="foot">
-				<shapla-button theme="primary" @click="updateAgentRole">
-					Create
-				</shapla-button>
+				<shapla-button theme="primary" @click="updateAgentRole">Update</shapla-button>
 			</template>
 		</modal>
 	</div>
@@ -63,12 +74,14 @@ import modal from 'shapla-modal'
 import {column, columns} from 'shapla-columns'
 import shaplaButton from "shapla-button";
 import dataTable from "shapla-data-table";
+import selectField from 'shapla-select-field';
+import textField from 'shapla-text-field';
 import {CrudMixin} from "../../mixins/CrudMixin";
 
 export default {
 	name: "Agents",
 	mixins: [CrudMixin],
-	components: {shaplaButton, vSelect, dataTable, modal, columns, column},
+	components: {shaplaButton, vSelect, dataTable, modal, columns, column, selectField, textField},
 	data() {
 		return {
 			showAddAgentModal: false,
@@ -179,6 +192,8 @@ export default {
 		updateAgentRole() {
 			this.update_item(StackonetSupportTicket.restRoot + '/agents/' + this.editAgentActiveAgent.term_id, {
 				role_id: this.editAgentActiveAgent.role_id,
+				phone_number: this.editAgentActiveAgent.phone,
+				email: this.editAgentActiveAgent.email,
 			}).then(() => {
 				this.showEditAgentModal = false;
 				this.getAgents();

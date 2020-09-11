@@ -170,6 +170,14 @@ class AgentController extends ApiController {
 		}
 
 		SupportAgent::update_role( $id, $role_id );
+		$email = $request->get_param( 'email' );
+		if ( is_email( $email ) ) {
+			update_term_meta( $id, 'email', $email );
+		}
+		$phone_number = $request->get_param( 'phone_number' );
+		if ( ! empty( $phone_number ) ) {
+			update_term_meta( $id, 'phone_number', $phone_number );
+		}
 
 		return $this->respondOK();
 	}

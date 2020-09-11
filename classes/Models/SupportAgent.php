@@ -3,6 +3,7 @@
 namespace StackonetSupportTicket\Models;
 
 use Stackonet\WP\Framework\Abstracts\Data;
+use StackonetSupportTicket\Supports\Utils;
 use WP_Error;
 use WP_Term;
 use WP_User;
@@ -41,11 +42,6 @@ class SupportAgent extends Data {
 	protected $term;
 
 	/**
-	 * @var void
-	 */
-	private $agent_roles = [];
-
-	/**
 	 * @var int
 	 */
 	private $role_id = 0;
@@ -54,13 +50,6 @@ class SupportAgent extends Data {
 	 * @var string
 	 */
 	private $role_label = '';
-
-	/**
-	 * Support agent phone number
-	 *
-	 * @var string
-	 */
-	private $phone_number = '';
 
 	/**
 	 * @var array
@@ -101,23 +90,28 @@ class SupportAgent extends Data {
 			'role_label'   => $this->role_label,
 			'id'           => $this->get_user()->ID,
 			'display_name' => $this->get_user()->display_name,
-			'email'        => $this->get_user()->user_email,
+			'email'        => $this->get_email(),
 			'phone'        => $this->get_phone_number(),
-			'avatar_url'   => get_avatar_url( $this->get_user()->user_email ),
+			'avatar_url'   => $this->get_avatar_url(),
 		];
 	}
 
 	/**
-	 * Get user phone number
+	 * Get id
 	 *
-	 * @return mixed|string
+	 * @return int
 	 */
-	public function get_phone_number() {
-		if ( empty( $this->phone_number ) ) {
-			$this->phone_number = get_user_meta( $this->get_user_id(), 'billing_phone', true );
-		}
+	public function get_id() {
+		return intval( $this->term->term_id );
+	}
 
-		return $this->phone_number;
+	/**
+	 * Get agent user id
+	 *
+	 * @return int
+	 */
+	public function get_user_id() {
+		return $this->user_id;
 	}
 
 	/**
@@ -134,12 +128,58 @@ class SupportAgent extends Data {
 	}
 
 	/**
-	 * Get agent user id
+	 * Get user email address
 	 *
-	 * @return int
+	 * @return string
 	 */
-	public function get_user_id() {
-		return $this->user_id;
+	public function get_email() {
+		return $this->get_meta( 'email', $this->get_user()->user_email );
+	}
+
+	/**
+	 * Get user phone number
+	 *
+	 * @return mixed|string
+	 */
+	public function get_phone_number() {
+		return $this->get_meta( 'phone_number', $this->get_user_meta( 'billing_phone' ) );
+	}
+
+	/**
+	 * Get avatar url
+	 *
+	 * @return string
+	 */
+	public function get_avatar_url() {
+		return Utils::get_avatar_url( $this->get_user_id() );
+	}
+
+	/**
+	 * Get term meta
+	 *
+	 * @param string $key
+	 * @param mixed  $default
+	 *
+	 * @return mixed|string
+	 */
+	public function get_meta( string $key, $default = '' ) {
+		$value = get_term_meta( $this->get_id(), $key, true );
+
+		return ! empty( $value ) ? $value : $default;
+	}
+
+	/**
+	 * Get term meta
+	 *
+	 * @param string $key
+	 * @param mixed  $default
+	 *
+	 * @return mixed|string
+	 */
+	public function get_user_meta( string $key, $default = '' ) {
+		$value = get_user_meta( $this->get_user_id(), $key, true );
+
+		return ! empty( $value ) ? $value : $default;
 	}
 
 	/**
