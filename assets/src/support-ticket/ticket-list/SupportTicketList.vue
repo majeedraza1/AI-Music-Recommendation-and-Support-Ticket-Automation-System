@@ -83,6 +83,9 @@
 					@item:select="updateSelectedItems"
 					:mobile-width="1000"
 				>
+					<span slot="ticket_subject" slot-scope="data"><strong>#{{
+							data.row.id
+						}}</strong> - {{ data.row.ticket_subject }}</span>
 					<template slot="created_by" slot-scope="data" class="button--status">
 						<span v-html="getAssignedAgents(data.row.assigned_agents)"></span>
 					</template>
@@ -125,12 +128,11 @@ export default {
 			selectedItems: [],
 			columns: [
 				{key: 'ticket_subject', label: 'Subject', numeric: false},
-				{key: 'id', label: 'Ticket ID', numeric: true},
-				{key: 'ticket_status', label: 'Status', numeric: false},
 				{key: 'customer_name', label: 'Name', numeric: false},
 				{key: 'customer_email', label: 'Email Address', numeric: false},
 				{key: 'customer_phone', label: 'Phone', numeric: false},
 				{key: 'created_by', label: 'Assigned Agent', numeric: false},
+				{key: 'ticket_status', label: 'Status', numeric: false},
 				{key: 'ticket_category', label: 'Category', numeric: false},
 				{key: 'ticket_priority', label: 'Priority', numeric: false},
 				{key: 'updated_human_time', label: 'Updated', numeric: false},
