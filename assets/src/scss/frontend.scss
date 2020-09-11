@@ -3,6 +3,14 @@
 @import "shapla-box";
 @import "~vue-select/src/scss/vue-select";
 
+
+@import "~shapla-utility-css/src/colors";
+@import "~shapla-utility-css/src/spacing/margin";
+@import "~shapla-utility-css/src/spacing/padding";
+@import "~shapla-utility-css/src/sizing/width";
+@import "~shapla-utility-css/src/flexbox/display";
+@import "~shapla-utility-css/src/flexbox/flex-grow";
+
 .shapla-text-field {
 	margin-bottom: 1rem;
 }

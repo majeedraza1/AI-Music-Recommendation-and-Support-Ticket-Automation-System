@@ -1,18 +1,22 @@
 <template>
 	<div class="stackont-single-support-ticket-container">
-		<p>
-			<shapla-button theme="primary" @click="backToTicketList">Back to Ticket</shapla-button>
-		</p>
+		<div class="flex mb-4">
+			<div class="flex-grow"></div>
+			<shapla-button theme="primary" outline size="small" @click="backToTicketList">Back to Ticket</shapla-button>
+		</div>
 
 		<columns>
 			<column :desktop="8">
 				<div class="stackont-single-ticket-content">
 
-					<div class="stackont-single-ticket__heading">
+					<div class="stackont-single-ticket__heading flex">
 						<h4 class="stackont-single-ticket__title">[Ticket #{{ item.id }}] {{ item.ticket_subject }}</h4>
-						<icon>
-							<span @click="openTitleModal" class="dashicons dashicons-edit"></span>
-						</icon>
+						<icon-container size="medium" hoverable @click="openTitleModal">
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+								<title>Edit Title</title>
+								<use xlink:href="#icon-pen"/>
+							</svg>
+						</icon-container>
 					</div>
 
 					<div>
@@ -56,69 +60,15 @@
 				</widget-box>
 				<widget-box title="Assign Agent(s)" :show-edit-icon="true" @edit="openAssignAgentModal">
 					<shapla-chip v-for="_agent in item.assigned_agents" :key="_agent.display_name"
-					             :image_src="_agent.avatar_url"> {{ _agent.display_name }}
+								 :image_src="_agent.avatar_url"> {{ _agent.display_name }}
 					</shapla-chip>
 				</widget-box>
 				<widget-box title="Raised By">
 					<shapla-chip :image_src="item.customer_url">{{ item.customer_name }}</shapla-chip>
 				</widget-box>
-				<sms-widget-box
-					:agents="agents"
-					@edit:agent="openTwilioAssignAgentModal"
-				/>
 				<widget-box title="SMS Messages">
-					<div class="shapla-widget-box__customer-phone">
-
-						<shapla-checkbox id="ticket_twilio_sms_customer_phone"
-						                 v-model="ticket_twilio_sms_customer_phone"><strong>Customer
-							Phone: </strong>
-							{{ item.customer_phone }}
-						</shapla-checkbox>
-					</div>
-					<div class="shapla-widget-box__customer-phone">
-
-						<shapla-checkbox id="users_can_register"
-						                 v-model="ticket_twilio_sms_enable_custom_phone"><strong>Custom
-							Phone: </strong>
-						</shapla-checkbox>
-						<input type="text" v-model="ticket_twilio_sms_custom_phone"/>
-
-					</div>
-					<p>
-						<icon>
-							<span @click="openTwilioAssignAgentModal" class="dashicons dashicons-edit"></span>
-						</icon>
-						<strong>Assign Agent(s)</strong><br>
-						<template v-for="_agent in agents">
-
-							<span class="shapla-chip shapla-chip--contact"
-							      v-if="twilio_support_agents_ids.indexOf(_agent.id) !== -1">
-							<span class="shapla-chip__contact">
-								<image-container>
-									<img :src="_agent.avatar_url" width="32" height="32">
-								</image-container>
-							</span>
-							<span class="shapla-chip__text">{{ _agent.display_name }}</span>
-						</span>
-						</template>
-					</p>
-					<p>
-                            <textarea type="text" name="ticket_twilio_sms" id="ticket_twilio_sms"
-                                      v-model="ticket_twilio_sms_content"
-                                      class="input-text" style="width: 100%;" rows="4" value=""></textarea>
-					</p>
-					<p style="margin-bottom:0">
-						<shapla-button theme="primary" id="wc_twilio_sms_order_send_message" @click="sendSms">
-							Send SMS
-						</shapla-button>
-
-						<span id="wc_twilio_sms_order_message_char_count"
-						      style="color: green; float: right; font-size: 16px;">{{
-								ticket_twilio_sms_content.length
-							}}</span>
-					</p>
+					<sms-widget-box :agents="agents" @edit:agent="openTwilioAssignAgentModal" @submit="sendSms"/>
 				</widget-box>
-
 			</column>
 
 		</columns>
@@ -154,7 +104,7 @@
 			<template v-for="_agent in agents">
 				<div class="support_agents-chip">
 					<div class="shapla-chip shapla-chip--contact" @click="updateAgent(_agent)"
-					     :class="{'is-active':support_agents_ids.indexOf(_agent.id) !== -1}">
+						 :class="{'is-active':support_agents_ids.indexOf(_agent.id) !== -1}">
 						<div class="shapla-chip__contact">
 							<image-container>
 								<img :src="_agent.avatar_url" width="32" height="32" alt="">
@@ -173,7 +123,7 @@
 			<template v-for="_agent in agents">
 				<div class="support_agents-chip">
 					<div class="shapla-chip shapla-chip--contact" @click="updateTwilioAgent(_agent)"
-					     :class="{'is-active':twilio_support_agents_ids.indexOf(_agent.id) !== -1}">
+						 :class="{'is-active':twilio_support_agents_ids.indexOf(_agent.id) !== -1}">
 						<div class="shapla-chip__contact">
 							<image-container>
 								<img :src="_agent.avatar_url" alt="" width="32" height="32">
@@ -212,12 +162,12 @@ import TicketThread from "../components/TicketThread";
 import WidgetBox from "../components/WidgetBox";
 import shaplaChip from 'shapla-chip';
 import SmsWidgetBox from "../components/SmsWidgetBox";
+import iconContainer from 'shapla-icon-container';
 
 export default {
 	name: "SingleSupportTicket",
 	components: {
-		SmsWidgetBox,
-		WidgetBox, shaplaChip, TicketThread,
+		SmsWidgetBox, iconContainer, WidgetBox, shaplaChip, TicketThread,
 		shaplaCheckbox, Icon, ImageContainer, shaplaButton, columns, column, ListItem, Editor, modal
 	},
 	data() {

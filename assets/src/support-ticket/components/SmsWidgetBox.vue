@@ -1,50 +1,48 @@
 <template>
 	<div class="support-ticket-widget-box--sms">
-		<widget-box :title="title">
-			<div class="mb-3 w-full">
-				<shapla-checkbox v-model="send_to_customer" :disabled="!customer_phone">
-					<strong>Customer Phone: </strong> {{ customer_phone }}
+		<div class="mb-3 w-full">
+			<shapla-checkbox v-model="send_to_customer" :disabled="!customer_phone">
+				<strong>Customer Phone: </strong> {{ customer_phone }}
+			</shapla-checkbox>
+		</div>
+		<div class="mb-3 w-full">
+			<shapla-checkbox v-model="send_to_custom_number">
+				<strong>Custom Phone: </strong>
+			</shapla-checkbox>
+			<div class="mt-2" v-if="send_to_custom_number">
+				<text-field label="Phone Number" v-model="custom_number"/>
+			</div>
+		</div>
+		<div class="mb-3 w-full">
+			<div class="flex">
+				<shapla-checkbox v-model="send_to_agents">
+					<strong>Support Agent(s): </strong>
 				</shapla-checkbox>
+				<icon-container v-if="send_to_agents" size="medium" hoverable @click="showAgentsModal = true">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+						<title>Edit Agents</title>
+						<use xlink:href="#icon-pen"/>
+					</svg>
+				</icon-container>
 			</div>
-			<div class="mb-3 w-full">
-				<shapla-checkbox v-model="send_to_custom_number">
-					<strong>Custom Phone: </strong>
-				</shapla-checkbox>
-				<div class="mt-2" v-if="send_to_custom_number">
-					<text-field label="Phone Number" v-model="custom_number"/>
-				</div>
+			<div class="mt-2">
+				<shapla-chip v-for="_agent in selected_agents" :key="_agent.display_name"
+							 :image_src="_agent.avatar_url"> {{ _agent.display_name }}
+				</shapla-chip>
 			</div>
-			<div class="mb-3 w-full">
-				<div class="flex">
-					<shapla-checkbox v-model="send_to_agents">
-						<strong>Support Agent(s): </strong>
-					</shapla-checkbox>
-					<icon-container v-if="send_to_agents" size="medium" hoverable @click="showAgentsModal = true">
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-							<title>Edit Agents</title>
-							<use xlink:href="#icon-pen"/>
-						</svg>
-					</icon-container>
-				</div>
-				<div class="mt-2">
-					<shapla-chip v-for="_agent in selected_agents" :key="_agent.display_name"
-					             :image_src="_agent.avatar_url"> {{ _agent.display_name }}
-					</shapla-chip>
-				</div>
-			</div>
-			<div class="mb-3 w-full">
-				<text-field type="textarea" label="SMS Content" v-model="sms_content" :rows="3"/>
-			</div>
-			<div class="w-full">
-				<shapla-button theme="primary" size="small" @click="sendSms">Send SMS</shapla-button>
+		</div>
+		<div class="mb-3 w-full">
+			<text-field type="textarea" label="SMS Content" v-model="sms_content" :rows="3"/>
+		</div>
+		<div class="w-full">
+			<shapla-button theme="primary" size="small" @click="sendSms">Send SMS</shapla-button>
 
-				<span class="sms_content_length">{{ sms_content.length }}</span>
-			</div>
-		</widget-box>
+			<span class="sms_content_length">{{ sms_content.length }}</span>
+		</div>
 		<modal :active="showAgentsModal" title="Choose Assign Agent(s)" @close="showAgentsModal = false">
 			<shapla-chip v-for="_agent in agents" :key="_agent.display_name" :image_src="_agent.avatar_url"
-			             :class="{'is-active':selected_agents_ids.indexOf(_agent.id) !== -1}"
-			             @click="handleSelect(_agent)">
+						 :class="{'is-active':selected_agents_ids.indexOf(_agent.id) !== -1}"
+						 @click="handleSelect(_agent)">
 				{{ _agent.display_name }}
 			</shapla-chip>
 			<template slot="foot">
@@ -55,7 +53,6 @@
 </template>
 
 <script>
-import WidgetBox from "./WidgetBox";
 import shaplaCheckbox from "shapla-checkbox";
 import shaplaButton from 'shapla-button'
 import shaplaChip from 'shapla-chip';
@@ -66,9 +63,8 @@ import {column, columns} from 'shapla-columns'
 
 export default {
 	name: "SmsWidgetBox",
-	components: {WidgetBox, shaplaCheckbox, shaplaButton, shaplaChip, iconContainer, textField, column, columns, modal},
+	components: {shaplaCheckbox, shaplaButton, shaplaChip, iconContainer, textField, column, columns, modal},
 	props: {
-		title: {type: String, default: 'SMS Messages'},
 		customer_phone: {type: String, default: ''},
 		agents: {type: Array},
 	},
@@ -102,18 +98,15 @@ export default {
 			}
 		},
 		sendSms() {
-
+			window.alert('SMS message is not supported yet.')
+			this.$emit('submit', this.sms_content);
 		},
 	}
 }
 </script>
 
 <style lang="scss">
-@import "~shapla-color-system/src/variables";
-@import "~shapla-utility-css/src/spacing/margin";
-@import "~shapla-utility-css/src/spacing/padding";
-@import "~shapla-utility-css/src/sizing/width";
-@import "~shapla-utility-css/src/flexbox/display";
+@import "~shapla-utility-css/src/colors";
 
 .support-ticket-widget-box--sms {
 	.shapla-text-field {

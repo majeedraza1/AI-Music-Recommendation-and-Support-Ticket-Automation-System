@@ -130,7 +130,7 @@ class SupportTicket extends DatabaseModel {
 	 * @var array
 	 */
 	private $ticket_threads = [];
-	
+
 	/**
 	 * @var false|mixed|string
 	 */
@@ -993,7 +993,7 @@ class SupportTicket extends DatabaseModel {
 		$id    = intval( $id );
 		$items = [ 'pre' => null, 'next' => null ];
 
-		$sql = "select * from {$table} where ( id = IFNULL((select min(id) from {$table} where id > {$id}),0) 
+		$sql = "select * from {$table} where ( id = IFNULL((select min(id) from {$table} where id > {$id}),0)
 			or  id = IFNULL((select max(id) from {$table} where id < {$id}),0) )";
 
 		$results = $wpdb->get_results( $sql, ARRAY_A );

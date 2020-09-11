@@ -38,14 +38,14 @@
 				<column :tablet="4">
 					<div class="flex justify-center">
 						<div v-if="label !=='trash'" @click="exportExcel" class="button-export"
-						     :class="{'is-active':selectedItems.length}">
+							 :class="{'is-active':selectedItems.length}">
 							<svg xmlns="http://www.w3.org/2000/svg">
 								<title>Import Export</title>
 								<use xlink:href="#icon-import_export"/>
 							</svg>
 						</div>
 						<div v-if="label==='trash'" @click="restoreItems" class="button-restore"
-						     :class="{'is-active':selectedItems.length}">
+							 :class="{'is-active':selectedItems.length}">
 							<svg xmlns="http://www.w3.org/2000/svg">
 								<title>Restore</title>
 								<use xlink:href="#icon-settings_restore"/>
@@ -60,46 +60,38 @@
 					</div>
 				</column>
 				<column :tablet="4">
-					<pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage"
-					            @pagination="paginate"/>
+					<pagination :total_items="pagination.total_items" :per_page="50" :current_page="currentPage"
+								@pagination="paginate"/>
 				</column>
 			</columns>
 		</div>
 		<columns multiline>
 			<column :tablet="12">
-				<data-table
-					action-column="ticket_subject"
-					:columns="columns"
-					:items="tickets"
-					:total-items="pagination.totalCount"
-					:total-pages="pagination.pageCount"
-					:per-page="pagination.limit"
-					:current-page="pagination.currentPage"
-					:actions="actions"
-					@action:click="onActionClick"
-					@bulk:apply="onBulkAction"
-					@pagination="paginate"
-					:show-search="false"
-					@item:select="updateSelectedItems"
-					:mobile-width="1000"
+				<data-table :columns="columns" :items="tickets" :selected-items="selectedItems" :actions="actions"
+							@action:click="onActionClick" @bulk:apply="onBulkAction" @item:select="updateSelectedItems"
 				>
 					<span slot="ticket_subject" slot-scope="data"><strong>#{{
 							data.row.id
 						}}</strong> - {{ data.row.ticket_subject }}</span>
+					<div slot="customer_name" slot-scope="data">
+						<span class="flex w-full"><strong>{{ data.row.customer_name }}</strong></span>
+						<span class="flex w-full">{{ data.row.customer_email }}</span>
+						<span class="flex w-full">{{ data.row.customer_phone }}</span>
+					</div>
 					<template slot="created_by" slot-scope="data" class="button--status">
 						<span v-html="getAssignedAgents(data.row.assigned_agents)"></span>
 					</template>
 					<span slot="ticket_status" slot-scope="data" class="button--status"
-					      :class="data.row.status.slug">{{ data.row.status.name }}</span>
+						  :class="data.row.status.slug">{{ data.row.status.name }}</span>
 					<span slot="ticket_category" slot-scope="data" class="button--category"
-					      :class="data.row.category.slug">{{ data.row.category.name }}</span>
+						  :class="data.row.category.slug">{{ data.row.category.name }}</span>
 					<span slot="ticket_priority" slot-scope="data" class="button--priority"
-					      :class="data.row.priority.slug">{{ data.row.priority.name }}</span>
+						  :class="data.row.priority.slug">{{ data.row.priority.name }}</span>
 				</data-table>
 			</column>
 			<column :tablet="12">
-				<pagination :total_items="pagination.totalCount" :per_page="50" :current_page="currentPage"
-				            @pagination="paginate"/>
+				<pagination :total_items="pagination.total_items" :per_page="50" :current_page="currentPage"
+							@pagination="paginate"/>
 			</column>
 		</columns>
 
@@ -128,9 +120,7 @@ export default {
 			selectedItems: [],
 			columns: [
 				{key: 'ticket_subject', label: 'Subject', numeric: false},
-				{key: 'customer_name', label: 'Name', numeric: false},
-				{key: 'customer_email', label: 'Email Address', numeric: false},
-				{key: 'customer_phone', label: 'Phone', numeric: false},
+				{key: 'customer_name', label: 'Raised By', numeric: false},
 				{key: 'created_by', label: 'Assigned Agent', numeric: false},
 				{key: 'ticket_status', label: 'Status', numeric: false},
 				{key: 'ticket_category', label: 'Category', numeric: false},
@@ -289,6 +279,7 @@ export default {
 			axios.post(StackonetSupportTicket.restRoot + '/tickets/batch', data).then(() => {
 				this.getItems();
 				this.$store.commit('SET_LOADING_STATUS', false);
+				this.selectedItems = [];
 			}).catch(error => {
 				console.log(error);
 				this.$store.commit('SET_LOADING_STATUS', false);
