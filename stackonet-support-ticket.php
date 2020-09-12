@@ -97,6 +97,8 @@ class StackonetSupportTicket {
 		$this->container['sync_old'] = StackonetSupportTicket\Sync\ToNewTicket::init();
 		$this->container['sync_new'] = StackonetSupportTicket\Sync\ToOldTicket::init();
 
+		$this->container['push_notification'] = StackonetSupportTicket\Integrations\MuslimZone\PushNotification::init();
+
 
 		if ( $this->is_request( 'admin' ) ) {
 			$this->container['admin'] = StackonetSupportTicket\Admin\Admin::init();

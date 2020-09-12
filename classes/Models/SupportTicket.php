@@ -190,6 +190,15 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Get ticket subject
+	 *
+	 * @return string
+	 */
+	public function get_ticket_subject() {
+		return $this->get( 'ticket_subject' );
+	}
+
+	/**
 	 * Get created via
 	 *
 	 * @return string|null
@@ -298,6 +307,15 @@ class SupportTicket extends DatabaseModel {
 		$dateTime     = new DateTime( $date_updated );
 
 		return human_time_diff( $dateTime->getTimestamp(), current_time( 'timestamp' ) ) . ' ago';
+	}
+
+	/**
+	 * Get ticket raised user id
+	 *
+	 * @return int
+	 */
+	public function get_created_by() {
+		return (int) $this->get( $this->created_by );
 	}
 
 	/**

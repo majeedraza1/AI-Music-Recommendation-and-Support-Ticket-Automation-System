@@ -1,58 +1,70 @@
 <template>
 	<div class="stackont-support-ticket-container stackont-support-ticket-container--new">
-		<p>
-			<shapla-button theme="primary" @click="backToTicketList">Back to Ticket</shapla-button>
-		</p>
+		<h1>Add new ticket</h1>
+		<div class="mb-4 w-full"></div>
+		<div class="mb-8">
+			<shapla-button theme="primary" outline size="small" @click="backToTicketList">Back to Ticket</shapla-button>
+		</div>
 
-		<columns multiline>
+		<div class="container container--add-ticket">
+			<columns multiline>
 
-			<column :desktop="6">
-				<div class="form-field">
-					<text-field label="Name" id="customer_name" v-model="customer_name"/>
-				</div>
-			</column>
+				<column :desktop="6">
+					<div class="form-field">
+						<text-field label="Name" id="customer_name" v-model="customer_name"/>
+					</div>
+				</column>
 
-			<column :desktop="6">
-				<div class="form-field">
-					<text-field label="Email Address" id="email_address" v-model="customer_email"/>
-				</div>
-			</column>
+				<column :desktop="6">
+					<div class="form-field">
+						<text-field label="Email Address" id="email_address" v-model="customer_email"/>
+					</div>
+				</column>
 
-			<column :desktop="12">
-				<div class="form-field">
-					<text-field type="textarea" :rows="2" label="Subject" id="ticket_subject" v-model="ticket_subject"/>
-				</div>
-			</column>
+				<column :desktop="12">
+					<div class="form-field">
+						<text-field type="textarea" :rows="2" label="Subject" id="ticket_subject"
+						            v-model="ticket_subject"/>
+					</div>
+				</column>
 
-			<column :desktop="12">
-				<div class="form-field">
-					<label for="ticket_description">Description</label>
-					<editor id="ticket_description" :init="mce" v-model="ticket_content"/>
-				</div>
-			</column>
+				<column :desktop="12">
+					<div class="form-field">
+						<label for="ticket_description">Description</label>
+						<editor id="ticket_description" :init="mce" v-model="ticket_content"/>
+					</div>
+				</column>
 
-			<column :desktop="6">
-				<div class="form-field">
-					<select-field label="Category *" v-model="ticket_category" :options="categories"
-					              label-key="name" value-key="term_id"/>
-				</div>
-			</column>
+				<column :desktop="6">
+					<div class="form-field">
+						<select-field label="Category *" v-model="ticket_category" :options="categories"
+						              label-key="name" value-key="term_id"/>
+					</div>
+				</column>
 
-			<column :desktop="6">
-				<div class="form-field">
-					<select-field label="Priority *" v-model="ticket_priority" :options="priorities"
-					              label-key="name" value-key="term_id"/>
-				</div>
-			</column>
+				<column :desktop="6">
+					<div class="form-field">
+						<select-field label="Priority *" v-model="ticket_priority" :options="priorities"
+						              label-key="name" value-key="term_id"/>
+					</div>
+				</column>
 
-			<column :desktop="12">
-				<div class="form-field">
-					<shapla-button theme="primary" :disabled="!canSubmit" @click="submitTicket">
-						Submit Ticket
-					</shapla-button>
-				</div>
-			</column>
-		</columns>
+				<column :desktop="12">
+					<div class="form-field">
+						<label class="flex mb-2" for="attachments">Attachments</label>
+						<input type="file" id="attachments" class="ticket-attachments" multiple>
+					</div>
+				</column>
+
+				<column :desktop="12">
+					<div class="form-field">
+						<shapla-button theme="primary" :disabled="!canSubmit" @click="submitTicket">
+							Submit Ticket
+						</shapla-button>
+					</div>
+				</column>
+			</columns>
+		</div>
 
 	</div>
 </template>
@@ -126,21 +138,26 @@ export default {
 			this.$router.push({name: 'SupportTicketList'});
 		},
 		submitTicket() {
-			let self = this;
-			axios.post(StackonetSupportTicket.restRoot + '/tickets', {
-				name: self.customer_name,
-				email: self.customer_email,
-				subject: self.ticket_subject,
-				content: self.ticket_content,
-				category: self.ticket_category,
-				priority: self.ticket_priority,
-			}).then((response) => {
-				self.$store.commit('SET_LOADING_STATUS', false);
+			let headers = {'Content-Type': 'multipart/form-data'};
+			let data = {
+				name: this.customer_name, email: this.customer_email, subject: this.ticket_subject,
+				content: this.ticket_content, category: this.ticket_category, priority: this.ticket_priority,
+			};
+			let formData = new FormData();
+			let fileList = this.$el.querySelector('.ticket-attachments').files;
+			for (let i = 0, numFiles = fileList.length; i < numFiles; i++) {
+				formData.append("files[]", fileList[i]);
+			}
+			for (const [key, value] of Object.entries(data)) {
+				formData.append(key, value);
+			}
+			axios.post(StackonetSupportTicket.restRoot + '/tickets', formData, {headers: headers}).then((response) => {
+				this.$store.commit('SET_LOADING_STATUS', false);
 				let id = response.data.data.ticket_id;
 				this.$router.push({name: 'SingleSupportTicket', params: {id: id}});
 			}).catch(error => {
 				console.log(error);
-				self.$store.commit('SET_LOADING_STATUS', false);
+				this.$store.commit('SET_LOADING_STATUS', false);
 			});
 		}
 	}
@@ -148,36 +165,7 @@ export default {
 </script>
 
 <style lang="scss">
-.stackont-support-ticket-container--new {
-	margin-top: 50px;
-}
-
-.display-flex.justify-space-between {
-	margin-bottom: 20px;
-}
-
-.stackont-support-ticket-container {
-	&--new {
-		max-width: 800px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	.shapla-text-field__input {
-		width: 100% !important;
-	}
-
-	.form-field {
-		display: block;
-
-		label {
-			display: block;
-		}
-
-		input, select {
-			display: block;
-			width: 100%;
-		}
-	}
+.container--add-ticket {
+	max-width: 960px;
 }
 </style>

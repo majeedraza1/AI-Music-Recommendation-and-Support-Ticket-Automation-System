@@ -117,7 +117,7 @@ class TicketThreadController extends ApiController {
 			'user_type'      => 'agent',
 		], $attachments );
 
-		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id );
+		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, $request->get_params() );
 
 		return $this->respondCreated();
 	}

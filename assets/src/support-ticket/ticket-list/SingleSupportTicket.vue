@@ -20,11 +20,7 @@
 					</div>
 
 					<div>
-						<editor :init="mce" v-model="content"/>
-						<div style="text-align: right;margin-top:20px;" v-show="content.length">
-							<shapla-button theme="default" @click="addNote">Add Note</shapla-button>
-							<shapla-button theme="primary" @click="submitReply">Submit Reply</shapla-button>
-						</div>
+						<add-ticket-thread :ticket_id="id" @added="getItem"/>
 					</div>
 
 					<div class="shapla-thread-container">
@@ -60,7 +56,7 @@
 				</widget-box>
 				<widget-box title="Assign Agent(s)" :show-edit-icon="true" @edit="openAssignAgentModal">
 					<shapla-chip v-for="_agent in item.assigned_agents" :key="_agent.display_name"
-								 :image_src="_agent.avatar_url"> {{ _agent.display_name }}
+					             :image_src="_agent.avatar_url"> {{ _agent.display_name }}
 					</shapla-chip>
 				</widget-box>
 				<widget-box title="Raised By">
@@ -104,7 +100,7 @@
 			<template v-for="_agent in agents">
 				<div class="support_agents-chip">
 					<div class="shapla-chip shapla-chip--contact" @click="updateAgent(_agent)"
-						 :class="{'is-active':support_agents_ids.indexOf(_agent.id) !== -1}">
+					     :class="{'is-active':support_agents_ids.indexOf(_agent.id) !== -1}">
 						<div class="shapla-chip__contact">
 							<image-container>
 								<img :src="_agent.avatar_url" width="32" height="32" alt="">
@@ -123,7 +119,7 @@
 			<template v-for="_agent in agents">
 				<div class="support_agents-chip">
 					<div class="shapla-chip shapla-chip--contact" @click="updateTwilioAgent(_agent)"
-						 :class="{'is-active':twilio_support_agents_ids.indexOf(_agent.id) !== -1}">
+					     :class="{'is-active':twilio_support_agents_ids.indexOf(_agent.id) !== -1}">
 						<div class="shapla-chip__contact">
 							<image-container>
 								<img :src="_agent.avatar_url" alt="" width="32" height="32">
@@ -163,10 +159,12 @@ import WidgetBox from "../components/WidgetBox";
 import shaplaChip from 'shapla-chip';
 import SmsWidgetBox from "../components/SmsWidgetBox";
 import iconContainer from 'shapla-icon-container';
+import AddTicketThread from "../components/AddTicketThread";
 
 export default {
 	name: "SingleSupportTicket",
 	components: {
+		AddTicketThread,
 		SmsWidgetBox, iconContainer, WidgetBox, shaplaChip, TicketThread,
 		shaplaCheckbox, Icon, ImageContainer, shaplaButton, columns, column, ListItem, Editor, modal
 	},
