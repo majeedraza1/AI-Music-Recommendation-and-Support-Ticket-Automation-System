@@ -89,7 +89,7 @@ class UserTicketThreadController extends ApiController {
 			'user_type'      => 'user',
 		], $attachments );
 
-		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id );
+		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, [] );
 
 		$response = [
 			'ticket'  => static::format_item_for_response( $support_ticket ),

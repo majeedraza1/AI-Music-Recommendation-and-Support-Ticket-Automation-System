@@ -2,12 +2,11 @@
 
 namespace StackonetSupportTicket\Integrations\MuslimZone;
 
-use MuslimZone\Modules\PushNotification\Interfaces\TemplateParserInterface;
-use MuslimZone\MuslimCaste;
+use MuslimZone\Modules\PushNotification\TemplateParsers\AbstractTemplateParser;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
 
-class SupportTicketParser implements TemplateParserInterface {
+class SupportTicketParser extends AbstractTemplateParser {
 	/**
 	 * Support Ticket
 	 *
@@ -23,13 +22,6 @@ class SupportTicketParser implements TemplateParserInterface {
 	private $thread;
 
 	/**
-	 * Muslim caste
-	 *
-	 * @var string
-	 */
-	protected $caste;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param int $ticket_id
@@ -38,13 +30,8 @@ class SupportTicketParser implements TemplateParserInterface {
 	public function __construct( int $ticket_id, int $thread_id ) {
 		$this->ticket = ( new SupportTicket )->find_by_id( $ticket_id );
 		$this->thread = ( new TicketThread )->find_by_id( $thread_id );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_caste( string $string ) {
-		$this->caste = MuslimCaste::sanitize_caste( $string );
+		$this->set_category( 'support_ticket' );
+		$this->set_unique_identifier( $ticket_id );
 	}
 
 	/**
