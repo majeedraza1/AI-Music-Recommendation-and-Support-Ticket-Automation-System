@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div v-for="role in roles" :key="role.role">
-			<div class="shapla-box shapla-box--role flex w-full content-center shadow--2dp">
+			<div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow--2dp">
 				<div>
 					<strong>{{ role.name }}</strong>
 				</div>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import vSelect from 'vue-select'
 import modal from 'shapla-modal'
 import {column, columns} from 'shapla-columns'
 import {tab, tabs} from "shapla-tabs";
@@ -46,7 +45,7 @@ import RoleEditor from "./RoleEditor";
 export default {
 	name: "AgentsList",
 	mixins: [CrudMixin],
-	components: {shaplaButton, RoleEditor, vSelect, dataTable, tabs, tab, modal, columns, column},
+	components: {shaplaButton, RoleEditor, dataTable, tabs, tab, modal, columns, column},
 	data() {
 		return {
 			showAddRoleModal: false,

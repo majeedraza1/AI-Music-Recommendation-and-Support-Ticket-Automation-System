@@ -24,19 +24,18 @@
 					<column :tablet="12">
 						<label>Agent</label>
 						<v-select @search="fetchUsers" :filterable="false" :options="users"
-						          label="name" v-model="addAgentActiveAgent"/>
+								  label="name" v-model="addAgentActiveAgent"/>
 						<span class="help has-error" v-if="agentError.length">{{ agentError }}</span>
 					</column>
 					<column :tablet="12">
 						<label>Role</label>
-						<v-select :filterable="false" :options="roles" label="name"
-						          v-model="addAgentActiveRole"/>
+						<select-field v-if="roles.length" :options="roles" label="name" v-model="addAgentActiveRole"/>
 					</column>
 				</columns>
 			</div>
 			<template slot="foot">
 				<shapla-button theme="primary" :disabled="!canCreateAgent"
-				               @click="createNewAgent"> Create
+							   @click="createNewAgent"> Create
 				</shapla-button>
 			</template>
 		</modal>

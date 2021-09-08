@@ -150,7 +150,7 @@ import {column, columns} from 'shapla-columns'
 import shaplaButton from 'shapla-button'
 import modal from 'shapla-modal'
 import Editor from '@tinymce/tinymce-vue'
-import ListItem from '../../shapla/shapla-list-item/ListItem'
+import ListItem from '../components/ListItem'
 import {iconContainer, imageContainer} from "shapla-vue-components";
 import shaplaCheckbox from "shapla-checkbox";
 import TicketThread from "../components/TicketThread";

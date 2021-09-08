@@ -1,15 +1,23 @@
 @use "~shapla-css/src/index.scss" as shapla;
 
 @import "tailwindcss";
-@import "utilities-classes/all";
-@import "shapla-box";
 @import "~vue-select/src/scss/vue-select";
 @import "~shapla-color-system/src/variables";
 
 @include shapla.button;
 @include shapla.modal;
 @include shapla.delete-icon;
-//@include shapla.button;
+
+
+.clearfix::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.shadow--2dp {
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 
 .shapla-text-field__input {
 	width: 100% !important;

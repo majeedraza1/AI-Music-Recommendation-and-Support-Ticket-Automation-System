@@ -2,7 +2,7 @@
     <div>
         <draggable :list="priorities" class="list-group" handle=".handle" @update="updateMenuOrder">
             <div v-for="_priority in priorities" :key="_priority.term_id">
-                <div class="shapla-box shapla-box--role flex w-full content-center shadow--2dp">
+                <div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow--2dp">
                     <div>
                         <strong>{{_priority.name}}</strong>
                     </div>

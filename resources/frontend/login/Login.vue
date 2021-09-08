@@ -20,7 +20,7 @@
                         :helptext="errors.password?errors.password[0]:''"
                 />
             </div>
-            <div class="flex space-between m-b-20">
+            <div class="flex space-between mb-4">
                 <div>
                     <shapla-checkbox v-model="remember">Remember me</shapla-checkbox>
                 </div>

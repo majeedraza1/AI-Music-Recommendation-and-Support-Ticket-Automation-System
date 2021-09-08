@@ -2,7 +2,7 @@
 	<div>
 		<draggable :list="categories" class="list-group" handle=".handle" @update="updateMenuOrder">
 			<div v-for="_category in categories" :key="_category.term_id">
-				<div class="shapla-box shapla-box--role flex w-full content-center shadow--2dp">
+				<div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow--2dp">
 					<div>
 						<strong>{{ _category.name }}</strong>
 						<span class="extra_info">ID: {{ _category.term_id }}</span>
