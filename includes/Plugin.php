@@ -5,7 +5,6 @@ namespace StackonetSupportTicket;
 use StackonetSupportTicket\Admin\Admin;
 use StackonetSupportTicket\Admin\PostType;
 use StackonetSupportTicket\Admin\Settings;
-use StackonetSupportTicket\Integrations\MuslimZone\PushNotification;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\REST\Admin\AgentController;
 use StackonetSupportTicket\REST\Admin\AgentRoleController;
@@ -74,8 +73,6 @@ class Plugin {
 		$this->container['assets']    = Assets::init();
 		$this->container['settings']  = Settings::init();
 		$this->container['post_type'] = PostType::init();
-
-//		$this->container['push_notification'] = PushNotification::init();
 
 		// Load classes for admin area
 		if ( $this->is_request( 'admin' ) ) {
