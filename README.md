@@ -12,7 +12,9 @@ Easy & Powerful support ticket system for WordPress. Easy to configure and easy 
 # REST Endpoint
 
 API_ENDPOINT: `https://example.com/wp-json`
+
 NAMESPACE: `stackonet-support-ticket`
+
 VERSION: `v1`
 
 Base Endpoint: `{API_ENDPOINT}/{NAMESPACE}/{VERSION}`

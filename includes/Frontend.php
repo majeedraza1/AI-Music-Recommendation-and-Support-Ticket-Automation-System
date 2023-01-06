@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket;
 
+use Stackonet\WP\Framework\Supports\Validate;
 use StackonetSupportTicket\Models\TicketCategory;
 use WP_Post;
 
@@ -88,8 +89,8 @@ class Frontend {
 			$attributes
 		);
 
-		$need_login    = in_array( $attributes['need_login'], [ 'yes', 'on', 'true', true, 1 ], true );
-		$show_category = in_array( $attributes['show_category'], [ 'yes', 'on', 'true', true, 1 ], true );
+		$need_login    = Validate::checked( $attributes['need_login'] );
+		$show_category = Validate::checked( $attributes['show_category'] );
 
 		$cat_options = [];
 		if ( $show_category ) {

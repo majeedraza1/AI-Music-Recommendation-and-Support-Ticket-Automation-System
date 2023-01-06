@@ -4,6 +4,7 @@ namespace StackonetSupportTicket\REST;
 
 use ArrayObject;
 use Exception;
+use Stackonet\WP\Framework\Supports\Sanitize;
 use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\SupportTicket;
 use WC_Order;
@@ -356,7 +357,12 @@ class TicketController extends ApiController {
 
 			if ( $thread_id ) {
 				$metadata = $request->get_param( 'metadata' );
-				// Add thread metadata
+				if ( is_array( $metadata ) ) {
+					$metadata = map_deep( $metadata, [ Sanitize::class, 'html' ] );
+					foreach ( $metadata as $meta_key => $meta_value ) {
+						( new SupportTicket() )->update_metadata( $ticket_id, $meta_key, $meta_value );
+					}
+				}
 			}
 
 			do_action( 'stackonet_support_ticket/v3/ticket_created', $ticket_id );

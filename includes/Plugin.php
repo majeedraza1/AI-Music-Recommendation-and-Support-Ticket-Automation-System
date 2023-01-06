@@ -4,6 +4,7 @@ namespace StackonetSupportTicket;
 
 use StackonetSupportTicket\Admin\Admin;
 use StackonetSupportTicket\Admin\Settings;
+use StackonetSupportTicket\Integration\NinjaForms\Module as NinjaFormsModule;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\REST\Admin\AgentController;
 use StackonetSupportTicket\REST\Admin\AgentRoleController;
@@ -20,6 +21,7 @@ use StackonetSupportTicket\REST\TicketController;
 use StackonetSupportTicket\REST\TicketSmsController;
 use StackonetSupportTicket\REST\TicketThreadController;
 use StackonetSupportTicket\REST\WebLoginController;
+use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -53,8 +55,10 @@ class Plugin {
 			self::$instance = new self();
 
 			add_action( 'plugins_loaded', [ self::$instance, 'includes' ] );
+			add_action( 'plugins_loaded', [ NinjaFormsModule::class, 'init' ], 1 );
 			add_action( 'stackonet_support_ticket/activation', [ self::$instance, 'activation_includes' ] );
 			add_action( 'stackonet_support_ticket/deactivation', [ self::$instance, 'deactivation_includes' ] );
+			add_filter( 'stackonet_support_ticket/webhook/create', [ self::$instance, 'create_ticket' ] );
 		}
 
 		return self::$instance;
@@ -96,7 +100,7 @@ class Plugin {
 	 * @return void
 	 */
 	public function modules_includes() {
-
+//		$this->container['module_ninja_forms'] = NinjaFormsModule::init();
 	}
 
 	/**
@@ -186,6 +190,21 @@ class Plugin {
 	}
 
 	/**
+	 * @param  array  $args
+	 *
+	 * @return array|WP_Error
+	 */
+	public function create_ticket( array $args ) {
+		$request = new \WP_REST_Request();
+		foreach ( $args as $key => $value ) {
+			$request->set_param( $key, $value );
+		}
+		$response = ( new TicketController() )->create_item( $request );
+
+		return $response->get_data();
+	}
+
+	/**
 	 * Run on plugin activation
 	 *
 	 * @return void
@@ -208,7 +227,7 @@ class Plugin {
 	/**
 	 * What type of request is this?
 	 *
-	 * @param  string $type  admin, ajax, rest, cron or frontend.
+	 * @param  string  $type  admin, ajax, rest, cron or frontend.
 	 *
 	 * @return bool
 	 */
