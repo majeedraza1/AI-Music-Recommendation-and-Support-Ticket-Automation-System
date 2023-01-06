@@ -24,7 +24,7 @@ class UserTicketThreadController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -36,12 +36,16 @@ class UserTicketThreadController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/tickets/me/(?P<id>\d+)/thread', [
+		register_rest_route(
+			$this->namespace,
+			'/tickets/me/(?P<id>\d+)/thread',
 			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_item' ],
-			],
-		] );
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'create_item' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -58,7 +62,7 @@ class UserTicketThreadController extends ApiController {
 		}
 
 		$id             = (int) $request->get_param( 'id' );
-		$support_ticket = ( new SupportTicket )->find_by_id( $id );
+		$support_ticket = ( new SupportTicket() )->find_by_id( $id );
 
 		if ( ! $support_ticket instanceof SupportTicket ) {
 			return $this->respondNotFound();
@@ -80,14 +84,18 @@ class UserTicketThreadController extends ApiController {
 			return $this->respondUnprocessableEntity( $attachments->get_error_code(), $attachments->get_error_message() );
 		}
 
-		$thread_id = SupportTicket::add_thread( $id, [
-			'thread_type'    => $thread_type,
-			'customer_name'  => $user->display_name,
-			'customer_email' => $user->user_email,
-			'post_content'   => $thread_content,
-			'agent_created'  => $user->ID,
-			'user_type'      => 'user',
-		], $attachments );
+		$thread_id = SupportTicket::add_thread(
+			$id,
+			[
+				'thread_type'    => $thread_type,
+				'customer_name'  => $user->display_name,
+				'customer_email' => $user->user_email,
+				'post_content'   => $thread_content,
+				'agent_created'  => $user->ID,
+				'user_type'      => 'user',
+			],
+			$attachments
+		);
 
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, [] );
 

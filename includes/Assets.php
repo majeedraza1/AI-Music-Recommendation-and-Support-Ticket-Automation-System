@@ -84,11 +84,11 @@ class Assets {
 	/**
 	 * Register scripts
 	 *
-	 * @param array $scripts
+	 * @param  array  $scripts
 	 *
 	 * @return void
 	 */
-	private function register_scripts( $scripts ) {
+	private function register_scripts( array $scripts ) {
 		foreach ( $scripts as $handle => $script ) {
 			$deps      = $script['deps'] ?? false;
 			$in_footer = $script['in_footer'] ?? true;
@@ -100,11 +100,11 @@ class Assets {
 	/**
 	 * Register styles
 	 *
-	 * @param array $styles
+	 * @param  array  $styles
 	 *
 	 * @return void
 	 */
-	public function register_styles( $styles ) {
+	public function register_styles( array $styles ) {
 		foreach ( $styles as $handle => $style ) {
 			$deps = $style['deps'] ?? false;
 			wp_register_style( $handle, $style['src'], $deps, $this->version );
@@ -116,16 +116,14 @@ class Assets {
 	 *
 	 * @return array
 	 */
-	public function get_scripts() {
-		$scripts = [
+	public function get_scripts(): array {
+		return [
 			$this->plugin_name . '-frontend' => [
 				'src'       => $this->assets_url . '/js/frontend.js',
 				'deps'      => [ 'wp-tinymce' ],
-				'in_footer' => true
-			]
+				'in_footer' => true,
+			],
 		];
-
-		return $scripts;
 	}
 
 	/**
@@ -133,14 +131,12 @@ class Assets {
 	 *
 	 * @return array
 	 */
-	public function get_styles() {
-		$styles = [
+	public function get_styles(): array {
+		return [
 			$this->plugin_name . '-frontend' => [
-				'src' => $this->assets_url . '/css/frontend.css'
-			]
+				'src' => $this->assets_url . '/css/frontend.css',
+			],
 		];
-
-		return $styles;
 	}
 
 	/**

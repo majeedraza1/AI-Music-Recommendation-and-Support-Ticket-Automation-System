@@ -18,13 +18,6 @@ class TicketCategory extends Data {
 	protected static $taxonomy = 'ticket_category';
 
 	/**
-	 * The primary key for the model.
-	 *
-	 * @var string
-	 */
-	protected $primaryKey = 'term_id';
-
-	/**
 	 * @var WP_Term
 	 */
 	protected $term;
@@ -71,7 +64,7 @@ class TicketCategory extends Data {
 	 *
 	 * @return array
 	 */
-	public function to_array() {
+	public function to_array():array {
 		return [
 			'term_id' => $this->get( 'term_id' ),
 			'slug'    => $this->get( 'slug' ),
@@ -94,8 +87,8 @@ class TicketCategory extends Data {
 			'order'      => 'ASC',
 			'meta_query' => array(
 				'order_clause' => array(
-					'key' => 'support_ticket_category_menu_order'
-				)
+					'key' => 'support_ticket_category_menu_order',
+				),
 			),
 		);
 		$args             = wp_parse_args( $args, $default );
@@ -120,10 +113,13 @@ class TicketCategory extends Data {
 	 * @return int|WP_Error
 	 */
 	public static function create( $term, $args = [] ) {
-		$data = wp_insert_term( $term, self::$taxonomy, [
+		$data = wp_insert_term(
+			$term,
+			self::$taxonomy,
+			[
 				'description' => isset( $args['description'] ) ? $args['description'] : '',
 				'slug'        => isset( $args['slug'] ) ? $args['slug'] : '',
-				'parent'      => isset( $args['parent'] ) ? intval( $args['parent'] ) : 0
+				'parent'      => isset( $args['parent'] ) ? intval( $args['parent'] ) : 0,
 			]
 		);
 

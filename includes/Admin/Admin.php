@@ -42,8 +42,15 @@ class Admin {
 	public function add_admin_menu() {
 		$capability = 'manage_options';
 		$slug       = 'stackonet-support-ticket';
-		$hook       = add_menu_page( __( 'Support - beta', 'stackonet-toolkit' ), __( 'Support - beta', 'stackonet-toolkit' ),
-			$capability, $slug, [ self::$instance, 'menu_page_callback' ], 'dashicons-format-chat', 6 );
+		$hook       = add_menu_page(
+			__( 'Support - beta', 'stackonet-toolkit' ),
+			__( 'Support - beta', 'stackonet-toolkit' ),
+			$capability,
+			$slug,
+			[ self::$instance, 'menu_page_callback' ],
+			'dashicons-format-chat',
+			6
+		);
 
 		add_action( 'load-' . $hook, [ self::$instance, 'init_support_tickets_hooks' ] );
 	}

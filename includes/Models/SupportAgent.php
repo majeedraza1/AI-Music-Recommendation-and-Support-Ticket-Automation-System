@@ -20,13 +20,6 @@ class SupportAgent extends Data {
 	protected static $taxonomy = 'support_agent';
 
 	/**
-	 * The primary key for the model.
-	 *
-	 * @var string
-	 */
-	protected $primaryKey = 'term_id';
-
-	/**
 	 * @var int
 	 */
 	protected $user_id = 0;
@@ -59,7 +52,7 @@ class SupportAgent extends Data {
 	/**
 	 * Class constructor.
 	 *
-	 * @param null|WP_Term $term
+	 * @param  null|WP_Term $term
 	 */
 	public function __construct( $term = null ) {
 		if ( $term instanceof WP_Term ) {
@@ -81,7 +74,7 @@ class SupportAgent extends Data {
 	 *
 	 * @return array
 	 */
-	public function to_array() {
+	public function to_array(): array {
 		return [
 			'term_id'      => $this->get( 'term_id' ),
 			'slug'         => $this->get( 'slug' ),
@@ -101,7 +94,7 @@ class SupportAgent extends Data {
 	 *
 	 * @return int
 	 */
-	public function get_id() {
+	public function get_id():int {
 		return intval( $this->term->term_id );
 	}
 
@@ -157,8 +150,8 @@ class SupportAgent extends Data {
 	/**
 	 * Get term meta
 	 *
-	 * @param string $key
-	 * @param mixed  $default
+	 * @param  string $key
+	 * @param  mixed  $default
 	 *
 	 * @return mixed|string
 	 */
@@ -171,8 +164,8 @@ class SupportAgent extends Data {
 	/**
 	 * Get term meta
 	 *
-	 * @param string $key
-	 * @param mixed  $default
+	 * @param  string $key
+	 * @param  mixed  $default
 	 *
 	 * @return mixed|string
 	 */
@@ -185,7 +178,7 @@ class SupportAgent extends Data {
 	/**
 	 * Get ticket statuses term
 	 *
-	 * @param array $args
+	 * @param  array $args
 	 *
 	 * @return self[]
 	 */
@@ -196,9 +189,9 @@ class SupportAgent extends Data {
 				array(
 					'key'     => 'agentgroup',
 					'value'   => '0',
-					'compare' => '='
-				)
-			)
+					'compare' => '=',
+				),
+			),
 		);
 		$args             = wp_parse_args( $args, $default );
 		$args['taxonomy'] = self::$taxonomy;
@@ -216,8 +209,8 @@ class SupportAgent extends Data {
 	/**
 	 * Crate a new term
 	 *
-	 * @param int $user_id
-	 * @param int $role_id
+	 * @param  int $user_id
+	 * @param  int $role_id
 	 *
 	 * @return int|WP_Error
 	 */
@@ -248,7 +241,7 @@ class SupportAgent extends Data {
 	/**
 	 * Find agent by id
 	 *
-	 * @param int $id
+	 * @param  int $id
 	 *
 	 * @return bool|SupportAgent
 	 */
@@ -264,8 +257,8 @@ class SupportAgent extends Data {
 	/**
 	 * Update support agent role
 	 *
-	 * @param int    $id
-	 * @param string $role_id
+	 * @param  int    $id
+	 * @param  string $role_id
 	 */
 	public static function update_role( $id, $role_id ) {
 		$user_id = get_term_meta( $id, 'user_id', true );
@@ -277,7 +270,7 @@ class SupportAgent extends Data {
 	/**
 	 * Delete a agent
 	 *
-	 * @param int $id
+	 * @param  int $id
 	 *
 	 * @return bool|int|WP_Error
 	 */

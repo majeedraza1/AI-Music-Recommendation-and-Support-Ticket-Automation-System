@@ -24,7 +24,7 @@ class TicketSmsController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -36,19 +36,23 @@ class TicketSmsController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/tickets/(?P<id>\d+)/sms', [
-			'args' => [
-				'id' => [
-					'description' => __( 'Unique identifier for the ticket.' ),
-					'type'        => 'integer',
-				],
-			],
+		register_rest_route(
+			$this->namespace,
+			'/tickets/(?P<id>\d+)/sms',
 			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'send_sms' ],
-				'args'     => $this->get_send_sms_params()
-			],
-		] );
+				'args' => [
+					'id' => [
+						'description' => __( 'Unique identifier for the ticket.' ),
+						'type'        => 'integer',
+					],
+				],
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'send_sms' ],
+					'args'     => $this->get_send_sms_params(),
+				],
+			]
+		);
 	}
 
 	/**
@@ -77,7 +81,7 @@ class TicketSmsController extends ApiController {
 			return $this->respondUnprocessableEntity( null, 'Message content must be at least 5 characters.' );
 		}
 
-		$supportTicket = ( new SupportTicket )->find_by_id( $id );
+		$supportTicket = ( new SupportTicket() )->find_by_id( $id );
 		if ( ! $supportTicket instanceof SupportTicket ) {
 			return $this->respondNotFound();
 		}
@@ -112,27 +116,30 @@ class TicketSmsController extends ApiController {
 		}
 
 		ob_start(); ?>
-        <table class="table--support-order">
-            <tr>
-                <td>Phone Number:</td>
-                <td><?php echo implode( ', ', $phones ) ?></td>
-            </tr>
-            <tr>
-                <td>SMS Content:</td>
-                <td><?php echo $content; ?></td>
-            </tr>
-        </table>
+		<table class="table--support-order">
+			<tr>
+				<td>Phone Number:</td>
+				<td><?php echo implode( ', ', $phones ); ?></td>
+			</tr>
+			<tr>
+				<td>SMS Content:</td>
+				<td><?php echo $content; ?></td>
+			</tr>
+		</table>
 		<?php
 		$html = ob_get_clean();
 
 		$user = wp_get_current_user();
-		SupportTicket::add_thread( $id, [
-			'thread_type'    => 'sms',
-			'customer_name'  => $user->display_name,
-			'customer_email' => $user->user_email,
-			'post_content'   => $html,
-			'agent_created'  => $user->ID,
-		] );
+		SupportTicket::add_thread(
+			$id,
+			[
+				'thread_type'    => 'sms',
+				'customer_name'  => $user->display_name,
+				'customer_email' => $user->user_email,
+				'post_content'   => $html,
+				'agent_created'  => $user->ID,
+			]
+		);
 
 		/**
 		 * Send support ticket SMS
@@ -141,7 +148,12 @@ class TicketSmsController extends ApiController {
 		 */
 		do_action( 'stackonet_support_ticket/v3/send_short_message', $content, $phones );
 
-		return $this->respondOK( [ 'numbers' => $phones, 'message' => $content ] );
+		return $this->respondOK(
+			[
+				'numbers' => $phones,
+				'message' => $content,
+			]
+		);
 	}
 
 	/**

@@ -4,7 +4,6 @@ node_modules
 assets/css
 assets/js
 vendor
+wordpress
 
 # Files
-package-lock.json
-composer.lock

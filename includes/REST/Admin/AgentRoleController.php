@@ -27,7 +27,7 @@ class AgentRoleController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -39,28 +39,36 @@ class AgentRoleController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/roles', [
+		register_rest_route(
+			$this->namespace,
+			'/roles',
 			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_items' ],
-			],
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_items' ],
+				],
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'create_item' ],
+					'args'     => $this->get_create_item_params(),
+				],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			'/role',
 			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_item' ],
-				'args'     => $this->get_create_item_params(),
-			],
-		] );
-		register_rest_route( $this->namespace, '/role', [
-			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this, 'update_item' ],
-				'args'     => $this->get_update_item_params(),
-			],
-			[
-				'methods'  => WP_REST_Server::DELETABLE,
-				'callback' => [ $this, 'delete_item' ],
-			],
-		] );
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'update_item' ],
+					'args'     => $this->get_update_item_params(),
+				],
+				[
+					'methods'  => WP_REST_Server::DELETABLE,
+					'callback' => [ $this, 'delete_item' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -73,9 +81,11 @@ class AgentRoleController extends ApiController {
 	public function get_items( $request ) {
 		$roles = AgentRole::get_roles();
 
-		return $this->respondOK( [
-			'roles' => $this->prepare_items_for_response( $roles )
-		] );
+		return $this->respondOK(
+			[
+				'roles' => $this->prepare_items_for_response( $roles ),
+			]
+		);
 	}
 
 	/**
@@ -211,7 +221,7 @@ class AgentRoleController extends ApiController {
 				'type'              => 'object',
 				'required'          => true,
 				'validate_callback' => 'rest_validate_request_arg',
-			)
+			),
 		];
 	}
 
@@ -243,7 +253,7 @@ class AgentRoleController extends ApiController {
 				'type'              => 'object',
 				'required'          => false,
 				'validate_callback' => 'rest_validate_request_arg',
-			)
+			),
 		];
 	}
 }

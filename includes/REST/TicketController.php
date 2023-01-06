@@ -30,7 +30,7 @@ class TicketController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -42,53 +42,65 @@ class TicketController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/tickets', [
+		register_rest_route(
+			$this->namespace,
+			'/tickets',
 			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_items' ],
-				'args'     => $this->get_collection_params(),
-			],
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_item' ],
-				'args'     => $this->get_create_item_params(),
-			],
-		] );
-
-		register_rest_route( $this->namespace, '/tickets/(?P<id>\d+)', [
-			'args' => [
-				'id' => [
-					'description' => __( 'Unique identifier for the object.' ),
-					'type'        => 'integer',
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_items' ],
+					'args'     => $this->get_collection_params(),
 				],
-			],
-			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_item' ]
-			],
-			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this, 'update_item' ],
-			],
-			[
-				'methods'  => WP_REST_Server::DELETABLE,
-				'callback' => [ $this, 'delete_item' ]
-			],
-		] );
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'create_item' ],
+					'args'     => $this->get_create_item_params(),
+				],
+			]
+		);
 
-		register_rest_route( $this->namespace, '/tickets/batch', [
+		register_rest_route(
+			$this->namespace,
+			'/tickets/(?P<id>\d+)',
 			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'update_batch_items' ],
-				'args'     => $this->get_batch_update_params(),
-			],
-		] );
+				'args' => [
+					'id' => [
+						'description' => __( 'Unique identifier for the object.' ),
+						'type'        => 'integer',
+					],
+				],
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_item' ],
+				],
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'update_item' ],
+				],
+				[
+					'methods'  => WP_REST_Server::DELETABLE,
+					'callback' => [ $this, 'delete_item' ],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/tickets/batch',
+			[
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'update_batch_items' ],
+					'args'     => $this->get_batch_update_params(),
+				],
+			]
+		);
 	}
 
 	/**
 	 * Retrieves a collection of items.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -114,21 +126,25 @@ class TicketController extends ApiController {
 		$supportTicket = new SupportTicket();
 
 		if ( ! empty( $search ) ) {
-			$items = $supportTicket->search( [
-				'search'          => $search,
-				'ticket_category' => $ticket_category
-			] );
+			$items = $supportTicket->search(
+				[
+					'search'          => $search,
+					'ticket_category' => $ticket_category,
+				]
+			);
 		} else {
-			$items = $supportTicket->find( [
-				'paged'           => $paged,
-				'per_page'        => $per_page,
-				'ticket_status'   => $ticket_status,
-				'ticket_category' => $ticket_category,
-				'ticket_priority' => $ticket_priority,
-				'city'            => $city,
-				'active'          => 'trash' != $label,
-				'agent'           => $agent,
-			] );
+			$items = $supportTicket->find(
+				[
+					'paged'           => $paged,
+					'per_page'        => $per_page,
+					'ticket_status'   => $ticket_status,
+					'ticket_category' => $ticket_category,
+					'ticket_priority' => $ticket_priority,
+					'city'            => $city,
+					'active'          => 'trash' != $label,
+					'agent'           => $agent,
+				]
+			);
 		}
 
 		$counts = [
@@ -138,46 +154,76 @@ class TicketController extends ApiController {
 
 		$pagination = static::get_pagination_data( $counts[ $label ], $per_page, $paged );
 
-		$response = [ 'items' => $items, 'pagination' => $pagination, 'filters' => [] ];
+		$response = [
+			'items'      => $items,
+			'pagination' => $pagination,
+			'filters'    => [],
+		];
 
 		$response['trash'] = [
 			'key'           => 'trash',
 			'name'          => __( 'Trash', 'stackonet-support-ticket' ),
 			'singular_name' => __( 'Trash', 'stackonet-support-ticket' ),
 			'count'         => $supportTicket->count_inactive_records(),
-			'active'        => $label == 'trash'
+			'active'        => $label == 'trash',
 		];
 
 		if ( current_user_can( 'manage_options' ) ) {
 			$response['filters'] = $this->get_filter_data(
-				$ticket_status, $ticket_category, $ticket_priority, $agent
+				$ticket_status,
+				$ticket_category,
+				$ticket_priority,
+				$agent
 			);
 		}
 
 		if ( 'trash' == $label ) {
 			$actions = $bulkActions = [
-				[ 'key' => 'restore', 'label' => 'Restore' ],
-				[ 'key' => 'delete', 'label' => 'Delete Permanently' ],
+				[
+					'key'   => 'restore',
+					'label' => 'Restore',
+				],
+				[
+					'key'   => 'delete',
+					'label' => 'Delete Permanently',
+				],
 			];
 		} else {
-			$actions     = [ [ 'key' => 'view', 'label' => 'View' ], [ 'key' => 'trash', 'label' => 'Trash' ], ];
-			$bulkActions = [ [ 'key' => 'trash', 'label' => 'Move to Trash' ], ];
+			$actions     = [
+				[
+					'key'   => 'view',
+					'label' => 'View',
+				],
+				[
+					'key'   => 'trash',
+					'label' => 'Trash',
+				],
+			];
+			$bulkActions = [
+				[
+					'key'   => 'trash',
+					'label' => 'Move to Trash',
+				],
+			];
 		}
 
-		$response['meta_data'] = [ 'actions' => $actions, 'bulkActions' => $bulkActions ];
+		$response['meta_data'] = [
+			'actions'     => $actions,
+			'bulkActions' => $bulkActions,
+		];
 
 		$response['statuses'] = [
 			[
 				'key'    => 'active',
 				'label'  => __( 'Active', 'stackonet-support-ticket' ),
 				'count'  => $counts['active'],
-				'active' => $label != 'trash'
+				'active' => $label != 'trash',
 			],
 			[
 				'key'    => 'trash',
 				'label'  => __( 'Trash', 'stackonet-support-ticket' ),
 				'count'  => $counts['trash'],
-				'active' => $label == 'trash'
+				'active' => $label == 'trash',
 			],
 		];
 
@@ -187,9 +233,9 @@ class TicketController extends ApiController {
 	/**
 	 * Retrieves one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
-	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 * @throws Exception
 	 */
 	public function get_item( $request ) {
@@ -199,7 +245,7 @@ class TicketController extends ApiController {
 
 		$id = (int) $request->get_param( 'id' );
 
-		$supportTicket = ( new SupportTicket )->find_by_id( $id );
+		$supportTicket = ( new SupportTicket() )->find_by_id( $id );
 		if ( ! $supportTicket instanceof SupportTicket ) {
 			return $this->respondNotFound();
 		}
@@ -211,7 +257,7 @@ class TicketController extends ApiController {
 		$response = [
 			'ticket'     => $ticket,
 			'threads'    => $threads,
-			'navigation' => $pagination
+			'navigation' => $pagination,
 		];
 
 		return $this->respondOK( $response );
@@ -220,7 +266,7 @@ class TicketController extends ApiController {
 	/**
 	 * Creates one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 * @throws Exception
@@ -261,11 +307,10 @@ class TicketController extends ApiController {
 		}
 
 		if ( count( $errors ) ) {
-			$message = "Missing parameter(s): " . implode( ', ', array_keys( $errors ) );
+			$message = 'Missing parameter(s): ' . implode( ', ', array_keys( $errors ) );
 
 			return $this->respondUnprocessableEntity( 'missing_required_param', $message, $errors );
 		}
-
 
 		$ticket_category = $request->get_param( 'category' );
 		$ticket_status   = $request->get_param( 'status' );
@@ -273,7 +318,8 @@ class TicketController extends ApiController {
 
 		$attachments = $this->get_attachments_ids( $request );
 		if ( is_wp_error( $attachments ) ) {
-			return $this->respondUnprocessableEntity( $attachments->get_error_code(), $attachments->get_error_message() );
+			return $this->respondUnprocessableEntity( $attachments->get_error_code(),
+				$attachments->get_error_message() );
 		}
 
 		$default_category = (int) get_option( 'support_ticket_default_category' );
@@ -292,10 +338,10 @@ class TicketController extends ApiController {
 			'ip_address'       => self::get_remote_ip(),
 			'agent_created'    => get_current_user_id(),
 			'ticket_auth_code' => bin2hex( random_bytes( 5 ) ),
-			'active'           => 1
+			'active'           => 1,
 		];
 
-		$ticket_id = ( new SupportTicket )->create( $data );
+		$ticket_id = SupportTicket::create( $data );
 
 		if ( ! empty( $ticket_id ) ) {
 			$thread_data = [
@@ -308,9 +354,14 @@ class TicketController extends ApiController {
 
 			$thread_id = SupportTicket::add_thread( $ticket_id, $thread_data, $attachments );
 
+			if ( $thread_id ) {
+				$metadata = $request->get_param( 'metadata' );
+				// Add thread metadata
+			}
+
 			do_action( 'stackonet_support_ticket/v3/ticket_created', $ticket_id );
 
-			$supportTicket = ( new SupportTicket )->find_by_id( $ticket_id );
+			$supportTicket = ( new SupportTicket() )->find_by_id( $ticket_id );
 			if ( ! $supportTicket instanceof SupportTicket ) {
 				return $this->respondNotFound();
 			}
@@ -335,14 +386,14 @@ class TicketController extends ApiController {
 	/**
 	 * Updates one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
 		$id = (int) $request->get_param( 'id' );
 
-		$supportTicket = ( new SupportTicket )->find_by_id( $id );
+		$supportTicket = ( new SupportTicket() )->find_by_id( $id );
 
 		if ( ! $supportTicket instanceof SupportTicket ) {
 			return $this->respondNotFound();
@@ -367,7 +418,7 @@ class TicketController extends ApiController {
 	/**
 	 * Deletes one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -409,7 +460,7 @@ class TicketController extends ApiController {
 	/**
 	 * Update batch items
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -421,7 +472,7 @@ class TicketController extends ApiController {
 				if ( current_user_can( 'delete_ticket', $id ) ) {
 					do_action( 'stackonet_support_ticket/v3/ticket_deleted', $id, 'trash' );
 
-					( new SupportTicket )->trash( $id );
+					( new SupportTicket() )->trash( $id );
 				}
 			}
 
@@ -435,7 +486,7 @@ class TicketController extends ApiController {
 				if ( current_user_can( 'delete_ticket', $id ) ) {
 					do_action( 'stackonet_support_ticket/v3/ticket_deleted', $id, 'restore' );
 
-					( new SupportTicket )->restore( $id );
+					( new SupportTicket() )->restore( $id );
 				}
 			}
 
@@ -449,7 +500,7 @@ class TicketController extends ApiController {
 				if ( current_user_can( 'delete_ticket', $id ) ) {
 					do_action( 'stackonet_support_ticket/v3/ticket_deleted', $id, 'delete' );
 
-					( new SupportTicket )->delete( $id );
+					( new SupportTicket() )->delete( $id );
 				}
 			}
 
@@ -656,28 +707,28 @@ class TicketController extends ApiController {
 	}
 
 	/**
-	 * @param string $name
-	 * @param string $phone
-	 * @param string $content
+	 * @param  string  $name
+	 * @param  string  $phone
+	 * @param  string  $content
 	 *
 	 * @return false|string
 	 */
 	public function get_ticket_content( $name, $phone, $content ) {
 		ob_start(); ?>
-		<table class="table--support-ticket">
-			<tr>
-				<td>Name:</td>
-				<td><strong><?php echo $name ?></strong></td>
-			</tr>
-			<tr>
-				<td>Phone:</td>
-				<td><strong><?php echo $phone ?></strong></td>
-			</tr>
-			<tr>
-				<td>Content:</td>
-				<td><strong><?php echo $content; ?></strong></td>
-			</tr>
-		</table>
+        <table class="table--support-ticket">
+            <tr>
+                <td>Name:</td>
+                <td><strong><?php echo $name; ?></strong></td>
+            </tr>
+            <tr>
+                <td>Phone:</td>
+                <td><strong><?php echo $phone; ?></strong></td>
+            </tr>
+            <tr>
+                <td>Content:</td>
+                <td><strong><?php echo $content; ?></strong></td>
+            </tr>
+        </table>
 		<?php
 		$html = ob_get_clean();
 
@@ -687,10 +738,10 @@ class TicketController extends ApiController {
 	/**
 	 * Get filter data
 	 *
-	 * @param int $status
-	 * @param int $category
-	 * @param int $priority
-	 * @param int $agent
+	 * @param  int  $status
+	 * @param  int  $category
+	 * @param  int  $priority
+	 * @param  int  $agent
 	 *
 	 * @return array
 	 */
@@ -703,7 +754,7 @@ class TicketController extends ApiController {
 				'value'  => $_category->term_id,
 				'label'  => $_category->name,
 				'count'  => isset( $counts[ $_category->term_id ] ) ? $counts[ $_category->term_id ] : 0,
-				'active' => $category == $_category->term_id
+				'active' => $category == $_category->term_id,
 			];
 		}
 
@@ -715,11 +766,11 @@ class TicketController extends ApiController {
 				'value'  => $_priority->term_id,
 				'label'  => $_priority->name,
 				'count'  => isset( $counts[ $_priority->term_id ] ) ? $counts[ $_priority->term_id ] : 0,
-				'active' => $priority == $_priority->term_id
+				'active' => $priority == $_priority->term_id,
 			];
 		}
 
-		$_statuses = ( new SupportTicket )->get_ticket_statuses_terms();
+		$_statuses = ( new SupportTicket() )->get_ticket_statuses_terms();
 		$counts    = SupportTicket::tickets_count_by_terms( $_statuses, 'ticket_status' );
 		$statuses  = [];
 		foreach ( $_statuses as $_status ) {
@@ -727,7 +778,7 @@ class TicketController extends ApiController {
 				'value'  => $_status->term_id,
 				'label'  => $_status->name,
 				'count'  => isset( $counts[ $_status->term_id ] ) ? $counts[ $_status->term_id ] : 0,
-				'active' => $status == $_status->term_id
+				'active' => $status == $_status->term_id,
 			];
 		}
 
@@ -739,7 +790,7 @@ class TicketController extends ApiController {
 				'value'  => $_agent->get_user_id(),
 				'label'  => $_agent->get_user()->display_name,
 				'count'  => isset( $counts[ $_agent->get( 'term_id' ) ] ) ? $counts[ $_agent->get( 'term_id' ) ] : 0,
-				'active' => $agent == $_agent->get_user_id()
+				'active' => $agent == $_agent->get_user_id(),
 			];
 		}
 
@@ -750,7 +801,7 @@ class TicketController extends ApiController {
 				'value'  => 0,
 				'label'  => $_city,
 				'count'  => 0,
-				'active' => false
+				'active' => false,
 			];
 		}
 
@@ -765,13 +816,13 @@ class TicketController extends ApiController {
 				'id'            => 'priority',
 				'name'          => __( 'Priorities', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'Priority', 'stackonet-support-ticket' ),
-				'options'       => count( $priorities ) ? $priorities : new ArrayObject()
+				'options'       => count( $priorities ) ? $priorities : new ArrayObject(),
 			],
 			[
 				'id'            => 'agent',
 				'name'          => __( 'Agents', 'stackonet-support-ticket' ),
 				'singular_name' => __( 'Agent', 'stackonet-support-ticket' ),
-				'options'       => count( $agents ) ? $agents : new ArrayObject()
+				'options'       => count( $agents ) ? $agents : new ArrayObject(),
 			],
 			[
 				'id'            => 'category',

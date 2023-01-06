@@ -14,6 +14,8 @@ class TicketThread extends DatabaseModel {
 	 */
 	protected $table = 'support_ticket_thread';
 
+	protected $meta_table = 'support_ticket_threadmeta';
+
 	/**
 	 * Available thread types
 	 *
@@ -43,7 +45,7 @@ class TicketThread extends DatabaseModel {
 	/**
 	 * @return array
 	 */
-	public static function get_thread_types() {
+	public static function get_thread_types(): array {
 		return apply_filters( 'ticket_thread_types', self::$valid_thread_types );
 	}
 
@@ -52,7 +54,7 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return array
 	 */
-	public function to_array() {
+	public function to_array(): array {
 		$human_time = human_time_diff( strtotime( $this->get_created_at() ), current_time( 'timestamp' ) );
 
 		return [
@@ -61,8 +63,8 @@ class TicketThread extends DatabaseModel {
 			'thread_date'         => $this->get_created_at(),
 			'human_time'          => $human_time,
 			'thread_type'         => $this->get_thread_type(),
-			'customer_name'       => $this->get( 'user_name' ),
-			'customer_email'      => $this->get( 'user_email' ),
+			'customer_name'       => $this->get_prop( 'user_name' ),
+			'customer_email'      => $this->get_prop( 'user_email' ),
 			'user_type'           => $this->get_user_type(),
 			'customer_avatar_url' => $this->get_avatar_url(),
 			'attachments'         => $this->get_attachments(),
@@ -74,8 +76,8 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return int
 	 */
-	public function get_id() {
-		return intval( $this->get( 'id' ) );
+	public function get_id(): int {
+		return intval( $this->get_prop( 'id' ) );
 	}
 
 	/**
@@ -83,8 +85,8 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return string
 	 */
-	public function get_thread_content() {
-		return $this->get( 'thread_content', '' );
+	public function get_thread_content(): string {
+		return $this->get_prop( 'thread_content' );
 	}
 
 	/**
@@ -92,8 +94,8 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return int
 	 */
-	public function get_created_by() {
-		return (int) $this->get( 'created_by' );
+	public function get_created_by(): int {
+		return (int) $this->get_prop( 'created_by' );
 	}
 
 	/**
@@ -101,9 +103,9 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return string
 	 */
-	public function get_avatar_url() {
+	public function get_avatar_url(): string {
 		if ( empty( $this->avatar_url ) ) {
-			$id_or_email      = $this->get_created_by() ? $this->get_created_by() : $this->get( 'customer_email' );
+			$id_or_email      = $this->get_created_by() ? $this->get_created_by() : $this->get_prop( 'customer_email' );
 			$this->avatar_url = Utils::get_avatar_url( $id_or_email );
 		}
 
@@ -115,8 +117,8 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return string
 	 */
-	public function get_thread_type() {
-		return $this->get( 'thread_type' );
+	public function get_thread_type(): string {
+		return $this->get_prop( 'thread_type' );
 	}
 
 	/**
@@ -124,8 +126,8 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return string
 	 */
-	public function get_user_type() {
-		return $this->get( 'user_type', 'user' );
+	public function get_user_type(): string {
+		return $this->get_prop( 'user_type', 'user' );
 	}
 
 	/**
@@ -133,8 +135,8 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return string
 	 */
-	public function get_created_at() {
-		return $this->get( 'created_at' );
+	public function get_created_at(): string {
+		return $this->get_prop( 'created_at' );
 	}
 
 	/**
@@ -142,14 +144,14 @@ class TicketThread extends DatabaseModel {
 	 *
 	 * @return array
 	 */
-	public function get_attachments_ids() {
-		return $this->get( 'attachments', [] );
+	public function get_attachments_ids(): array {
+		return $this->get_prop( 'attachments', [] );
 	}
 
 	/**
 	 * Get attachment data
 	 */
-	public function get_attachments() {
+	public function get_attachments(): array {
 		if ( $this->attachments_read ) {
 			return $this->attachments;
 		}
@@ -168,16 +170,16 @@ class TicketThread extends DatabaseModel {
 	/**
 	 * Get all threads by ticket id
 	 *
-	 * @param int $ticket_id
+	 * @param  int  $ticket_id
 	 *
 	 * @return array
 	 */
-	public function find_by_ticket_id( int $ticket_id ) {
+	public function find_by_ticket_id( int $ticket_id ): array {
 		global $wpdb;
 		$table = $this->get_table_name();
 
 		$sql      = $wpdb->prepare( "SELECT * FROM {$table} WHERE ticket_id = %d", $ticket_id );
-		$sql      .= " ORDER BY id DESC";
+		$sql      .= ' ORDER BY id DESC';
 		$_threads = $wpdb->get_results( $sql, ARRAY_A );
 
 		$threads = [];
@@ -186,60 +188,5 @@ class TicketThread extends DatabaseModel {
 		}
 
 		return $threads;
-	}
-
-	/**
-	 * Create table
-	 */
-	public static function create_table() {
-		global $wpdb;
-		$self       = new self;
-		$table      = $wpdb->prefix . 'support_ticket_thread';
-		$meta_table = $wpdb->prefix . 'support_ticket_threadmeta';
-		$fk_table   = $wpdb->prefix . 'support_ticket';
-		$collate    = $wpdb->get_charset_collate();
-
-		$tables = "CREATE TABLE IF NOT EXISTS {$table} (
-			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			ticket_id BIGINT(20) UNSIGNED NOT NULL,
-			thread_type VARCHAR(30) NULL DEFAULT NULL,
-			thread_content LONGTEXT NULL DEFAULT NULL,
-			attachments TEXT NULL DEFAULT NULL,
-			user_type VARCHAR(30) NULL DEFAULT NULL COMMENT 'agent or user',
-			user_name VARCHAR(100) NULL DEFAULT NULL,
-			user_email VARCHAR(100) NULL DEFAULT NULL,
-			user_phone VARCHAR(20) NULL DEFAULT NULL,
-			created_by BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
-			created_at DATETIME NULL DEFAULT NULL,
-			updated_at DATETIME NULL DEFAULT NULL,
-			PRIMARY KEY (id)
-		) $collate;";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $tables );
-
-		$meta_table_schema = "CREATE TABLE IF NOT EXISTS {$meta_table} (
-			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			thread_id BIGINT(20) UNSIGNED NOT NULL,
-			meta_key varchar(255) NULL DEFAULT NULL,
-			meta_value LONGTEXT NULL DEFAULT NULL,
-			PRIMARY KEY  (id)
-		) $collate;";
-		dbDelta( $meta_table_schema );
-
-		$version = get_option( $table . '-version' );
-		if ( false === $version ) {
-			$constant_name = $self->get_foreign_key_constant_name( $fk_table, $table );
-			$sql           = "ALTER TABLE `{$table}` ADD CONSTRAINT $constant_name FOREIGN KEY (`ticket_id`)";
-			$sql           .= " REFERENCES `{$fk_table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
-			$wpdb->query( $sql );
-
-			$constant_name2 = $self->get_foreign_key_constant_name( $meta_table, $table );
-			$sql            = "ALTER TABLE `{$meta_table}` ADD CONSTRAINT $constant_name2 FOREIGN KEY (`thread_id`)";
-			$sql            .= " REFERENCES `{$table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
-			$wpdb->query( $sql );
-
-			update_option( $table . '-version', '1.0.0', false );
-		}
 	}
 }

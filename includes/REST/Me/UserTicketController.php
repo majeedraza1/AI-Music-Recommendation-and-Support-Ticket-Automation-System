@@ -26,7 +26,7 @@ class UserTicketController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -38,38 +38,49 @@ class UserTicketController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/tickets/me', [
+		register_rest_route(
+			$this->namespace,
+			'/tickets/me',
 			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_items' ],
-				'args'     => $this->get_collection_params(),
-			],
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_item' ],
-			],
-		] );
-
-		register_rest_route( $this->namespace, '/tickets/me/(?P<id>\d+)', [
-			'args' => [
-				'id' => [
-					'description' => __( 'Unique identifier for the object.' ),
-					'type'        => 'integer',
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_items' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				],
-			],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_item' ],
+					'permission_callback' => [ $this, 'create_item_permissions_check' ],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/tickets/me/(?P<id>\d+)',
 			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_item' ]
-			],
-		] );
+				'args' => [
+					'id' => [
+						'description' => __( 'Unique identifier for the object.' ),
+						'type'        => 'integer',
+					],
+				],
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+			]
+		);
 	}
 
 	/**
 	 * Retrieves a collection of items.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param  WP_REST_Request  $request  Full details about the request.
 	 *
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
 		$user = wp_get_current_user();
@@ -84,7 +95,11 @@ class UserTicketController extends ApiController {
 		$ticket_category = (int) $request->get_param( 'ticket_category' );
 		$ticket_priority = (int) $request->get_param( 'ticket_priority' );
 
-		$args = [ 'page' => $paged, 'per_page' => $per_page, 'agent_created' => $user->ID ];
+		$args = [
+			'page'          => $paged,
+			'per_page'      => $per_page,
+			'agent_created' => $user->ID,
+		];
 
 		if ( ! empty( $search ) ) {
 			$args['search'] = $search;
@@ -123,7 +138,7 @@ class UserTicketController extends ApiController {
 	/**
 	 * Creates one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param  WP_REST_Request  $request  Full details about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 * @throws \Exception
@@ -138,7 +153,7 @@ class UserTicketController extends ApiController {
 
 		if ( $response->get_status() === 201 ) {
 			$data   = $response->get_data();
-			$ticket = ( new SupportTicket )->find_by_id( $data['data']['ticket_id'] );
+			$ticket = ( new SupportTicket() )->find_by_id( $data['data']['ticket_id'] );
 
 			$response = [
 				'ticket'  => static::format_item_for_response( $ticket ),
@@ -154,7 +169,7 @@ class UserTicketController extends ApiController {
 	/**
 	 * Retrieves one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param  WP_REST_Request  $request  Full details about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
@@ -166,7 +181,7 @@ class UserTicketController extends ApiController {
 
 		$id = (int) $request->get_param( 'id' );
 
-		$supportTicket = ( new SupportTicket )->find_by_id( $id );
+		$supportTicket = ( new SupportTicket() )->find_by_id( $id );
 		if ( ! $supportTicket instanceof SupportTicket ) {
 			return $this->respondNotFound();
 		}

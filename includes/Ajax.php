@@ -11,6 +11,11 @@ use StackonetSupportTicket\Supports\Utils;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class Ajax
+ *
+ * @package StackonetSupportTicket
+ */
 class Ajax {
 
 	/**
@@ -53,28 +58,30 @@ class Ajax {
 		$statuses = $categories = $priorities = $agents = [];
 
 		foreach ( $_statuses as $status ) {
-			$statuses[ $status->get( 'term_id' ) ] = $status->to_array();
+			$statuses[ $status->get_prop( 'term_id' ) ] = $status->to_array();
 		}
 
 		foreach ( $_priorities as $status ) {
-			$priorities[ $status->get( 'term_id' ) ] = $status->to_array();
+			$priorities[ $status->get_prop( 'term_id' ) ] = $status->to_array();
 		}
 
 		foreach ( $_categories as $status ) {
-			$categories[ $status->get( 'term_id' ) ] = $status->to_array();
+			$categories[ $status->get_prop( 'term_id' ) ] = $status->to_array();
 		}
 
 		foreach ( $_agents as $agent ) {
 			$agents[ $agent->get_user_id() ] = $agent->to_array();
 		}
 
-		$items = ( new SupportTicket )->find( [
-			'paged'           => 1,
-			'per_page'        => 1000,
-			'ticket_status'   => $ticket_status,
-			'ticket_category' => $ticket_category,
-			'ticket_priority' => $ticket_priority,
-		] );
+		$items = ( new SupportTicket() )->find(
+			[
+				'paged'           => 1,
+				'per_page'        => 1000,
+				'ticket_status'   => $ticket_status,
+				'ticket_category' => $ticket_category,
+				'ticket_priority' => $ticket_priority,
+			]
+		);
 
 		$filename = sprintf( 'support-tickets-%s-%s-%s.csv', $ticket_status, $ticket_category, $ticket_priority );
 
@@ -95,11 +102,11 @@ class Ajax {
 
 		/** @var SupportTicket[] $items */
 		foreach ( $items as $ticket ) {
-			$status   = $ticket->get( 'ticket_status' );
+			$status   = $ticket->get_prop( 'ticket_status' );
 			$status   = isset( $statuses[ $status ] ) ? $statuses[ $status ]['name'] : $status;
-			$category = $ticket->get( 'ticket_category' );
+			$category = $ticket->get_prop( 'ticket_category' );
 			$category = isset( $categories[ $category ] ) ? $categories[ $category ]['name'] : $category;
-			$priority = $ticket->get( 'ticket_priority' );
+			$priority = $ticket->get_prop( 'ticket_priority' );
 			$priority = isset( $priorities[ $priority ] ) ? $priorities[ $priority ]['name'] : $priority;
 
 			$__agents   = [];
@@ -113,12 +120,12 @@ class Ajax {
 			}
 
 			$rows[] = [
-				$ticket->get( 'id' ),
-				$ticket->get( 'ticket_subject' ),
+				$ticket->get_prop( 'id' ),
+				$ticket->get_prop( 'ticket_subject' ),
 				$status,
-				$ticket->get( 'customer_name' ),
-				$ticket->get( 'customer_email' ),
-				$ticket->get( 'customer_phone' ),
+				$ticket->get_prop( 'customer_name' ),
+				$ticket->get_prop( 'customer_email' ),
+				$ticket->get_prop( 'customer_phone' ),
 				implode( ', ', $__agents ),
 				$category,
 				$priority,
@@ -135,5 +142,4 @@ class Ajax {
 		echo Utils::generateCsv( $rows );
 		die();
 	}
-
 }

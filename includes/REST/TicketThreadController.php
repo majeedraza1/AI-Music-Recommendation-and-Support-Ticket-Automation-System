@@ -28,7 +28,7 @@ class TicketThreadController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -40,35 +40,43 @@ class TicketThreadController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/tickets/(?P<id>\d+)/thread', [
+		register_rest_route(
+			$this->namespace,
+			'/tickets/(?P<id>\d+)/thread',
 			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_item' ],
-				'args'     => $this->get_create_item_params(),
-			],
-		] );
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'create_item' ],
+					'args'     => $this->get_create_item_params(),
+				],
+			]
+		);
 
-		register_rest_route( $this->namespace, '/tickets/(?P<id>\d+)/thread/(?P<thread_id>\d+)', [
-			'args' => [
-				'id'        => [
-					'description' => __( 'Unique identifier for the ticket.' ),
-					'type'        => 'integer',
-				],
-				'thread_id' => [
-					'description' => __( 'Unique identifier for the ticket thread.' ),
-					'type'        => 'integer',
-				],
-			],
+		register_rest_route(
+			$this->namespace,
+			'/tickets/(?P<id>\d+)/thread/(?P<thread_id>\d+)',
 			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this, 'update_item' ],
-				'args'     => $this->get_update_item_params(),
-			],
-			[
-				'methods'  => WP_REST_Server::DELETABLE,
-				'callback' => [ $this, 'delete_item' ]
-			],
-		] );
+				'args' => [
+					'id'        => [
+						'description' => __( 'Unique identifier for the ticket.' ),
+						'type'        => 'integer',
+					],
+					'thread_id' => [
+						'description' => __( 'Unique identifier for the ticket thread.' ),
+						'type'        => 'integer',
+					],
+				],
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'update_item' ],
+					'args'     => $this->get_update_item_params(),
+				],
+				[
+					'methods'  => WP_REST_Server::DELETABLE,
+					'callback' => [ $this, 'delete_item' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -91,7 +99,7 @@ class TicketThreadController extends ApiController {
 			return $this->respondUnprocessableEntity( null, 'Only note and reply are supported.' );
 		}
 
-		$support_ticket = ( new SupportTicket )->find_by_id( $id );
+		$support_ticket = ( new SupportTicket() )->find_by_id( $id );
 
 		if ( ! $support_ticket instanceof SupportTicket ) {
 			return $this->respondNotFound();
@@ -108,14 +116,18 @@ class TicketThreadController extends ApiController {
 
 		$user = wp_get_current_user();
 
-		$thread_id = SupportTicket::add_thread( $id, [
-			'thread_type'    => $thread_type,
-			'customer_name'  => $user->display_name,
-			'customer_email' => $user->user_email,
-			'post_content'   => $thread_content,
-			'agent_created'  => $user->ID,
-			'user_type'      => 'agent',
-		], $attachments );
+		$thread_id = SupportTicket::add_thread(
+			$id,
+			[
+				'thread_type'    => $thread_type,
+				'customer_name'  => $user->display_name,
+				'customer_email' => $user->user_email,
+				'post_content'   => $thread_content,
+				'agent_created'  => $user->ID,
+				'user_type'      => 'agent',
+			],
+			$attachments
+		);
 
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, $request->get_params() );
 
@@ -138,7 +150,7 @@ class TicketThreadController extends ApiController {
 			return $this->respondUnprocessableEntity();
 		}
 
-		$support_ticket = ( new SupportTicket )->find_by_id( $id );
+		$support_ticket = ( new SupportTicket() )->find_by_id( $id );
 
 		if ( ! $support_ticket instanceof SupportTicket ) {
 			return $this->respondNotFound();
@@ -154,10 +166,12 @@ class TicketThreadController extends ApiController {
 			return $this->respondNotFound( null, 'Sorry, no thread found.' );
 		}
 
-		$response = wp_update_post( [
-			'ID'           => $thread_id,
-			'post_content' => $post_content,
-		] );
+		$response = wp_update_post(
+			[
+				'ID'           => $thread_id,
+				'post_content' => $post_content,
+			]
+		);
 
 		if ( ! $response instanceof WP_Error ) {
 
@@ -180,7 +194,7 @@ class TicketThreadController extends ApiController {
 		$id        = (int) $request->get_param( 'id' );
 		$thread_id = (int) $request->get_param( 'thread_id' );
 
-		$support_ticket = ( new SupportTicket )->find_by_id( $id );
+		$support_ticket = ( new SupportTicket() )->find_by_id( $id );
 
 		if ( ! $support_ticket instanceof SupportTicket ) {
 			return $this->respondNotFound();
