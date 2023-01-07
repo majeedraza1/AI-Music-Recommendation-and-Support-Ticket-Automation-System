@@ -147,6 +147,7 @@ class ApiController extends WP_REST_Controller {
 				'city'   => $ticket->get_prop( 'city' ),
 				'type'   => $ticket->get_prop( 'user_type' ),
 			],
+			'metadata' => $ticket->get_all_metadata(),
 		];
 	}
 }

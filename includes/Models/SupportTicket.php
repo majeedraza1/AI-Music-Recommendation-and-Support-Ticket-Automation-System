@@ -134,7 +134,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Model constructor.
 	 *
-	 * @param  array $data
+	 * @param  array  $data
 	 */
 	public function __construct( $data = [] ) {
 		if ( $data ) {
@@ -237,6 +237,27 @@ class SupportTicket extends DatabaseModel {
 		}
 
 		return $this->ticket_threads;
+	}
+
+	/**
+	 * Get all metadata
+	 *
+	 * @return array
+	 */
+	public function get_all_metadata(): array {
+		global $wpdb;
+		$table = $wpdb->prefix . $this->meta_table;
+
+		$ticket_meta = [];
+		$sql         = "SELECT meta_key,meta_value FROM {$table} WHERE ticket_id= %d";
+		$results     = $wpdb->get_results( $wpdb->prepare( $sql, $this->get_id() ), ARRAY_A );
+		if ( $results ) {
+			foreach ( $results as $result ) {
+				$ticket_meta[ $result['meta_key'] ] = stripslashes( $result['meta_value'] );
+			}
+		}
+
+		return $ticket_meta;
 	}
 
 	/**
@@ -396,7 +417,7 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
-	 * @param  WP_Term $term
+	 * @param  WP_Term  $term
 	 *
 	 * @return array
 	 */
@@ -469,8 +490,8 @@ class SupportTicket extends DatabaseModel {
 	 * Create support ticket
 	 *
 	 * @param  array  $data
-	 * @param  string $content
-	 * @param  string $thread_type
+	 * @param  string  $content
+	 * @param  string  $thread_type
 	 *
 	 * @return int
 	 * @throws Exception
@@ -512,9 +533,9 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
-	 * @param  int   $ticket_id
-	 * @param  array $data
-	 * @param  array $attachments
+	 * @param  int  $ticket_id
+	 * @param  array  $data
+	 * @param  array  $attachments
 	 *
 	 * @return int
 	 */
@@ -561,9 +582,9 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Add support ticket note
 	 *
-	 * @param  int    $ticket_id
-	 * @param  string $note
-	 * @param  string $type
+	 * @param  int  $ticket_id
+	 * @param  string  $note
+	 * @param  string  $type
 	 */
 	public function add_note( $ticket_id, $note, $type = 'note' ) {
 		$user = wp_get_current_user();
@@ -582,8 +603,8 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Get ticket meta
 	 *
-	 * @param  int    $ticket_id
-	 * @param  string $meta_key
+	 * @param  int  $ticket_id
+	 * @param  string  $meta_key
 	 *
 	 * @return array
 	 */
@@ -610,10 +631,10 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Update ticket metadata
 	 *
-	 * @param  int    $ticket_id
-	 * @param  string $meta_key
+	 * @param  int  $ticket_id
+	 * @param  string  $meta_key
 	 * @param  mixed  $meta_value
-	 * @param  int    $meta_id
+	 * @param  int  $meta_id
 	 *
 	 * @return int
 	 */
@@ -636,7 +657,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Get current user agent id
 	 *
-	 * @param  int $user_id
+	 * @param  int  $user_id
 	 *
 	 * @return int|mixed
 	 */
@@ -659,7 +680,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Find multiple records from database
 	 *
-	 * @param  array $args
+	 * @param  array  $args
 	 *
 	 * @return array
 	 */
@@ -696,7 +717,7 @@ class SupportTicket extends DatabaseModel {
 				$user_id = get_current_user_id();
 			}
 			$agent_id = self::get_current_user_agent_id( $user_id );
-			$query   .= ' AND(';
+			$query    .= ' AND(';
 			if ( ! empty( $agent_id ) ) {
 				$query .= $wpdb->prepare(
 					' (mt.meta_key = %s AND mt.meta_value = %d) OR',
@@ -734,9 +755,9 @@ class SupportTicket extends DatabaseModel {
 			$query .= ' AND active = 1';
 		}
 
-		$query  .= " GROUP BY {$table}.{$this->primary_key}";
-		$query  .= " ORDER BY {$table}.{$orderby} {$order}";
-		$query  .= $wpdb->prepare( ' LIMIT %d OFFSET %d', $per_page, $offset );
+		$query   .= " GROUP BY {$table}.{$this->primary_key}";
+		$query   .= " ORDER BY {$table}.{$orderby} {$order}";
+		$query   .= $wpdb->prepare( ' LIMIT %d OFFSET %d', $per_page, $offset );
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
 		$data = [];
@@ -763,7 +784,7 @@ class SupportTicket extends DatabaseModel {
 		global $wpdb;
 		$table = $self->get_table_name();
 
-		$query  = "SELECT * FROM {$table} WHERE 1=1";
+		$query = "SELECT * FROM {$table} WHERE 1=1";
 		$query .= $wpdb->prepare( ' AND `agent_created` = %d', intval( $args['agent_created'] ) );
 
 		foreach ( [ 'ticket_category', 'ticket_priority', 'ticket_status' ] as $columnName ) {
@@ -780,21 +801,23 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	public static function find_for_user( array $args = [] ) {
-		$self = new static();
+		$self = ( new static() )->get_data_store();
 		global $wpdb;
 		$cache_key = $self->get_cache_key_for_collection( $args );
 		$items     = $self->get_cache( $cache_key );
 		if ( false === $items ) {
 			list( $per_page, $offset ) = $self->get_pagination_and_order_data( $args );
-			$order_by                  = $self->get_order_by( $args );
+			$order_by = $self->get_order_by( $args );
 
-			$query  = static::_find_for_user_sql( $args );
-			$query .= " ORDER BY {$order_by}";
+			$query = static::_find_for_user_sql( $args );
+			if ( $order_by ) {
+				$query .= " ORDER BY {$order_by}";
+			}
 
 			if ( $per_page > 0 ) {
 				$query .= $wpdb->prepare( ' LIMIT %d', $per_page );
 			}
-			if ( $offset >= 0 ) {
+			if ( $per_page > 0 && $offset >= 0 ) {
 				$query .= $wpdb->prepare( ' OFFSET %d', $offset );
 			}
 			$items = $wpdb->get_results( $query, ARRAY_A );
@@ -824,7 +847,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Metadata for user
 	 *
-	 * @param  array $args
+	 * @param  array  $args
 	 *
 	 * @return array
 	 */
@@ -857,8 +880,8 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Search phone
 	 *
-	 * @param  array $args
-	 * @param  array $fields
+	 * @param  array  $args
+	 * @param  array  $fields
 	 *
 	 * @return array
 	 */
@@ -894,7 +917,7 @@ class SupportTicket extends DatabaseModel {
 			if ( ! current_user_can( 'read_others_tickets' ) ) {
 				$user_id  = get_current_user_id();
 				$agent_id = self::get_current_user_agent_id( $user_id );
-				$query   .= ' AND(';
+				$query    .= ' AND(';
 				if ( ! empty( $agent_id ) ) {
 					$query .= $wpdb->prepare(
 						' (mt.meta_key = %s AND mt.meta_value = %d) OR',
@@ -956,8 +979,8 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
-	 * @param  string $query
-	 * @param  bool   $object
+	 * @param  string  $query
+	 * @param  bool  $object
 	 *
 	 * @return array|WP_Term[]
 	 */
@@ -1015,7 +1038,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Find record by id
 	 *
-	 * @param  int $id
+	 * @param  int  $id
 	 *
 	 * @return false|self
 	 */
@@ -1032,7 +1055,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Get previous and next item
 	 *
-	 * @param  int $id
+	 * @param  int  $id
 	 *
 	 * @return array
 	 */
@@ -1066,7 +1089,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Update support ticket agents
 	 *
-	 * @param  array $agents_ids  List of WP_User[] ID
+	 * @param  array  $agents_ids  List of WP_User[] ID
 	 */
 	public function update_agent( array $agents_ids ) {
 		global $wpdb;
@@ -1107,7 +1130,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Delete data
 	 *
-	 * @param  int $thread_id
+	 * @param  int  $thread_id
 	 *
 	 * @return bool
 	 */
@@ -1118,7 +1141,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Send an item to trash
 	 *
-	 * @param  int $id
+	 * @param  int  $id
 	 *
 	 * @return bool
 	 */
@@ -1133,7 +1156,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Restore an item from trash
 	 *
-	 * @param  int $id
+	 * @param  int  $id
 	 *
 	 * @return bool
 	 */
@@ -1148,7 +1171,7 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Delete data
 	 *
-	 * @param  int $id
+	 * @param  int  $id
 	 *
 	 * @return bool
 	 */
@@ -1265,8 +1288,8 @@ class SupportTicket extends DatabaseModel {
 	/**
 	 * Count number of tickets by status
 	 *
-	 * @param  WP_Term[] $terms
-	 * @param  string    $column_name
+	 * @param  WP_Term[]  $terms
+	 * @param  string  $column_name
 	 *
 	 * @return array
 	 */
@@ -1282,7 +1305,7 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
-	 * @param  string $column_name  table column name
+	 * @param  string  $column_name  table column name
 	 *
 	 * @return array
 	 */
@@ -1305,7 +1328,7 @@ class SupportTicket extends DatabaseModel {
 			if ( ! current_user_can( 'read_others_tickets' ) ) {
 				$user_id  = get_current_user_id();
 				$agent_id = self::get_current_user_agent_id( $user_id );
-				$query   .= ' AND(';
+				$query    .= ' AND(';
 				if ( ! empty( $agent_id ) ) {
 					$query .= $wpdb->prepare(
 						' (mt.meta_key = %s AND mt.meta_value = %d) OR',
@@ -1317,7 +1340,7 @@ class SupportTicket extends DatabaseModel {
 				$query .= ' )';
 			}
 
-			$query .= " GROUP BY {$column_name}";
+			$query  .= " GROUP BY {$column_name}";
 			$counts = $wpdb->get_results( $query, ARRAY_A );
 
 			wp_cache_set( $column_name . '_counts', $counts, $self->cache_group );
@@ -1338,9 +1361,9 @@ class SupportTicket extends DatabaseModel {
 		$meta_table = $wpdb->prefix . $self->meta_table;
 
 		$query   = "SELECT mt.meta_value as _key, COUNT(mt.ticket_id ) AS _value FROM {$table}";
-		$query  .= " RIGHT JOIN {$meta_table} as mt ON {$table}.id = mt.ticket_id";
-		$query  .= " WHERE {$table}.active = 1 AND mt.meta_key = 'assigned_agent'";
-		$query  .= ' GROUP BY meta_value';
+		$query   .= " RIGHT JOIN {$meta_table} as mt ON {$table}.id = mt.ticket_id";
+		$query   .= " WHERE {$table}.active = 1 AND mt.meta_key = 'assigned_agent'";
+		$query   .= ' GROUP BY meta_value';
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
 		$counts = [];
@@ -1355,8 +1378,8 @@ class SupportTicket extends DatabaseModel {
 	 * Map meta capability for support ticket
 	 *
 	 * @param  array  $caps
-	 * @param  string $cap
-	 * @param  int    $user_id
+	 * @param  string  $cap
+	 * @param  int  $user_id
 	 * @param  array  $args
 	 *
 	 * @return array
@@ -1373,9 +1396,9 @@ class SupportTicket extends DatabaseModel {
 
 			$is_same_user = false;
 			if ( $user_id == $ticket->get( 'agent_created' ) || in_array(
-				$user_id,
-				$ticket->get_assigned_agents_ids()
-			) ) {
+					$user_id,
+					$ticket->get_assigned_agents_ids()
+				) ) {
 				$is_same_user = true;
 			}
 

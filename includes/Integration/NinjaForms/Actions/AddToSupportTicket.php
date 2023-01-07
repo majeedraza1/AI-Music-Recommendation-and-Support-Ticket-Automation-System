@@ -1,9 +1,10 @@
 <?php
 
-namespace StackonetSupportTicket\Integration\NinjaForms;
+namespace StackonetSupportTicket\Integration\NinjaForms\Actions;
 
 use NF_Abstracts_Action;
 use Stackonet\WP\Framework\Supports\Logger;
+use StackonetSupportTicket\REST\TicketController;
 
 /**
  * Class Module
@@ -64,7 +65,14 @@ class AddToSupportTicket extends NF_Abstracts_Action {
 			$form_fields_to_ticket_fields[ $field['support_ticket_field'] ] = $fields_by_key[ $field['form_field'] ]['value'];
 		}
 		Logger::log( $form_fields_to_ticket_fields );
-		// TODO: Add to support ticket
+		$request = new \WP_REST_Request();
+		foreach ( $form_fields_to_ticket_fields as $key => $value ) {
+			$request->set_param( $key, $value );
+		}
+		$response = ( new TicketController() )->create_item( $request );
+		if ( 201 !== $response->get_status() ) {
+			$data['errors']['form']['incomplete'] = '';
+		}
 
 		return $data;
 	}

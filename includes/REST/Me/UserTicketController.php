@@ -130,6 +130,7 @@ class UserTicketController extends ApiController {
 			'items'      => $items,
 			'pagination' => static::get_pagination_data( $pagination, $per_page, $paged ),
 			'metadata'   => $metadata,
+			'args'       => $args,
 		];
 
 		return $this->respondOK( $response );
