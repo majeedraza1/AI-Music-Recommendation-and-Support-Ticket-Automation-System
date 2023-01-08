@@ -41,23 +41,23 @@ class Settings {
 		$current_user = wp_get_current_user();
 		if ( $current_user->exists() ) {
 			$options         = get_user_meta( $current_user->ID, '_stackonet_support_ticket', true );
-			$primary_color   = isset( $options['support_ticket_primary_color'] ) ? $options['support_ticket_primary_color'] : $primary_color;
-			$secondary_color = isset( $options['support_ticket_secondary_color'] ) ? $options['support_ticket_secondary_color'] : $secondary_color;
+			$primary_color   = $options['support_ticket_primary_color'] ?? $primary_color;
+			$secondary_color = $options['support_ticket_secondary_color'] ?? $secondary_color;
 			$secondary_color = ! empty( $secondary_color ) ? $secondary_color : $primary_color;
 		}
 
 		?>
-        <style type="text/css">
-            :root {
-                --stackonet-ticket-primary: <?php echo $primary_color; ?>;
-                --stackonet-ticket-on-primary: #ffffff;
-                --stackonet-ticket-secondary: <?php echo $secondary_color; ?>;
-                --stackonet-ticket-on-secondary: #ffffff;
-                --stackonet-ticket-text-primary: rgba(0, 0, 0, 0.87);
-                --stackonet-ticket-text-secondary: rgba(0, 0, 0, 0.54);
-                --stackonet-ticket-text-icon: rgba(0, 0, 0, 0.38);
-            }
-        </style>
+		<style type="text/css">
+			:root {
+				--stackonet-ticket-primary: <?php echo $primary_color; ?>;
+				--stackonet-ticket-on-primary: #ffffff;
+				--stackonet-ticket-secondary: <?php echo $secondary_color; ?>;
+				--stackonet-ticket-on-secondary: #ffffff;
+				--stackonet-ticket-text-primary: rgba(0, 0, 0, 0.87);
+				--stackonet-ticket-text-secondary: rgba(0, 0, 0, 0.54);
+				--stackonet-ticket-text-icon: rgba(0, 0, 0, 0.38);
+			}
+		</style>
 		<?php
 	}
 
@@ -73,7 +73,7 @@ class Settings {
 				'id'       => 'general_settings_panel',
 				'title'    => __( 'General', 'stackonet-support-ticket' ),
 				'priority' => 10,
-			)
+			),
 		);
 
 		// Add settings page tab
@@ -86,7 +86,7 @@ class Settings {
 				'description' => __( 'Plugin general options.', 'stackonet-support-ticket' ),
 				'panel'       => 'general_settings_panel',
 				'priority'    => 10,
-			)
+			),
 		);
 
 		// Add Sections
@@ -181,7 +181,13 @@ class Settings {
 	}
 
 	public static function get_pages_for_options() {
-		$_pages  = get_posts( [ 'post_type' => 'page', 'post_status' => 'publish', 'posts_per_page' => - 1 ] );
+		$_pages  = get_posts(
+			[
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'posts_per_page' => - 1,
+			]
+		);
 		$options = [];
 		foreach ( $_pages as $page ) {
 			$options[ $page->ID ] = get_the_title( $page );

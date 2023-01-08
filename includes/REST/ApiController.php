@@ -4,6 +4,7 @@ namespace StackonetSupportTicket\REST;
 
 use Stackonet\WP\Framework\Media\UploadedFile;
 use Stackonet\WP\Framework\Media\Uploader;
+use Stackonet\WP\Framework\Traits\ApiPermissionChecker;
 use Stackonet\WP\Framework\Traits\ApiResponse;
 use Stackonet\WP\Framework\Traits\ApiUtils;
 use StackonetSupportTicket\Models\SupportTicket;
@@ -15,7 +16,7 @@ use WP_REST_Request;
 defined( 'ABSPATH' ) || exit;
 
 class ApiController extends WP_REST_Controller {
-	use ApiResponse, ApiUtils;
+	use ApiResponse, ApiUtils, ApiPermissionChecker;
 
 	/**
 	 * The namespace of this controller's route.
@@ -25,12 +26,12 @@ class ApiController extends WP_REST_Controller {
 	protected $namespace = STACKONET_SUPPORT_TICKET_REST_NAMESPACE;
 
 	/**
-	 * @param WP_REST_Request $request
+	 * @param  WP_REST_Request  $request
 	 *
 	 * @return int[]|WP_Error
 	 */
 	protected function get_attachments_ids( WP_REST_Request $request ) {
-		$files = ApiController::handle_file_upload();
+		$files = self::handle_file_upload();
 		if ( is_wp_error( $files ) ) {
 			return $files;
 		}
@@ -87,17 +88,17 @@ class ApiController extends WP_REST_Controller {
 	}
 
 	/**
-	 * @param TicketThread $thread
+	 * @param  TicketThread  $thread
 	 *
 	 * @return array
 	 */
-	protected static function format_thread_for_response( TicketThread $thread ) {
+	protected static function format_thread_for_response( TicketThread $thread ): array {
 		return [
 			'id'          => $thread->get_id(),
 			'content'     => $thread->get_thread_content(),
 			'creator'     => [
-				'name'   => $thread->get( 'user_name' ),
-				'email'  => $thread->get( 'user_email' ),
+				'name'   => $thread->get_prop( 'user_name' ),
+				'email'  => $thread->get_prop( 'user_email' ),
 				'avatar' => $thread->get_avatar_url(),
 				'type'   => $thread->get_user_type(),
 			],
@@ -108,11 +109,11 @@ class ApiController extends WP_REST_Controller {
 	}
 
 	/**
-	 * @param array $threads
+	 * @param  array  $threads
 	 *
 	 * @return array
 	 */
-	protected static function format_thread_collections( array $threads ) {
+	protected static function format_thread_collections( array $threads ): array {
 		$data = [];
 		foreach ( $threads as $thread ) {
 			if ( $thread instanceof TicketThread ) {
@@ -124,28 +125,29 @@ class ApiController extends WP_REST_Controller {
 	}
 
 	/**
-	 * @param SupportTicket $ticket
+	 * @param  SupportTicket  $ticket
 	 *
 	 * @return array
 	 */
-	protected static function format_item_for_response( SupportTicket $ticket ) {
+	protected static function format_item_for_response( SupportTicket $ticket ): array {
 		return [
-			'id'       => intval( $ticket->get( 'id' ) ),
-			'subject'  => $ticket->get( 'ticket_subject' ),
-			'created'  => mysql_to_rfc3339( $ticket->get( 'date_created' ) ),
-			'updated'  => mysql_to_rfc3339( $ticket->get( 'date_updated' ) ),
+			'id'       => intval( $ticket->get_prop( 'id' ) ),
+			'subject'  => $ticket->get_prop( 'ticket_subject' ),
+			'created'  => mysql_to_rfc3339( $ticket->get_prop( 'date_created' ) ),
+			'updated'  => mysql_to_rfc3339( $ticket->get_prop( 'date_updated' ) ),
 			'status'   => $ticket->get_ticket_status(),
 			'category' => $ticket->get_ticket_category(),
 			'priority' => $ticket->get_ticket_priority(),
 			'creator'  => [
-				'id'     => intval( $ticket->get( 'agent_created' ) ),
-				'name'   => $ticket->get( 'customer_name' ),
-				'email'  => $ticket->get( 'customer_email' ),
-				'avatar' => get_avatar_url( $ticket->get( 'customer_email' ) ),
-				'phone'  => $ticket->get( 'customer_phone' ),
-				'city'   => $ticket->get( 'city' ),
-				'type'   => $ticket->get( 'user_type' ),
+				'id'     => intval( $ticket->get_prop( 'agent_created' ) ),
+				'name'   => $ticket->get_prop( 'customer_name' ),
+				'email'  => $ticket->get_prop( 'customer_email' ),
+				'avatar' => get_avatar_url( $ticket->get_prop( 'customer_email' ) ),
+				'phone'  => $ticket->get_prop( 'customer_phone' ),
+				'city'   => $ticket->get_prop( 'city' ),
+				'type'   => $ticket->get_prop( 'user_type' ),
 			],
+			'metadata' => $ticket->get_all_metadata(),
 		];
 	}
 }

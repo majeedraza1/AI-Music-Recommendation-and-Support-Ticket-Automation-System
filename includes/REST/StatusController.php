@@ -25,7 +25,7 @@ class StatusController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -37,42 +37,54 @@ class StatusController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/statuses', [
+		register_rest_route(
+			$this->namespace,
+			'/statuses',
 			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_items' ],
-			],
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_item' ],
-				'args'     => $this->get_create_item_params()
-			],
-		] );
-
-		register_rest_route( $this->namespace, '/statuses/(?P<id>\d+)', [
-			'args' => [
-				'id' => [
-					'description' => __( 'Unique identifier for the status.' ),
-					'type'        => 'integer',
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_items' ],
 				],
-			],
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'create_item' ],
+					'args'     => $this->get_create_item_params(),
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/statuses/(?P<id>\d+)',
 			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this, 'update_item' ],
-				'args'     => $this->get_update_item_params()
-			],
+				'args' => [
+					'id' => [
+						'description' => __( 'Unique identifier for the status.' ),
+						'type'        => 'integer',
+					],
+				],
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'update_item' ],
+					'args'     => $this->get_update_item_params(),
+				],
+				[
+					'methods'  => WP_REST_Server::DELETABLE,
+					'callback' => [ $this, 'delete_item' ],
+				],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			'/statuses/batch',
 			[
-				'methods'  => WP_REST_Server::DELETABLE,
-				'callback' => [ $this, 'delete_item' ],
-			],
-		] );
-		register_rest_route( $this->namespace, '/statuses/batch', [
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'update_batch_items' ],
-				'args'     => $this->get_batch_update_params()
-			],
-		] );
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'update_batch_items' ],
+					'args'     => $this->get_batch_update_params(),
+				],
+			]
+		);
 	}
 
 	/**

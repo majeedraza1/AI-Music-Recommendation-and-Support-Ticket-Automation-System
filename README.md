@@ -1,7 +1,9 @@
 # Stackonet Support Ticket
+
 Easy & Powerful support ticket system for WordPress. Easy to configure and easy to use is our first priority.
 
 # Shortcodes
+
 ```
 [support_ticket] - All In One support features for front-end. Page having this must be selected as support page in general setting of support ticket.
 [create_ticket] - Create ticket form. Can be used as contact form.
@@ -9,646 +11,553 @@ Easy & Powerful support ticket system for WordPress. Easy to configure and easy 
 
 # REST Endpoint
 
-### Get collection of tickets
+API_ENDPOINT: `https://example.com/wp-json`
+
+NAMESPACE: `stackonet-support-ticket`
+
+VERSION: `v1`
+
+Base Endpoint: `{API_ENDPOINT}/{NAMESPACE}/{VERSION}`
+
+### Ticket
 
 <details>
-<summary>View contents</summary>
-
+<summary>Get collection of tickets</summary>
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/tickets]`
+`[GET /tickets]`
 
 Params:
 
-| Property          | Type      | Required  | Default   | Description                                                           |
-|-------------------|-----------|-----------|-----------|-----------------------------------------------------------------------|
-| `page`            | integer   | **no**    | `1`       | Current page of the collection.                                       |
-| `per_page`        | integer   | **no**    | `10`      | Maximum number of items to be returned in result set.                 |
-| `search`          | string    | **no**    | `null`    | Limit results to those matching a string.                             |
-| `city`            | string    | **no**    | `null`    | Limit results to those matching a city.                               |
-| `ticket_status`   | integer   | **no**    | `null`    | Limit results to those matching ticket status.                        |
-| `ticket_category` | integer   | **no**    | `null`    | Limit results to those matching ticket category.                      |
-| `ticket_priority` | integer   | **no**    | `null`    | Limit results to those matching ticket priority.                      |
-| `agent`           | integer   | **no**    | `null`    | Agent user id. Limit results to those matching support ticket agents  |
-
+| Property          | Type    | Required | Default | Description                                                          |
+|-------------------|---------|----------|---------|----------------------------------------------------------------------|
+| `page`            | integer | **no**   | `1`     | Current page of the collection.                                      |
+| `per_page`        | integer | **no**   | `10`    | Maximum number of items to be returned in result set.                |
+| `search`          | string  | **no**   | `null`  | Limit results to those matching a string.                            |
+| `city`            | string  | **no**   | `null`  | Limit results to those matching a city.                              |
+| `ticket_status`   | integer | **no**   | `null`  | Limit results to those matching ticket status.                       |
+| `ticket_category` | integer | **no**   | `null`  | Limit results to those matching ticket category.                     |
+| `ticket_priority` | integer | **no**   | `null`  | Limit results to those matching ticket priority.                     |
+| `agent`           | integer | **no**   | `null`  | Agent user id. Limit results to those matching support ticket agents |
 
 </details>
-
-### Create a ticket
-
 <details>
-<summary>View contents</summary>
+<summary>Create a ticket</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/tickets]`
+`[POST /tickets]`
 
 Params:
 
-| Property          | Type      | Required  | Default   | Description                   |
-|-------------------|-----------|-----------|-----------|-------------------------------|
-| `name`            | string    | **yes**   | `null`    | User full name.               |
-| `email`           | string    | **yes**   | `null`    | User email address.           |
-| `subject`         | string    | **yes**   | `null`    | Ticket subject.               |
-| `content`         | string    | **yes**   | `null`    | Ticket content.               |
-| `phone_number`    | string    | **no**    | `null`    | User phone number.            |
-| `category`        | integer   | **no**    | `null`    | Ticket category id.           |
-| `status`          | integer   | **no**    | `null`    | Ticket status id.             |
-| `priority`        | integer   | **no**    | `null`    | Ticket priority.              |
-| `attachments`     | array     | **no**    | `[]`      | Array of WordPress media ID.  |
-
+| Property       | Type    | Required | Default | Description                  |
+|----------------|---------|----------|---------|------------------------------|
+| `name`         | string  | **yes**  | `null`  | User full name.              |
+| `email`        | string  | **yes**  | `null`  | User email address.          |
+| `subject`      | string  | **yes**  | `null`  | Ticket subject.              |
+| `content`      | string  | **yes**  | `null`  | Ticket content.              |
+| `phone_number` | string  | **no**   | `null`  | User phone number.           |
+| `category`     | integer | **no**   | `null`  | Ticket category id.          |
+| `status`       | integer | **no**   | `null`  | Ticket status id.            |
+| `priority`     | integer | **no**   | `null`  | Ticket priority.             |
+| `attachments`  | array   | **no**   | `[]`    | Array of WordPress media ID. |
 
 </details>
-
-### Get a ticket
-
 <details>
-<summary>View contents</summary>
+<summary>Get a ticket</summary>
 
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/tickets/{id}]`
+`[GET /tickets/{id}]`
 
 Replace `{id}` with actual ticket id.
 
 </details>
-
-### Update a ticket
-
 <details>
-<summary>View contents</summary>
+<summary>Update a ticket</summary>
 
 
 Endpoint
 
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/tickets/{id}]`
+`[POST|PUT|PATCH /tickets/{id}]`
 
 Replace `{id}` with actual ticket id.
 
 Params: This endpoint accept same argument as create endpoint.
 
 </details>
-
-### Delete a ticket
-
 <details>
-<summary>View contents</summary>
+<summary>Delete a ticket</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/tickets/{id}]`
+`[DELETE /tickets/{id}]`
 
 Replace `{id}` with actual ticket id.
 
 Params:
 
-| Property  | Type     | Required | Default | Description                                        |
-|-----------|----------|----------|---------|----------------------------------------------------|
-| `action`  | string   | **no**   | `trash` | Value can be `trash` or `restore` or `delete`.     |
-
+| Property | Type   | Required | Default | Description                                    |
+|----------|--------|----------|---------|------------------------------------------------|
+| `action` | string | **no**   | `trash` | Value can be `trash` or `restore` or `delete`. |
 
 </details>
-
-### Update batch tickets
-
 <details>
-<summary>View contents</summary>
+<summary>Run batch action on tickets</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/tickets/batch]`
+`[POST /tickets/batch]`
 
 Params:
 
-| Property  | Type     | Required | Default | Description                           |
-|-----------|----------|----------|---------|---------------------------------------|
-| `trash`   | array    | **no**   | `[]`    | Array of ticket id to be trashed.     |
-| `restore` | array    | **no**   | `[]`    | Array of ticket id to be restored.    |
-| `delete`  | array    | **no**   | `[]`    | Array of ticket id to be deleted.     |
+| Property  | Type  | Required | Default | Description                        |
+|-----------|-------|----------|---------|------------------------------------|
+| `trash`   | array | **no**   | `[]`    | Array of ticket id to be trashed.  |
+| `restore` | array | **no**   | `[]`    | Array of ticket id to be restored. |
+| `delete`  | array | **no**   | `[]`    | Array of ticket id to be deleted.  |
 
 </details>
 
-### Create ticket thread
-
 <details>
-<summary>View contents</summary>
+<summary>Update a ticket agent(s)</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/tickets/{id}/thread]`
+`[POST|PUT|PATCH /tickets/{id}/agent]`
 
 Replace `{id}` with actual ticket id.
 
 Params:
 
-| Property              | Type     | Required | Default | Description                                                                           |
-|-----------------------|----------|----------|---------|---------------------------------------------------------------------------------------|
-| `thread_type`         | string   | **no**   | `null`  | Thread type. Value can be `report` or `log` or `reply` or `note` or `sms` or `email`. |
-| `thread_content`      | array    | **no**   | `null`  | Thread content.                                                                       |
-| `thread_attachments`  | array    | **no**   | `[]`    | Thread attachments. Array of WordPress media attachment id.                           |
+| Property     | Type  | Required | Default | Description                           |
+|--------------|-------|----------|---------|---------------------------------------|
+| `agents_ids` | array | **no**   | `[]`    | Array of agents ids to assign ticket. |
 
 </details>
 
-### Update ticket thread
+### Ticket thread
 
 <details>
-<summary>View contents</summary>
+<summary>Create ticket thread</summary>
 
 
 Endpoint
 
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/tickets/{id}/thread/{thread_id}]`
+`[POST /tickets/{id}/thread]`
+
+Replace `{id}` with actual ticket id.
+
+Params:
+
+| Property             | Type   | Required | Default | Description                                                                           |
+|----------------------|--------|----------|---------|---------------------------------------------------------------------------------------|
+| `thread_type`        | string | **no**   | `null`  | Thread type. Value can be `report` or `log` or `reply` or `note` or `sms` or `email`. |
+| `thread_content`     | array  | **no**   | `null`  | Thread content.                                                                       |
+| `thread_attachments` | array  | **no**   | `[]`    | Thread attachments. Array of WordPress media attachment id.                           |
+
+</details>
+<details>
+<summary>Update ticket thread</summary>
+
+
+Endpoint
+
+`[POST|PUT|PATCH /tickets/{id}/thread/{thread_id}]`
 
 Replace `{id}` with actual ticket id. and replace `{thread_id}` with actual thread id.
 
 Params:
 
-| Property              | Type     | Required | Default | Description       |
-|-----------------------|----------|----------|---------|-------------------|
-| `thread_content`      | array    | **no**   | `null`  | Thread content.   |
+| Property         | Type  | Required | Default | Description     |
+|------------------|-------|----------|---------|-----------------|
+| `thread_content` | array | **no**   | `null`  | Thread content. |
 
 </details>
-
-### Delete a ticket thread
-
 <details>
-<summary>View contents</summary>
+<summary>Delete a ticket thread</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/tickets/{id}/thread/{thread_id}]`
+`[DELETE /tickets/{id}/thread/{thread_id}]`
 
 Replace `{id}` with actual ticket id. and replace `{thread_id}` with actual thread id.
 
 </details>
 
-
-### Update a ticket agent(s)
+### Category
 
 <details>
-<summary>View contents</summary>
+<summary>Get collection of categories</summary>
 
 
 Endpoint
 
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/tickets/{id}/agent]`
+`[GET /categories]`
 
-Replace `{id}` with actual ticket id.
+</details>
+<details>
+<summary>Create a category</summary>
+
+
+Endpoint
+
+`[POST /categories]`
 
 Params:
 
-| Property      | Type     | Required | Default | Description                             |
-|---------------|----------|----------|---------|-----------------------------------------|
-| `agents_ids`  | array    | **no**   | `[]`    | Array of agents ids to assign ticket.   |
+| Property      | Type    | Required | Default | Description                                 |
+|---------------|---------|----------|---------|---------------------------------------------|
+| `name`        | string  | **yes**  | `null`  | Category name.                              |
+| `slug`        | string  | **no**   | `null`  | Category slug. Must be unique for category. |
+| `description` | string  | **no**   | `null`  | Category description.                       |
+| `parent`      | integer | **no**   | `null`  | Parent category ID.                         |
 
 </details>
-
-
-### Get collection of categories
-
 <details>
-<summary>View contents</summary>
+<summary>Update a category</summary>
 
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/categories]`
-
-</details>
-
-
-### Create a category
-
-<details>
-<summary>View contents</summary>
-
-
-Endpoint
-
-`[POST /wp-json/stackonet-support-ticket/v1/categories]`
-
-Params:
-
-| Property      | Type     | Required | Default | Description                                   |
-|---------------|----------|----------|---------|-----------------------------------------------|
-| `name`        | string   | **yes**  | `null`  | Category name.                                |
-| `slug`        | string   | **no**   | `null`  | Category slug. Must be unique for category.   |
-| `description` | string   | **no**   | `null`  | Category description.                         |
-| `parent`      | integer  | **no**   | `null`  | Parent category ID.                           |
-
-</details>
-
-### Update a category
-
-<details>
-<summary>View contents</summary>
-
-
-Endpoint
-
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/categories/{id}]`
+`[POST|PUT|PATCH /categories/{id}]`
 
 Replace `{id}` with actual category id.
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                   |
-|---------------|----------|----------|---------|-----------------------------------------------|
-| `name`        | string   | **no**   | `null`  | Category name.                                |
-| `slug`        | string   | **no**   | `null`  | Category slug. Must be unique for category.   |
+| Property | Type   | Required | Default | Description                                 |
+|----------|--------|----------|---------|---------------------------------------------|
+| `name`   | string | **no**   | `null`  | Category name.                              |
+| `slug`   | string | **no**   | `null`  | Category slug. Must be unique for category. |
 
 </details>
-
-### Delete a category
-
 <details>
-<summary>View contents</summary>
+<summary>Delete a category</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/categories/{id}]`
+`[DELETE /categories/{id}]`
 
 Replace `{id}` with actual ticket id.
 
 </details>
-
-### Update categories sorting order
-
 <details>
-<summary>View contents</summary>
+<summary>Update categories sorting order</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/categories/batch]`
+`[POST /categories/batch]`
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                                         |
-|---------------|----------|----------|---------|---------------------------------------------------------------------|
-| `menu_orders` | array    | **no**   | `[]`    | Array of all categories ID. New order will be set by numeric order. |
+| Property      | Type  | Required | Default | Description                                                         |
+|---------------|-------|----------|---------|---------------------------------------------------------------------|
+| `menu_orders` | array | **no**   | `[]`    | Array of all categories ID. New order will be set by numeric order. |
 
 </details>
 
-
-### Get collection of statuses
+### Status
 
 <details>
-<summary>View contents</summary>
+<summary>Get collection of statuses</summary>
 
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/statuses]`
+`[GET /statuses]`
 
 </details>
-
-
-### Create a status
-
 <details>
-<summary>View contents</summary>
+<summary>Create a status</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/statuses]`
+`[POST /statuses]`
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                   |
-|---------------|----------|----------|---------|-----------------------------------------------|
-| `name`        | string   | **yes**  | `null`  | Status name.                                  |
-| `slug`        | string   | **no**   | `null`  | Status slug. Must be unique for status.       |
-| `description` | string   | **no**   | `null`  | Status description.                           |
-| `parent`      | integer  | **no**   | `null`  | Parent status ID.                             |
+| Property      | Type    | Required | Default | Description                             |
+|---------------|---------|----------|---------|-----------------------------------------|
+| `name`        | string  | **yes**  | `null`  | Status name.                            |
+| `slug`        | string  | **no**   | `null`  | Status slug. Must be unique for status. |
+| `description` | string  | **no**   | `null`  | Status description.                     |
+| `parent`      | integer | **no**   | `null`  | Parent status ID.                       |
 
 </details>
-
-### Update a status
-
 <details>
-<summary>View contents</summary>
+<summary>Update a status</summary>
 
 
 Endpoint
 
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/statuses/{id}]`
+`[POST|PUT|PATCH /statuses/{id}]`
 
 Replace `{id}` with actual status id.
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                   |
-|---------------|----------|----------|---------|-----------------------------------------------|
-| `name`        | string   | **no**   | `null`  | Status name.                                  |
-| `slug`        | string   | **no**   | `null`  | Status slug. Must be unique for status.       |
+| Property | Type   | Required | Default | Description                             |
+|----------|--------|----------|---------|-----------------------------------------|
+| `name`   | string | **no**   | `null`  | Status name.                            |
+| `slug`   | string | **no**   | `null`  | Status slug. Must be unique for status. |
 
 </details>
-
-### Delete a status
-
 <details>
-<summary>View contents</summary>
+<summary>Delete a status</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/statuses/{id}]`
+`[DELETE /statuses/{id}]`
 
 Replace `{id}` with actual status id.
 
 </details>
-
-### Update statuses sorting order
-
 <details>
-<summary>View contents</summary>
+<summary>Update statuses sorting order</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/statuses/batch]`
+`[POST /statuses/batch]`
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                                        |
-|---------------|----------|----------|---------|--------------------------------------------------------------------|
-| `menu_orders` | array    | **no**   | `[]`    | Array of all statuses ID. New order will be set by numeric order.  |
+| Property      | Type  | Required | Default | Description                                                       |
+|---------------|-------|----------|---------|-------------------------------------------------------------------|
+| `menu_orders` | array | **no**   | `[]`    | Array of all statuses ID. New order will be set by numeric order. |
 
 </details>
 
-
-### Get collection of priorities
+### Priorities
 
 <details>
-<summary>View contents</summary>
+<summary>Get collection of priorities</summary>
 
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/priorities]`
+`[GET /priorities]`
 
 </details>
-
-
-### Create a priority
-
 <details>
-<summary>View contents</summary>
+<summary>Create a priority</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/priorities]`
+`[POST /priorities]`
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                   |
-|---------------|----------|----------|---------|-----------------------------------------------|
-| `name`        | string   | **yes**  | `null`  | Priority name.                                |
-| `slug`        | string   | **no**   | `null`  | Priority slug. Must be unique for priority.   |
-| `description` | string   | **no**   | `null`  | Priority description.                         |
-| `parent`      | integer  | **no**   | `null`  | Parent priority ID.                           |
+| Property      | Type    | Required | Default | Description                                 |
+|---------------|---------|----------|---------|---------------------------------------------|
+| `name`        | string  | **yes**  | `null`  | Priority name.                              |
+| `slug`        | string  | **no**   | `null`  | Priority slug. Must be unique for priority. |
+| `description` | string  | **no**   | `null`  | Priority description.                       |
+| `parent`      | integer | **no**   | `null`  | Parent priority ID.                         |
 
 </details>
-
-### Update a priority
-
 <details>
-<summary>View contents</summary>
+<summary>Update a priority</summary>
 
 
 Endpoint
 
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/priorities/{id}]`
+`[POST|PUT|PATCH /priorities/{id}]`
 
 Replace `{id}` with actual priority id.
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                   |
-|---------------|----------|----------|---------|-----------------------------------------------|
-| `name`        | string   | **no**   | `null`  | Priority name.                                |
-| `slug`        | string   | **no**   | `null`  | Priority slug. Must be unique for priority.   |
+| Property | Type   | Required | Default | Description                                 |
+|----------|--------|----------|---------|---------------------------------------------|
+| `name`   | string | **no**   | `null`  | Priority name.                              |
+| `slug`   | string | **no**   | `null`  | Priority slug. Must be unique for priority. |
 
 </details>
-
-### Delete a priority
-
 <details>
-<summary>View contents</summary>
+<summary>Delete a priority</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/priorities/{id}]`
+`[DELETE /priorities/{id}]`
 
 Replace `{id}` with actual priority id.
 
 </details>
-
-### Update priorities sorting order
-
 <details>
-<summary>View contents</summary>
+<summary>Update priorities sorting order</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/priorities/batch]`
+`[POST /priorities/batch]`
 
 Params:
 
-| Property      | Type     | Required | Default | Description                                                         |
-|---------------|----------|----------|---------|---------------------------------------------------------------------|
-| `menu_orders` | array    | **no**   | `[]`    | Array of all priorities ID. New order will be set by numeric order. |
+| Property      | Type  | Required | Default | Description                                                         |
+|---------------|-------|----------|---------|---------------------------------------------------------------------|
+| `menu_orders` | array | **no**   | `[]`    | Array of all priorities ID. New order will be set by numeric order. |
 
 </details>
 
-
-
-### Get collection of agents
+### Agents
 
 <details>
-<summary>View contents</summary>
+<summary>Get collection of agents</summary>
 
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/agents]`
+`[GET /agents]`
 
 </details>
-
-
-### Create an agent
-
 <details>
-<summary>View contents</summary>
+<summary>Create an agent</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/agents]`
+`[POST /agents]`
 
 Params:
 
-| Property      | Type     | Required | Default | Description           |
-|---------------|----------|----------|---------|-----------------------|
-| `user_id`     | integer  | **yes**  | `null`  | WordPress user ID.    |
-| `role_id`     | string   | **yes**  | `null`  | Agent role ID.        |
+| Property  | Type    | Required | Default | Description        |
+|-----------|---------|----------|---------|--------------------|
+| `user_id` | integer | **yes**  | `null`  | WordPress user ID. |
+| `role_id` | string  | **yes**  | `null`  | Agent role ID.     |
 
 </details>
-
-### Update an agent
-
 <details>
-<summary>View contents</summary>
+<summary>Update an agent</summary>
 
 
 Endpoint
 
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/agents/{id}]`
+`[POST|PUT|PATCH /agents/{id}]`
 
 Replace `{id}` with actual agent id.
 
 Params:
 
-| Property      | Type     | Required | Default | Description       |
-|---------------|----------|----------|---------|-------------------|
-| `role_id`     | string   | **no**   | `null`  | Agent role ID.    |
+| Property  | Type   | Required | Default | Description    |
+|-----------|--------|----------|---------|----------------|
+| `role_id` | string | **no**   | `null`  | Agent role ID. |
 
 </details>
-
-### Delete an agent
-
 <details>
-<summary>View contents</summary>
+<summary>Delete an agent</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/agents/{id}]`
+`[DELETE /agents/{id}]`
 
 Replace `{id}` with actual agent id.
 
 </details>
 
-
-### Get collection of roles
+### Roles
 
 <details>
-<summary>View contents</summary>
+<summary>Get collection of roles</summary>
 
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/roles]`
+`[GET /roles]`
 
 </details>
-
-
-### Create a role
-
 <details>
-<summary>View contents</summary>
+<summary>Create a role</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/roles]`
+`[POST /roles]`
 
 Params:
 
-| Property       | Type     | Required | Default | Description                                  |
-|----------------|----------|----------|---------|----------------------------------------------|
-| `role`         | string   | **yes**  | `null`  | Role slug. Role slug cannot change latter.   |
-| `name`         | string   | **yes**  | `null`  | Role display name.                           |
-| `capabilities` | object   | **yes**  | `null`  | Role capabilities.                           |
+| Property       | Type   | Required | Default | Description                                |
+|----------------|--------|----------|---------|--------------------------------------------|
+| `role`         | string | **yes**  | `null`  | Role slug. Role slug cannot change latter. |
+| `name`         | string | **yes**  | `null`  | Role display name.                         |
+| `capabilities` | object | **yes**  | `null`  | Role capabilities.                         |
 
 </details>
-
-### Update a role
-
 <details>
-<summary>View contents</summary>
+<summary>Update a role</summary>
 
 
 Endpoint
 
-`[POST|PUT|PATCH /wp-json/stackonet-support-ticket/v1/role]`
+`[POST|PUT|PATCH /role]`
 
 Params:
 
-| Property       | Type     | Required | Default | Description          |
-|----------------|----------|----------|---------|----------------------|
-| `role`         | string   | **yes**  | `null`  | Role slug.           |
-| `name`         | string   | **no**   | `null`  | Role display name.   |
-| `capabilities` | object   | **no**   | `null`  | Role capabilities.   |
+| Property       | Type   | Required | Default | Description        |
+|----------------|--------|----------|---------|--------------------|
+| `role`         | string | **yes**  | `null`  | Role slug.         |
+| `name`         | string | **no**   | `null`  | Role display name. |
+| `capabilities` | object | **no**   | `null`  | Role capabilities. |
 
 </details>
-
-### Delete a role
-
 <details>
-<summary>View contents</summary>
+<summary>Delete a role</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/role]`
+`[DELETE /role]`
 
 Params:
 
-| Property       | Type     | Required | Default | Description          |
-|----------------|----------|----------|---------|----------------------|
-| `role`         | string   | **yes**  | `null`  | Role slug.           |
-
+| Property | Type   | Required | Default | Description |
+|----------|--------|----------|---------|-------------|
+| `role`   | string | **yes**  | `null`  | Role slug.  |
 
 </details>
 
-
-### Get collection of attachments
+### Attachments
 
 <details>
-<summary>View contents</summary>
+<summary>Get collection of attachments</summary>
 
 
 Endpoint
 
-`[GET /wp-json/stackonet-support-ticket/v1/attachments]`
+`[GET /attachments]`
 
 </details>
-
-### Upload an attachment
-
 <details>
-<summary>View contents</summary>
+<summary>Upload an attachment</summary>
 
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/attachments]`
+`[POST /attachments]`
 
 </details>
-
-### Delete an attachment
-
 <details>
-<summary>View contents</summary>
+<summary>Delete an attachment</summary>
 
 
 Endpoint
 
-`[DELETE /wp-json/stackonet-support-ticket/v1/attachments/:id]`
+`[DELETE /attachments/:id]`
 
 Replace `{id}` with actual attachment id.
 
@@ -662,18 +571,17 @@ Replace `{id}` with actual attachment id.
 
 Endpoint
 
-`[POST /wp-json/stackonet-support-ticket/v1/tickets/:id/sms]`
+`[POST /tickets/:id/sms]`
 
 Replace `{id}` with actual ticket id.
 
 Params:
 
-| Property       | Type     | Required | Default | Description
-|----------------|----------|----------|---------|-------------------------------------------------
-| `content`      | array    | **yes**  | `[]`    | Sms Content. If sms content is more than 160 characters, then multiple SMS will be sent
-| `sms_for`      | string   | **yes**  | ``      | Value can be `customer` or `custom` or `agents`
-| `custom_phone` | string   | **no**   | ``      | Custom phone number. Required if `sms_for` is set as `custom`
-| `agents_ids`   | array    | **no**   | `[]`    | Array of agents ids. Required if `sms_for` is set as `agents`
+| Property       | Type   | Required | Default | Description                                                                             |
+|----------------|--------|----------|---------|-----------------------------------------------------------------------------------------|
+| `content`      | array  | **yes**  | `[]`    | Sms Content. If sms content is more than 160 characters, then multiple SMS will be sent |
+| `sms_for`      | string | **yes**  | ``      | Value can be `customer` or `custom` or `agents`                                         |
+| `custom_phone` | string | **no**   | ``      | Custom phone number. Required if `sms_for` is set as `custom`                           |
+| `agents_ids`   | array  | **no**   | `[]`    | Array of agents ids. Required if `sms_for` is set as `agents`                           |
 
 </details>
-

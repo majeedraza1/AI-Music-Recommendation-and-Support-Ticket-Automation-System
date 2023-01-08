@@ -27,7 +27,7 @@ class TicketAgentController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -39,22 +39,26 @@ class TicketAgentController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/tickets/(?P<id>\d+)/agent', [
+		register_rest_route(
+			$this->namespace,
+			'/tickets/(?P<id>\d+)/agent',
 			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this, 'update_item' ],
-				'args'     => [
-					'id'         => [
-						'description' => __( 'Unique identifier for the ticket.' ),
-						'type'        => 'integer',
-					],
-					'agents_ids' => [
-						'description' => __( 'Array of agents ids to assign ticket.' ),
-						'type'        => 'array',
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'update_item' ],
+					'args'     => [
+						'id'         => [
+							'description' => __( 'Unique identifier for the ticket.' ),
+							'type'        => 'integer',
+						],
+						'agents_ids' => [
+							'description' => __( 'Array of agents ids to assign ticket.' ),
+							'type'        => 'array',
+						],
 					],
 				],
-			],
-		] );
+			]
+		);
 	}
 
 	/**
@@ -69,7 +73,7 @@ class TicketAgentController extends ApiController {
 		$agent = $request->get_param( 'agents_ids' );
 		$agent = is_array( $agent ) ? array_map( 'intval', $agent ) : [];
 
-		$support_ticket = ( new SupportTicket )->find_by_id( $id );
+		$support_ticket = ( new SupportTicket() )->find_by_id( $id );
 
 		if ( ! $support_ticket instanceof SupportTicket ) {
 			return $this->respondNotFound();

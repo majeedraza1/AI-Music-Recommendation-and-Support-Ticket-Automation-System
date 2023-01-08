@@ -40,13 +40,30 @@ class AttachmentController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/attachments', [
-			[ 'methods' => WP_REST_Server::READABLE, 'callback' => [ $this, 'get_items' ], ],
-			[ 'methods' => WP_REST_Server::CREATABLE, 'callback' => [ $this, 'create_item' ], ],
-		] );
-		register_rest_route( $this->namespace, '/attachments/(?P<id>\d+)', [
-			[ 'methods' => WP_REST_Server::DELETABLE, 'callback' => [ $this, 'delete_logo' ], ],
-		] );
+		register_rest_route(
+			$this->namespace,
+			'/attachments',
+			[
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_items' ],
+				],
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'create_item' ],
+				],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			'/attachments/(?P<id>\d+)',
+			[
+				[
+					'methods'  => WP_REST_Server::DELETABLE,
+					'callback' => [ $this, 'delete_logo' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -134,8 +151,16 @@ class AttachmentController extends ApiController {
 			'title'          => $title,
 			'token'          => $token,
 			'attachment_url' => $attachment_url,
-			'thumbnail'      => [ 'src' => $image[0], 'width' => $image[1], 'height' => $image[2], ],
-			'full'           => [ 'src' => $full_image[0], 'width' => $full_image[1], 'height' => $full_image[2], ],
+			'thumbnail'      => [
+				'src'    => $image[0],
+				'width'  => $image[1],
+				'height' => $image[2],
+			],
+			'full'           => [
+				'src'    => $full_image[0],
+				'width'  => $full_image[1],
+				'height' => $full_image[2],
+			],
 		];
 	}
 

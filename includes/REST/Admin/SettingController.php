@@ -24,7 +24,7 @@ class SettingController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -36,13 +36,30 @@ class SettingController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/settings', [
-			[ 'methods' => WP_REST_Server::READABLE, 'callback' => [ $this, 'get_settings' ] ],
-			[ 'methods' => WP_REST_Server::EDITABLE, 'callback' => [ $this, 'update_settings' ] ],
-		] );
-		register_rest_route( $this->namespace, '/settings/user', [
-			[ 'methods' => WP_REST_Server::CREATABLE, 'callback' => [ $this, 'update_user_settings' ] ],
-		] );
+		register_rest_route(
+			$this->namespace,
+			'/settings',
+			[
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_settings' ],
+				],
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'update_settings' ],
+				],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			'/settings/user',
+			[
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'update_user_settings' ],
+				],
+			]
+		);
 	}
 
 	/**

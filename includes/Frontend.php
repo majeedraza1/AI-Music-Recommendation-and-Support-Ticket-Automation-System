@@ -2,10 +2,17 @@
 
 namespace StackonetSupportTicket;
 
+use Stackonet\WP\Framework\Supports\Validate;
 use StackonetSupportTicket\Models\TicketCategory;
+use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class Frontend
+ *
+ * @package StackonetSupportTicket
+ */
 class Frontend {
 
 	/**
@@ -36,45 +43,54 @@ class Frontend {
 	 * Load frontend scripts
 	 */
 	public function load_frontend_scripts() {
-		wp_enqueue_style( STACKONET_SUPPORT_TICKET . '-frontend' );
-		wp_enqueue_script( STACKONET_SUPPORT_TICKET . '-frontend' );
+		if ( $this->should_load_scripts() ) {
+			wp_enqueue_style( STACKONET_SUPPORT_TICKET . '-frontend' );
+			wp_enqueue_script( STACKONET_SUPPORT_TICKET . '-frontend' );
+		}
 	}
 
 	/**
 	 * Support Ticket frontend shortcode
 	 */
-	public function support_ticket() {
+	public function support_ticket(): string {
 		if ( ! is_user_logged_in() ) {
 			return $this->support_ticket_login();
 		}
-		include STACKONET_SUPPORT_TICKET_PATH . '/assets/icon/icons.svg';
+		// Include icons on footer before loading the script
+		add_action( 'wp_footer', function () {
+			include STACKONET_SUPPORT_TICKET_PATH . '/assets/icon/icons.svg';
+		}, 0 );
 
+		// Return the root element to load the Vue/React app
 		return '<div id="stackonet_support_ticket_list"></div>';
 	}
 
 	/**
 	 * Support Ticket frontend shortcode
 	 *
-	 * @param array $attributes
+	 * @param  array  $attributes
 	 *
 	 * @return string
 	 */
-	public function create_ticket( $attributes ) {
+	public function create_ticket( array $attributes ): string {
 		$default_category = (int) get_option( 'support_ticket_default_category' );
 		$default_status   = (int) get_option( 'support_ticket_default_status' );
 		$default_priority = (int) get_option( 'support_ticket_default_priority' );
 
-		$attributes = shortcode_atts( array(
-			'need_login'       => 'no',
-			'show_category'    => 'yes',
-			'category'         => '',
-			'default_category' => $default_category,
-			'default_status'   => $default_status,
-			'default_priority' => $default_priority,
-		), $attributes );
+		$attributes = shortcode_atts(
+			[
+				'need_login'       => 'no',
+				'show_category'    => 'yes',
+				'category'         => '',
+				'default_category' => $default_category,
+				'default_status'   => $default_status,
+				'default_priority' => $default_priority,
+			],
+			$attributes
+		);
 
-		$need_login    = in_array( $attributes['need_login'], [ 'yes', 'on', 'true', true, 1 ], true );
-		$show_category = in_array( $attributes['show_category'], [ 'yes', 'on', 'true', true, 1 ], true );
+		$need_login    = Validate::checked( $attributes['need_login'] );
+		$show_category = Validate::checked( $attributes['show_category'] );
 
 		$cat_options = [];
 		if ( $show_category ) {
@@ -85,7 +101,7 @@ class Frontend {
 			}
 			$cats = TicketCategory::get_all( $cat_args );
 			foreach ( $cats as $cat ) {
-				$cat_options[ $cat->get( 'term_id' ) ] = $cat->get( 'name' );
+				$cat_options[ $cat->get_prop( 'term_id' ) ] = $cat->get_prop( 'name' );
 			}
 		}
 
@@ -141,7 +157,7 @@ class Frontend {
 			$fields['category'] = [
 				'id'      => 'category',
 				'type'    => 'hidden',
-				'default' => $attributes['default_category']
+				'default' => $attributes['default_category'],
 			];
 		}
 
@@ -150,7 +166,7 @@ class Frontend {
 			$fields['priority'] = [
 				'id'      => 'priority',
 				'type'    => 'hidden',
-				'default' => $attributes['default_priority']
+				'default' => $attributes['default_priority'],
 			];
 		}
 
@@ -159,7 +175,7 @@ class Frontend {
 			$fields['status'] = [
 				'id'      => 'status',
 				'type'    => 'hidden',
-				'default' => $attributes['default_status']
+				'default' => $attributes['default_status'],
 			];
 		}
 
@@ -171,11 +187,30 @@ class Frontend {
 	 *
 	 * @return string
 	 */
-	public function support_ticket_login() {
+	public function support_ticket_login(): string {
 		if ( is_user_logged_in() ) {
 			return 'You are already logged in.';
 		}
 
 		return '<div id="stackonet_support_ticket_login"></div>';
+	}
+
+	/**
+	 * Check if it should load frontend scripts
+	 *
+	 * @return bool
+	 */
+	private function should_load_scripts(): bool {
+		global $post;
+		if ( $post instanceof WP_Post ) {
+			$shortcodes = [ 'support_ticket', 'create_ticket' ];
+			foreach ( $shortcodes as $shortcode ) {
+				if ( has_shortcode( $post->post_content, $shortcode ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

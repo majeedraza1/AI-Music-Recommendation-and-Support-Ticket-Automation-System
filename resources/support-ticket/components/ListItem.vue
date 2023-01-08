@@ -1,9 +1,9 @@
 <template>
-    <div class="shapla-list-item">
-        <span class="shapla-list-item-label">{{label}}</span>
-        <span class="shapla-list-item-separator">:</span>
-        <span class="shapla-list-item-value"><slot>{{value}}</slot></span>
-    </div>
+  <div class="shapla-list-item">
+    <span class="shapla-list-item-label">{{ label }}</span>
+    <span class="shapla-list-item-separator">:</span>
+    <span class="shapla-list-item-value"><slot>{{ value }}</slot></span>
+  </div>
 </template>
 
 <script>

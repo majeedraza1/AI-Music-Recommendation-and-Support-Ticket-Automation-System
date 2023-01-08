@@ -2,14 +2,11 @@
 
 namespace StackonetSupportTicket;
 
-use StackonetSupportTicket\Admin\PostType;
 use StackonetSupportTicket\Models\AgentRole;
 use StackonetSupportTicket\Models\SupportAgent;
-use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketCategory;
 use StackonetSupportTicket\Models\TicketPriority;
 use StackonetSupportTicket\Models\TicketStatus;
-use StackonetSupportTicket\Models\TicketThread;
 use WP_User;
 
 defined( 'ABSPATH' ) || exit;
@@ -32,13 +29,10 @@ class Install {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
-
 			RoleAndCapability::activation();
-			PostType::activation();
 
-			( new  SupportTicket )->create_table();
-			self::create_meta_table();
-			TicketThread::create_table();
+			self::create_support_table();
+			self::create_thread_table();
 
 			self::add_default_roles();
 			self::add_support_ticket_agents();
@@ -52,8 +46,8 @@ class Install {
 	/**
 	 * Get foreign key constant name
 	 *
-	 * @param string $table1
-	 * @param string $table2
+	 * @param  string  $table1
+	 * @param  string  $table2
 	 *
 	 * @return string
 	 */
@@ -61,11 +55,11 @@ class Install {
 		global $wpdb;
 		$tables = [
 			str_replace( $wpdb->prefix, '', $table1 ),
-			str_replace( $wpdb->prefix, '', $table2 )
+			str_replace( $wpdb->prefix, '', $table2 ),
 		];
 		asort( $tables );
 
-		return substr( sprintf( "fk_%s__%s", $tables[0], $tables[1] ), 0, 64 );
+		return substr( sprintf( 'fk_%s__%s', $tables[0], $tables[1] ), 0, 64 );
 	}
 
 	/**
@@ -73,19 +67,25 @@ class Install {
 	 */
 	public static function add_default_roles() {
 		$valid_caps = AgentRole::valid_capabilities();
-		AgentRole::add_role( 'administrator', __( 'Support Admin', 'stackonet-support-ticket' ),
+		AgentRole::add_role(
+			'administrator',
+			__( 'Support Admin', 'stackonet-support-ticket' ),
 			array_fill_keys( array_keys( $valid_caps ), true )
 		);
-		AgentRole::add_role( 'agent', __( 'Support Agent', 'stackonet-support-ticket' ), [
-			'view_unassigned'                      => true,
-			'view_assigned_me'                     => true,
-			'assign_unassigned'                    => true,
-			'assign_assigned_me'                   => true,
-			'change_ticket_status_assigned_me'     => true,
-			'change_ticket_field_assigned_me'      => true,
-			'change_ticket_agent_only_assigned_me' => true,
-			'reply_assigned_me'                    => true,
-		] );
+		AgentRole::add_role(
+			'agent',
+			__( 'Support Agent', 'stackonet-support-ticket' ),
+			[
+				'view_unassigned'                      => true,
+				'view_assigned_me'                     => true,
+				'assign_unassigned'                    => true,
+				'assign_assigned_me'                   => true,
+				'change_ticket_status_assigned_me'     => true,
+				'change_ticket_field_assigned_me'      => true,
+				'change_ticket_agent_only_assigned_me' => true,
+				'reply_assigned_me'                    => true,
+			]
+		);
 	}
 
 	/**
@@ -102,7 +102,43 @@ class Install {
 	/**
 	 * Create meta table
 	 */
-	private static function create_meta_table() {
+	private static function create_support_table() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'support_ticket';
+		$collate    = $wpdb->get_charset_collate();
+
+		$tables = "CREATE TABLE IF NOT EXISTS {$table_name} (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			customer_name varchar(100) NULL DEFAULT NULL,
+			customer_email varchar(100) NULL DEFAULT NULL,
+			customer_phone varchar(20) NULL DEFAULT NULL,
+			ticket_subject TEXT NULL DEFAULT NULL,
+			city varchar(100) NULL DEFAULT NULL,
+			user_type varchar(30) NULL DEFAULT NULL,
+			ticket_category BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			ticket_priority BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			ticket_status BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			active tinyint(1) NOT NULL DEFAULT 1,
+			ip_address VARCHAR(30) NULL DEFAULT NULL,
+			ticket_auth_code varchar(255) NULL DEFAULT NULL,
+			agent_created BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			date_created datetime NULL DEFAULT NULL,
+			date_updated datetime NULL DEFAULT NULL,
+			PRIMARY KEY (id)
+		) $collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $tables );
+
+		$version = get_option( $table_name . '-version' );
+		if ( false === $version ) {
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_category` (`ticket_category`);" );
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_priority` (`ticket_priority`);" );
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_status` (`ticket_status`);" );
+			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `agent_created` (`agent_created`);" );
+			update_option( $table_name . '-version', '1.0.0', false );
+		}
+
 		global $wpdb;
 		$fk_table = $wpdb->prefix . 'support_ticket';
 
@@ -117,7 +153,7 @@ class Install {
 			PRIMARY KEY  (id)
 		) $collate;";
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $tables );
 
 		$version = get_option( $table_name . '-version' );
@@ -127,6 +163,62 @@ class Install {
 			$sql           .= " REFERENCES `{$fk_table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
 			$wpdb->query( $sql );
 			update_option( $table_name . '-version', '1.0.0', false );
+		}
+	}
+
+
+	/**
+	 * Create table
+	 */
+	public static function create_thread_table() {
+		global $wpdb;
+		$self       = new self();
+		$table      = $wpdb->prefix . 'support_ticket_thread';
+		$meta_table = $wpdb->prefix . 'support_ticket_threadmeta';
+		$fk_table   = $wpdb->prefix . 'support_ticket';
+		$collate    = $wpdb->get_charset_collate();
+
+		$tables = "CREATE TABLE IF NOT EXISTS {$table} (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			ticket_id BIGINT(20) UNSIGNED NOT NULL,
+			thread_type VARCHAR(30) NULL DEFAULT NULL,
+			thread_content LONGTEXT NULL DEFAULT NULL,
+			attachments TEXT NULL DEFAULT NULL,
+			user_type VARCHAR(30) NULL DEFAULT NULL COMMENT 'agent or user',
+			user_name VARCHAR(100) NULL DEFAULT NULL,
+			user_email VARCHAR(100) NULL DEFAULT NULL,
+			user_phone VARCHAR(20) NULL DEFAULT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			created_at DATETIME NULL DEFAULT NULL,
+			updated_at DATETIME NULL DEFAULT NULL,
+			PRIMARY KEY (id)
+		) $collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $tables );
+
+		$meta_table_schema = "CREATE TABLE IF NOT EXISTS {$meta_table} (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			thread_id BIGINT(20) UNSIGNED NOT NULL,
+			meta_key varchar(255) NULL DEFAULT NULL,
+			meta_value LONGTEXT NULL DEFAULT NULL,
+			PRIMARY KEY  (id)
+		) $collate;";
+		dbDelta( $meta_table_schema );
+
+		$version = get_option( $table . '-version' );
+		if ( false === $version ) {
+			$constant_name = $self->get_foreign_key_constant_name( $fk_table, $table );
+			$sql           = "ALTER TABLE `{$table}` ADD CONSTRAINT $constant_name FOREIGN KEY (`ticket_id`)";
+			$sql           .= " REFERENCES `{$fk_table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
+			$wpdb->query( $sql );
+
+			$constant_name2 = $self->get_foreign_key_constant_name( $meta_table, $table );
+			$sql            = "ALTER TABLE `{$meta_table}` ADD CONSTRAINT $constant_name2 FOREIGN KEY (`thread_id`)";
+			$sql            .= " REFERENCES `{$table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
+			$wpdb->query( $sql );
+
+			update_option( $table . '-version', '1.0.0', false );
 		}
 	}
 
@@ -141,30 +233,36 @@ class Install {
 		}
 
 		// Status Items
-		$term_id = TicketStatus::create( __( 'Open', 'stackonet-support-ticket' ), [ 'color' => '#d9534f', ] );
+		$term_id = TicketStatus::create( __( 'Open', 'stackonet-support-ticket' ), [ 'color' => '#d9534f' ] );
 		if ( ! is_wp_error( $term_id ) ) {
 			update_option( 'support_ticket_default_status', $term_id );
 		}
-		$term_id = TicketStatus::create( __( 'Awaiting customer reply', 'stackonet-support-ticket' ), [ 'color' => '#000000', ] );
+		$term_id = TicketStatus::create(
+			__( 'Awaiting customer reply', 'stackonet-support-ticket' ),
+			[ 'color' => '#000000' ]
+		);
 		if ( ! is_wp_error( $term_id ) ) {
 			update_option( 'support_ticket_status_after_agent_reply', $term_id );
 		}
-		$term_id = TicketStatus::create( __( 'Awaiting agent reply', 'stackonet-support-ticket' ), [ 'color' => '#f0ad4e', ] );
+		$term_id = TicketStatus::create(
+			__( 'Awaiting agent reply', 'stackonet-support-ticket' ),
+			[ 'color' => '#f0ad4e' ]
+		);
 		if ( ! is_wp_error( $term_id ) ) {
 			update_option( 'support_ticket_status_after_customer_reply', $term_id );
 		}
-		$term_id = TicketStatus::create( __( 'Closed', 'stackonet-support-ticket' ), [ 'color' => '#5cb85c', ] );
+		$term_id = TicketStatus::create( __( 'Closed', 'stackonet-support-ticket' ), [ 'color' => '#5cb85c' ] );
 		if ( ! is_wp_error( $term_id ) ) {
 			update_option( 'support_ticket_close_ticket_status', $term_id );
 		}
 
 		// Priority Items
-		$term_id = TicketPriority::create( __( 'Low', 'stackonet-support-ticket' ), [ 'color' => '#5bc0de', ] );
+		$term_id = TicketPriority::create( __( 'Low', 'stackonet-support-ticket' ), [ 'color' => '#5bc0de' ] );
 		if ( ! is_wp_error( $term_id ) ) {
 			update_option( 'support_ticket_default_priority', $term_id );
 		}
-		$term_id = TicketPriority::create( __( 'Medium', 'stackonet-support-ticket' ), [ 'color' => '#f0ad4e', ] );
-		$term_id = TicketPriority::create( __( 'High', 'stackonet-support-ticket' ), [ 'color' => '#d9534f', ] );
+		$term_id = TicketPriority::create( __( 'Medium', 'stackonet-support-ticket' ), [ 'color' => '#f0ad4e' ] );
+		$term_id = TicketPriority::create( __( 'High', 'stackonet-support-ticket' ), [ 'color' => '#d9534f' ] );
 	}
 
 	/**
@@ -173,13 +271,19 @@ class Install {
 	private static function add_default_options() {
 		update_option( 'support_ticket_allow_customer_close_ticket', 'yes' );
 
-		$support_ticket_thankyou_html = __( "<p>Dear {customer_name},</p><p>We have received your ticket and confirmation has been sent to your email address&nbsp;{customer_email}.</p><p>Your ticket id is #{ticket_id}. You will get email notification after we post reply in your ticket but in case email notification failed, you can check your ticket status on below link:</p><p>{ticket_url}</p>", 'stackonet-support-ticket' );
+		$support_ticket_thankyou_html = __(
+			'<p>Dear {customer_name},</p><p>We have received your ticket and confirmation has been sent to your email address&nbsp;{customer_email}.</p><p>Your ticket id is #{ticket_id}. You will get email notification after we post reply in your ticket but in case email notification failed, you can check your ticket status on below link:</p><p>{ticket_url}</p>',
+			'stackonet-support-ticket'
+		);
 		update_option( 'support_ticket_thankyou_html', $support_ticket_thankyou_html );
 		update_option( 'support_ticket_thankyou_url', '' );
 
 		update_option( 'support_terms_and_conditions', '0' );
 
-		$support_ticket_gdpr_html = __( "I understand my personal information like Name, Email address, IP address etc will be stored in database.", 'stackonet-support-ticket' );
+		$support_ticket_gdpr_html = __(
+			'I understand my personal information like Name, Email address, IP address etc will be stored in database.',
+			'stackonet-support-ticket'
+		);
 		update_option( 'support_ticket_gdpr_html', $support_ticket_gdpr_html );
 
 		update_option( 'support_ticket_allow_tinymce_in_guest_ticket', '1' );

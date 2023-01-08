@@ -54,10 +54,13 @@ class RoleAndCapability {
 	 * Add support ticket capabilities
 	 */
 	public static function add_support_ticket_capabilities() {
-		self::add_capabilities_to_roles( [ 'administrator', 'editor', 'manager' ],
+		self::add_capabilities_to_roles(
+			[ 'administrator', 'editor', 'manager' ],
 			array_fill_keys( self::$ticket_capabilities, true )
 		);
-		self::add_capabilities_to_roles( [ 'agent' ], [
+		self::add_capabilities_to_roles(
+			[ 'agent' ],
+			[
 				'delete_tickets' => true,
 				'edit_tickets'   => true,
 				'create_tickets' => true,

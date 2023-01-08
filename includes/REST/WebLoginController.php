@@ -23,7 +23,7 @@ class WebLoginController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -35,13 +35,17 @@ class WebLoginController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/login', [
+		register_rest_route(
+			$this->namespace,
+			'/login',
 			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'login' ],
-				'args'     => $this->get_login_params()
-			],
-		] );
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'login' ],
+					'args'     => $this->get_login_params(),
+				],
+			]
+		);
 	}
 
 	/**
@@ -59,15 +63,23 @@ class WebLoginController extends ApiController {
 		$remember   = (bool) $request->get_param( 'remember' );
 
 		if ( ! ( username_exists( $user_login ) || email_exists( $user_login ) ) ) {
-			return $this->respondUnprocessableEntity( null, null, [
-				'user_login' => [ 'No user found with this email' ]
-			] );
+			return $this->respondUnprocessableEntity(
+				null,
+				null,
+				[
+					'user_login' => [ 'No user found with this email' ],
+				]
+			);
 		}
 
 		if ( empty( $password ) ) {
-			return $this->respondUnprocessableEntity( null, null, [
-				'password' => [ 'Please provide password.' ]
-			] );
+			return $this->respondUnprocessableEntity(
+				null,
+				null,
+				[
+					'password' => [ 'Please provide password.' ],
+				]
+			);
 		}
 
 		$credentials = array(
@@ -80,8 +92,10 @@ class WebLoginController extends ApiController {
 
 		if ( is_wp_error( $user ) ) {
 			return $this->respondUnprocessableEntity(
-				$user->get_error_code(), $user->get_error_message( $user->get_error_code() ),
-				[ 'password' => [ 'Password is not correct.' ] ] );
+				$user->get_error_code(),
+				$user->get_error_message( $user->get_error_code() ),
+				[ 'password' => [ 'Password is not correct.' ] ]
+			);
 		}
 
 		wp_set_current_user( $user->ID, $user->user_login );

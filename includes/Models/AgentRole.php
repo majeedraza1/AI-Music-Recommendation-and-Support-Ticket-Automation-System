@@ -45,10 +45,10 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * AgentRole constructor.
 	 *
-	 * @param string $role
-	 * @param array  $data
+	 * @param  string|null  $role  Role slug.
+	 * @param  array  $data  Role data.
 	 */
-	public function __construct( $role, $data = [] ) {
+	public function __construct( ?string $role, array $data = [] ) {
 		$this->role = $role;
 		if ( isset( $data['name'], $data['capabilities'] ) ) {
 			$this->name         = $data['name'];
@@ -65,7 +65,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return array
 	 */
-	public static function get_reserve_roles() {
+	public static function get_reserve_roles(): array {
 		return self::$reserve_roles;
 	}
 
@@ -74,7 +74,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return array
 	 */
-	public function to_array() {
+	public function to_array(): array {
 		return [
 			'role'         => $this->get_role_slug(),
 			'name'         => $this->get_role_name(),
@@ -87,7 +87,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function get_role_slug() {
+	public function get_role_slug(): ?string {
 		return $this->role;
 	}
 
@@ -96,7 +96,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function get_role_name() {
+	public function get_role_name(): string {
 		return $this->name;
 	}
 
@@ -105,7 +105,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return array
 	 */
-	public function get_capabilities() {
+	public function get_capabilities(): array {
 		return $this->capabilities;
 	}
 
@@ -114,7 +114,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return array|self[]
 	 */
-	public static function get_roles() {
+	public static function get_roles(): array {
 		$agent_role = get_option( self::$option_name );
 
 		if ( ! is_array( $agent_role ) ) {
@@ -132,11 +132,11 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * Retrieve role object.
 	 *
-	 * @param string $role Role name.
+	 * @param  string  $role  Role name.
 	 *
 	 * @return self|null WP_Role object if found, null if the role does not exist.
 	 */
-	public static function get_role( $role ) {
+	public static function get_role( string $role ): ?AgentRole {
 		$agent_roles = get_option( self::$option_name );
 		if ( ! isset( $agent_roles[ $role ] ) ) {
 			return null;
@@ -148,13 +148,13 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * Add role, if it does not exist.
 	 *
-	 * @param string $role         Role name.
-	 * @param string $display_name Display name for role.
-	 * @param array  $capabilities List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
+	 * @param  string  $role  Role name.
+	 * @param  string  $display_name  Display name for role.
+	 * @param  array  $capabilities  List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
 	 *
 	 * @return self|WP_Error
 	 */
-	public static function add_role( $role, $display_name, $capabilities = [] ) {
+	public static function add_role( string $role, string $display_name, array $capabilities = [] ) {
 		$agent_roles = get_option( self::$option_name );
 		if ( isset( $agent_roles[ $role ] ) ) {
 			return new WP_Error( 'role_exists', __( 'A role with the name provided already exists.' ) );
@@ -163,7 +163,7 @@ class AgentRole implements JsonSerializable {
 		$valid_caps    = static::valid_capabilities();
 		$_capabilities = [];
 		foreach ( $valid_caps as $cap_name => $active ) {
-			$enabled                    = isset( $capabilities[ $cap_name ] ) ? $capabilities[ $cap_name ] : $active;
+			$enabled                    = $capabilities[ $cap_name ] ?? $active;
 			$_capabilities[ $cap_name ] = static::is_checked( $enabled ) ? 1 : 0;
 		}
 
@@ -180,13 +180,17 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * Update role, if it exist.
 	 *
-	 * @param string $role         Role name.
-	 * @param array  $capabilities List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
-	 * @param string $display_name Display name for role.
+	 * @param  string  $role  Role name.
+	 * @param  array  $capabilities  List of capabilities, e.g. array( 'edit_posts' => true, 'delete_posts' => false );
+	 * @param  string  $display_name  Display name for role.
 	 *
 	 * @return self|null
 	 */
-	public static function update_role( $role, $capabilities = [], $display_name = '' ) {
+	public static function update_role(
+		string $role,
+		array $capabilities = [],
+		string $display_name = ''
+	): ?AgentRole {
 		$agent_roles = get_option( self::$option_name );
 		if ( ! isset( $agent_roles[ $role ] ) ) {
 			return null;
@@ -197,7 +201,7 @@ class AgentRole implements JsonSerializable {
 
 		$_capabilities = [];
 		foreach ( $current_role->get_capabilities() as $cap_name => $active ) {
-			$enabled = isset( $capabilities[ $cap_name ] ) ? $capabilities[ $cap_name ] : $active;
+			$enabled = $capabilities[ $cap_name ] ?? $active;
 
 			$_capabilities[ $cap_name ] = static::is_checked( $enabled ) ? 1 : 0;
 		}
@@ -215,11 +219,11 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * Remove role, if it exists.
 	 *
-	 * @param string $role Role name.
+	 * @param  string  $role  Role name.
 	 *
 	 * @return bool
 	 */
-	public static function remove_role( $role ) {
+	public static function remove_role( string $role ): bool {
 		$agent_roles = get_option( self::$option_name );
 		if ( isset( $agent_roles[ $role ] ) ) {
 			unset( $agent_roles[ $role ] );
@@ -238,10 +242,10 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return array
 	 */
-	public static function format_capabilities( $capabilities ) {
+	public static function format_capabilities( $capabilities ): array {
 		$caps = [];
 		foreach ( static::valid_capabilities() as $cap_name => $default ) {
-			$enabled           = isset( $capabilities[ $cap_name ] ) ? $capabilities[ $cap_name ] : false;
+			$enabled           = $capabilities[ $cap_name ] ?? false;
 			$caps[ $cap_name ] = static::is_checked( $enabled );
 		}
 
@@ -251,21 +255,25 @@ class AgentRole implements JsonSerializable {
 	/**
 	 * Check if boolean
 	 *
-	 * @param string $value
+	 * @param  mixed  $value
 	 *
 	 * @return bool
 	 */
-	public static function is_checked( $value ) {
+	public static function is_checked( $value ): bool {
+		if ( ! is_string( $value ) ) {
+			return false;
+		}
+
 		return in_array( $value, [ '1', 'true', 'on', 'yes', 1, true ], true );
 	}
 
 	/**
 	 * Specify data which should be serialized to JSON
 	 *
-	 * @return mixed data which can be serialized by json_encode
+	 * @return array data which can be serialized by json_encode
 	 * which is a value of any type other than a resource.
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return $this->to_array();
 	}
 
@@ -274,7 +282,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return array
 	 */
-	public static function valid_capabilities() {
+	public static function valid_capabilities(): array {
 		$settings = static::form_settings();
 		$ids      = wp_list_pluck( $settings, 'id' );
 
@@ -286,7 +294,7 @@ class AgentRole implements JsonSerializable {
 	 *
 	 * @return array
 	 */
-	public static function form_settings() {
+	public static function form_settings(): array {
 		return [
 			[
 				'id'          => 'view_unassigned',
@@ -296,12 +304,14 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'view_assigned_me',
 				'label'       => __( 'View assigned me', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to user himself. This will also enable private notes.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself. This will also enable private notes.',
+					'stackonet-support-ticket' ),
 			],
 			[
 				'id'          => 'view_assigned_others',
 				'label'       => __( 'View assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents. This will also enable private notes.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents. This will also enable private notes.',
+					'stackonet-support-ticket' ),
 			],
 
 			[
@@ -312,12 +322,14 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'assign_assigned_me',
 				'label'       => __( 'Assign assigned me', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to user himself further assign capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself further assign capability.',
+					'stackonet-support-ticket' ),
 			],
 			[
 				'id'          => 'assign_assigned_others',
 				'label'       => __( 'Assign assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents further assign capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents further assign capability.',
+					'stackonet-support-ticket' ),
 			],
 
 			[
@@ -333,7 +345,8 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'reply_assigned_others',
 				'label'       => __( 'Reply assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents reply capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents reply capability.',
+					'stackonet-support-ticket' ),
 			],
 
 			[
@@ -349,7 +362,8 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'delete_assigned_others',
 				'label'       => __( 'Delete assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents delete capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents delete capability.',
+					'stackonet-support-ticket' ),
 			],
 
 			[
@@ -360,12 +374,14 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'change_ticket_status_assigned_me',
 				'label'       => __( 'Change status assigned me', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to user himself change ticket status capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change ticket status capability.',
+					'stackonet-support-ticket' ),
 			],
 			[
 				'id'          => 'change_ticket_status_assigned_others',
 				'label'       => __( 'Change status assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents change ticket status capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change ticket status capability.',
+					'stackonet-support-ticket' ),
 			],
 
 			[
@@ -376,12 +392,14 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'change_ticket_field_assigned_me',
 				'label'       => __( 'Change ticket fields assigned me', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to user himself change ticket fields capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change ticket fields capability.',
+					'stackonet-support-ticket' ),
 			],
 			[
 				'id'          => 'change_ticket_field_assigned_others',
 				'label'       => __( 'Change ticket fields assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents change ticket fields capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change ticket fields capability.',
+					'stackonet-support-ticket' ),
 			],
 
 			[
@@ -392,12 +410,14 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'change_ticket_agent_only_assigned_me',
 				'label'       => __( 'Change agent only fields assigned me', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to user himself change agent only fields capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change agent only fields capability.',
+					'stackonet-support-ticket' ),
 			],
 			[
 				'id'          => 'change_ticket_agent_only_assigned_others',
 				'label'       => __( 'Change agent only fields assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents change agent only fields capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change agent only fields capability.',
+					'stackonet-support-ticket' ),
 			],
 
 			[
@@ -408,12 +428,14 @@ class AgentRole implements JsonSerializable {
 			[
 				'id'          => 'change_ticket_raised_by_assigned_me',
 				'label'       => __( 'Change Raised By assigned me', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to user himself change Raised By capability.', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to user himself change Raised By capability.',
+					'stackonet-support-ticket' ),
 			],
 			[
 				'id'          => 'change_ticket_raised_by_assigned_others',
 				'label'       => __( 'Change Raised By assigned others', 'stackonet-support-ticket' ),
-				'description' => __( 'Ticket assigned to all other agents change Raised By capability..', 'stackonet-support-ticket' ),
+				'description' => __( 'Ticket assigned to all other agents change Raised By capability.',
+					'stackonet-support-ticket' ),
 			],
 		];
 	}

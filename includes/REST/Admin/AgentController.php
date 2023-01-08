@@ -29,7 +29,7 @@ class AgentController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -41,38 +41,46 @@ class AgentController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/agents', [
+		register_rest_route(
+			$this->namespace,
+			'/agents',
 			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_items' ],
-			],
-			[
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'create_item' ],
-				'args'     => $this->get_create_item_params()
-			],
-		] );
-		register_rest_route( $this->namespace, '/agents/(?P<id>\d+)', [
-			'args' => [
-				'id' => [
-					'description' => __( 'Unique identifier for the agent.' ),
-					'type'        => 'integer',
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_items' ],
 				],
-			],
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'create_item' ],
+					'args'     => $this->get_create_item_params(),
+				],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			'/agents/(?P<id>\d+)',
 			[
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'get_item' ],
-			],
-			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this, 'update_item' ],
-				'args'     => $this->get_update_item_params()
-			],
-			[
-				'methods'  => WP_REST_Server::DELETABLE,
-				'callback' => [ $this, 'delete_item' ],
-			],
-		] );
+				'args' => [
+					'id' => [
+						'description' => __( 'Unique identifier for the agent.' ),
+						'type'        => 'integer',
+					],
+				],
+				[
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => [ $this, 'get_item' ],
+				],
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'update_item' ],
+					'args'     => $this->get_update_item_params(),
+				],
+				[
+					'methods'  => WP_REST_Server::DELETABLE,
+					'callback' => [ $this, 'delete_item' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -226,7 +234,7 @@ class AgentController extends ApiController {
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
-			)
+			),
 		];
 	}
 
@@ -243,7 +251,7 @@ class AgentController extends ApiController {
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
-			)
+			),
 		];
 	}
 }

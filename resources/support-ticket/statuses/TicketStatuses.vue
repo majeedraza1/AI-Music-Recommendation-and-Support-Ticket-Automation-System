@@ -5,6 +5,7 @@
 				<div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow--2dp">
 					<div>
 						<strong>{{ _status.name }}</strong>
+            <span class="extra_info">ID: {{ _status.term_id }}</span>
 					</div>
 					<div class="flex">
 						<div class="handle">

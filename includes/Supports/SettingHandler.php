@@ -154,12 +154,14 @@ class SettingHandler {
 			return new WP_Error( 'field_not_set', 'Required key is not set properly for creating section.' );
 		}
 
-
-		$this->panels[] = wp_parse_args( $panel, array(
-			'id'       => 'general',
-			'title'    => '',
-			'priority' => 10,
-		) );
+		$this->panels[] = wp_parse_args(
+			$panel,
+			array(
+				'id'       => 'general',
+				'title'    => '',
+				'priority' => 10,
+			)
+		);
 
 		return $this;
 	}
@@ -176,13 +178,16 @@ class SettingHandler {
 			return new WP_Error( 'field_not_set', 'Required key is not set properly for creating section.' );
 		}
 
-		$this->sections[] = wp_parse_args( $section, array(
-			'id'          => '',
-			'panel'       => 'general',
-			'title'       => '',
-			'description' => '',
-			'priority'    => 10,
-		) );
+		$this->sections[] = wp_parse_args(
+			$section,
+			array(
+				'id'          => '',
+				'panel'       => 'general',
+				'title'       => '',
+				'description' => '',
+				'priority'    => 10,
+			)
+		);
 
 		return $this;
 	}
@@ -201,16 +206,19 @@ class SettingHandler {
 			return new WP_Error( 'field_not_set', 'Required key is not set properly for creating field.' );
 		}
 
-		$this->fields[ $field['id'] ] = wp_parse_args( $field, array(
-			'type'              => 'text',
-			'section'           => '',
-			'id'                => '',
-			'title'             => '',
-			'description'       => '',
-			'default'           => '',
-			'sanitize_callback' => '',
-			'priority'          => 10,
-		) );
+		$this->fields[ $field['id'] ] = wp_parse_args(
+			$field,
+			array(
+				'type'              => 'text',
+				'section'           => '',
+				'id'                => '',
+				'title'             => '',
+				'description'       => '',
+				'default'           => '',
+				'sanitize_callback' => '',
+				'priority'          => 10,
+			)
+		);
 
 		return $this;
 	}
@@ -254,7 +262,7 @@ class SettingHandler {
 
 	/**
 	 * @param array $options
-	 * @param bool $individual
+	 * @param bool  $individual
 	 */
 	public function update( array $options, $individual = false ) {
 		$sanitized_options = $this->sanitize_options( $options );
@@ -270,7 +278,7 @@ class SettingHandler {
 	/**
 	 * Validate the option's value
 	 *
-	 * @param mixed $input
+	 * @param mixed  $input
 	 * @param string $validation_rule
 	 *
 	 * @return mixed
@@ -361,6 +369,7 @@ class SettingHandler {
 
 	/**
 	 * Get sections sorted by priority
+	 *
 	 * @return array
 	 */
 	public function get_sections() {

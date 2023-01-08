@@ -25,7 +25,7 @@ class SupportTicketController extends ApiController {
 	 */
 	public static function init() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 
 			add_action( 'rest_api_init', array( self::$instance, 'register_routes' ) );
 		}
@@ -37,12 +37,16 @@ class SupportTicketController extends ApiController {
 	 * Registers the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/tickets/(?P<id>\d+)/call', [
+		register_rest_route(
+			$this->namespace,
+			'/tickets/(?P<id>\d+)/call',
 			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this, 'mark_as_called' ]
-			],
-		] );
+				[
+					'methods'  => WP_REST_Server::EDITABLE,
+					'callback' => [ $this, 'mark_as_called' ],
+				],
+			]
+		);
 	}
 
 	/**
