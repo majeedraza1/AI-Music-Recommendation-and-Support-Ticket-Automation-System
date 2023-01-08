@@ -23,7 +23,7 @@ class TicketStatus extends Data {
 	/**
 	 * Class constructor.
 	 *
-	 * @param null|WP_Term $term
+	 * @param  null|WP_Term  $term
 	 */
 	public function __construct( $term = null ) {
 		if ( $term instanceof WP_Term ) {
@@ -37,7 +37,7 @@ class TicketStatus extends Data {
 	 *
 	 * @return string
 	 */
-	public function get_color() {
+	public function get_color(): string {
 		$color = get_term_meta( $this->term->term_id, '_color', true );
 
 		return ! empty( $color ) ? $color : '';
@@ -48,11 +48,11 @@ class TicketStatus extends Data {
 	 *
 	 * @return array
 	 */
-	public function to_array():array {
+	public function to_array(): array {
 		return [
-			'term_id' => $this->get( 'term_id' ),
-			'slug'    => $this->get( 'slug' ),
-			'name'    => $this->get( 'name' ),
+			'term_id' => $this->get_prop( 'term_id' ),
+			'slug'    => $this->get_prop( 'slug' ),
+			'name'    => $this->get_prop( 'name' ),
 			'color'   => $this->get_color(),
 		];
 	}
@@ -60,21 +60,21 @@ class TicketStatus extends Data {
 	/**
 	 * Get ticket statuses term
 	 *
-	 * @param array $args
+	 * @param  array  $args
 	 *
 	 * @return self[]
 	 */
-	public static function get_all( $args = [] ) {
-		$default          = array(
+	public static function get_all( array $args = [] ): array {
+		$default          = [
 			'hide_empty' => false,
 			'orderby'    => 'meta_value_num',
 			'order'      => 'ASC',
-			'meta_query' => array(
-				'order_clause' => array(
+			'meta_query' => [
+				'order_clause' => [
 					'key' => 'support_ticket_status_menu_order',
-				),
-			),
-		);
+				],
+			],
+		];
 		$args             = wp_parse_args( $args, $default );
 		$args['taxonomy'] = self::$taxonomy;
 
@@ -91,24 +91,24 @@ class TicketStatus extends Data {
 	/**
 	 * Crate a new term
 	 *
-	 * @param string $term term to add
-	 * @param array  $args
+	 * @param  string  $term  term to add
+	 * @param  array  $args
 	 *
 	 * @return int|WP_Error
 	 */
-	public static function create( $term, $args = [] ) {
+	public static function create( string $term, array $args = [] ) {
 		$data = wp_insert_term(
 			$term,
 			self::$taxonomy,
 			[
-				'description' => isset( $args['description'] ) ? $args['description'] : '',
-				'slug'        => isset( $args['slug'] ) ? $args['slug'] : '',
+				'description' => $args['description'] ?? '',
+				'slug'        => $args['slug'] ?? '',
 				'parent'      => isset( $args['parent'] ) ? intval( $args['parent'] ) : 0,
 			]
 		);
 
 		if ( ! is_wp_error( $data ) ) {
-			$term_id    = isset( $data['term_id'] ) ? $data['term_id'] : 0;
+			$term_id    = $data['term_id'] ?? 0;
 			$categories = self::get_all();
 			update_term_meta( $term_id, 'support_ticket_status_menu_order', count( $categories ) + 1 );
 
@@ -125,14 +125,14 @@ class TicketStatus extends Data {
 	/**
 	 * Update category
 	 *
-	 * @param int    $term_id
-	 * @param string $name
-	 * @param string $slug
-	 * @param string $color
+	 * @param  int  $term_id
+	 * @param  string  $name
+	 * @param  string  $slug
+	 * @param  string  $color
 	 *
 	 * @return array|WP_Error
 	 */
-	public static function update( $term_id, $name, $slug, $color = '' ) {
+	public static function update( int $term_id, string $name, string $slug, string $color = '' ) {
 		$args = [
 			'name' => $name,
 			'slug' => $slug,
@@ -148,11 +148,11 @@ class TicketStatus extends Data {
 	/**
 	 * Get category by id
 	 *
-	 * @param int $id
+	 * @param  int  $id
 	 *
 	 * @return bool|TicketStatus
 	 */
-	public static function find_by_id( $id ) {
+	public static function find_by_id( int $id ) {
 		$term = get_term_by( 'term_id', $id, self::$taxonomy, OBJECT );
 		if ( $term instanceof WP_Term ) {
 			return new self( $term );
@@ -164,7 +164,7 @@ class TicketStatus extends Data {
 	/**
 	 * Update support ticket menu order
 	 *
-	 * @param array $terms_ids
+	 * @param  array  $terms_ids
 	 */
 	public static function update_menu_orders( array $terms_ids ) {
 		$terms_ids = array_map( 'intval', $terms_ids );
@@ -176,11 +176,11 @@ class TicketStatus extends Data {
 	/**
 	 * Delete category by term id
 	 *
-	 * @param int $term_id
+	 * @param  int  $term_id
 	 *
 	 * @return bool
 	 */
-	public static function delete( $term_id ) {
+	public static function delete( int $term_id ): bool {
 		return ( wp_delete_term( $term_id, self::$taxonomy ) === true );
 	}
 }

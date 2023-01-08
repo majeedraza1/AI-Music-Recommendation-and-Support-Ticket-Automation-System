@@ -44,7 +44,7 @@ class TicketCategory extends Data {
 	 *
 	 * @return string
 	 */
-	public function get_color() {
+	public function get_color(): string {
 		$color = get_term_meta( $this->term->term_id, '_color', true );
 
 		return ! empty( $color ) ? $color : '';
@@ -55,7 +55,7 @@ class TicketCategory extends Data {
 	 *
 	 * @return array
 	 */
-	public static function get_reserve_categories() {
+	public static function get_reserve_categories(): array {
 		return self::$reserve_categories;
 	}
 
@@ -66,9 +66,9 @@ class TicketCategory extends Data {
 	 */
 	public function to_array():array {
 		return [
-			'term_id' => $this->get( 'term_id' ),
-			'slug'    => $this->get( 'slug' ),
-			'name'    => $this->get( 'name' ),
+			'term_id' => $this->get_prop( 'term_id' ),
+			'slug'    => $this->get_prop( 'slug' ),
+			'name'    => $this->get_prop( 'name' ),
 			'color'   => $this->get_color(),
 		];
 	}
@@ -76,11 +76,11 @@ class TicketCategory extends Data {
 	/**
 	 * Get ticket statuses term
 	 *
-	 * @param array $args
+	 * @param  array  $args
 	 *
 	 * @return self[]
 	 */
-	public static function get_all( $args = [] ) {
+	public static function get_all( array $args = [] ): array {
 		$default          = array(
 			'hide_empty' => false,
 			'orderby'    => 'meta_value_num',
@@ -107,24 +107,24 @@ class TicketCategory extends Data {
 	/**
 	 * Crate a new term
 	 *
-	 * @param string $term term to add
-	 * @param array  $args
+	 * @param  string  $term term to add
+	 * @param  array  $args
 	 *
 	 * @return int|WP_Error
 	 */
-	public static function create( $term, $args = [] ) {
+	public static function create( string $term, array $args = [] ) {
 		$data = wp_insert_term(
 			$term,
 			self::$taxonomy,
 			[
-				'description' => isset( $args['description'] ) ? $args['description'] : '',
-				'slug'        => isset( $args['slug'] ) ? $args['slug'] : '',
+				'description' => $args['description'] ?? '',
+				'slug'        => $args['slug'] ?? '',
 				'parent'      => isset( $args['parent'] ) ? intval( $args['parent'] ) : 0,
 			]
 		);
 
 		if ( ! is_wp_error( $data ) ) {
-			$term_id    = isset( $data['term_id'] ) ? $data['term_id'] : 0;
+			$term_id    = $data['term_id'] ?? 0;
 			$categories = self::get_all();
 			update_term_meta( $term_id, 'support_ticket_category_menu_order', count( $categories ) + 1 );
 
@@ -137,13 +137,13 @@ class TicketCategory extends Data {
 	/**
 	 * Update category
 	 *
-	 * @param int    $term_id
-	 * @param string $name
-	 * @param string $slug
+	 * @param  int  $term_id
+	 * @param  string  $name
+	 * @param  string  $slug
 	 *
 	 * @return array|WP_Error
 	 */
-	public static function update( $term_id, $name, $slug ) {
+	public static function update( int $term_id, string $name, string $slug ) {
 		$args = [
 			'name' => $name,
 			'slug' => $slug,
@@ -155,11 +155,11 @@ class TicketCategory extends Data {
 	/**
 	 * Get category by id
 	 *
-	 * @param int $id
+	 * @param  int  $id
 	 *
 	 * @return bool|TicketCategory
 	 */
-	public static function find_by_id( $id ) {
+	public static function find_by_id( int $id ) {
 		$term = get_term_by( 'term_id', $id, self::$taxonomy, OBJECT );
 		if ( $term instanceof WP_Term ) {
 			return new self( $term );
@@ -183,11 +183,11 @@ class TicketCategory extends Data {
 	/**
 	 * Delete category by term id
 	 *
-	 * @param int $term_id
+	 * @param  int  $term_id
 	 *
 	 * @return bool
 	 */
-	public static function delete( $term_id ) {
+	public static function delete( int $term_id ): bool {
 		return ( wp_delete_term( $term_id, self::$taxonomy ) === true );
 	}
 }

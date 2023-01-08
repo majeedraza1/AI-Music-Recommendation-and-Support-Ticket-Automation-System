@@ -62,7 +62,7 @@ class UserTicketController extends ApiController {
 			[
 				'args' => [
 					'id' => [
-						'description' => __( 'Unique identifier for the object.' ),
+						'description' => __( 'Unique identifier for the object.', 'stackonet-support-ticket' ),
 						'type'        => 'integer',
 					],
 				],

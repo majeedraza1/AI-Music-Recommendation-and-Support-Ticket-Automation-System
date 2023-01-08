@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a01f75551f89ed9f335828838809d25a",
+    "content-hash": "0e8fadf5f6f993afe38c06f18b451138",
     "packages": [
         {
             "name": "stackonet/wp-helpers",
-            "version": "1.9.2",
+            "version": "1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sayful1/wp-helpers.git",
-                "reference": "9dce83db1cda5e8801fcbc2af4674bd39cc6f0ed"
+                "reference": "976919b679bef23bf85eeb48562d008cdb380d68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sayful1/wp-helpers/zipball/9dce83db1cda5e8801fcbc2af4674bd39cc6f0ed",
-                "reference": "9dce83db1cda5e8801fcbc2af4674bd39cc6f0ed",
+                "url": "https://api.github.com/repos/sayful1/wp-helpers/zipball/976919b679bef23bf85eeb48562d008cdb380d68",
+                "reference": "976919b679bef23bf85eeb48562d008cdb380d68",
                 "shasum": ""
             },
             "require": {
@@ -66,9 +66,9 @@
             "support": {
                 "email": "info@stackonet.com",
                 "issues": "https://github.com/sayful1/wp-helpers/issues",
-                "source": "https://github.com/sayful1/wp-helpers/tree/1.9.2"
+                "source": "https://github.com/sayful1/wp-helpers/tree/1.9.3"
             },
-            "time": "2022-12-29T13:05:24+00:00"
+            "time": "2023-01-07T13:35:29+00:00"
         }
     ],
     "packages-dev": [
