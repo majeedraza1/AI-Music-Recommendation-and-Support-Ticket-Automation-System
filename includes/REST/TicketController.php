@@ -5,6 +5,7 @@ namespace StackonetSupportTicket\REST;
 use ArrayObject;
 use Exception;
 use Stackonet\WP\Framework\Supports\Sanitize;
+use StackonetSupportTicket\Admin\Settings;
 use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\SupportTicket;
 use WC_Order;
@@ -101,7 +102,7 @@ class TicketController extends ApiController {
 	/**
 	 * Retrieves a collection of items.
 	 *
-	 * @param  WP_REST_Request $request  Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -234,7 +235,7 @@ class TicketController extends ApiController {
 	/**
 	 * Retrieves one item from the collection.
 	 *
-	 * @param  WP_REST_Request $request  Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 * @throws Exception
@@ -255,10 +256,22 @@ class TicketController extends ApiController {
 		$threads    = $supportTicket->get_ticket_threads();
 		$pagination = $supportTicket->find_pre_and_next( $id );
 
+		$meta_labels = Settings::get_custom_fields_labels();
+		foreach ( $ticket['metadata'] as $meta_key => $meta_value ) {
+			$ticket['metadata'][ $meta_key ] = [
+				'label' => ! empty( $meta_labels[ $meta_key ] ) ? $meta_labels[ $meta_key ] : $meta_key,
+				'value' => $meta_value,
+			];
+		}
+
 		$response = [
 			'ticket'     => $ticket,
 			'threads'    => $threads,
 			'navigation' => $pagination,
+			'settings'   => [
+				'show_sms_widget'        => Settings::is_sms_enabled(),
+				'show_push_notification' => Settings::is_push_notification_enabled(),
+			],
 		];
 
 		return $this->respondOK( $response );
@@ -267,7 +280,7 @@ class TicketController extends ApiController {
 	/**
 	 * Creates one item from the collection.
 	 *
-	 * @param  WP_REST_Request $request  Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -393,7 +406,7 @@ class TicketController extends ApiController {
 	/**
 	 * Updates one item from the collection.
 	 *
-	 * @param  WP_REST_Request $request  Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -425,7 +438,7 @@ class TicketController extends ApiController {
 	/**
 	 * Deletes one item from the collection.
 	 *
-	 * @param  WP_REST_Request $request  Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -467,7 +480,7 @@ class TicketController extends ApiController {
 	/**
 	 * Update batch items
 	 *
-	 * @param  WP_REST_Request $request  Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -714,28 +727,28 @@ class TicketController extends ApiController {
 	}
 
 	/**
-	 * @param  string $name
-	 * @param  string $phone
-	 * @param  string $content
+	 * @param  string  $name
+	 * @param  string  $phone
+	 * @param  string  $content
 	 *
 	 * @return false|string
 	 */
 	public function get_ticket_content( $name, $phone, $content ) {
 		ob_start(); ?>
-		<table class="table--support-ticket">
-			<tr>
-				<td>Name:</td>
-				<td><strong><?php echo $name; ?></strong></td>
-			</tr>
-			<tr>
-				<td>Phone:</td>
-				<td><strong><?php echo $phone; ?></strong></td>
-			</tr>
-			<tr>
-				<td>Content:</td>
-				<td><strong><?php echo $content; ?></strong></td>
-			</tr>
-		</table>
+        <table class="table--support-ticket">
+            <tr>
+                <td>Name:</td>
+                <td><strong><?php echo $name; ?></strong></td>
+            </tr>
+            <tr>
+                <td>Phone:</td>
+                <td><strong><?php echo $phone; ?></strong></td>
+            </tr>
+            <tr>
+                <td>Content:</td>
+                <td><strong><?php echo $content; ?></strong></td>
+            </tr>
+        </table>
 		<?php
 		$html = ob_get_clean();
 
@@ -745,10 +758,10 @@ class TicketController extends ApiController {
 	/**
 	 * Get filter data
 	 *
-	 * @param  int $status
-	 * @param  int $category
-	 * @param  int $priority
-	 * @param  int $agent
+	 * @param  int  $status
+	 * @param  int  $category
+	 * @param  int  $priority
+	 * @param  int  $agent
 	 *
 	 * @return array
 	 */

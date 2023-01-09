@@ -2,6 +2,8 @@
 
 namespace StackonetSupportTicket\REST\Admin;
 
+use StackonetSupportTicket\Admin\Settings;
+use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\REST\ApiController;
 use StackonetSupportTicket\Supports\SettingHandler;
 use WP_REST_Request;
@@ -60,12 +62,22 @@ class SettingController extends ApiController {
 				],
 			]
 		);
+		register_rest_route(
+			$this->namespace,
+			'/settings/fields_labels',
+			[
+				[
+					'methods'  => WP_REST_Server::CREATABLE,
+					'callback' => [ $this, 'update_fields_labels' ],
+				],
+			]
+		);
 	}
 
 	/**
 	 * Retrieves a collection of items.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -85,12 +97,14 @@ class SettingController extends ApiController {
 			$current_user = wp_get_current_user();
 			$user_options = get_user_meta( $current_user->ID, '_stackonet_support_ticket', true );
 			foreach ( $options as $key => $value ) {
-				$options[ $key ] = isset( $user_options[ $key ] ) ? $user_options[ $key ] : $value;
+				$options[ $key ] = $user_options[ $key ] ?? $value;
 
 			}
 		}
 
-		$data['options'] = $options;
+		$data['options']      = $options;
+		$data['fields_label'] = Settings::get_custom_fields_labels();
+		$data['user_fields']  = Settings::get_user_custom_fields();
 
 		return $this->respondOK( $data );
 	}
@@ -98,7 +112,7 @@ class SettingController extends ApiController {
 	/**
 	 * Updates settings
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -117,7 +131,7 @@ class SettingController extends ApiController {
 	/**
 	 * Updates settings
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -142,11 +156,39 @@ class SettingController extends ApiController {
 		];
 		$_options = [];
 		foreach ( $defaults as $key => $default ) {
-			$_options[ $key ] = isset( $sanitized_options[ $key ] ) ? $sanitized_options[ $key ] : $default;
+			$_options[ $key ] = $sanitized_options[ $key ] ?? $default;
 		}
 
 		update_user_meta( $current_user->ID, '_stackonet_support_ticket', $_options );
 
 		return $this->respondOK();
+	}
+
+	public function update_fields_labels( WP_REST_Request $request ) {
+		$_fields_labels = $request->get_param( 'fields_labels' );
+		$_user_fields   = $request->get_param( 'user_fields' );
+
+		$unique_meta_keys = SupportTicket::get_unique_meta_keys();
+
+		$fields_labels = [];
+		$user_fields   = [];
+
+		if ( is_array( $_fields_labels ) ) {
+			$defaults      = array_fill_keys( $unique_meta_keys, '' );
+			$fields_labels = array_replace_recursive( $defaults, $_fields_labels );
+			update_option( 'ticket_extra_fields_labels', $fields_labels );
+		}
+
+		if ( is_array( $_user_fields ) ) {
+			$defaults    = array_fill_keys( $unique_meta_keys, false );
+			$user_fields = array_replace_recursive( $defaults, $_user_fields );
+			update_option( 'ticket_user_extra_fields', $user_fields );
+		}
+
+
+		return $this->respondOK( [
+			'fields_label' => $fields_labels,
+			'user_fields'  => $user_fields
+		] );
 	}
 }

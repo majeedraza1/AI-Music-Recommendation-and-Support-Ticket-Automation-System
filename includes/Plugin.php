@@ -4,6 +4,7 @@ namespace StackonetSupportTicket;
 
 use StackonetSupportTicket\Admin\Admin;
 use StackonetSupportTicket\Admin\Settings;
+use StackonetSupportTicket\Emails\AdminRepliedToTicket;
 use StackonetSupportTicket\Integration\NinjaForms\Module as NinjaFormsModule;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\REST\Admin\AgentController;
@@ -92,6 +93,8 @@ class Plugin {
 		}
 
 		$this->modules_includes();
+
+		AdminRepliedToTicket::init();
 	}
 
 	/**

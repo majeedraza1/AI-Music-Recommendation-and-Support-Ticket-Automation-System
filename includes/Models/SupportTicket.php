@@ -128,6 +128,25 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Get unique meta keys
+	 *
+	 * @return array
+	 */
+	public static function get_unique_meta_keys(): array {
+		global $wpdb;
+		$self  = new self();
+		$table = $self->get_table_name( $self->meta_table );
+
+		$meta_keys = $wpdb->get_results( "SELECT DISTINCT meta_key FROM $table", ARRAY_A );
+
+		if ( ! empty( $meta_keys ) ) {
+			return wp_list_pluck( $meta_keys, 'meta_key' );
+		}
+
+		return [];
+	}
+
+	/**
 	 * Array representation of the class
 	 *
 	 * @return array
@@ -147,6 +166,7 @@ class SupportTicket extends DatabaseModel {
 		$data['belongs_to_id']      = $this->belongs_to_id();
 		$data['last_note_diff']     = $this->get_last_note_diff();
 		$data['called_to_customer'] = $this->called_to_customer();
+		$data['metadata']           = $this->get_all_metadata();
 
 		return $data;
 	}
@@ -930,7 +950,7 @@ class SupportTicket extends DatabaseModel {
 				if ( count( $terms_ids ) ) {
 					$terms_fields = [ 'ticket_status', 'ticket_category', 'ticket_priority' ];
 
-					foreach ( $terms_fields as  $field ) {
+					foreach ( $terms_fields as $field ) {
 						foreach ( $terms_ids as $term_id ) {
 							$query .= $wpdb->prepare( " OR {$field} = %d", $term_id );
 						}

@@ -339,7 +339,7 @@ class SettingHandler {
 		if ( $individual ) {
 			$options = [];
 			foreach ( $this->get_fields() as $value ) {
-				$default = isset( $value['default'] ) ? $value['default'] : '';
+				$default = $value['default'] ?? '';
 
 				$options[ $value['id'] ] = get_option( $value['id'], $default );
 			}

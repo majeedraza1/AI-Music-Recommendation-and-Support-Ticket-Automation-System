@@ -187,7 +187,7 @@ class UserTicketController extends ApiController {
 			return $this->respondNotFound();
 		}
 
-		if ( $supportTicket->get( 'agent_created' ) != $user->ID ) {
+		if ( $supportTicket->get_prop( 'agent_created' ) != $user->ID ) {
 			return $this->respondUnauthorized();
 		}
 

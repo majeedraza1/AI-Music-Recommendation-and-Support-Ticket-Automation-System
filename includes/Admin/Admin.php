@@ -40,6 +40,7 @@ class Admin {
 	 * Add admin menu
 	 */
 	public function add_admin_menu() {
+		global $submenu;
 		$capability = 'manage_options';
 		$slug       = 'stackonet-support-ticket';
 		$hook       = add_menu_page(
@@ -51,6 +52,24 @@ class Admin {
 			'dashicons-format-chat',
 			6
 		);
+
+		$menus = [
+			[
+				'title' => __( 'Tickets', 'stackonet-support-ticket' ),
+				'slug'  => '#/',
+			],
+			[
+				'title' => __( 'Settings', 'stackonet-support-ticket' ),
+				'slug'  => '#/settings',
+			],
+		];
+
+		if ( current_user_can( $capability ) ) {
+			foreach ( $menus as $menu ) {
+				// phpcs:ignore
+				$submenu[ $slug ][] = [ $menu['title'], $capability, 'admin.php?page=' . $slug . $menu['slug'] ];
+			}
+		}
 
 		add_action( 'load-' . $hook, [ self::$instance, 'init_support_tickets_hooks' ] );
 	}

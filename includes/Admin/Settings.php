@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\Admin;
 
+use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketCategory;
 use StackonetSupportTicket\Models\TicketPriority;
 use StackonetSupportTicket\Models\TicketStatus;
@@ -47,17 +48,17 @@ class Settings {
 		}
 
 		?>
-		<style type="text/css">
-			:root {
-				--stackonet-ticket-primary: <?php echo $primary_color; ?>;
-				--stackonet-ticket-on-primary: #ffffff;
-				--stackonet-ticket-secondary: <?php echo $secondary_color; ?>;
-				--stackonet-ticket-on-secondary: #ffffff;
-				--stackonet-ticket-text-primary: rgba(0, 0, 0, 0.87);
-				--stackonet-ticket-text-secondary: rgba(0, 0, 0, 0.54);
-				--stackonet-ticket-text-icon: rgba(0, 0, 0, 0.38);
-			}
-		</style>
+        <style type="text/css">
+            :root {
+                --stackonet-ticket-primary: <?php echo $primary_color; ?>;
+                --stackonet-ticket-on-primary: #ffffff;
+                --stackonet-ticket-secondary: <?php echo $secondary_color; ?>;
+                --stackonet-ticket-on-secondary: #ffffff;
+                --stackonet-ticket-text-primary: rgba(0, 0, 0, 0.87);
+                --stackonet-ticket-text-secondary: rgba(0, 0, 0, 0.54);
+                --stackonet-ticket-text-icon: rgba(0, 0, 0, 0.38);
+            }
+        </style>
 		<?php
 	}
 
@@ -98,7 +99,8 @@ class Settings {
 				'id'                => 'support_page_id',
 				'type'              => 'select',
 				'title'             => __( 'Support Page', 'stackonet-support-ticket' ),
-				'description'       => __( 'Select page in which shortcode is inserted. Create a page with shortcode [support_ticket] if not created yet. Fullwidth page template is recommended.', 'stackonet-support-ticket' ),
+				'description'       => __( 'Select page in which shortcode is inserted. Create a page with shortcode [support_ticket] if not created yet. Fullwidth page template is recommended.',
+					'stackonet-support-ticket' ),
 				'priority'          => 10,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_pages_for_options(),
@@ -108,7 +110,8 @@ class Settings {
 				'id'                => 'support_ticket_default_status',
 				'type'              => 'select',
 				'title'             => __( 'Default ticket status', 'stackonet-support-ticket' ),
-				'description'       => __( 'This status will get applied for newly created ticket.', 'stackonet-support-ticket' ),
+				'description'       => __( 'This status will get applied for newly created ticket.',
+					'stackonet-support-ticket' ),
 				'priority'          => 15,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
@@ -118,7 +121,8 @@ class Settings {
 				'id'                => 'support_ticket_default_category',
 				'type'              => 'select',
 				'title'             => __( 'Default ticket category', 'stackonet-support-ticket' ),
-				'description'       => __( 'This category will get applied for newly created ticket.', 'stackonet-support-ticket' ),
+				'description'       => __( 'This category will get applied for newly created ticket.',
+					'stackonet-support-ticket' ),
 				'priority'          => 20,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_categories_for_options(),
@@ -128,7 +132,8 @@ class Settings {
 				'id'                => 'support_ticket_default_priority',
 				'type'              => 'select',
 				'title'             => __( 'Default ticket priority', 'stackonet-support-ticket' ),
-				'description'       => __( 'This priority will get applied for newly created ticket.', 'stackonet-support-ticket' ),
+				'description'       => __( 'This priority will get applied for newly created ticket.',
+					'stackonet-support-ticket' ),
 				'priority'          => 25,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_priorities_for_options(),
@@ -138,7 +143,8 @@ class Settings {
 				'id'                => 'support_ticket_status_after_customer_reply',
 				'type'              => 'select',
 				'title'             => __( 'Ticket status after customer reply', 'stackonet-support-ticket' ),
-				'description'       => __( 'This status will be applied to the ticket if customer post reply in ticket.', 'stackonet-support-ticket' ),
+				'description'       => __( 'This status will be applied to the ticket if customer post reply in ticket.',
+					'stackonet-support-ticket' ),
 				'priority'          => 30,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
@@ -148,7 +154,8 @@ class Settings {
 				'id'                => 'support_ticket_status_after_agent_reply',
 				'type'              => 'select',
 				'title'             => __( 'Ticket status after agent reply', 'stackonet-support-ticket' ),
-				'description'       => __( 'This status will be applied to the ticket if agent or any support staff post reply in ticket.', 'stackonet-support-ticket' ),
+				'description'       => __( 'This status will be applied to the ticket if agent or any support staff post reply in ticket.',
+					'stackonet-support-ticket' ),
 				'priority'          => 35,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
@@ -158,7 +165,8 @@ class Settings {
 				'id'                => 'support_ticket_close_ticket_status',
 				'type'              => 'select',
 				'title'             => __( 'Close ticket status', 'stackonet-support-ticket' ),
-				'description'       => __( 'Status to apply if \'Close Ticket\' button clicked for a ticket.', 'stackonet-support-ticket' ),
+				'description'       => __( 'Status to apply if \'Close Ticket\' button clicked for a ticket.',
+					'stackonet-support-ticket' ),
 				'priority'          => 40,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
@@ -168,7 +176,8 @@ class Settings {
 				'id'          => 'support_ticket_allow_customer_close_ticket',
 				'type'        => 'select',
 				'title'       => __( 'Allow customer to close ticket', 'stackonet-support-ticket' ),
-				'description' => __( 'Enables \'Close Ticket\' button for customer inside open ticket screen.', 'stackonet-support-ticket' ),
+				'description' => __( 'Enables \'Close Ticket\' button for customer inside open ticket screen.',
+					'stackonet-support-ticket' ),
 				'priority'    => 45,
 				'options'     => [
 					'yes' => __( 'Yes', 'stackonet-support-ticket' ),
@@ -227,5 +236,39 @@ class Settings {
 		}
 
 		return $options;
+	}
+
+	public static function get_custom_fields_labels(): array {
+		$unique_meta_keys = SupportTicket::get_unique_meta_keys();
+		$defaults         = array_fill_keys( $unique_meta_keys, '' );
+		$options          = (array) get_option( 'ticket_extra_fields_labels', $defaults );
+
+		return wp_parse_args( $options, $defaults );
+	}
+
+	public static function get_user_custom_fields(): array {
+		$unique_meta_keys = SupportTicket::get_unique_meta_keys();
+		$defaults         = array_fill_keys( $unique_meta_keys, false );
+		$options          = (array) get_option( 'ticket_user_extra_fields', $defaults );
+
+		return wp_parse_args( $options, $defaults );
+	}
+
+	/**
+	 * Option to check if sms notification is enabled or not
+	 *
+	 * @return bool
+	 */
+	public static function is_sms_enabled(): bool {
+		return apply_filters( 'stackonet_support_ticket/is_sms_enabled', false );
+	}
+
+	/**
+	 * Option to check if sms notification is enabled or not
+	 *
+	 * @return bool
+	 */
+	public static function is_push_notification_enabled(): bool {
+		return apply_filters( 'stackonet_support_ticket/is_push_notification_enabled', false );
 	}
 }
