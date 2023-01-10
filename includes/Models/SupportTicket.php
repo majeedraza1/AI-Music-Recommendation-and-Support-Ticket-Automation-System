@@ -315,7 +315,7 @@ class SupportTicket extends DatabaseModel {
 		try {
 			$dateTime = new DateTime( $date_updated );
 
-			return $dateTime->format( 'Y-m-d\TH:i:s' );
+			return $dateTime->format( DateTime::ATOM );
 		} catch ( Exception $e ) {
 		}
 

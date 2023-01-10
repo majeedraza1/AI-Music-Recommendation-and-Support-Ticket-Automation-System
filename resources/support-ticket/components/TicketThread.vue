@@ -16,7 +16,7 @@
 						<span v-else-if="thread.thread_type === 'reply'">replied</span>
 						<span v-else-if="thread.thread_type === 'sms'">sent sms</span>
 						<span v-else>reported</span>
-						{{ thread.human_time }} ago
+						{{ to_human_time(thread.thread_date) }} ago
 					</small>
 					<div class="support-ticket-thread__customer_email">{{ thread.customer_email }}</div>
 					<div class="support-ticket-thread__user_type">
@@ -57,6 +57,7 @@
 <script>
 import imageContainer from 'shapla-image-container';
 import iconContainer from 'shapla-icon-container';
+import human_time_diff from "../human_time_diff";
 
 export default {
 	name: "TicketThread",
@@ -73,7 +74,12 @@ export default {
 				`support-ticket-thread--${this.thread.thread_type}`
 			]
 		},
-	}
+	},
+  methods:{
+    to_human_time(date) {
+      return human_time_diff(date);
+    }
+  }
 }
 </script>
 
