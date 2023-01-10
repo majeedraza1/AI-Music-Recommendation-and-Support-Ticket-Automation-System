@@ -104,8 +104,9 @@ class Install {
 	 */
 	private static function create_support_table() {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'support_ticket';
-		$collate    = $wpdb->get_charset_collate();
+		$table_name      = $wpdb->prefix . 'support_ticket';
+		$meta_table_name = $wpdb->prefix . 'support_ticketmeta';
+		$collate         = $wpdb->get_charset_collate();
 
 		$tables = "CREATE TABLE IF NOT EXISTS {$table_name} (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -122,30 +123,24 @@ class Install {
 			ip_address VARCHAR(30) NULL DEFAULT NULL,
 			ticket_auth_code varchar(255) NULL DEFAULT NULL,
 			agent_created BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			admin_unread_threads_count tinyint UNSIGNED NOT NULL DEFAULT 0,
+			user_unread_threads_count tinyint UNSIGNED NOT NULL DEFAULT 0,
 			date_created datetime NULL DEFAULT NULL,
 			date_updated datetime NULL DEFAULT NULL,
-			PRIMARY KEY (id)
+			PRIMARY KEY (id),
+    		INDEX `ticket_category` (`ticket_category`),
+    		INDEX `ticket_priority` (`ticket_priority`),
+    		INDEX `ticket_status` (`ticket_status`),
+    		INDEX `agent_created` (`agent_created`)
 		) $collate;";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $tables );
 
 		$version = get_option( $table_name . '-version' );
-		if ( false === $version ) {
-			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_category` (`ticket_category`);" );
-			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_priority` (`ticket_priority`);" );
-			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `ticket_status` (`ticket_status`);" );
-			$wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX `agent_created` (`agent_created`);" );
-			update_option( $table_name . '-version', '1.0.0', false );
-		}
 
-		global $wpdb;
-		$fk_table = $wpdb->prefix . 'support_ticket';
 
-		$table_name = $wpdb->prefix . 'support_ticketmeta';
-		$collate    = $wpdb->get_charset_collate();
-
-		$tables = "CREATE TABLE IF NOT EXISTS {$table_name} (
+		$tables = "CREATE TABLE IF NOT EXISTS {$meta_table_name} (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			ticket_id BIGINT(20) UNSIGNED NOT NULL,
 			meta_key varchar(255) NULL DEFAULT NULL,
@@ -156,13 +151,13 @@ class Install {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $tables );
 
-		$version = get_option( $table_name . '-version' );
+		$version = get_option( $meta_table_name . '-version' );
 		if ( false === $version ) {
-			$constant_name = self::get_foreign_key_constant_name( $table_name, $fk_table );
-			$sql           = "ALTER TABLE `{$table_name}` ADD CONSTRAINT $constant_name FOREIGN KEY (`ticket_id`)";
-			$sql           .= " REFERENCES `{$fk_table}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
+			$constant_name = self::get_foreign_key_constant_name( $meta_table_name, $table_name );
+			$sql           = "ALTER TABLE `{$meta_table_name}` ADD CONSTRAINT $constant_name FOREIGN KEY (`ticket_id`)";
+			$sql           .= " REFERENCES `{$table_name}`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
 			$wpdb->query( $sql );
-			update_option( $table_name . '-version', '1.0.0', false );
+			update_option( $meta_table_name . '-version', '1.0.0', false );
 		}
 	}
 

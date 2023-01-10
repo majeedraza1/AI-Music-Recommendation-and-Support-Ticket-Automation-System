@@ -264,6 +264,14 @@ class TicketController extends ApiController {
 			];
 		}
 
+		$thread_count = $supportTicket->get_admin_unread_threads_count();
+		if ( $thread_count > 0 ) {
+			SupportTicket::update( [
+				'id'                         => $id,
+				'admin_unread_threads_count' => 0
+			] );
+		}
+
 		$response = [
 			'ticket'     => $ticket,
 			'threads'    => $threads,

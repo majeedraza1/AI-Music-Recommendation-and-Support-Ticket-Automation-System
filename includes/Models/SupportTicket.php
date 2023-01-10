@@ -153,20 +153,22 @@ class SupportTicket extends DatabaseModel {
 	 * @throws Exception
 	 */
 	public function to_array(): array {
-		$data                       = parent::to_array();
-		$data['customer_url']       = get_avatar_url( $this->get_prop( 'customer_email' ) );
-		$data['status']             = $this->get_ticket_status();
-		$data['category']           = $this->get_ticket_category();
-		$data['priority']           = $this->get_ticket_priority();
-		$data['created_by']         = $this->get_agent_created();
-		$data['assigned_agents']    = $this->get_assigned_agents();
-		$data['updated']            = $this->update_at();
-		$data['updated_human_time'] = $this->updated_human_time();
-		$data['created_via']        = $this->created_via();
-		$data['belongs_to_id']      = $this->belongs_to_id();
-		$data['last_note_diff']     = $this->get_last_note_diff();
-		$data['called_to_customer'] = $this->called_to_customer();
-		$data['metadata']           = $this->get_all_metadata();
+		$data                               = parent::to_array();
+		$data['customer_url']               = get_avatar_url( $this->get_prop( 'customer_email' ) );
+		$data['status']                     = $this->get_ticket_status();
+		$data['category']                   = $this->get_ticket_category();
+		$data['priority']                   = $this->get_ticket_priority();
+		$data['created_by']                 = $this->get_agent_created();
+		$data['assigned_agents']            = $this->get_assigned_agents();
+		$data['updated']                    = $this->update_at();
+		$data['updated_human_time']         = $this->updated_human_time();
+		$data['created_via']                = $this->created_via();
+		$data['belongs_to_id']              = $this->belongs_to_id();
+		$data['last_note_diff']             = $this->get_last_note_diff();
+		$data['called_to_customer']         = $this->called_to_customer();
+		$data['admin_unread_threads_count'] = $this->get_admin_unread_threads_count();
+		$data['user_unread_threads_count']  = $this->get_user_unread_threads_count();
+		$data['metadata']                   = $this->get_all_metadata();
 
 		return $data;
 	}
@@ -176,6 +178,14 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_ticket_id(): int {
 		return intval( $this->get_prop( 'id' ) );
+	}
+
+	public function get_admin_unread_threads_count(): int {
+		return intval( $this->get_prop( 'admin_unread_threads_count', 0 ) );
+	}
+
+	public function get_user_unread_threads_count(): int {
+		return intval( $this->get_prop( 'user_unread_threads_count', 0 ) );
 	}
 
 	/**

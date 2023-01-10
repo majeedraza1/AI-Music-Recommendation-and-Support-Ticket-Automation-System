@@ -140,6 +140,12 @@ class TicketThreadController extends ApiController {
 			] );
 		}
 
+		$thread_count = $support_ticket->get_user_unread_threads_count();
+		SupportTicket::update( [
+			'id'                        => $id,
+			'user_unread_threads_count' => $thread_count + 1,
+		] );
+
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, $request->get_params() );
 
 		return $this->respondCreated();

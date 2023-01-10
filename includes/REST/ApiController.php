@@ -144,14 +144,14 @@ class ApiController extends WP_REST_Controller {
 		}
 
 		return [
-			'id'       => intval( $ticket->get_prop( 'id' ) ),
-			'subject'  => $ticket->get_prop( 'ticket_subject' ),
-			'created'  => mysql_to_rfc3339( $ticket->get_prop( 'date_created' ) ),
-			'updated'  => mysql_to_rfc3339( $ticket->get_prop( 'date_updated' ) ),
-			'status'   => $ticket->get_ticket_status(),
-			'category' => $ticket->get_ticket_category(),
-			'priority' => $ticket->get_ticket_priority(),
-			'creator'  => [
+			'id'            => intval( $ticket->get_prop( 'id' ) ),
+			'subject'       => $ticket->get_prop( 'ticket_subject' ),
+			'created'       => mysql_to_rfc3339( $ticket->get_prop( 'date_created' ) ),
+			'updated'       => mysql_to_rfc3339( $ticket->get_prop( 'date_updated' ) ),
+			'status'        => $ticket->get_ticket_status(),
+			'category'      => $ticket->get_ticket_category(),
+			'priority'      => $ticket->get_ticket_priority(),
+			'creator'       => [
 				'id'     => intval( $ticket->get_prop( 'agent_created' ) ),
 				'name'   => $ticket->get_prop( 'customer_name' ),
 				'email'  => $ticket->get_prop( 'customer_email' ),
@@ -160,7 +160,8 @@ class ApiController extends WP_REST_Controller {
 				'city'   => $ticket->get_prop( 'city' ),
 				'type'   => $ticket->get_prop( 'user_type' ),
 			],
-			'metadata' => $metadata,
+			'metadata'      => $metadata,
+			'unread_thread' => $ticket->get_user_unread_threads_count(),
 		];
 	}
 }
