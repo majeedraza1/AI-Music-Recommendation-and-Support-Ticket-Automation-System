@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\Models;
 
+use DateTime;
 use Stackonet\WP\Framework\Abstracts\DatabaseModel;
 use StackonetSupportTicket\Supports\Utils;
 
@@ -55,12 +56,13 @@ class TicketThread extends DatabaseModel {
 	 * @return array
 	 */
 	public function to_array(): array {
+		$datatime   = DateTime::createFromFormat( 'Y-m-d H:i:s', $this->get_created_at() );
 		$human_time = human_time_diff( strtotime( $this->get_created_at() ), current_time( 'timestamp' ) );
 
 		return [
 			'thread_id'           => $this->get_id(),
 			'thread_content'      => $this->get_thread_content(),
-			'thread_date'         => $this->get_created_at(),
+			'thread_date'         => $datatime->format( DateTime::ATOM ),
 			'human_time'          => $human_time,
 			'thread_type'         => $this->get_thread_type(),
 			'customer_name'       => $this->get_prop( 'user_name' ),

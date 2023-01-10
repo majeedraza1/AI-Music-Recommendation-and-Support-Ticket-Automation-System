@@ -17,18 +17,6 @@
                 </toggle>
             </toggles>
         </div>
-
-
-        <div class="support-tickets-side-nav__settings">
-            <a href="#" @click.prevent="gotToSettings">
-                <span class="support-tickets-side-nav__settings--icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-                        <use xlink:href="#icon-settings"/>
-                    </svg>
-                </span>
-                <span class="support-tickets-side-nav__settings--label">Setting</span>
-            </a>
-        </div>
     </div>
 </template>
 
@@ -66,9 +54,6 @@
                 }
 
                 this.$store.dispatch('getTickets');
-            },
-            gotToSettings() {
-                this.$router.push({name: 'Settings'});
             },
         }
     }

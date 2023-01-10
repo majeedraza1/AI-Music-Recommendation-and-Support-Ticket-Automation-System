@@ -2,6 +2,8 @@
 
 namespace StackonetSupportTicket\REST;
 
+use Stackonet\WP\Framework\Supports\Validate;
+use StackonetSupportTicket\Emails\AdminRepliedToTicket;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
 use WP_Error;
@@ -82,7 +84,7 @@ class TicketThreadController extends ApiController {
 	/**
 	 * Creates one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -111,7 +113,8 @@ class TicketThreadController extends ApiController {
 
 		$attachments = $this->get_attachments_ids( $request );
 		if ( is_wp_error( $attachments ) ) {
-			return $this->respondUnprocessableEntity( $attachments->get_error_code(), $attachments->get_error_message() );
+			return $this->respondUnprocessableEntity( $attachments->get_error_code(),
+				$attachments->get_error_message() );
 		}
 
 		$user = wp_get_current_user();
@@ -129,6 +132,20 @@ class TicketThreadController extends ApiController {
 			$attachments
 		);
 
+		$send_email_notification = Validate::checked( $request->get_param( 'send_email_notification' ) );
+		if ( $send_email_notification ) {
+			AdminRepliedToTicket::init()->push_to_queue( [
+				'ticket_id' => $id,
+				'thread_id' => $thread_id
+			] );
+		}
+
+		$thread_count = $support_ticket->get_user_unread_threads_count();
+		SupportTicket::update( [
+			'id'                        => $id,
+			'user_unread_threads_count' => $thread_count + 1,
+		] );
+
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, $request->get_params() );
 
 		return $this->respondCreated();
@@ -137,7 +154,7 @@ class TicketThreadController extends ApiController {
 	/**
 	 * Updates one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -186,7 +203,7 @@ class TicketThreadController extends ApiController {
 	/**
 	 * Deletes one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */

@@ -4,6 +4,7 @@ namespace StackonetSupportTicket;
 
 use StackonetSupportTicket\Admin\Admin;
 use StackonetSupportTicket\Admin\Settings;
+use StackonetSupportTicket\Emails\AdminRepliedToTicket;
 use StackonetSupportTicket\Integration\NinjaForms\Module as NinjaFormsModule;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\REST\Admin\AgentController;
@@ -13,7 +14,6 @@ use StackonetSupportTicket\REST\Admin\TicketAgentController;
 use StackonetSupportTicket\REST\AttachmentController;
 use StackonetSupportTicket\REST\CategoryController;
 use StackonetSupportTicket\REST\Me\UserTicketController;
-use StackonetSupportTicket\REST\Me\UserTicketThreadController;
 use StackonetSupportTicket\REST\PriorityController;
 use StackonetSupportTicket\REST\StatusController;
 use StackonetSupportTicket\REST\SupportTicketController;
@@ -92,6 +92,8 @@ class Plugin {
 		}
 
 		$this->modules_includes();
+
+		AdminRepliedToTicket::init();
 	}
 
 	/**
@@ -133,7 +135,6 @@ class Plugin {
 		$this->container['rest-role']         = AgentRoleController::init();
 		$this->container['rest-settings']     = SettingController::init();
 		$this->container['rest-user_ticket']  = UserTicketController::init();
-		$this->container['rest-user_thread']  = UserTicketThreadController::init();
 	}
 
 	/**

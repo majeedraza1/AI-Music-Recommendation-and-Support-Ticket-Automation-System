@@ -128,25 +128,47 @@ class SupportTicket extends DatabaseModel {
 	}
 
 	/**
+	 * Get unique meta keys
+	 *
+	 * @return array
+	 */
+	public static function get_unique_meta_keys(): array {
+		global $wpdb;
+		$self  = new self();
+		$table = $self->get_table_name( $self->meta_table );
+
+		$meta_keys = $wpdb->get_results( "SELECT DISTINCT meta_key FROM $table", ARRAY_A );
+
+		if ( ! empty( $meta_keys ) ) {
+			return wp_list_pluck( $meta_keys, 'meta_key' );
+		}
+
+		return [];
+	}
+
+	/**
 	 * Array representation of the class
 	 *
 	 * @return array
 	 * @throws Exception
 	 */
 	public function to_array(): array {
-		$data                       = parent::to_array();
-		$data['customer_url']       = get_avatar_url( $this->get_prop( 'customer_email' ) );
-		$data['status']             = $this->get_ticket_status();
-		$data['category']           = $this->get_ticket_category();
-		$data['priority']           = $this->get_ticket_priority();
-		$data['created_by']         = $this->get_agent_created();
-		$data['assigned_agents']    = $this->get_assigned_agents();
-		$data['updated']            = $this->update_at();
-		$data['updated_human_time'] = $this->updated_human_time();
-		$data['created_via']        = $this->created_via();
-		$data['belongs_to_id']      = $this->belongs_to_id();
-		$data['last_note_diff']     = $this->get_last_note_diff();
-		$data['called_to_customer'] = $this->called_to_customer();
+		$data                               = parent::to_array();
+		$data['customer_url']               = get_avatar_url( $this->get_prop( 'customer_email' ) );
+		$data['status']                     = $this->get_ticket_status();
+		$data['category']                   = $this->get_ticket_category();
+		$data['priority']                   = $this->get_ticket_priority();
+		$data['created_by']                 = $this->get_agent_created();
+		$data['assigned_agents']            = $this->get_assigned_agents();
+		$data['updated']                    = $this->update_at();
+		$data['updated_human_time']         = $this->updated_human_time();
+		$data['created_via']                = $this->created_via();
+		$data['belongs_to_id']              = $this->belongs_to_id();
+		$data['last_note_diff']             = $this->get_last_note_diff();
+		$data['called_to_customer']         = $this->called_to_customer();
+		$data['admin_unread_threads_count'] = $this->get_admin_unread_threads_count();
+		$data['user_unread_threads_count']  = $this->get_user_unread_threads_count();
+		$data['metadata']                   = $this->get_all_metadata();
 
 		return $data;
 	}
@@ -156,6 +178,14 @@ class SupportTicket extends DatabaseModel {
 	 */
 	public function get_ticket_id(): int {
 		return intval( $this->get_prop( 'id' ) );
+	}
+
+	public function get_admin_unread_threads_count(): int {
+		return intval( $this->get_prop( 'admin_unread_threads_count', 0 ) );
+	}
+
+	public function get_user_unread_threads_count(): int {
+		return intval( $this->get_prop( 'user_unread_threads_count', 0 ) );
 	}
 
 	/**
@@ -285,7 +315,7 @@ class SupportTicket extends DatabaseModel {
 		try {
 			$dateTime = new DateTime( $date_updated );
 
-			return $dateTime->format( 'Y-m-d\TH:i:s' );
+			return $dateTime->format( DateTime::ATOM );
 		} catch ( Exception $e ) {
 		}
 
@@ -930,7 +960,7 @@ class SupportTicket extends DatabaseModel {
 				if ( count( $terms_ids ) ) {
 					$terms_fields = [ 'ticket_status', 'ticket_category', 'ticket_priority' ];
 
-					foreach ( $terms_fields as  $field ) {
+					foreach ( $terms_fields as $field ) {
 						foreach ( $terms_ids as $term_id ) {
 							$query .= $wpdb->prepare( " OR {$field} = %d", $term_id );
 						}

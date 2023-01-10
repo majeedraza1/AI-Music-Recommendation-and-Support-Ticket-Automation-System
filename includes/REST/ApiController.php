@@ -7,6 +7,7 @@ use Stackonet\WP\Framework\Media\Uploader;
 use Stackonet\WP\Framework\Traits\ApiPermissionChecker;
 use Stackonet\WP\Framework\Traits\ApiResponse;
 use Stackonet\WP\Framework\Traits\ApiUtils;
+use StackonetSupportTicket\Admin\Settings;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
 use WP_Error;
@@ -130,15 +131,27 @@ class ApiController extends WP_REST_Controller {
 	 * @return array
 	 */
 	protected static function format_item_for_response( SupportTicket $ticket ): array {
+		$meta_labels = Settings::get_custom_fields_labels();
+		$user_fields = Settings::get_user_custom_fields();
+		$metadata    = [];
+		foreach ( $ticket->get_all_metadata() as $meta_key => $meta_value ) {
+			if ( isset( $user_fields[ $meta_key ] ) && true === $user_fields[ $meta_key ] ) {
+				$metadata[ $meta_key ] = [
+					'label' => ! empty( $meta_labels[ $meta_key ] ) ? $meta_labels[ $meta_key ] : $meta_key,
+					'value' => $meta_value,
+				];
+			}
+		}
+
 		return [
-			'id'       => intval( $ticket->get_prop( 'id' ) ),
-			'subject'  => $ticket->get_prop( 'ticket_subject' ),
-			'created'  => mysql_to_rfc3339( $ticket->get_prop( 'date_created' ) ),
-			'updated'  => mysql_to_rfc3339( $ticket->get_prop( 'date_updated' ) ),
-			'status'   => $ticket->get_ticket_status(),
-			'category' => $ticket->get_ticket_category(),
-			'priority' => $ticket->get_ticket_priority(),
-			'creator'  => [
+			'id'            => intval( $ticket->get_prop( 'id' ) ),
+			'subject'       => $ticket->get_prop( 'ticket_subject' ),
+			'created'       => mysql_to_rfc3339( $ticket->get_prop( 'date_created' ) ),
+			'updated'       => mysql_to_rfc3339( $ticket->get_prop( 'date_updated' ) ),
+			'status'        => $ticket->get_ticket_status(),
+			'category'      => $ticket->get_ticket_category(),
+			'priority'      => $ticket->get_ticket_priority(),
+			'creator'       => [
 				'id'     => intval( $ticket->get_prop( 'agent_created' ) ),
 				'name'   => $ticket->get_prop( 'customer_name' ),
 				'email'  => $ticket->get_prop( 'customer_email' ),
@@ -147,7 +160,8 @@ class ApiController extends WP_REST_Controller {
 				'city'   => $ticket->get_prop( 'city' ),
 				'type'   => $ticket->get_prop( 'user_type' ),
 			],
-			'metadata' => $ticket->get_all_metadata(),
+			'metadata'      => $metadata,
+			'unread_thread' => $ticket->get_user_unread_threads_count(),
 		];
 	}
 }

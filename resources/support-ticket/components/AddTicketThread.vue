@@ -9,7 +9,7 @@
 				<input type="file" id="thread_attachments" class="thread-attachments" multiple>
 			</div>
 			<div class="mb-4 flex flex-col">
-				<div class="mb-2 w-full">
+				<div class="mb-2 w-full" v-if="cbPushNotification">
 					<shapla-checkbox v-model="send_push_notification">Send Push Notification</shapla-checkbox>
 				</div>
 				<div class="mb-2 w-full">
@@ -35,6 +35,7 @@ export default {
 	components: {Editor, shaplaButton, shaplaCheckbox},
 	props: {
 		ticket_id: {type: Number, default: 0},
+		cbPushNotification: {type: Boolean, default: false},
 	},
 	data() {
 		return {

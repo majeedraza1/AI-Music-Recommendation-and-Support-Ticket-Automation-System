@@ -34,11 +34,22 @@ class Ajax {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
+			add_action( 'wp_ajax_stackonet_test', [ self::$instance, 'stackonet_test' ] );
 			add_action( 'wp_ajax_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
 			add_action( 'wp_ajax_nopriv_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
 		}
 
 		return self::$instance;
+	}
+
+	public function stackonet_test() {
+		$unique_meta_keys = SupportTicket::get_unique_meta_keys();
+		// fill the unique meta keys with empty values
+		$defaults = array_fill_keys( $unique_meta_keys, '' );
+		$options  = get_option( 'ticket_extra_fields_labels', $defaults );
+		$options  = wp_parse_args( $options, $defaults );
+		var_dump( $options );
+		wp_die();
 	}
 
 	public function download_support_ticket() {
