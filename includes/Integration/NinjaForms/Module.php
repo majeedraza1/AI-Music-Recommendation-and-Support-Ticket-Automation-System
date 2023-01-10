@@ -62,7 +62,7 @@ class Module {
 		return $fields;
 	}
 
-	public function field_type_sections( array $sections ) {
+	public function field_type_sections( array $sections ): array {
 		$sections['support_ticket'] = [
 			'id'         => 'support_ticket',
 			'nicename'   => esc_html__( 'Support Ticket', 'stackonet-support-ticket' ),
@@ -75,7 +75,6 @@ class Module {
 	public function load_custom_row_template() {
 		?>
         <script id="nf-tmpl-support-ticket-field-mapping-repeater-row" type="text/template">
-            <# window.console.log(data) #>
             <div>
                 <span class="dashicons dashicons-menu handle"></span>
             </div>
