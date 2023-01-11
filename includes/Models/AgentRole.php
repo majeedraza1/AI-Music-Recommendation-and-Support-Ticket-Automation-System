@@ -155,7 +155,7 @@ class AgentRole implements JsonSerializable {
 	 * @return self|WP_Error
 	 */
 	public static function add_role( string $role, string $display_name, array $capabilities = [] ) {
-		$agent_roles = get_option( self::$option_name );
+		$agent_roles = (array) get_option( self::$option_name, [] );
 		if ( isset( $agent_roles[ $role ] ) ) {
 			return new WP_Error( 'role_exists', __( 'A role with the name provided already exists.' ) );
 		}

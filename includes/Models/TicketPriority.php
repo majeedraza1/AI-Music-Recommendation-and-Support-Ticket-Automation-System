@@ -23,13 +23,22 @@ class TicketPriority extends Data {
 	/**
 	 * Class constructor.
 	 *
-	 * @param null|WP_Term $term
+	 * @param  null|WP_Term  $term
 	 */
 	public function __construct( $term = null ) {
 		if ( $term instanceof WP_Term ) {
 			$this->term = $term;
 			$this->data = $term->to_array();
 		}
+	}
+
+	/**
+	 * Get id
+	 *
+	 * @return int
+	 */
+	public function get_id(): int {
+		return $this->term->term_id;
 	}
 
 	/**
@@ -48,7 +57,7 @@ class TicketPriority extends Data {
 	 *
 	 * @return array
 	 */
-	public function to_array():array {
+	public function to_array(): array {
 		return [
 			'term_id' => $this->get_prop( 'term_id' ),
 			'slug'    => $this->get_prop( 'slug' ),
@@ -82,7 +91,9 @@ class TicketPriority extends Data {
 
 		$terms = [];
 		foreach ( $_terms as $term ) {
-			$terms[] = new self( $term );
+			if ( $term instanceof \WP_Term ) {
+				$terms[] = new self( $term );
+			}
 		}
 
 		return $terms;
@@ -91,7 +102,7 @@ class TicketPriority extends Data {
 	/**
 	 * Crate a new term
 	 *
-	 * @param  string  $term term to add
+	 * @param  string  $term  term to add
 	 * @param  array  $args
 	 *
 	 * @return int|WP_Error
@@ -159,7 +170,7 @@ class TicketPriority extends Data {
 	/**
 	 * Update support ticket menu order
 	 *
-	 * @param array $terms_ids
+	 * @param  array  $terms_ids
 	 */
 	public static function update_menu_orders( array $terms_ids ) {
 		$terms_ids = array_map( 'intval', $terms_ids );

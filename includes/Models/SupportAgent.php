@@ -178,7 +178,7 @@ class SupportAgent extends Data {
 	/**
 	 * Get ticket statuses term
 	 *
-	 * @param  array  $args Additional arguments.
+	 * @param  array  $args  Additional arguments.
 	 *
 	 * @return self[]
 	 */
@@ -200,7 +200,9 @@ class SupportAgent extends Data {
 
 		$terms = [];
 		foreach ( $_terms as $term ) {
-			$terms[] = new self( $term );
+			if ( $term instanceof WP_Term ) {
+				$terms[] = new self( $term );
+			}
 		}
 
 		return $terms;
@@ -209,12 +211,12 @@ class SupportAgent extends Data {
 	/**
 	 * Crate a new term
 	 *
-	 * @param  int  $user_id User id.
-	 * @param  int  $role_id Role id.
+	 * @param  int  $user_id  User id.
+	 * @param  string  $role_id  Role id.
 	 *
 	 * @return int|WP_Error
 	 */
-	public static function create( int $user_id, int $role_id ) {
+	public static function create( int $user_id, string $role_id ) {
 		$term = wp_insert_term( 'agent_' . $user_id, self::$taxonomy );
 		if ( is_wp_error( $term ) ) {
 			return $term;

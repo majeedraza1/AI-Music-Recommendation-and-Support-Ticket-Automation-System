@@ -211,8 +211,8 @@ class Plugin {
 	 * @return void
 	 */
 	public function activation_includes() {
-		Install::init();
 		$this->register_taxonomy();
+		Install::init();
 		flush_rewrite_rules();
 	}
 
