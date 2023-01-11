@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket;
 
+use Stackonet\WP\Framework\Supports\Logger;
 use StackonetSupportTicket\Models\AgentRole;
 use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\TicketCategory;

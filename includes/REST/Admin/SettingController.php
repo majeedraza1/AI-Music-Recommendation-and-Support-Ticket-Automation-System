@@ -176,13 +176,13 @@ class SettingController extends ApiController {
 		if ( is_array( $_fields_labels ) ) {
 			$defaults      = array_fill_keys( $unique_meta_keys, '' );
 			$fields_labels = array_replace_recursive( $defaults, $_fields_labels );
-			update_option( 'ticket_extra_fields_labels', $fields_labels );
+			update_option( 'support_ticket_extra_fields_labels', $fields_labels );
 		}
 
 		if ( is_array( $_user_fields ) ) {
 			$defaults    = array_fill_keys( $unique_meta_keys, false );
 			$user_fields = array_replace_recursive( $defaults, $_user_fields );
-			update_option( 'ticket_user_extra_fields', $user_fields );
+			update_option( 'support_ticket_user_extra_fields', $user_fields );
 		}
 
 

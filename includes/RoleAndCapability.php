@@ -32,6 +32,23 @@ class RoleAndCapability {
 		self::add_support_ticket_capabilities();
 	}
 
+	public static function uninstall() {
+		self::remove_capabilities_from_roles(
+			[ 'administrator', 'editor', 'manager' ],
+			self::$ticket_capabilities
+		);
+		self::remove_capabilities_from_roles(
+			[ 'agent' ],
+			[ 'delete_tickets', 'edit_tickets', 'create_tickets', 'read_tickets', ]
+		);
+		if ( get_role( 'manager' ) ) {
+			remove_role( 'manager' );
+		}
+		if ( get_role( 'agent' ) ) {
+			remove_role( 'agent' );
+		}
+	}
+
 	/**
 	 * Add manager role
 	 */
@@ -72,8 +89,8 @@ class RoleAndCapability {
 	/**
 	 * Add capabilities to roles
 	 *
-	 * @param array $roles
-	 * @param array $capabilities
+	 * @param  array  $roles
+	 * @param  array  $capabilities
 	 */
 	public static function add_capabilities_to_roles( array $roles, array $capabilities ) {
 		foreach ( $roles as $roleName ) {
@@ -85,6 +102,27 @@ class RoleAndCapability {
 			foreach ( $capabilities as $cap => $grant ) {
 				if ( ! $role->has_cap( $cap ) ) {
 					$role->add_cap( $cap, (bool) $grant );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Add capabilities to roles
+	 *
+	 * @param  array  $roles
+	 * @param  array  $capabilities
+	 */
+	public static function remove_capabilities_from_roles( array $roles, array $capabilities ) {
+		foreach ( $roles as $roleName ) {
+			$role = get_role( $roleName );
+			if ( ! $role instanceof WP_Role ) {
+				continue;
+			}
+
+			foreach ( $capabilities as $cap ) {
+				if ( $role->has_cap( $cap ) ) {
+					$role->remove_cap( $cap );
 				}
 			}
 		}

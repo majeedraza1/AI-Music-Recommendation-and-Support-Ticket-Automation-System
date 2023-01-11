@@ -34,7 +34,8 @@ class Ajax {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
-			add_action( 'wp_ajax_stackonet_test', [ self::$instance, 'stackonet_test' ] );
+			add_action( 'wp_ajax_support_ticket_activation', [ self::$instance, 'support_ticket_activation' ] );
+			add_action( 'wp_ajax_support_ticket_deactivation', [ self::$instance, 'support_ticket_deactivation' ] );
 			add_action( 'wp_ajax_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
 			add_action( 'wp_ajax_nopriv_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
 		}
@@ -42,14 +43,20 @@ class Ajax {
 		return self::$instance;
 	}
 
-	public function stackonet_test() {
-		$unique_meta_keys = SupportTicket::get_unique_meta_keys();
-		// fill the unique meta keys with empty values
-		$defaults = array_fill_keys( $unique_meta_keys, '' );
-		$options  = get_option( 'ticket_extra_fields_labels', $defaults );
-		$options  = wp_parse_args( $options, $defaults );
-		var_dump( $options );
-		wp_die();
+	public function support_ticket_activation() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( 'You have no permission to download phones CSV file.' );
+		}
+		Install::init();
+		wp_die( 'Support ticket activated successfully.' );
+	}
+
+	public function support_ticket_deactivation() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( 'You have no permission to download phones CSV file.' );
+		}
+		Uninstall::run();
+		wp_die( 'Support ticket deactivated successfully.' );
 	}
 
 	public function download_support_ticket() {

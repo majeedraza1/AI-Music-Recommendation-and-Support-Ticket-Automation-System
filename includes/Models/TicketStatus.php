@@ -33,6 +33,15 @@ class TicketStatus extends Data {
 	}
 
 	/**
+	 * Get id
+	 *
+	 * @return int
+	 */
+	public function get_id(): int {
+		return $this->term->term_id;
+	}
+
+	/**
 	 * Color
 	 *
 	 * @return string
@@ -82,7 +91,9 @@ class TicketStatus extends Data {
 
 		$terms = [];
 		foreach ( $_terms as $term ) {
-			$terms[] = new self( $term );
+			if ( $term instanceof \WP_Term ) {
+				$terms[] = new self( $term );
+			}
 		}
 
 		return $terms;
