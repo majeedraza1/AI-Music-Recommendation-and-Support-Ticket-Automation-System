@@ -55,8 +55,7 @@
 </template>
 
 <script>
-import imageContainer from 'shapla-image-container';
-import iconContainer from 'shapla-icon-container';
+import {imageContainer,iconContainer} from 'shapla-vue-components';
 import human_time_diff from "../human_time_diff";
 
 export default {

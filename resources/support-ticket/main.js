@@ -3,7 +3,7 @@ import SupportTicket from './ticket-list/SupportTicket'
 import axios from "axios";
 import store from './store'
 import router from "./routers";
-import Dialog from 'shapla-confirm-dialog'
+import {Dialog} from 'shapla-vue-components'
 import wpMenuFix from "@/support-ticket/admin-menu-fix";
 
 Vue.config.productionTip = false;

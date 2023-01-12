@@ -398,7 +398,7 @@ export default {
     updateThread() {
       this.$store.commit('SET_LOADING_STATUS', true);
       axios.put(StackonetSupportTicket.restRoot + '/tickets/' + this.id + '/thread/' + this.activeThread.thread_id, {
-        post_content: this.activeThreadContent,
+        thread_content: this.activeThreadContent,
       }).then(() => {
         this.$store.commit('SET_LOADING_STATUS', false);
         this.activeThreadModal = false;

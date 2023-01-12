@@ -1,54 +1,11 @@
-@use "~shapla-css/src/index.scss" as shapla;
-
-@import "tailwindcss";
-@import "~vue-select/src/scss/vue-select";
-@import "~shapla-color-system/src/variables";
+@use "~shapla-css/src/index.scss" as shapla with (
+  $checkbox-image-path: "shapla-css/src/form/checkbox",
+  $color--primary: #303D7A,
+  $color--secondary: #FBE277,
+);
 
 @include shapla.button;
-@include shapla.modal;
-@include shapla.delete-icon;
-
-
-.clearfix::after {
-	content: "";
-	display: table;
-	clear: both;
-}
-
-.shadow--2dp {
-	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-}
-
-.shapla-text-field__input {
-	width: 100% !important;
-}
-
-.shapla-text-field {
-	margin-bottom: 1rem;
-}
-
-.shapla-widget-box__heading {
-	background: $primary;
-	color: $on-primary;
-	padding: 15px;
-}
-
-body.has-support-ticket .site-content {
-	background: #f5f7fb;
-}
-
-
-.button-save-settings-container,
-.button-add-agent-container,
-.button-add-role-container {
-	position: fixed;
-	bottom: 1rem;
-	right: 1rem;
-	z-index: 10;
-}
-
-.button-save-settings-container {
-	svg {
-		fill: $on-primary !important;
-	}
-}
+@include shapla.checkbox;
+@include shapla.columns;
+@include shapla.spinner;
+@include shapla.text-field;

@@ -86,7 +86,7 @@ class Admin {
 	 * Load required styles and scripts
 	 */
 	public static function init_support_tickets_hooks() {
-		wp_enqueue_style( STACKONET_SUPPORT_TICKET . '-frontend' );
-		wp_enqueue_script( STACKONET_SUPPORT_TICKET . '-frontend' );
+		wp_enqueue_style( STACKONET_SUPPORT_TICKET . '-admin' );
+		wp_enqueue_script( STACKONET_SUPPORT_TICKET . '-admin' );
 	}
 }

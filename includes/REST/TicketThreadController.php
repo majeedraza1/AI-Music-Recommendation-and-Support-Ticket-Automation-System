@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\REST;
 
+use Stackonet\WP\Framework\Supports\Sanitize;
 use Stackonet\WP\Framework\Supports\Validate;
 use StackonetSupportTicket\Emails\AdminRepliedToTicket;
 use StackonetSupportTicket\Models\SupportTicket;
@@ -146,6 +147,12 @@ class TicketThreadController extends ApiController {
 			'user_unread_threads_count' => $thread_count + 1,
 		] );
 
+		// update ticket status
+		SupportTicket::update( [
+			'id'     => $id,
+			'status' => get_option( 'support_ticket_status_after_agent_reply' ),
+		] );
+
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, $request->get_params() );
 
 		return $this->respondCreated();
@@ -183,21 +190,15 @@ class TicketThreadController extends ApiController {
 			return $this->respondNotFound( null, 'Sorry, no thread found.' );
 		}
 
-		$response = wp_update_post(
-			[
-				'ID'           => $thread_id,
-				'post_content' => $post_content,
-			]
-		);
-
-		if ( ! $response instanceof WP_Error ) {
+		$response = TicketThread::update_content( $thread_id, $post_content );
+		if ( $response ) {
 
 			do_action( 'stackonet_support_ticket/v3/thread_updated', $id, $thread_id, $post_content );
 
 			return $this->respondOK( $post_content );
 		}
 
-		return $this->respondInternalServerError();
+		return $this->respondInternalServerError( $response );
 	}
 
 	/**
@@ -235,20 +236,25 @@ class TicketThreadController extends ApiController {
 	 *
 	 * @return array Query parameters for the collection.
 	 */
-	public function get_create_item_params() {
+	public function get_create_item_params(): array {
 		return [
 			'id'                 => [
-				'description' => __( 'Unique identifier for the ticket.' ),
-				'type'        => 'integer',
+				'description'       => __( 'Unique identifier for the ticket.' ),
+				'type'              => 'integer',
+				'sanitize_callback' => [ Sanitize::class, 'int' ],
+				'validate_callback' => 'rest_validate_request_arg',
 			],
 			'thread_type'        => [
-				'description' => __( 'Thread type.' ),
-				'type'        => 'string',
-				'enum'        => TicketThread::get_thread_types(),
+				'description'       => __( 'Thread type.' ),
+				'type'              => 'string',
+				'enum'              => TicketThread::get_thread_types(),
+				'validate_callback' => 'rest_validate_request_arg',
 			],
 			'thread_content'     => [
-				'description' => __( 'Thread content.' ),
-				'type'        => 'string',
+				'description'       => __( 'Thread content.' ),
+				'type'              => 'string',
+				'sanitize_callback' => [ Sanitize::class, 'html' ],
+				'validate_callback' => 'rest_validate_request_arg',
 			],
 			'thread_attachments' => [
 				'description' => __( 'Thread attachments. Array of WordPress media attachment id.' ),
@@ -262,11 +268,13 @@ class TicketThreadController extends ApiController {
 	 *
 	 * @return array Query parameters for the collection.
 	 */
-	public function get_update_item_params() {
+	public function get_update_item_params(): array {
 		return [
 			'thread_content' => [
-				'description' => __( 'Thread content.' ),
-				'type'        => 'string',
+				'description'       => __( 'Thread content.' ),
+				'type'              => 'string',
+				'sanitize_callback' => [ Sanitize::class, 'html' ],
+				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];
 	}

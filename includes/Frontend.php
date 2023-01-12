@@ -31,9 +31,9 @@ class Frontend {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
-			add_shortcode( 'support_ticket', array( self::$instance, 'support_ticket' ) );
-			add_shortcode( 'create_ticket', array( self::$instance, 'create_ticket' ) );
-			add_action( 'wp_enqueue_scripts', array( self::$instance, 'load_frontend_scripts' ) );
+			add_shortcode( 'support_ticket', [ self::$instance, 'support_ticket' ] );
+			add_shortcode( 'create_ticket', [ self::$instance, 'create_ticket' ] );
+			add_action( 'wp_enqueue_scripts', [ self::$instance, 'load_frontend_scripts' ] );
 		}
 
 		return self::$instance;
@@ -68,29 +68,35 @@ class Frontend {
 	/**
 	 * Support Ticket frontend shortcode
 	 *
-	 * @param  array  $attributes
+	 * @param  array|string  $attributes
 	 *
 	 * @return string
 	 */
-	public function create_ticket( array $attributes ): string {
+	public function create_ticket( $attributes ): string {
 		$default_category = (int) get_option( 'support_ticket_default_category' );
 		$default_status   = (int) get_option( 'support_ticket_default_status' );
 		$default_priority = (int) get_option( 'support_ticket_default_priority' );
 
 		$attributes = shortcode_atts(
 			[
-				'need_login'       => 'no',
-				'show_category'    => 'yes',
-				'category'         => '',
-				'default_category' => $default_category,
-				'default_status'   => $default_status,
-				'default_priority' => $default_priority,
+				'need_login'        => 'no',
+				'show_category'     => 'yes',
+				'category'          => '',
+				'exclude_fields'    => '',
+				'default_subject'   => '',
+				'thank_you_message' => '<h3>Thank you for contacting us!</h3><p>We will get back to you as soon as possible.</p>',
+				'default_category'  => $default_category,
+				'default_status'    => $default_status,
+				'default_priority'  => $default_priority,
 			],
 			$attributes
 		);
 
-		$need_login    = Validate::checked( $attributes['need_login'] );
-		$show_category = Validate::checked( $attributes['show_category'] );
+		$exclude_fields = array_filter(
+			array_map( 'trim', explode( ',', $attributes['exclude_fields'] ) )
+		);
+		$show_category  = ! in_array( 'category', $exclude_fields );
+		$need_login     = Validate::checked( $attributes['need_login'] );
 
 		$cat_options = [];
 		if ( $show_category ) {
@@ -101,7 +107,7 @@ class Frontend {
 			}
 			$cats = TicketCategory::get_all( $cat_args );
 			foreach ( $cats as $cat ) {
-				$cat_options[ $cat->get_prop( 'term_id' ) ] = $cat->get_prop( 'name' );
+				$cat_options[ $cat->get_id() ] = $cat->get_prop( 'name' );
 			}
 		}
 
@@ -111,27 +117,43 @@ class Frontend {
 			return $this->support_ticket_login();
 		}
 
+		$default_name  = '';
+		$default_email = '';
+		$default_phone = '';
+		if ( $current_user->exists() ) {
+			$default_name  = $current_user->display_name;
+			$default_email = $current_user->user_email;
+			// @todo: get meta field name from settings
+			$default_phone = get_user_meta( $current_user->ID, 'billing_phone', true );
+		}
+
 		$fields = [
-			'name'    => [
+			'name'         => [
 				'id'      => 'name',
 				'type'    => 'text',
 				'label'   => __( 'Name', 'stackonet-support-ticket' ),
-				'default' => $current_user->exists() ? $current_user->display_name : '',
+				'default' => $default_name,
 			],
-			'email'   => [
+			'email'        => [
 				'id'      => 'email',
 				'type'    => 'email',
 				'label'   => __( 'Email', 'stackonet-support-ticket' ),
-				'default' => $current_user->exists() ? $current_user->user_email : '',
+				'default' => $default_email,
 			],
-			'subject' => [
+			'phone_number' => [
+				'id'      => 'phone_number',
+				'type'    => 'tel',
+				'label'   => __( 'Phone', 'stackonet-support-ticket' ),
+				'default' => $default_phone,
+			],
+			'subject'      => [
 				'id'          => 'subject',
 				'type'        => 'text',
 				'label'       => __( 'Subject', 'stackonet-support-ticket' ),
 				'description' => __( 'Short description of the ticket.', 'stackonet-support-ticket' ),
-				'default'     => '',
+				'default'     => $attributes['default_subject'],
 			],
-			'content' => [
+			'content'      => [
 				'id'          => 'content',
 				'type'        => 'textarea',
 				'label'       => __( 'Content', 'stackonet-support-ticket' ),
@@ -179,7 +201,19 @@ class Frontend {
 			];
 		}
 
-		return "<div data-form_fields='" . wp_json_encode( $fields ) . "'><div id='stackonet_support_ticket_form'></div></div>";
+		// Hide excluded fields
+		foreach ( $exclude_fields as $exclude_field ) {
+			if ( array_key_exists( $exclude_field, $fields ) ) {
+				$fields[ $exclude_field ]['type'] = 'hidden';
+			}
+		}
+
+		$data = [
+			'thank_you_message' => $attributes['thank_you_message'],
+			'fields'            => $fields,
+		];
+
+		return "<div data-form_fields='" . wp_json_encode( $data ) . "'><div id='stackonet_support_ticket_form'></div></div>";
 	}
 
 	/**

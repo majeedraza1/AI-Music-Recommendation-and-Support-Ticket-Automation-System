@@ -26,9 +26,8 @@
 
 <script>
 import Editor from '@tinymce/tinymce-vue'
-import shaplaButton from 'shapla-button'
+import {shaplaButton,shaplaCheckbox} from 'shapla-vue-components'
 import axios from "axios";
-import shaplaCheckbox from 'shapla-checkbox';
 
 export default {
 	name: "AddTicketThread",

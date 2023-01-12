@@ -7,7 +7,6 @@ use DateTime;
 use Exception;
 use Stackonet\WP\Framework\Abstracts\DatabaseModel;
 use StackonetSupportTicket\Supports\Utils;
-use WP_Post;
 use WP_Term;
 use WP_Term_Query;
 use WP_User;
@@ -1139,7 +1138,7 @@ class SupportTicket extends DatabaseModel {
 	 * @return bool
 	 */
 	public function delete_thread( $thread_id = 0 ) {
-		return wp_delete_post( $thread_id ) instanceof WP_Post;
+		return TicketThread::delete( $thread_id );
 	}
 
 	/**

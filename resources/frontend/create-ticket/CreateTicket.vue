@@ -1,30 +1,39 @@
 <template>
   <div class="support-ticket-form">
-    <form action="#" @submit.prevent="submitTicket">
+    <div v-if="showThankYouMessage" v-html="thank_you_message">
+      <h4>Thank you for contacting us!</h4>
+      <p>We will get back to you as soon as possible.</p>
+    </div>
+    <form v-if="Object.keys(fields).length && false === showThankYouMessage" action="#" @submit.prevent="submitTicket">
       <columns :multiline="true">
-        <column v-if="fields.name" :tablet="6">
+        <column v-if="fields.name" :tablet="12">
           <div class="support-ticket-form__control">
             <label for="customer_name">
               <strong class="support-ticket-form__label">{{ fields.name.label }}</strong>
               <span class="support-ticket-form__description">{{ fields.name.description }}</span>
             </label>
-            <input id="customer_name" v-model="ticket.name" :disabled="hasDefaultName"
-                   class="support-ticket-form__input"
-                   type="text">
+            <input id="customer_name" v-model="ticket.name" class="support-ticket-form__input" type="text">
           </div>
         </column>
-        <column v-if="fields.email" :tablet="6">
+        <column v-if="fields.email" :tablet="12">
           <div class="support-ticket-form__control">
             <label for="customer_email">
               <strong class="support-ticket-form__label">{{ fields.email.label }}</strong>
               <span class="support-ticket-form__description">{{ fields.email.description }}</span>
             </label>
-            <input id="customer_email" v-model="ticket.email" :disabled="hasDefaultEmail"
-                   class="support-ticket-form__input"
-                   type="text">
+            <input id="customer_email" v-model="ticket.email" class="support-ticket-form__input" type="text">
           </div>
         </column>
-        <column v-if="fields.subject" :tablet="12">
+        <column v-if="fields.phone_number && fields.phone_number.type !== 'hidden'" :tablet="12">
+          <div class="support-ticket-form__control">
+            <label for="customer_email">
+              <strong class="support-ticket-form__label">{{ fields.phone_number.label }}</strong>
+              <span class="support-ticket-form__description">{{ fields.phone_number.description }}</span>
+            </label>
+            <input id="customer_email" v-model="ticket.phone_number" class="support-ticket-form__input" type="tel">
+          </div>
+        </column>
+        <column v-show="fields.subject && fields.subject.type !== 'hidden'" :tablet="12">
           <div class="support-ticket-form__control">
             <label for="ticket_subject">
               <strong class="support-ticket-form__label">{{ fields.subject.label }}</strong>
@@ -43,7 +52,7 @@
             <editor id="ticket_content" v-model="ticket.content" :init="mce"/>
           </div>
         </column>
-        <column v-if="fields.category" :tablet="12">
+        <column v-if="fields.category && fields.category.type !== 'hidden'" :tablet="12">
           <div class="support-ticket-form__control">
             <label for="ticket_category">
               <strong class="support-ticket-form__label">{{ fields.category.label }}</strong>
@@ -55,7 +64,7 @@
           </div>
         </column>
         <column :tablet="12">
-          <button class="button button--create-ticket">Submit</button>
+          <shapla-button theme="primary" size="large" :class="{'is-loading':loading}">Submit</shapla-button>
         </column>
       </columns>
     </form>
@@ -64,17 +73,18 @@
 
 <script>
 import axios from 'axios'
-import {column, columns} from 'shapla-vue-components';
+import {column, columns, shaplaButton} from 'shapla-vue-components';
 import Editor from '@tinymce/tinymce-vue'
 
 export default {
   name: "CreateTicket",
-  components: {columns, column, Editor},
+  components: {shaplaButton, columns, column, Editor},
   data() {
     return {
       loading: false,
       showThankYouMessage: false,
       defaults: {},
+      thank_you_message: '',
       ticket: {
         name: '',
         email: '',
@@ -113,8 +123,10 @@ export default {
   mounted() {
     let fieldsEl = document.querySelector('[data-form_fields]');
     if (fieldsEl) {
-      this.fields = JSON.parse(fieldsEl.getAttribute('data-form_fields'));
-      Object.values(this.fields).forEach(field => {
+      const data = JSON.parse(fieldsEl.getAttribute('data-form_fields'));
+      this.fields = data.fields;
+      this.thank_you_message = data.thank_you_message;
+      Object.values(data.fields).forEach(field => {
         this.defaults[field.id] = field.default;
         this.ticket[field.id] = field.default;
       });

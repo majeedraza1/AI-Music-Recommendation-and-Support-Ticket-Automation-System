@@ -123,6 +123,11 @@ class Assets {
 				'deps'      => [ 'wp-tinymce' ],
 				'in_footer' => true,
 			],
+			$this->plugin_name . '-admin' => [
+				'src'       => $this->assets_url . '/js/admin.js',
+				'deps'      => [ 'wp-tinymce' ],
+				'in_footer' => true,
+			],
 		];
 	}
 
@@ -135,6 +140,9 @@ class Assets {
 		return [
 			$this->plugin_name . '-frontend' => [
 				'src' => $this->assets_url . '/css/frontend.css',
+			],
+			$this->plugin_name . '-admin' => [
+				'src' => $this->assets_url . '/css/admin.css',
 			],
 		];
 	}

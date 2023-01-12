@@ -2,7 +2,7 @@
   <div>
     <draggable :list="priorities" class="list-group" handle=".handle" @update="updateMenuOrder">
       <div v-for="_priority in priorities" :key="_priority.term_id">
-        <div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow--2dp">
+        <div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow-sm">
           <div>
             <strong>{{ _priority.name }}</strong>
             <span class="extra_info">ID: {{ _priority.term_id }}</span>
@@ -61,11 +61,9 @@
 </template>
 
 <script>
-import modal from 'shapla-modal'
+import {modal, shaplaButton, textField} from 'shapla-vue-components'
 import draggable from 'vuedraggable'
 import {CrudMixin} from "../../mixins/CrudMixin";
-import textField from "shapla-text-field";
-import shaplaButton from "shapla-button";
 
 export default {
   name: "TicketPriorities",

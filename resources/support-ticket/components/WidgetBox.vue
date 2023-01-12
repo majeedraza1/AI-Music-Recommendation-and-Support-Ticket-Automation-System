@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import iconContainer from 'shapla-icon-container';
+import {iconContainer} from 'shapla-vue-components';
 
 export default {
 	name: "WidgetBox",
@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~shapla-color-system/src/variables";
+@import "shapla-css/src/colors";
 
 .support-ticket-widget-box {
 	background-color: white;

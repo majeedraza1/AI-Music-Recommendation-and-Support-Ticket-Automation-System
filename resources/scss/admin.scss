@@ -1,0 +1,38 @@
+@use "~shapla-css/src/index.scss" as shapla with (
+  $checkbox-image-path: "shapla-css/src/form/checkbox",
+  $color--primary: #303D7A,
+  $color--secondary: #FBE277,
+);
+
+@import "tailwindcss";
+@import "~vue-select/src/scss/vue-select";
+
+@include shapla.button;
+@include shapla.columns;
+@include shapla.modal;
+@include shapla.notification;
+@include shapla.sidenav;
+@include shapla.spinner;
+@include shapla.delete-icon;
+@include shapla.icon-container;
+@include shapla.data-table;
+@include shapla.data-table-pagination;
+@include shapla.data-table-status-list;
+@include shapla.search-form;
+@include shapla.toggles;
+@include shapla.text-field;
+@include shapla.select;
+@include shapla.dropdown;
+@include shapla.checkbox;
+@include shapla.tabs;
+@include shapla.input-switch;
+@include shapla.box-shadow;
+
+.button-save-settings-container,
+.button-add-agent-container,
+.button-add-role-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10;
+}

@@ -191,4 +191,19 @@ class TicketThread extends DatabaseModel {
 
 		return $threads;
 	}
+
+	public static function update_content( $thread_id, $content ) {
+		global $wpdb;
+		$table = self::get_table_name();
+
+		return $wpdb->update(
+			$table,
+			[
+				'thread_content' => $content,
+			],
+			[
+				'id' => $thread_id,
+			]
+		);
+	}
 }

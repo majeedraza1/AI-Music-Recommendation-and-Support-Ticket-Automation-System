@@ -1,10 +1,13 @@
 {
-  "proxyURL": "http://muslimzone.test/wp-admin/admin.php?page=stackonet-support-ticket",
+  "proxyURL": "http://plugin.test/wp-admin/admin.php?page=stackonet-support-ticket",
   "entryPoints": {
     "frontend": [
       "./resources/scss/frontend.scss",
       "./resources/frontend/login/main.js",
-      "./resources/frontend/create-ticket/main.js",
+      "./resources/frontend/create-ticket/main.js"
+    ],
+    "admin": [
+      "./resources/scss/admin.scss",
       "./resources/support-ticket/main.js"
     ]
   }

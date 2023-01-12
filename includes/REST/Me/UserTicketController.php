@@ -271,6 +271,12 @@ class UserTicketController extends ApiController {
 			'admin_unread_threads_count' => $thread_count + 1,
 		] );
 
+		// update ticket status
+		SupportTicket::update( [
+			'id'     => $id,
+			'status' => get_option( 'support_ticket_status_after_customer_reply' ),
+		] );
+
 		do_action( 'stackonet_support_ticket/v3/thread_created', $id, $thread_id, [] );
 
 		$response = [

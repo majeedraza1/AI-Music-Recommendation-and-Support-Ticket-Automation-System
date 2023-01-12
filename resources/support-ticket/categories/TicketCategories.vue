@@ -2,7 +2,7 @@
   <div>
     <draggable :list="categories" class="list-group" handle=".handle" @update="updateMenuOrder">
       <div v-for="_category in categories" :key="_category.term_id">
-        <div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow--2dp">
+        <div class="bg-white rounded p-4 shapla-box--role flex w-full content-center shadow-sm">
           <div>
             <strong>{{ _category.name }}</strong>
             <span class="extra_info">ID: {{ _category.term_id }}</span>
@@ -11,8 +11,9 @@
             <div class="handle">
               <icon-container>
                 <svg height="24" viewBox="0 0 320 512" width="24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"
-                        fill="currentColor"></path>
+                  <path
+                      d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"
+                      fill="currentColor"></path>
                 </svg>
               </icon-container>
             </div>
@@ -68,12 +69,9 @@
 </template>
 
 <script>
-import modal from 'shapla-modal'
+import {iconContainer, modal, shaplaButton, textField} from 'shapla-vue-components'
 import draggable from 'vuedraggable'
 import {CrudMixin} from "../../mixins/CrudMixin";
-import textField from "shapla-text-field";
-import shaplaButton from "shapla-button";
-import {iconContainer} from "shapla-vue-components";
 
 export default {
   name: "TicketCategories",

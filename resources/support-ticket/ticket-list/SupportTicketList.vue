@@ -289,7 +289,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~shapla-color-system/src/variables";
+@import "shapla-css/src/colors";
 
 .stackont-support-ticket-container {
   padding-top: 2rem;
