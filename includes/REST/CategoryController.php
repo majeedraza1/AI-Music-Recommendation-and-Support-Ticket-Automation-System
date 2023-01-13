@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\REST;
 
+use Stackonet\WP\Framework\Supports\Sanitize;
 use StackonetSupportTicket\Models\TicketCategory;
 use WP_Error;
 use WP_REST_Request;
@@ -90,7 +91,7 @@ class CategoryController extends ApiController {
 	/**
 	 * Retrieves a collection of items.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -103,7 +104,7 @@ class CategoryController extends ApiController {
 	/**
 	 * Creates one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
@@ -144,7 +145,7 @@ class CategoryController extends ApiController {
 	/**
 	 * Updates one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -173,7 +174,7 @@ class CategoryController extends ApiController {
 	/**
 	 * Update batch items
 	 *
-	 * @param WP_REST_Request $request
+	 * @param  WP_REST_Request  $request
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -194,7 +195,7 @@ class CategoryController extends ApiController {
 	/**
 	 * Deletes one item from the collection.
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
+	 * @param  WP_REST_Request  $request  Full data about the request.
 	 *
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
@@ -244,7 +245,7 @@ class CategoryController extends ApiController {
 				'description'       => __( 'Parent category ID.', 'stackonet-support-ticker' ),
 				'type'              => 'integer',
 				'required'          => false,
-				'sanitize_callback' => 'intval',
+				'sanitize_callback' => [ Sanitize::class, 'int' ],
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];
@@ -282,7 +283,8 @@ class CategoryController extends ApiController {
 	public function get_batch_update_params() {
 		return [
 			'menu_orders' => [
-				'description'       => __( 'Array of all categories ID. New order will be set by numeric order.', 'stackonet-support-ticker' ),
+				'description'       => __( 'Array of all categories ID. New order will be set by numeric order.',
+					'stackonet-support-ticker' ),
 				'type'              => 'array',
 				'required'          => false,
 				'validate_callback' => 'rest_validate_request_arg',

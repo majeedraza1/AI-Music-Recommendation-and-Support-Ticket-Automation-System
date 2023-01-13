@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\REST;
 
+use Stackonet\WP\Framework\Supports\Sanitize;
 use StackonetSupportTicket\Models\TicketPriority;
 use WP_Error;
 use WP_REST_Request;
@@ -242,7 +243,7 @@ class PriorityController extends ApiController {
 				'description'       => __( 'Parent priority ID.', 'stackonet-support-ticker' ),
 				'type'              => 'integer',
 				'required'          => false,
-				'sanitize_callback' => 'intval',
+				'sanitize_callback' => [ Sanitize::class, 'int' ],
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];

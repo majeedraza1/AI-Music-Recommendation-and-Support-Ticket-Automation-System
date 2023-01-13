@@ -2,6 +2,7 @@
 
 namespace StackonetSupportTicket\REST;
 
+use Stackonet\WP\Framework\Supports\Sanitize;
 use StackonetSupportTicket\Models\TicketStatus;
 use WP_Error;
 use WP_REST_Request;
@@ -249,7 +250,7 @@ class StatusController extends ApiController {
 				'description'       => __( 'Parent status ID.', 'stackonet-support-ticker' ),
 				'type'              => 'integer',
 				'required'          => false,
-				'sanitize_callback' => 'intval',
+				'sanitize_callback' => [ Sanitize::class, 'int' ],
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];

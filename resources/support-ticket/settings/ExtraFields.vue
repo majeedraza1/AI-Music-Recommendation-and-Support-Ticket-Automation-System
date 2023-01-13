@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     saveOptions() {
-      axios.post('settings/fields_labels', {
+      axios.post(StackonetSupportTicket.restRoot + '/settings/fields_labels', {
         fields_labels: this.fields_label,
         user_fields: this.user_fields
       }).then(response => {
