@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import {iconContainer, shaplaButton} from "shapla-vue-components";
-import axios from "axios";
+import {ShaplaIcon as iconContainer, ShaplaButton as shaplaButton} from "@shapla/vue-components";
+import {default as axios} from "@/admin/axios";
 
 export default {
   name: "ExtraFields",

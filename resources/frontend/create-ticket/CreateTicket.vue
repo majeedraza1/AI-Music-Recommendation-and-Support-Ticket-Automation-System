@@ -1,9 +1,6 @@
 <template>
   <div class="support-ticket-form">
-    <div v-if="showThankYouMessage" v-html="thank_you_message">
-      <h4>Thank you for contacting us!</h4>
-      <p>We will get back to you as soon as possible.</p>
-    </div>
+    <div v-if="showThankYouMessage" v-html="thank_you_message"/>
     <form v-if="Object.keys(fields).length && false === showThankYouMessage" action="#" @submit.prevent="submitTicket">
       <columns :multiline="true">
         <column v-if="fields.name" :tablet="12">
@@ -72,13 +69,13 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {column, columns, shaplaButton} from 'shapla-vue-components';
+import http from "@/frontend/axios";
+import {ShaplaButton, ShaplaColumn, ShaplaColumns} from '@shapla/vue-components';
 import Editor from '@tinymce/tinymce-vue'
 
 export default {
   name: "CreateTicket",
-  components: {shaplaButton, columns, column, Editor},
+  components: {shaplaButton: ShaplaButton, columns: ShaplaColumns, column: ShaplaColumn, Editor},
   data() {
     return {
       loading: false,
@@ -139,7 +136,7 @@ export default {
     },
     submitTicket() {
       this.loading = true;
-      axios.post('tickets', this.ticket).then(response => {
+      http.post('tickets', this.ticket).then(response => {
         this.loading = false;
         if (response.data.data.ticket_id) {
           this.showThankYouMessage = true;

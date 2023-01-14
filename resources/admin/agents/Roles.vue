@@ -34,7 +34,15 @@
 </template>
 
 <script>
-import {column, columns, dataTable, modal, shaplaButton, tab, tabs} from 'shapla-vue-components'
+import {
+  ShaplaButton as shaplaButton,
+  ShaplaColumn as column,
+  ShaplaColumns as columns,
+  ShaplaModal as modal,
+  ShaplaTab as tab,
+  ShaplaTable as dataTable,
+  ShaplaTabs as tabs
+} from '@shapla/vue-components'
 import {CrudMixin} from "../../mixins/CrudMixin";
 import RoleEditor from "./RoleEditor";
 
@@ -74,13 +82,6 @@ export default {
         console.log(error);
       })
     },
-    getRoles() {
-      this.get_item(StackonetSupportTicket.restRoot + '/roles').then(data => {
-        this.roles = data.roles;
-      }).catch(error => {
-        console.log(error);
-      })
-    },
     closeAddNewRoleModal() {
       this.role = {};
       this.showAddRoleModal = false;
@@ -92,6 +93,13 @@ export default {
     editRole(role) {
       this.activeRole = role;
       this.showEditRoleModal = true;
+    },
+    getRoles() {
+      this.get_item(StackonetSupportTicket.restRoot + '/roles').then(data => {
+        this.roles = data.roles;
+      }).catch(error => {
+        console.log(error);
+      })
     },
     deleteRole(role) {
       this.$dialog.confirm('Are you sure to delete this role?').then(confirm => {

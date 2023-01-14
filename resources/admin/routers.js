@@ -1,11 +1,8 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import {createRouter, createWebHashHistory} from 'vue-router';
 import SupportTicketList from './ticket-list/SupportTicketList'
 import SingleSupportTicket from "./ticket-list/SingleSupportTicket";
 import NewSupportTicket from "./ticket-list/NewSupportTicket";
 import Settings from "./ticket-list/Settings";
-
-Vue.use(VueRouter);
 
 const routes = [
     {path: '/', name: 'SupportTicketList', component: SupportTicketList},
@@ -14,6 +11,9 @@ const routes = [
     {path: '/settings', name: 'Settings', component: Settings},
 ];
 
-export default new VueRouter({
+const router = createRouter({
+    history: createWebHashHistory(),
     routes: routes
 });
+
+export default router;

@@ -45,7 +45,7 @@
                    @click="handleSelect(_agent)">
         {{ _agent.display_name }}
       </shapla-chip>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="default" @click="showAgentsModal = false">Close</shapla-button>
       </template>
     </modal>
@@ -54,15 +54,15 @@
 
 <script>
 import {
-  column,
-  columns,
-  iconContainer,
-  modal,
-  shaplaButton,
-  shaplaCheckbox,
-  shaplaChip,
-  textField
-} from "shapla-vue-components";
+  ShaplaButton as shaplaButton,
+  ShaplaCheckbox as shaplaCheckbox,
+  ShaplaChip as shaplaChip,
+  ShaplaColumn as column,
+  ShaplaColumns as columns,
+  ShaplaIcon as iconContainer,
+  ShaplaInput as textField,
+  ShaplaModal as modal
+} from "@shapla/vue-components";
 
 export default {
   name: "SmsWidgetBox",

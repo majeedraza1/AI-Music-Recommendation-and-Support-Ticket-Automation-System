@@ -2,7 +2,7 @@
   <div class="stackonet-support-ticket-login">
     <form class="stackonet-support-ticket-login-form" @submit.prevent="submitForm">
       <div style="margin-bottom: 1rem">
-        <text-field
+        <shapla-input
             v-model="user_login"
             :has-error="hasUserLoginError"
             :helptext="errors.user_login?errors.user_login[0]:''"
@@ -11,7 +11,7 @@
         />
       </div>
       <div style="margin-bottom: 1rem">
-        <text-field
+        <shapla-input
             v-model="password"
             :has-error="hasPasswordError"
             :helptext="errors.password?errors.password[0]:''"
@@ -30,17 +30,17 @@
         <shapla-button :disabled="!canSubmit" :fullwidth="true" theme="primary">Log in</shapla-button>
       </div>
     </form>
-    <spinner :active="loading"/>
+    <shapla-spinner :active="loading"/>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import {shaplaButton, shaplaCheckbox, spinner, textField} from 'shapla-vue-components';
+import http from "@/frontend/axios";
+import {ShaplaButton, ShaplaCheckbox, ShaplaInput, ShaplaSpinner} from '@shapla/vue-components';
 
 export default {
   name: "Login",
-  components: {shaplaCheckbox, shaplaButton, textField, spinner},
+  components: {ShaplaButton, ShaplaCheckbox, ShaplaSpinner, ShaplaInput},
   data() {
     return {
       loading: false,
@@ -70,7 +70,7 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('login', {
+      http.post('login', {
         username: this.user_login,
         password: this.password,
         remember: this.remember,

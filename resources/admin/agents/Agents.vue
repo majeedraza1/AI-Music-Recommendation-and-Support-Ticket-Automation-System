@@ -9,7 +9,7 @@
         action-column="display_name"
         index="term_id"
     >
-      <template slot="avatar_url" slot-scope="data">
+      <template v-slot:avatar_url="data">
         <img :src="data.row.avatar_url" alt="" width="48" height="48">
       </template>
     </data-table>
@@ -33,7 +33,7 @@
           </column>
         </columns>
       </div>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="primary" :disabled="!canCreateAgent"
                        @click="createNewAgent"> Create
         </shapla-button>
@@ -59,7 +59,7 @@
             v-model="editAgentActiveAgent.phone"
         />
       </div>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="primary" @click="updateAgentRole">Update</shapla-button>
       </template>
     </modal>
@@ -67,9 +67,17 @@
 </template>
 
 <script>
-import axios from 'axios';
+import {default as axios} from "@/admin/axios";
 import vSelect from 'vue-select'
-import {column, columns, dataTable, modal, selectField, shaplaButton, textField} from 'shapla-vue-components'
+import {
+  ShaplaButton as shaplaButton,
+  ShaplaColumn as column,
+  ShaplaColumns as columns,
+  ShaplaInput as textField,
+  ShaplaModal as modal,
+  ShaplaSelect as selectField,
+  ShaplaTable as dataTable
+} from '@shapla/vue-components'
 import {CrudMixin} from "../../mixins/CrudMixin";
 
 export default {

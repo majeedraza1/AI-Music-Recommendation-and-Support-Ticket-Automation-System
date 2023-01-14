@@ -1,36 +1,48 @@
 <template>
   <div class="wrap Support-ticket-wrapper">
 
-    <side-navigation :active="showSideNav" @close="hideSideNav" nav-width="320px">
+    <shapla-sidenav :active="showSideNav" @close="hideSideNav" nav-width="320px">
       <support-ticket-side-nav/>
-    </side-navigation>
+    </shapla-sidenav>
 
     <div class="admin-support-tickets-container">
       <router-view/>
-      <spinner :active="loading"/>
-      <notification v-model="snackbar"/>
-      <confirm-dialog/>
+      <shapla-spinner :active="loading"/>
+      <shapla-notification-container v-model="snackbar"/>
+      <shapla-confirm-container/>
     </div>
   </div>
 
 </template>
 
 <script>
-import {mapState} from 'vuex';
-import {ConfirmDialog, notification, sideNavigation, spinner} from 'shapla-vue-components';
+import {useStore} from "vuex";
+import {computed} from "vue";
+import {
+  ShaplaConfirmContainer,
+  ShaplaNotificationContainer,
+  ShaplaSidenav,
+  ShaplaSpinner
+} from '@shapla/vue-components';
 import SupportTicketSideNav from "./SupportTicketSideNav";
 
 export default {
   name: "SupportTicket",
-  components: {SupportTicketSideNav, notification, spinner, ConfirmDialog, sideNavigation},
-
-  computed: {
-    ...mapState(['snackbar', 'loading', 'showSideNav']),
+  components: {
+    SupportTicketSideNav,
+    ShaplaNotificationContainer,
+    ShaplaSpinner,
+    ShaplaConfirmContainer,
+    ShaplaSidenav
   },
+  setup() {
+    const store = useStore();
 
-  methods: {
-    hideSideNav() {
-      this.$store.commit('SET_SHOW_SIDE_NAVE', false);
+    return {
+      snackbar: computed(() => store.state.snackbar),
+      loading: computed(() => store.state.loading),
+      showSideNav: computed(() => store.state.showSideNav),
+      hideSideNav: () => store.commit('SET_SHOW_SIDE_NAVE', false),
     }
   }
 }

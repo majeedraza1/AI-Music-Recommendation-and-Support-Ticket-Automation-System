@@ -20,7 +20,7 @@
         </column>
       </columns>
     </div>
-    <template slot="foot">
+    <template v-slot:foot>
       <shapla-button theme="primary" @click="submit">
         {{ btnSave }}
       </shapla-button>
@@ -29,7 +29,14 @@
 </template>
 
 <script>
-import {column, columns, modal, shaplaButton, shaplaSwitch, textField} from 'shapla-vue-components'
+import {
+  ShaplaButton as shaplaButton,
+  ShaplaColumn as column,
+  ShaplaColumns as columns,
+  ShaplaInput as textField,
+  ShaplaModal as modal,
+  ShaplaSwitch as shaplaSwitch
+} from '@shapla/vue-components'
 
 export default {
   name: "RoleEditor",

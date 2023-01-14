@@ -79,7 +79,7 @@
     </columns>
     <modal :active="activeThreadModal" title="Edit this Thread" @close="closeThreadEditor">
       <editor :init="mce" v-model="activeThreadContent"/>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="primary" @click="updateThread">Save</shapla-button>
       </template>
     </modal>
@@ -100,7 +100,7 @@
           <option :value="_category.term_id" v-for="_category in priorities">{{ _category.name }}</option>
         </select>
       </list-item>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="primary" @click="updateTicketStatus">Save</shapla-button>
       </template>
     </modal>
@@ -119,7 +119,7 @@
           </div>
         </div>
       </template>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="primary" @click="updateAssignAgents">Save</shapla-button>
       </template>
     </modal>
@@ -138,14 +138,14 @@
           </div>
         </div>
       </template>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="primary" @click="activeTwilioAgentModal = false">Confirm</shapla-button>
       </template>
     </modal>
 
     <modal :active="activeTitleModal" title="Change Ticket Subject" @close="activeTitleModal = false">
       <textarea v-model="ticket_subject" style="width: 100%;"></textarea>
-      <template slot="foot">
+      <template v-slot:foot>
         <shapla-button theme="primary" @click="updateSubject">Save</shapla-button>
       </template>
     </modal>
@@ -153,24 +153,30 @@
 </template>
 
 <script>
-import axios from 'axios';
-import {mapState} from 'vuex';
+import {default as axios} from "@/admin/axios";
+import {useStore} from 'vuex';
 import {
-  column,
-  columns,
-  iconContainer,
-  imageContainer,
-  modal,
-  shaplaButton,
-  shaplaCheckbox,
-  shaplaChip
-} from 'shapla-vue-components'
+  ShaplaButton as shaplaButton,
+  ShaplaCheckbox as shaplaCheckbox,
+  ShaplaChip as shaplaChip,
+  ShaplaColumn as column,
+  ShaplaColumns as columns,
+  ShaplaIcon as iconContainer,
+  ShaplaImage as imageContainer,
+  ShaplaModal as modal
+} from '@shapla/vue-components'
 import Editor from '@tinymce/tinymce-vue'
 import ListItem from '../components/ListItem'
 import TicketThread from "../components/TicketThread";
 import WidgetBox from "../components/WidgetBox";
 import SmsWidgetBox from "../components/SmsWidgetBox";
 import AddTicketThread from "../components/AddTicketThread";
+import {useRoute, useRouter} from "vue-router";
+import {computed, onMounted, reactive, toRefs} from "vue";
+
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
 
 export default {
   name: "SingleSupportTicket",
@@ -178,80 +184,16 @@ export default {
     AddTicketThread, SmsWidgetBox, iconContainer, WidgetBox, shaplaChip, TicketThread,
     shaplaCheckbox, imageContainer, shaplaButton, columns, column, ListItem, Editor, modal
   },
-  data() {
-    return {
-      loading: false,
-      activeStatusModal: false,
-      activeAgentModal: false,
-      activeThreadModal: false,
-      activeTitleModal: false,
-      show_sms_widget: false,
-      show_push_notification: false,
-      activeThread: {},
-      activeTwilioAgentModal: false,
-      ticket_twilio_sms_customer_phone: true,
-      ticket_twilio_sms_enable_custom_phone: false,
-      ticket_twilio_sms_custom_phone: '',
-      ticket_twilio_sms_content: '',
-      twilio_support_agents_ids: [],
-      activeThreadContent: '',
-      ticket_subject: '',
-      ticket_category: '',
-      ticket_priority: '',
-      ticket_status: '',
-      support_agents_ids: [],
-      threadType: '',
-      id: 0,
-      content: '',
-      item: {},
-      threads: []
-    }
-  },
-  computed: {
-    ...mapState(['categories', 'priorities', 'statuses', 'agents']),
-    mce() {
-      return {
-        branding: false,
-        plugins: 'lists link paste wpemoji',
-        toolbar: 'undo redo bold italic underline strikethrough bullist numlist link unlink table inserttable',
-        min_height: 150,
-        inline: false,
-        menubar: false,
-        statusbar: true
-      }
-    },
-  },
-  mounted() {
-    let id = this.$route.params.id;
-    this.$store.commit('SET_LOADING_STATUS', false);
-    this.$store.commit('SET_SHOW_SIDE_NAVE', false);
-    if (id) {
-      this.id = parseInt(id);
-      this.getItem();
-    }
-    if (!this.categories.length) {
-      this.$store.dispatch('getCategories');
-    }
-    if (!this.priorities.length) {
-      this.$store.dispatch('getPriorities');
-    }
-    if (!this.statuses.length) {
-      this.$store.dispatch('getStatuses');
-    }
-    if (!this.agents.length) {
-      this.$store.dispatch('getAgents');
-    }
-  },
   methods: {
     backToTicketList() {
-      this.$router.push({name: 'SupportTicketList'})
+      router.push({name: 'SupportTicketList'})
     },
     sendSms() {
       if (this.ticket_twilio_sms_content.length < 5) {
         alert('Please add some content first.');
         return;
       }
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.post(StackonetSupportTicket.restRoot + '/tickets/' + this.id + '/sms', {
         content: this.ticket_twilio_sms_content,
         send_to_customer: this.ticket_twilio_sms_customer_phone,
@@ -259,7 +201,7 @@ export default {
         custom_phone: this.ticket_twilio_sms_custom_phone,
         agents_ids: this.twilio_support_agents_ids,
       }).then(() => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.ticket_twilio_sms_content = '';
         this.ticket_twilio_sms_customer_phone = true;
         this.ticket_twilio_sms_enable_custom_phone = false;
@@ -268,11 +210,11 @@ export default {
         alert('Message has been sent.');
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
     },
     openNewTicket() {
-      this.$router.push({name: 'NewSupportTicket'});
+      router.push({name: 'NewSupportTicket'});
     },
     addNote() {
       this.addThread('note', this.content);
@@ -328,15 +270,15 @@ export default {
       }
     },
     updateAssignAgents() {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.post(StackonetSupportTicket.restRoot + '/tickets/' + this.id + '/agent', {agents_ids: this.support_agents_ids}).then(() => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.activeAgentModal = false;
         this.support_agents_ids = [];
         this.getItem();
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
     },
     openThreadEditor(thread) {
@@ -350,13 +292,13 @@ export default {
       this.activeThreadContent = '';
     },
     updateTicketStatus() {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.put(StackonetSupportTicket.restRoot + '/tickets/' + this.id, {
         ticket_category: this.ticket_category,
         ticket_priority: this.ticket_priority,
         ticket_status: this.ticket_status,
       }).then(() => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.activeStatusModal = false;
         this.ticket_subject = '';
         this.ticket_status = '';
@@ -364,61 +306,61 @@ export default {
         this.getItem();
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
     },
     updateSubject() {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.put(StackonetSupportTicket.restRoot + '/tickets/' + this.id, {
         ticket_subject: this.ticket_subject,
       }).then(() => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.activeTitleModal = false;
         this.ticket_subject = '';
         this.getItem();
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
     },
     addThread(thread_type, thread_content) {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.post(StackonetSupportTicket.restRoot + '/tickets/' + this.id + '/thread/', {
         thread_type: thread_type,
         thread_content: thread_content,
       }).then(() => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.content = '';
         this.getItem();
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
     },
     updateThread() {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.put(StackonetSupportTicket.restRoot + '/tickets/' + this.id + '/thread/' + this.activeThread.thread_id, {
         thread_content: this.activeThreadContent,
       }).then(() => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.activeThreadModal = false;
         this.activeThread = {};
         this.activeThreadContent = '';
         this.getItem();
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
     },
     deleteThread(thread) {
       if (confirm('Are you sure to delete this thread?')) {
-        this.$store.commit('SET_LOADING_STATUS', true);
+        store.commit('SET_LOADING_STATUS', true);
         axios.delete(StackonetSupportTicket.restRoot + '/tickets/' + this.id + '/thread/' + thread.thread_id).then(() => {
-          this.$store.commit('SET_LOADING_STATUS', false);
+          store.commit('SET_LOADING_STATUS', false);
           this.getItem();
         }).catch(error => {
           console.log(error);
-          this.$store.commit('SET_LOADING_STATUS', false);
+          store.commit('SET_LOADING_STATUS', false);
         });
       }
     },
@@ -429,20 +371,96 @@ export default {
       ]
     },
     ticketList() {
-      this.$router.push({name: 'SupportTicketList'});
+      router.push({name: 'SupportTicketList'});
     },
     getItem() {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.get(StackonetSupportTicket.restRoot + '/tickets/' + this.id).then(response => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.item = response.data.data.ticket;
         this.threads = response.data.data.threads;
         this.show_sms_widget = response.data.data.settings.show_sms_widget;
         this.show_push_notification = response.data.data.settings.show_push_notification;
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
+    }
+  },
+  setup() {
+
+    const state = reactive({
+      loading: false,
+      activeStatusModal: false,
+      activeAgentModal: false,
+      activeThreadModal: false,
+      activeTitleModal: false,
+      show_sms_widget: false,
+      show_push_notification: false,
+      activeThread: {},
+      activeTwilioAgentModal: false,
+      ticket_twilio_sms_customer_phone: true,
+      ticket_twilio_sms_enable_custom_phone: false,
+      ticket_twilio_sms_custom_phone: '',
+      ticket_twilio_sms_content: '',
+      twilio_support_agents_ids: [],
+      activeThreadContent: '',
+      ticket_subject: '',
+      ticket_category: '',
+      ticket_priority: '',
+      ticket_status: '',
+      support_agents_ids: [],
+      threadType: '',
+      id: 0,
+      content: '',
+      item: {},
+      threads: []
+    })
+
+    const categories = computed(() => store.state.categories);
+    const priorities = computed(() => store.state.priorities);
+    const statuses = computed(() => store.state.statuses);
+    const agents = computed(() => store.state.agents);
+
+    onMounted(() => {
+      let id = route.params.id;
+      store.commit('SET_LOADING_STATUS', false);
+      store.commit('SET_SHOW_SIDE_NAVE', false);
+      if (id) {
+        state.id = parseInt(id);
+        this.getItem();
+      }
+      if (!categories.length) {
+        store.dispatch('getCategories');
+      }
+      if (!priorities.length) {
+        store.dispatch('getPriorities');
+      }
+      if (!statuses.length) {
+        store.dispatch('getStatuses');
+      }
+      if (!agents.length) {
+        store.dispatch('getAgents');
+      }
+    })
+
+    return {
+      ...toRefs(state),
+      categories,
+      priorities,
+      statuses,
+      agents,
+      mce: () => {
+        return {
+          branding: false,
+          plugins: 'lists link paste wpemoji',
+          toolbar: 'undo redo bold italic underline strikethrough bullist numlist link unlink table inserttable',
+          min_height: 150,
+          inline: false,
+          menubar: false,
+          statusbar: true
+        }
+      },
     }
   }
 }

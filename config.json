@@ -8,7 +8,7 @@
     ],
     "admin": [
       "./resources/scss/admin.scss",
-      "./resources/support-ticket/main.js"
+      "./resources/admin/main.js"
     ]
   }
 }

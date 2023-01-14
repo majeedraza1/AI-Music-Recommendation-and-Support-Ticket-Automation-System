@@ -70,23 +70,27 @@
         <data-table :columns="columns" :items="tickets" :selected-items="selectedItems" :actions="actions"
                     @action:click="onActionClick" @bulk:apply="onBulkAction" @item:select="updateSelectedItems"
         >
-					<span slot="ticket_subject" slot-scope="data"><strong>#{{
+          <template v-slot:ticket_subject="data"><strong>#{{
               data.row.id
-            }}</strong> - {{ data.row.ticket_subject }}</span>
-          <div slot="customer_name" slot-scope="data">
+            }}</strong> - {{ data.row.ticket_subject }}
+          </template>
+          <template v-slot:customer_name="data">
             <span class="flex w-full"><strong>{{ data.row.customer_name }}</strong></span>
             <span class="flex w-full">{{ data.row.customer_email }}</span>
             <span class="flex w-full">{{ data.row.customer_phone }}</span>
-          </div>
-          <template slot="created_by" slot-scope="data" class="button--status">
+          </template>
+          <template v-slot:created_by="data" class="button--status">
             <span v-html="getAssignedAgents(data.row.assigned_agents)"></span>
           </template>
-          <span slot="ticket_status" slot-scope="data" class="button--status"
-                :class="data.row.status.slug">{{ data.row.status.name }}</span>
-          <span slot="ticket_category" slot-scope="data" class="button--category"
-                :class="data.row.category.slug">{{ data.row.category.name }}</span>
-          <span slot="ticket_priority" slot-scope="data" class="button--priority"
-                :class="data.row.priority.slug">{{ data.row.priority.name }}</span>
+          <template v-slot:ticket_status="data" class="button--status"
+                    :class="data.row.status.slug">{{ data.row.status.name }}
+          </template>
+          <template v-slot:ticket_category="data" class="button--category"
+                    :class="data.row.category.slug">{{ data.row.category.name }}
+          </template>
+          <template v-slot:ticket_priority="data" class="button--priority"
+                    :class="data.row.priority.slug">{{ data.row.priority.name }}
+          </template>
           <template v-slot:updated="data">{{ to_human_time(data.row.updated) }}</template>
         </data-table>
       </column>
@@ -100,10 +104,23 @@
 </template>
 
 <script>
-import axios from 'axios';
-import {mapState} from 'vuex';
-import {column, columns, dataTable, pagination, searchForm, shaplaButton, statusList} from 'shapla-vue-components';
+import {default as axios} from "@/admin/axios";
+import {useStore} from 'vuex';
+import {
+  ShaplaButton as shaplaButton,
+  ShaplaColumn as column,
+  ShaplaColumns as columns,
+  ShaplaSearchForm as searchForm,
+  ShaplaTable as dataTable,
+  ShaplaTablePagination as pagination,
+  ShaplaTableStatusList as statusList
+} from '@shapla/vue-components';
 import human_time_diff from "../human_time_diff";
+import {computed,onMounted} from "vue";
+import {useRouter} from 'vue-router'
+
+const router = useRouter();
+const store = useStore();
 
 export default {
   name: "SupportTicketList",
@@ -125,22 +142,6 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.$store.commit('SET_LOADING_STATUS', false);
-    if (!this.tickets.length) {
-      this.getItems();
-    }
-  },
-  computed: {
-    ...mapState(['pagination', 'tickets', 'filters', 'meta_data', 'label',
-      'status', 'category', 'priority', 'currentPage', 'city', 'search', 'labels']),
-    actions() {
-      return this.meta_data.actions;
-    },
-    bulkActions() {
-      return this.meta_data.bulkActions;
-    },
-  },
   methods: {
     to_human_time(date) {
       return human_time_diff(date);
@@ -153,38 +154,38 @@ export default {
       }
     },
     getActiveItems() {
-      this.$store.commit('SET_STATUS', 0);
-      this.$store.commit('SET_CATEGORY', 0);
-      this.$store.commit('SET_PRIORITY', 0);
-      this.$store.commit('SET_AGENT', 0);
-      this.$store.commit('SET_LABEL', 'active');
-      this.$store.commit('SET_SHOW_SIDE_NAVE', false);
+      store.commit('SET_STATUS', 0);
+      store.commit('SET_CATEGORY', 0);
+      store.commit('SET_PRIORITY', 0);
+      store.commit('SET_AGENT', 0);
+      store.commit('SET_LABEL', 'active');
+      store.commit('SET_SHOW_SIDE_NAVE', false);
 
-      this.$store.dispatch('getTickets');
+      store.dispatch('getTickets');
     },
     getTrashedItems() {
-      this.$store.commit('SET_STATUS', 0);
-      this.$store.commit('SET_CATEGORY', 0);
-      this.$store.commit('SET_PRIORITY', 0);
-      this.$store.commit('SET_AGENT', 0);
-      this.$store.commit('SET_LABEL', 'trash');
-      this.$store.commit('SET_SHOW_SIDE_NAVE', false);
+      store.commit('SET_STATUS', 0);
+      store.commit('SET_CATEGORY', 0);
+      store.commit('SET_PRIORITY', 0);
+      store.commit('SET_AGENT', 0);
+      store.commit('SET_LABEL', 'trash');
+      store.commit('SET_SHOW_SIDE_NAVE', false);
 
-      this.$store.dispatch('getTickets');
+      store.dispatch('getTickets');
     },
     openSideNav() {
-      this.$store.commit('SET_SHOW_SIDE_NAVE', true);
+      store.commit('SET_SHOW_SIDE_NAVE', true);
     },
     getItems() {
-      this.$store.dispatch('getTickets');
+      store.dispatch('getTickets');
     },
     categorySearch(data) {
-      this.$store.commit('SET_CATEGORY', data.cat);
-      this.$store.commit('SET_SEARCH', data.query);
+      store.commit('SET_CATEGORY', data.cat);
+      store.commit('SET_SEARCH', data.query);
       this.getItems();
     },
     openNewTicket() {
-      this.$router.push({name: 'NewSupportTicket'});
+      router.push({name: 'NewSupportTicket'});
     },
     getAssignedAgents(data) {
       if (data.length < 1) return 'None';
@@ -197,23 +198,23 @@ export default {
       return html;
     },
     clearFilter() {
-      this.$store.commit('SET_STATUS', 'all');
-      this.$store.commit('SET_CATEGORY', 'all');
-      this.$store.commit('SET_PRIORITY', 'all');
-      this.$store.commit('SET_CITY', 'all');
+      store.commit('SET_STATUS', 'all');
+      store.commit('SET_CATEGORY', 'all');
+      store.commit('SET_PRIORITY', 'all');
+      store.commit('SET_CITY', 'all');
 
       this.getItems();
     },
     changeStatus() {
-      this.$store.commit('SET_CURRENT_PAGE', 1);
+      store.commit('SET_CURRENT_PAGE', 1);
       this.getItems();
     },
     paginate(page) {
-      this.$store.commit('SET_CURRENT_PAGE', page);
+      store.commit('SET_CURRENT_PAGE', page);
       this.getItems();
     },
     searchTicket(query) {
-      this.$store.commit('SET_SEARCH', query);
+      store.commit('SET_SEARCH', query);
       this.getItems();
     },
     updateSelectedItems(ids) {
@@ -225,7 +226,7 @@ export default {
     },
     onActionClick(action, item) {
       if ('view' === action) {
-        this.$router.push({name: 'SingleSupportTicket', params: {id: item.id}});
+        router.push({name: 'SingleSupportTicket', params: {id: item.id}});
       }
       if ('trash' === action && window.confirm('Are you sure move this item to trash?')) {
         this.trashAction(item, 'trash');
@@ -259,30 +260,54 @@ export default {
       }
     },
     trashAction(item, action) {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       axios.delete(StackonetSupportTicket.restRoot + '/tickets/' + item.id, {
         params: {
           action: action
         }
       }).then(() => {
         this.getItems();
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       }).catch(() => {
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
     },
     batchTrashAction(ids, action) {
-      this.$store.commit('SET_LOADING_STATUS', true);
+      store.commit('SET_LOADING_STATUS', true);
       let data = {};
       data[action] = ids;
       axios.post(StackonetSupportTicket.restRoot + '/tickets/batch', data).then(() => {
         this.getItems();
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
         this.selectedItems = [];
       }).catch(error => {
         console.log(error);
-        this.$store.commit('SET_LOADING_STATUS', false);
+        store.commit('SET_LOADING_STATUS', false);
       });
+    }
+  },
+  setup() {
+    onMounted(() => {
+      store.commit('SET_LOADING_STATUS', false);
+      if (!this.tickets.length) {
+        this.getItems();
+      }
+    });
+    return {
+      pagination: computed(() => store.state.pagination),
+      tickets: computed(() => store.state.tickets),
+      filters: computed(() => store.state.filters),
+      meta_data: computed(() => store.state.meta_data),
+      label: computed(() => store.state.label),
+      status: computed(() => store.state.status),
+      category: computed(() => store.state.category),
+      priority: computed(() => store.state.priority),
+      currentPage: computed(() => store.state.currentPage),
+      city: computed(() => store.state.city),
+      search: computed(() => store.state.search),
+      labels: computed(() => store.state.labels),
+      actions: computed(() => store.state.meta_data.actions),
+      bulkActions: computed(() => store.state.meta_data.bulkActions),
     }
   }
 }
