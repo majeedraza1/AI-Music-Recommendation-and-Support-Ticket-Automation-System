@@ -1,10 +1,6 @@
 <template>
   <div class="support-ticket-form">
-    <div v-if="showThankYouMessage" v-html="thank_you_message">
-      <h4>Thank you for contacting us!</h4>
-      <p>We will get back to you as soon as possible.</p>
-    </div>
-    <form v-if="Object.keys(fields).length && false === showThankYouMessage" action="#" @submit.prevent="submitTicket">
+    <form v-if="Object.keys(fields).length" action="#" @submit.prevent="submitTicket">
       <columns :multiline="true">
         <column v-if="fields.name" :tablet="12">
           <div class="support-ticket-form__control">
@@ -68,6 +64,7 @@
         </column>
       </columns>
     </form>
+    <div v-if="showThankYouMessage" v-html="thank_you_message"></div>
   </div>
 </template>
 
@@ -75,6 +72,19 @@
 import axios from 'axios'
 import {column, columns, shaplaButton} from 'shapla-vue-components';
 import Editor from '@tinymce/tinymce-vue'
+
+const defaultTicket = () => {
+  return {
+    name: '',
+    email: '',
+    subject: '',
+    content: '',
+    phone_number: '',
+    category: 0,
+    status: 0,
+    priority: 0,
+  }
+}
 
 export default {
   name: "CreateTicket",
@@ -85,16 +95,7 @@ export default {
       showThankYouMessage: false,
       defaults: {},
       thank_you_message: '',
-      ticket: {
-        name: '',
-        email: '',
-        subject: '',
-        content: '',
-        phone_number: '',
-        category: 0,
-        status: 0,
-        priority: 0,
-      },
+      ticket: defaultTicket(),
       fields: []
     }
   },
@@ -109,12 +110,6 @@ export default {
         menubar: false,
         statusbar: true
       }
-    },
-    hasDefaultName() {
-      return !!(this.defaults.name && this.defaults.name.length)
-    },
-    hasDefaultEmail() {
-      return !!(this.defaults.email && this.defaults.email.length)
     },
     isValidEmail() {
       return !!(this.ticket.email.length && this.validateEmail(this.ticket.email));
@@ -144,6 +139,8 @@ export default {
         if (response.data.data.ticket_id) {
           this.showThankYouMessage = true;
         }
+        // Reset ticket
+        this.ticket = defaultTicket();
       }).catch(error => {
         console.log(error);
         this.loading = false;
