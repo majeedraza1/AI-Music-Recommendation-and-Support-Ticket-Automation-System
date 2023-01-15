@@ -80,31 +80,20 @@ class Settings {
 		// Add settings page tab
 		$option_page->add_panels( apply_filters( 'stackonet_support_ticket/settings/panels', $panels ) );
 
-		$sections = array(
-			array(
+		$sections = [
+			[
 				'id'          => 'general_settings_section',
 				'title'       => __( 'General', 'stackonet-support-ticket' ),
 				'description' => __( 'Plugin general options.', 'stackonet-support-ticket' ),
 				'panel'       => 'general_settings_panel',
 				'priority'    => 10,
-			),
-		);
+			],
+		];
 
 		// Add Sections
 		$option_page->add_sections( apply_filters( 'stackonet_support_ticket/settings/sections', $sections ) );
 
 		$fields = [
-			[
-				'section'           => 'general_settings_section',
-				'id'                => 'support_page_id',
-				'type'              => 'select',
-				'title'             => __( 'Support Page', 'stackonet-support-ticket' ),
-				'description'       => __( 'Select page in which shortcode is inserted. Create a page with shortcode [support_ticket] if not created yet. Fullwidth page template is recommended.',
-					'stackonet-support-ticket' ),
-				'priority'          => 10,
-				'sanitize_callback' => 'intval',
-				'options'           => static::get_pages_for_options(),
-			],
 			[
 				'section'           => 'general_settings_section',
 				'id'                => 'customer_support_list_page_url',
@@ -218,23 +207,7 @@ class Settings {
 		$option_page->add_fields( apply_filters( 'stackonet_support_ticket/settings/fields', $fields ) );
 	}
 
-	public static function get_pages_for_options() {
-		$_pages  = get_posts(
-			[
-				'post_type'      => 'page',
-				'post_status'    => 'publish',
-				'posts_per_page' => - 1,
-			]
-		);
-		$options = [];
-		foreach ( $_pages as $page ) {
-			$options[ $page->ID ] = get_the_title( $page );
-		}
-
-		return $options;
-	}
-
-	public static function get_tickets_statuses_for_options() {
+	public static function get_tickets_statuses_for_options(): array {
 		$statuses = TicketStatus::get_all();
 
 		$options = [];
@@ -245,7 +218,7 @@ class Settings {
 		return $options;
 	}
 
-	public static function get_tickets_categories_for_options() {
+	public static function get_tickets_categories_for_options(): array {
 		$statuses = TicketCategory::get_all();
 
 		$options = [];
@@ -256,7 +229,7 @@ class Settings {
 		return $options;
 	}
 
-	public static function get_tickets_priorities_for_options() {
+	public static function get_tickets_priorities_for_options(): array {
 		$statuses = TicketPriority::get_all();
 
 		$options = [];

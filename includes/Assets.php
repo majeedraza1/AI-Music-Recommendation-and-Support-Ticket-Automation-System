@@ -92,7 +92,12 @@ class Assets {
 		foreach ( $scripts as $handle => $script ) {
 			$deps      = $script['deps'] ?? false;
 			$in_footer = $script['in_footer'] ?? true;
-			$version   = $script['version'] ?? $this->version;
+			$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $script['src'] );
+			if ( file_exists( $file_path ) ) {
+				$version = date( 'Y.m.d.Gi', filemtime( $file_path ) );
+			} else {
+				$version = $script['version'] ?? $this->version;
+			}
 			wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
 		}
 	}
@@ -107,7 +112,13 @@ class Assets {
 	public function register_styles( array $styles ) {
 		foreach ( $styles as $handle => $style ) {
 			$deps = $style['deps'] ?? false;
-			wp_register_style( $handle, $style['src'], $deps, $this->version );
+			$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $style['src'] );
+			if ( file_exists( $file_path ) ) {
+				$version = date( 'Y.m.d.Gi', filemtime( $file_path ) );
+			} else {
+				$version = $style['version'] ?? $this->version;
+			}
+			wp_register_style( $handle, $style['src'], $deps, $version );
 		}
 	}
 
