@@ -77,6 +77,23 @@ class Frontend {
 		$default_status   = (int) get_option( 'support_ticket_default_status' );
 		$default_priority = (int) get_option( 'support_ticket_default_priority' );
 
+		$current_user = wp_get_current_user();
+
+		if ( $current_user->exists() ) {
+			$thank_you_html = sprintf(
+				__(
+					'<p>Thank you for contacting us! We will get back to you as soon as possible. <a href="%s">Click here to track your ticket.</a></p>',
+					'stackonet-support-ticket'
+				),
+				get_option( 'customer_support_list_page_url' )
+			);
+		} else {
+			$thank_you_html = __(
+				'<p>Thank you for contacting us! We will get back to you as soon as possible.</p>',
+				'stackonet-support-ticket'
+			);
+		}
+
 		$attributes = shortcode_atts(
 			[
 				'need_login'        => 'no',
@@ -84,7 +101,7 @@ class Frontend {
 				'category'          => '',
 				'exclude_fields'    => '',
 				'default_subject'   => '',
-				'thank_you_message' => '<h3>Thank you for contacting us!</h3><p>We will get back to you as soon as possible.</p>',
+				'thank_you_message' => $thank_you_html,
 				'default_category'  => $default_category,
 				'default_status'    => $default_status,
 				'default_priority'  => $default_priority,
@@ -110,8 +127,6 @@ class Frontend {
 				$cat_options[ $cat->get_id() ] = $cat->get_prop( 'name' );
 			}
 		}
-
-		$current_user = wp_get_current_user();
 
 		if ( $need_login && ! $current_user->exists() ) {
 			return $this->support_ticket_login();
@@ -209,8 +224,10 @@ class Frontend {
 		}
 
 		$data = [
-			'thank_you_message' => $attributes['thank_you_message'],
-			'fields'            => $fields,
+			'is_authenticated'     => $current_user->exists(),
+			'ticket_list_page_url' => get_option( 'customer_support_list_page_url' ),
+			'thank_you_message'    => $attributes['thank_you_message'],
+			'fields'               => $fields,
 		];
 
 		return "<div data-form_fields='" . wp_json_encode( $data ) . "'><div id='stackonet_support_ticket_form'></div></div>";

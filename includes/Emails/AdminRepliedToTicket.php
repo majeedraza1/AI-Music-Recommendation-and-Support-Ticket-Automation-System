@@ -70,10 +70,15 @@ class AdminRepliedToTicket extends BackgroundProcess {
 		$name  = $support->get_prop( 'customer_name' );
 
 		try {
+			$base_url    = str_replace(
+				'{ticket_id}',
+				$ticket_id,
+				get_option( 'customer_support_single_page_url' )
+			);
 			$support_url = add_query_arg( [
 				'ticket' => $support->get_prop( 'ticket_auth_code' ),
 				'ref'    => 'email',
-			], site_url( '/' ) );
+			], $base_url ?? site_url( '/' ) );
 
 			$mailer = new Mailer();
 			$mailer->setTo( $email, $name );

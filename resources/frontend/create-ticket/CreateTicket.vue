@@ -64,7 +64,9 @@
         </column>
       </columns>
     </form>
-    <div v-if="showThankYouMessage" v-html="thank_you_message"></div>
+    <div v-if="showThankYouMessage">
+      <div v-html="thank_you_message"></div>
+    </div>
   </div>
 </template>
 
@@ -95,6 +97,8 @@ export default {
       showThankYouMessage: false,
       defaults: {},
       thank_you_message: '',
+      is_authenticated: false,
+      ticket_list_page_url: '',
       ticket: defaultTicket(),
       fields: []
     }
@@ -121,6 +125,8 @@ export default {
       const data = JSON.parse(fieldsEl.getAttribute('data-form_fields'));
       this.fields = data.fields;
       this.thank_you_message = data.thank_you_message;
+      this.is_authenticated = data.is_authenticated;
+      this.ticket_list_page_url = data.ticket_list_page_url;
       Object.values(data.fields).forEach(field => {
         this.defaults[field.id] = field.default;
         this.ticket[field.id] = field.default;

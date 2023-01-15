@@ -168,6 +168,15 @@ class UserTicketController extends ApiController {
 			$response = [
 				'ticket'  => static::format_item_for_response( $ticket ),
 				'threads' => static::format_thread_collections( $ticket->get_ticket_threads() ),
+				'links'   => [
+					'list'   => get_option( 'customer_support_list_page_url' ),
+					'view'   => str_replace(
+						'{ticket_id}',
+						$ticket->get_id(),
+						get_option( 'customer_support_single_page_url' )
+					),
+					'create' => get_option( 'customer_support_create_page_url' ),
+				]
 			];
 
 			return $this->respondCreated( $response );

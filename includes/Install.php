@@ -2,7 +2,6 @@
 
 namespace StackonetSupportTicket;
 
-use Stackonet\WP\Framework\Supports\Logger;
 use StackonetSupportTicket\Models\AgentRole;
 use StackonetSupportTicket\Models\SupportAgent;
 use StackonetSupportTicket\Models\TicketCategory;
@@ -267,9 +266,10 @@ class Install {
 	private static function add_default_options() {
 		update_option( 'support_ticket_allow_customer_close_ticket', 'yes' );
 
-		$support_ticket_thankyou_html = __(
-			'<p>Dear {customer_name},</p><p>We have received your ticket and confirmation has been sent to your email address&nbsp;{customer_email}.</p><p>Your ticket id is #{ticket_id}. You will get email notification after we post reply in your ticket but in case email notification failed, you can check your ticket status on below link:</p><p>{ticket_url}</p>',
-			'stackonet-support-ticket'
+		$support_ticket_thankyou_html = sprintf(
+			__( '<p>Thank you for contacting us! We will get back to you as soon as possible. <a href="%s">Click here to track your ticket.</a></p>',
+				'stackonet-support-ticket' ),
+			get_option( 'customer_support_list_page_url' )
 		);
 		update_option( 'support_ticket_thankyou_html', $support_ticket_thankyou_html );
 		update_option( 'support_ticket_thankyou_url', '' );

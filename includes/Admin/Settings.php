@@ -93,8 +93,8 @@ class Settings {
 		// Add Sections
 		$option_page->add_sections( apply_filters( 'stackonet_support_ticket/settings/sections', $sections ) );
 
-		$fields = array(
-			array(
+		$fields = [
+			[
 				'section'           => 'general_settings_section',
 				'id'                => 'support_page_id',
 				'type'              => 'select',
@@ -104,19 +104,48 @@ class Settings {
 				'priority'          => 10,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_pages_for_options(),
-			),
-			array(
+			],
+			[
+				'section'           => 'general_settings_section',
+				'id'                => 'customer_support_list_page_url',
+				'type'              => 'text',
+				'title'             => __( 'Ticket list Page for customer', 'stackonet-support-ticket' ),
+				'description'       => __( 'Enter url where customer all support ticket are listed.',
+					'stackonet-support-ticket' ),
+				'priority'          => 15,
+				'sanitize_callback' => 'esc_url_raw',
+			],
+			[
+				'section'           => 'general_settings_section',
+				'id'                => 'customer_support_single_page_url',
+				'type'              => 'text',
+				'title'             => __( 'Ticket detail page for customer', 'stackonet-support-ticket' ),
+				'description'       => __( 'Enter ticket detail page url. use {ticket_id} for ticket id.',
+					'stackonet-support-ticket' ),
+				'priority'          => 16,
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			[
+				'section'           => 'general_settings_section',
+				'id'                => 'customer_support_create_page_url',
+				'type'              => 'text',
+				'title'             => __( 'Support Create page for customer', 'stackonet-support-ticket' ),
+				'description'       => __( 'Enter ticket create page url.', 'stackonet-support-ticket' ),
+				'priority'          => 17,
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			[
 				'section'           => 'general_settings_section',
 				'id'                => 'support_ticket_default_status',
 				'type'              => 'select',
 				'title'             => __( 'Default ticket status', 'stackonet-support-ticket' ),
 				'description'       => __( 'This status will get applied for newly created ticket.',
 					'stackonet-support-ticket' ),
-				'priority'          => 15,
+				'priority'          => 19,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
-			),
-			array(
+			],
+			[
 				'section'           => 'general_settings_section',
 				'id'                => 'support_ticket_default_category',
 				'type'              => 'select',
@@ -126,8 +155,8 @@ class Settings {
 				'priority'          => 20,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_categories_for_options(),
-			),
-			array(
+			],
+			[
 				'section'           => 'general_settings_section',
 				'id'                => 'support_ticket_default_priority',
 				'type'              => 'select',
@@ -137,8 +166,8 @@ class Settings {
 				'priority'          => 25,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_priorities_for_options(),
-			),
-			array(
+			],
+			[
 				'section'           => 'general_settings_section',
 				'id'                => 'support_ticket_status_after_customer_reply',
 				'type'              => 'select',
@@ -148,8 +177,8 @@ class Settings {
 				'priority'          => 30,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
-			),
-			array(
+			],
+			[
 				'section'           => 'general_settings_section',
 				'id'                => 'support_ticket_status_after_agent_reply',
 				'type'              => 'select',
@@ -159,8 +188,8 @@ class Settings {
 				'priority'          => 35,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
-			),
-			array(
+			],
+			[
 				'section'           => 'general_settings_section',
 				'id'                => 'support_ticket_close_ticket_status',
 				'type'              => 'select',
@@ -170,8 +199,8 @@ class Settings {
 				'priority'          => 40,
 				'sanitize_callback' => 'intval',
 				'options'           => static::get_tickets_statuses_for_options(),
-			),
-			array(
+			],
+			[
 				'section'     => 'general_settings_section',
 				'id'          => 'support_ticket_allow_customer_close_ticket',
 				'type'        => 'select',
@@ -183,8 +212,8 @@ class Settings {
 					'yes' => __( 'Yes', 'stackonet-support-ticket' ),
 					'no'  => __( 'No', 'stackonet-support-ticket' ),
 				],
-			),
-		);
+			],
+		];
 
 		$option_page->add_fields( apply_filters( 'stackonet_support_ticket/settings/fields', $fields ) );
 	}
