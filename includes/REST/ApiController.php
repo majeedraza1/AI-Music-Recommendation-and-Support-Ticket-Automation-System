@@ -10,6 +10,7 @@ use Stackonet\WP\Framework\Traits\ApiUtils;
 use StackonetSupportTicket\Admin\Settings;
 use StackonetSupportTicket\Models\SupportTicket;
 use StackonetSupportTicket\Models\TicketThread;
+use StackonetSupportTicket\Plugin;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -19,12 +20,9 @@ defined( 'ABSPATH' ) || exit;
 class ApiController extends WP_REST_Controller {
 	use ApiResponse, ApiUtils, ApiPermissionChecker;
 
-	/**
-	 * The namespace of this controller's route.
-	 *
-	 * @var string
-	 */
-	protected $namespace = STACKONET_SUPPORT_TICKET_REST_NAMESPACE;
+	public function __construct() {
+		$this->namespace = Plugin::init()->get_rest_namespace();
+	}
 
 	/**
 	 * @param  WP_REST_Request  $request

@@ -34,6 +34,7 @@ class Ajax {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
+			add_action( 'wp_ajax_support_ticket_test', [ self::$instance, 'support_ticket_test' ] );
 			add_action( 'wp_ajax_support_ticket_activation', [ self::$instance, 'support_ticket_activation' ] );
 			add_action( 'wp_ajax_support_ticket_deactivation', [ self::$instance, 'support_ticket_deactivation' ] );
 			add_action( 'wp_ajax_download_support_ticket', [ self::$instance, 'download_support_ticket' ] );
@@ -41,6 +42,12 @@ class Ajax {
 		}
 
 		return self::$instance;
+	}
+
+	public function support_ticket_test() {
+		$plugin_data = [];
+
+		var_dump( $plugin_data );
 	}
 
 	public function support_ticket_activation() {

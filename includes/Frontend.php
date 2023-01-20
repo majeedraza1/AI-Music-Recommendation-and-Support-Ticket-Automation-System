@@ -44,8 +44,8 @@ class Frontend {
 	 */
 	public function load_frontend_scripts() {
 		if ( $this->should_load_scripts() ) {
-			wp_enqueue_style( STACKONET_SUPPORT_TICKET . '-frontend' );
-			wp_enqueue_script( STACKONET_SUPPORT_TICKET . '-frontend' );
+			wp_enqueue_style( Plugin::init()->get_directory_name() . '-frontend' );
+			wp_enqueue_script( Plugin::init()->get_directory_name() . '-frontend' );
 		}
 	}
 
@@ -58,7 +58,7 @@ class Frontend {
 		}
 		// Include icons on footer before loading the script
 		add_action( 'wp_footer', function () {
-			include STACKONET_SUPPORT_TICKET_PATH . '/assets/icon/icons.svg';
+			include Plugin::init()->get_plugin_path() . '/assets/icon/icons.svg';
 		}, 0 );
 
 		// Return the root element to load the Vue/React app

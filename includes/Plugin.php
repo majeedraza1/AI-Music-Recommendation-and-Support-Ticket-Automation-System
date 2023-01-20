@@ -45,6 +45,13 @@ class Plugin {
 	 */
 	private $container = [];
 
+	private $plugin_data = [
+		'Version'     => '',
+		'TextDomain'  => '',
+		'Name'        => '',
+		'RequiresPHP' => '',
+	];
+
 	/**
 	 * Ensures only one instance of the class is loaded or can be loaded.
 	 *
@@ -54,6 +61,8 @@ class Plugin {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 
+			self::$instance->read_plugin_data();
+
 			add_action( 'plugins_loaded', [ self::$instance, 'includes' ] );
 			add_action( 'plugins_loaded', [ NinjaFormsModule::class, 'init' ], 1 );
 			add_action( 'stackonet_support_ticket/activation', [ self::$instance, 'activation_includes' ] );
@@ -62,6 +71,20 @@ class Plugin {
 		}
 
 		return self::$instance;
+	}
+
+	/**
+	 * Read plugin data
+	 *
+	 * @return void
+	 */
+	private function read_plugin_data() {
+		$this->plugin_data = get_file_data( $this->get_plugin_file(), [
+			'Version'     => 'Version',
+			'TextDomain'  => 'Text Domain',
+			'Name'        => 'Plugin Name',
+			'RequiresPHP' => 'Requires PHP',
+		] );
 	}
 
 	/**
@@ -232,7 +255,7 @@ class Plugin {
 	 *
 	 * @return bool
 	 */
-	private function is_request( string $type ): bool {
+	public function is_request( string $type ): bool {
 		switch ( $type ) {
 			case 'admin':
 				return is_admin();
@@ -247,5 +270,69 @@ class Plugin {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get plugin main file
+	 *
+	 * @return string
+	 */
+	public function get_plugin_file(): string {
+		return STACKONET_SUPPORT_TICKET_FILE;
+	}
+
+	/**
+	 * Get plugin rest namespace
+	 *
+	 * @return string
+	 */
+	public function get_rest_namespace(): string {
+		if ( defined( 'STACKONET_SUPPORT_TICKET_REST_NAMESPACE' ) ) {
+			return STACKONET_SUPPORT_TICKET_REST_NAMESPACE;
+		}
+
+		return 'stackonet-support-ticket/v1';
+	}
+
+	/**
+	 * Get the plugin url.
+	 *
+	 * @param  string  $path  Extra path appended to the end of the URL.
+	 *
+	 * @return string
+	 */
+	public function get_plugin_url( string $path = '' ): string {
+		return plugins_url( $path, $this->get_plugin_file() );
+	}
+
+	/**
+	 * Get plugin path
+	 *
+	 * @return string
+	 */
+	public function get_plugin_path(): string {
+		return dirname( $this->get_plugin_file() );
+	}
+
+	/**
+	 * Get plugin directory/folder name.
+	 *
+	 * @return string
+	 */
+	public function get_directory_name(): string {
+		return basename( $this->get_plugin_path() );
+	}
+
+	/**
+	 * Get plugin version
+	 *
+	 * @return string
+	 */
+	public function get_plugin_version(): string {
+		if ( ! empty( $this->plugin_data['Version'] ) ) {
+			return $this->plugin_data['Version'];
+		}
+
+		return date( 'Y.m.d.Gi', filemtime( $this->get_plugin_file() ) );
 	}
 }

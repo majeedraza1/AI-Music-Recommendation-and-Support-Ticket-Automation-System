@@ -7,6 +7,7 @@
  * Author URI: https://stackonet.com
  * Requires at least: 5.0
  * Tested up to: 5.3
+ * Requires PHP: 7.2
  * Text Domain: stackonet-support-ticket
  * Domain Path: /languages
  */
@@ -21,20 +22,6 @@ class StackonetSupportTicket {
 	 * @var self
 	 */
 	public static $instance = null;
-
-	/**
-	 * Plugin name slug
-	 *
-	 * @var string
-	 */
-	private $plugin_name = 'stackonet-support-ticket';
-
-	/**
-	 * Plugin version number
-	 *
-	 * @var string
-	 */
-	public $version = '1.0.0-beta.1';
 
 	/**
 	 * Only one instance of the class can be loaded
@@ -64,14 +51,8 @@ class StackonetSupportTicket {
 	 * Define plugin constants
 	 */
 	private function define_constants() {
-		define( 'STACKONET_SUPPORT_TICKET', $this->plugin_name );
-		define( 'STACKONET_SUPPORT_TICKET_VERSION', $this->version );
-		define( 'STACKONET_SUPPORT_TICKET_REST_NAMESPACE', 'stackonet-support-ticket/v1' );
 		define( 'STACKONET_SUPPORT_TICKET_FILE', __FILE__ );
 		define( 'STACKONET_SUPPORT_TICKET_PATH', dirname( STACKONET_SUPPORT_TICKET_FILE ) );
-		define( 'STACKONET_SUPPORT_TICKET_INCLUDES', STACKONET_SUPPORT_TICKET_PATH . '/includes' );
-		define( 'STACKONET_SUPPORT_TICKET_URL', plugins_url( '', STACKONET_SUPPORT_TICKET_FILE ) );
-		define( 'STACKONET_SUPPORT_TICKET_ASSETS', STACKONET_SUPPORT_TICKET_URL . '/assets' );
 	}
 
 	/**

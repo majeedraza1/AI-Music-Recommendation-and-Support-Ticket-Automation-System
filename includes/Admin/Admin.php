@@ -2,13 +2,7 @@
 
 namespace StackonetSupportTicket\Admin;
 
-use StackonetSupportTicket\Models\AgentRole;
-use StackonetSupportTicket\Models\SupportAgent;
-use StackonetSupportTicket\Models\SupportTicket;
-use StackonetSupportTicket\Models\TicketCategory;
-use StackonetSupportTicket\Models\TicketPriority;
-use StackonetSupportTicket\Models\TicketStatus;
-use WP_Post;
+use StackonetSupportTicket\Plugin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -79,14 +73,14 @@ class Admin {
 	 */
 	public function menu_page_callback() {
 		echo '<div class="wrap"><div id="stackonet_support_ticket_list"></div></div>';
-		include STACKONET_SUPPORT_TICKET_PATH . '/assets/icon/icons.svg';
+		include Plugin::init()->get_plugin_path() . '/assets/icon/icons.svg';
 	}
 
 	/**
 	 * Load required styles and scripts
 	 */
 	public static function init_support_tickets_hooks() {
-		wp_enqueue_style( STACKONET_SUPPORT_TICKET . '-admin' );
-		wp_enqueue_script( STACKONET_SUPPORT_TICKET . '-admin' );
+		wp_enqueue_style( Plugin::init()->get_directory_name() . '-admin' );
+		wp_enqueue_script( Plugin::init()->get_directory_name() . '-admin' );
 	}
 }

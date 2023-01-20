@@ -69,9 +69,9 @@ class Assets {
 	 * @return void
 	 */
 	public function register() {
-		$this->plugin_name = STACKONET_SUPPORT_TICKET;
-		$this->version     = STACKONET_SUPPORT_TICKET_VERSION;
-		$this->assets_url  = STACKONET_SUPPORT_TICKET_ASSETS;
+		$this->plugin_name = Plugin::init()->get_directory_name();
+		$this->version     = Plugin::init()->get_plugin_version();
+		$this->assets_url  = Plugin::init()->get_plugin_url( 'assets' );
 
 		if ( $this->is_script_debug_enabled() ) {
 			$this->version = $this->version . '-' . time();
@@ -111,7 +111,7 @@ class Assets {
 	 */
 	public function register_styles( array $styles ) {
 		foreach ( $styles as $handle => $style ) {
-			$deps = $style['deps'] ?? false;
+			$deps      = $style['deps'] ?? false;
 			$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $style['src'] );
 			if ( file_exists( $file_path ) ) {
 				$version = date( 'Y.m.d.Gi', filemtime( $file_path ) );
@@ -134,7 +134,7 @@ class Assets {
 				'deps'      => [ 'wp-tinymce' ],
 				'in_footer' => true,
 			],
-			$this->plugin_name . '-admin' => [
+			$this->plugin_name . '-admin'    => [
 				'src'       => $this->assets_url . '/js/admin.js',
 				'deps'      => [ 'wp-tinymce' ],
 				'in_footer' => true,
@@ -152,7 +152,7 @@ class Assets {
 			$this->plugin_name . '-frontend' => [
 				'src' => $this->assets_url . '/css/frontend.css',
 			],
-			$this->plugin_name . '-admin' => [
+			$this->plugin_name . '-admin'    => [
 				'src' => $this->assets_url . '/css/admin.css',
 			],
 		];
@@ -170,7 +170,7 @@ class Assets {
 			'lostPasswordUrl' => wp_lostpassword_url(),
 			'isUserLoggedIn'  => $current_user->exists(),
 			'wpRestRoot'      => esc_url_raw( rest_url( 'wp/v2' ) ),
-			'restRoot'        => esc_url_raw( rest_url( STACKONET_SUPPORT_TICKET_REST_NAMESPACE ) ),
+			'restRoot'        => esc_url_raw( rest_url( Plugin::init()->get_rest_namespace() ) ),
 		];
 
 		if ( $current_user->exists() ) {
