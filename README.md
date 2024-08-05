@@ -1,6 +1,6 @@
-# Stackonet Support Ticket
+# AI Music Recommendation and Support Ticket Automation System
 
-Easy & Powerful support ticket system for WordPress. Easy to configure and easy to use is our first priority.
+Easy to configure and easy to use is our first priority.
 
 # Shortcodes
 
@@ -13,7 +13,7 @@ Easy & Powerful support ticket system for WordPress. Easy to configure and easy 
 
 API_ENDPOINT: `https://example.com/wp-json`
 
-NAMESPACE: `stackonet-support-ticket`
+NAMESPACE: `AI-Music-Recommendation-and-Support-Ticket-Automation-System`
 
 VERSION: `v1`
 
