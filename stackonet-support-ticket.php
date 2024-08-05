@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Stackonet Support Ticket
- * Description: Easy & Powerful support ticket system for WordPress
+ * Project Name: AI-Music-Recommendation-and-Support-Ticket-Automation-System
+ * Description: Easy & Powerful AI support ticket system
  * Version: 1.0.0-beta.1
- * Author: Stackonet Services (Pvt.) Ltd.
- * Author URI: https://stackonet.com
+ * Author: Majeed Raza.
+ * Author URI: https://majeedraza.me
  * Requires at least: 5.0
  * Tested up to: 5.3
  * Requires PHP: 7.2
- * Text Domain: stackonet-support-ticket
+ * Text Domain: AI-Music-Recommendation-and-Support-Ticket-Automation-System
  * Domain Path: /languages
  */
 
